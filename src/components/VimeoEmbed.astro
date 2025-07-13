@@ -1,0 +1,106 @@
+---
+export interface Props {
+  url: string;
+  title?: string;
+}
+
+const { url, title = 'Vimeo Video' } = Astro.props;
+
+// Extract Vimeo video ID from URL
+function getVimeoId(url: string): string | null {
+  const match = url.match(/vimeo\.com\/(?:.*#|.*\/videos\/)?([0-9]+)/);
+  return match ? match[1] : null;
+}
+
+const videoId = getVimeoId(url);
+---
+
+{videoId ? (
+  <div class="vimeo-embed">
+    <div class="embed-container">
+      <iframe 
+        src={`https://player.vimeo.com/video/${videoId}?color=fb923c&title=0&byline=0&portrait=0`}
+        title={title}
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+    <div class="embed-caption">
+      <span class="embed-icon">🎬</span>
+      <span class="embed-text">Vimeo Video</span>
+    </div>
+  </div>
+) : (
+  <div class="vimeo-embed">
+    <div class="embed-fallback">
+      <p>Vimeo video: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a></p>
+    </div>
+  </div>
+)}
+
+<style>
+  .vimeo-embed {
+    margin: 32px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--hover);
+  }
+
+  .embed-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
+
+  .embed-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .embed-caption {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--hover);
+    border-top: 1px solid var(--border);
+  }
+
+  .embed-icon {
+    font-size: 16px;
+  }
+
+  .embed-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .embed-fallback {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .embed-fallback a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .embed-fallback a:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .vimeo-embed {
+      margin: 24px 0;
+    }
+  }
+</style>

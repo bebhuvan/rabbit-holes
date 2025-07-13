@@ -1,0 +1,26 @@
+site:
+  title: "Bhuvan's Blog"
+  description: "Curiosity-driven discovery and exploration"
+  url: "https://blog.bhuvan.dev"
+  author: "Bhuvan"
+  email: "hello@bhuvan.dev"
+
+navigation:
+  main:
+    - title: "Archive"
+      url: "/archive"
+    - title: "Tags"
+      url: "/tags"
+    - title: "Blogroll"
+      url: "/blogroll"
+    - title: "Random"
+      url: "#"
+    - title: "Search"
+      url: "#"
+    - title: "RSS"
+      url: "/rss.xml"
+
+social:
+  twitter: "https://twitter.com/bhuvan"
+  github: "https://github.com/bhuvan"
+  linkedin: "https://linkedin.com/in/bhuvan"

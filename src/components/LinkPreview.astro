@@ -1,0 +1,163 @@
+---
+export interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+
+// In a real implementation, you'd fetch metadata from the URL
+// For now, we'll create a placeholder that could be enhanced with meta fetching
+const linkData = {
+  title: 'Link Title',
+  description: 'A brief description of the linked content.',
+  image: null,
+  domain: new URL(url).hostname
+};
+---
+
+<div class="link-preview">
+  <div class="link-preview-content">
+    <div class="link-preview-text">
+      <h4 class="link-preview-title">{linkData.title}</h4>
+      <p class="link-preview-description">{linkData.description}</p>
+      <div class="link-preview-meta">
+        <span class="link-preview-domain">{linkData.domain}</span>
+        <span class="link-preview-arrow">→</span>
+      </div>
+    </div>
+    {linkData.image && (
+      <div class="link-preview-image">
+        <img src={linkData.image} alt={linkData.title} loading="lazy" />
+      </div>
+    )}
+  </div>
+  <a href={url} target="_blank" rel="noopener noreferrer" class="link-preview-overlay">
+    <span class="sr-only">Visit link</span>
+  </a>
+</div>
+
+<style>
+  .link-preview {
+    margin: 32px 0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .link-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  .link-preview:hover::before {
+    transform: scaleX(1);
+  }
+
+  .link-preview:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .link-preview-content {
+    padding: 24px;
+    background: var(--hover);
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .link-preview-text {
+    flex: 1;
+  }
+
+  .link-preview-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .link-preview-description {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .link-preview-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+  }
+
+  .link-preview-domain {
+    font-weight: 500;
+  }
+
+  .link-preview-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .link-preview:hover .link-preview-arrow {
+    transform: translateX(4px);
+  }
+
+  .link-preview-image {
+    width: 120px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+
+  .link-preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .link-preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-decoration: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .link-preview-content {
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .link-preview-image {
+      width: 100%;
+      height: 120px;
+    }
+  }
+</style>

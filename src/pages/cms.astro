@@ -1,0 +1,860 @@
+---
+// CMS page that serves the static HTML
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI CMS - Bhuvan's Blog</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text-primary: #111111;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --accent: #fb923c;
+      --accent-light: #fed7aa;
+      --border: #e5e5e5;
+      --hover: #f8fafc;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0a0a0a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-tertiary: #64748b;
+      --accent: #fb923c;
+      --accent-light: #ea580c;
+      --border: #1e293b;
+      --hover: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+
+    .cms-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .input-section,
+    .output-section {
+      background: var(--hover);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-textarea {
+      min-height: 200px;
+      resize: vertical;
+      font-family: ui-monospace, 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+      line-height: 1.5;
+    }
+
+    .content-textarea {
+      min-height: 300px;
+    }
+
+    .tag-input-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag-item {
+      background: var(--accent-light);
+      color: var(--text-primary);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tag-remove {
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: bold;
+    }
+
+    .tag-remove:hover {
+      color: var(--text-primary);
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--hover);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--error);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .status-loading {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color 0.2s ease;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .preview-content {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      min-height: 200px;
+    }
+
+    .iteration-history {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .iteration-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .iteration-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .iteration-timestamp {
+      color: var(--text-tertiary);
+      font-size: 12px;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      border-top-color: var(--accent);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 16px;
+      }
+
+      .cms-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>AI-Enhanced Content Creation</h1>
+      <p>Create and enhance blog posts with AI assistance</p>
+    </div>
+
+    <div id="status-message" class="status-message"></div>
+
+    <div class="cms-layout">
+      <!-- Input Section -->
+      <div class="input-section">
+        <h2 class="section-title">Content Input</h2>
+        
+        <div class="form-group">
+          <label class="form-label" for="post-type">Post Type</label>
+          <select id="post-type" class="form-select">
+            <option value="musing">Musing</option>
+            <option value="link">Link</option>
+            <option value="video">Video</option>
+            <option value="music">Music</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="post-title">Title (optional)</label>
+          <input type="text" id="post-title" class="form-input" placeholder="Leave blank for AI to generate">
+        </div>
+
+        <div class="form-group" id="url-group" style="display: none;">
+          <label class="form-label" for="post-url">URL</label>
+          <input type="url" id="post-url" class="form-input" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="post-tags">Tags</label>
+          <input type="text" id="post-tags" class="form-input" placeholder="Add tags (press Enter or comma to add)">
+          <div id="tags-container" class="tag-input-container" style="margin-top: 8px;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="post-content">Content</label>
+          <textarea id="post-content" class="form-textarea content-textarea" 
+                    placeholder="Paste your content, links, thoughts, or notes here..."
+                    spellcheck="false"></textarea>
+        </div>
+
+        <div class="btn-group">
+          <button id="enhance-btn" class="btn">
+            <span class="btn-text">Enhance with AI</span>
+          </button>
+          <button id="save-draft-btn" class="btn btn-secondary">Save Draft</button>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <h2 class="section-title">Enhanced Output</h2>
+        
+        <div class="tabs">
+          <button class="tab active" data-tab="markdown">Markdown</button>
+          <button class="tab" data-tab="preview">Preview</button>
+          <button class="tab" data-tab="frontmatter">Frontmatter</button>
+        </div>
+
+        <div id="markdown-tab" class="tab-content active">
+          <textarea id="enhanced-content" class="form-textarea content-textarea" 
+                    placeholder="AI-enhanced content will appear here..."></textarea>
+        </div>
+
+        <div id="preview-tab" class="tab-content">
+          <div id="preview-content" class="preview-content">
+            <p style="color: var(--text-secondary);">Preview will appear here after enhancement...</p>
+          </div>
+        </div>
+
+        <div id="frontmatter-tab" class="tab-content">
+          <textarea id="frontmatter-content" class="form-textarea" 
+                    placeholder="YAML frontmatter will be generated here..."></textarea>
+        </div>
+
+        <div class="btn-group">
+          <button id="refine-btn" class="btn" disabled>
+            Refine Further
+          </button>
+          <button id="publish-btn" class="btn" disabled>
+            Publish to Blog
+          </button>
+          <button id="download-btn" class="btn btn-secondary" disabled>
+            Download .md
+          </button>
+        </div>
+
+        <div class="iteration-history" id="iteration-history" style="display: none;">
+          <h3>Iteration History</h3>
+          <div id="iterations-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Refinement Modal -->
+    <div id="refine-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+      <div style="background: var(--bg); padding: 32px; border-radius: 12px; max-width: 500px; width: 90%;">
+        <h3>Refine Content</h3>
+        <p>Tell the AI how you'd like to improve the content:</p>
+        <textarea id="refine-instructions" class="form-textarea" placeholder="e.g., 'make it shorter', 'add more examples', 'focus on the technical aspects'"></textarea>
+        <div class="btn-group">
+          <button id="apply-refinement-btn" class="btn">Apply Refinement</button>
+          <button id="cancel-refinement-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ API_BASE: import.meta.env.DEV ? '' : '' }}>
+    // Global state
+    let currentTags = [];
+    let enhancedContent = '';
+    let iterationHistory = [];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeEventListeners();
+      loadDraftFromStorage();
+    });
+
+    function initializeEventListeners() {
+      // Post type change
+      document.getElementById('post-type').addEventListener('change', function() {
+        const urlGroup = document.getElementById('url-group');
+        const value = this.value;
+        urlGroup.style.display = (value === 'link' || value === 'video' || value === 'music') ? 'block' : 'none';
+      });
+
+      // Tag input
+      const tagInput = document.getElementById('post-tags');
+      tagInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ',') {
+          e.preventDefault();
+          addTag(this.value.trim());
+          this.value = '';
+        }
+      });
+
+      // Tab switching
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          switchTab(this.dataset.tab);
+        });
+      });
+
+      // Buttons
+      document.getElementById('enhance-btn').addEventListener('click', enhanceContent);
+      document.getElementById('refine-btn').addEventListener('click', showRefineModal);
+      document.getElementById('publish-btn').addEventListener('click', publishContent);
+      document.getElementById('download-btn').addEventListener('click', downloadContent);
+      document.getElementById('save-draft-btn').addEventListener('click', saveDraft);
+
+      // Refinement modal
+      document.getElementById('apply-refinement-btn').addEventListener('click', applyRefinement);
+      document.getElementById('cancel-refinement-btn').addEventListener('click', hideRefineModal);
+
+      // Auto-save
+      setInterval(saveDraftToStorage, 30000); // Auto-save every 30 seconds
+
+      // Ensure paste functionality works
+      const contentTextarea = document.getElementById('post-content');
+      contentTextarea.addEventListener('paste', function(e) {
+        // Allow default paste behavior
+        setTimeout(() => {
+          saveDraftToStorage();
+        }, 100);
+      });
+    }
+
+    function addTag(tag) {
+      if (tag && !currentTags.includes(tag)) {
+        currentTags.push(tag);
+        updateTagsDisplay();
+      }
+    }
+
+    function removeTag(tag) {
+      currentTags = currentTags.filter(t => t !== tag);
+      updateTagsDisplay();
+    }
+
+    function updateTagsDisplay() {
+      const container = document.getElementById('tags-container');
+      container.innerHTML = currentTags.map(tag => 
+        `<div class="tag-item">
+          ${tag}
+          <span class="tag-remove" onclick="removeTag('${tag}')">&times;</span>
+        </div>`
+      ).join('');
+    }
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    }
+
+    function showStatus(message, type) {
+      const statusEl = document.getElementById('status-message');
+      statusEl.textContent = message;
+      statusEl.className = `status-message status-${type}`;
+      statusEl.style.display = 'block';
+      
+      if (type !== 'loading') {
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+        }, 5000);
+      }
+    }
+
+    function hideStatus() {
+      document.getElementById('status-message').style.display = 'none';
+    }
+
+    async function enhanceContent() {
+      const postType = document.getElementById('post-type').value;
+      const title = document.getElementById('post-title').value;
+      const url = document.getElementById('post-url').value;
+      const content = document.getElementById('post-content').value;
+
+      if (!content.trim()) {
+        showStatus('Please enter some content to enhance', 'error');
+        return;
+      }
+
+      const enhanceBtn = document.getElementById('enhance-btn');
+      enhanceBtn.disabled = true;
+      enhanceBtn.innerHTML = '<span class="loading-spinner"></span> Enhancing...';
+      
+      showStatus('Enhancing content with AI...', 'loading');
+
+      try {
+        const response = await fetch('/api/enhance-content', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: postType,
+            title: title || null,
+            url: url || null,
+            content,
+            tags: currentTags
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        enhancedContent = result.content;
+        document.getElementById('enhanced-content').value = enhancedContent;
+        document.getElementById('frontmatter-content').value = result.frontmatter;
+        
+        // Update preview
+        document.getElementById('preview-content').innerHTML = result.preview || '<p>Preview not available</p>';
+        
+        // Enable buttons
+        document.getElementById('refine-btn').disabled = false;
+        document.getElementById('publish-btn').disabled = false;
+        document.getElementById('download-btn').disabled = false;
+        
+        // Add to history
+        addToHistory('Initial Enhancement', enhancedContent);
+        
+        showStatus('Content enhanced successfully!', 'success');
+        
+      } catch (error) {
+        console.error('Enhancement failed:', error);
+        showStatus('Failed to enhance content. Please try again.', 'error');
+      } finally {
+        enhanceBtn.disabled = false;
+        enhanceBtn.innerHTML = '<span class="btn-text">Enhance with AI</span>';
+        hideStatus();
+      }
+    }
+
+    function showRefineModal() {
+      document.getElementById('refine-modal').style.display = 'flex';
+    }
+
+    function hideRefineModal() {
+      document.getElementById('refine-modal').style.display = 'none';
+      document.getElementById('refine-instructions').value = '';
+    }
+
+    async function applyRefinement() {
+      const instructions = document.getElementById('refine-instructions').value;
+      if (!instructions.trim()) {
+        showStatus('Please enter refinement instructions', 'error');
+        return;
+      }
+
+      hideRefineModal();
+      
+      const refineBtn = document.getElementById('refine-btn');
+      refineBtn.disabled = true;
+      refineBtn.innerHTML = '<span class="loading-spinner"></span> Refining...';
+      
+      showStatus('Refining content...', 'loading');
+
+      try {
+        const response = await fetch('/api/refine-content', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: enhancedContent,
+            instructions
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        enhancedContent = result.content;
+        document.getElementById('enhanced-content').value = enhancedContent;
+        
+        // Add to history
+        addToHistory(`Refinement: ${instructions}`, enhancedContent);
+        
+        showStatus('Content refined successfully!', 'success');
+        
+      } catch (error) {
+        console.error('Refinement failed:', error);
+        showStatus('Failed to refine content. Please try again.', 'error');
+      } finally {
+        refineBtn.disabled = false;
+        refineBtn.innerHTML = 'Refine Further';
+        hideStatus();
+      }
+    }
+
+    async function publishContent() {
+      if (!enhancedContent) {
+        showStatus('No content to publish', 'error');
+        return;
+      }
+
+      const publishBtn = document.getElementById('publish-btn');
+      publishBtn.disabled = true;
+      publishBtn.innerHTML = '<span class="loading-spinner"></span> Publishing...';
+      
+      showStatus('Publishing to blog...', 'loading');
+
+      try {
+        const frontmatter = document.getElementById('frontmatter-content').value;
+        
+        const response = await fetch('/api/publish-post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            frontmatter,
+            content: enhancedContent
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        showStatus(`Post published successfully! ${result.url || ''}`, 'success');
+        
+        // Clear form
+        clearForm();
+        
+      } catch (error) {
+        console.error('Publishing failed:', error);
+        showStatus('Failed to publish post. Please try again.', 'error');
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.innerHTML = 'Publish to Blog';
+        hideStatus();
+      }
+    }
+
+    function downloadContent() {
+      if (!enhancedContent) {
+        showStatus('No content to download', 'error');
+        return;
+      }
+
+      const frontmatter = document.getElementById('frontmatter-content').value;
+      const fullContent = frontmatter + '\n---\n\n' + enhancedContent;
+      
+      const blob = new Blob([fullContent], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `blog-post-${Date.now()}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showStatus('Content downloaded successfully!', 'success');
+    }
+
+    function addToHistory(action, content) {
+      iterationHistory.push({
+        timestamp: new Date().toLocaleString(),
+        action,
+        content: content.substring(0, 200) + '...'
+      });
+      
+      updateHistoryDisplay();
+    }
+
+    function updateHistoryDisplay() {
+      const historyContainer = document.getElementById('iteration-history');
+      const historyList = document.getElementById('iterations-list');
+      
+      if (iterationHistory.length > 0) {
+        historyContainer.style.display = 'block';
+        historyList.innerHTML = iterationHistory.map(item => 
+          `<div class="iteration-item">
+            <div class="iteration-header">
+              <strong>${item.action}</strong>
+              <span class="iteration-timestamp">${item.timestamp}</span>
+            </div>
+            <div>${item.content}</div>
+          </div>`
+        ).reverse().join('');
+      }
+    }
+
+    function saveDraft() {
+      saveDraftToStorage();
+      showStatus('Draft saved!', 'success');
+    }
+
+    function saveDraftToStorage() {
+      const draft = {
+        type: document.getElementById('post-type').value,
+        title: document.getElementById('post-title').value,
+        url: document.getElementById('post-url').value,
+        content: document.getElementById('post-content').value,
+        tags: currentTags,
+        enhanced: enhancedContent,
+        frontmatter: document.getElementById('frontmatter-content').value
+      };
+      
+      localStorage.setItem('blog-cms-draft', JSON.stringify(draft));
+    }
+
+    function loadDraftFromStorage() {
+      const draft = localStorage.getItem('blog-cms-draft');
+      if (draft) {
+        try {
+          const data = JSON.parse(draft);
+          
+          document.getElementById('post-type').value = data.type || 'musing';
+          document.getElementById('post-title').value = data.title || '';
+          document.getElementById('post-url').value = data.url || '';
+          document.getElementById('post-content').value = data.content || '';
+          document.getElementById('enhanced-content').value = data.enhanced || '';
+          document.getElementById('frontmatter-content').value = data.frontmatter || '';
+          
+          currentTags = data.tags || [];
+          updateTagsDisplay();
+          
+          enhancedContent = data.enhanced || '';
+          
+          if (enhancedContent) {
+            document.getElementById('refine-btn').disabled = false;
+            document.getElementById('publish-btn').disabled = false;
+            document.getElementById('download-btn').disabled = false;
+          }
+          
+        } catch (e) {
+          console.error('Failed to load draft:', e);
+        }
+      }
+    }
+
+    function clearForm() {
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-url').value = '';
+      document.getElementById('post-content').value = '';
+      document.getElementById('enhanced-content').value = '';
+      document.getElementById('frontmatter-content').value = '';
+      
+      currentTags = [];
+      updateTagsDisplay();
+      
+      enhancedContent = '';
+      iterationHistory = [];
+      
+      document.getElementById('refine-btn').disabled = true;
+      document.getElementById('publish-btn').disabled = true;
+      document.getElementById('download-btn').disabled = true;
+      
+      localStorage.removeItem('blog-cms-draft');
+    }
+
+    // Global functions for onclick handlers
+    window.removeTag = removeTag;
+  </script>
+</body>
+</html>

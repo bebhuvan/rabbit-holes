@@ -1,0 +1,129 @@
+---
+export interface Props {
+  url: string;
+  height?: string;
+  theme?: 'light' | 'dark';
+}
+
+const { url, height = '400', theme = 'light' } = Astro.props;
+
+// Extract CodePen info from URL
+function getCodePenInfo(url: string) {
+  const match = url.match(/codepen\.io\/([^\/]+)\/pen\/([^\/\?]+)/);
+  if (match) {
+    return {
+      user: match[1],
+      penId: match[2],
+      embedUrl: `https://codepen.io/${match[1]}/embed/${match[2]}?theme-id=${theme}&default-tab=result`
+    };
+  }
+  return null;
+}
+
+const penInfo = getCodePenInfo(url);
+---
+
+{penInfo ? (
+  <div class="codepen-embed">
+    <iframe 
+      src={penInfo.embedUrl}
+      style={`height: ${height}px; width: 100%;`}
+      scrolling="no" 
+      frameborder="no" 
+      allowtransparency="true" 
+      allowfullscreen="true"
+      title={`CodePen by ${penInfo.user}`}
+      loading="lazy">
+    </iframe>
+    <div class="embed-caption">
+      <span class="embed-icon">💻</span>
+      <span class="embed-text">CodePen by {penInfo.user}</span>
+      <a href={url} target="_blank" rel="noopener noreferrer" class="embed-link">View on CodePen</a>
+    </div>
+  </div>
+) : (
+  <div class="codepen-embed">
+    <div class="embed-fallback">
+      <p>CodePen: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a></p>
+    </div>
+  </div>
+)}
+
+<style>
+  .codepen-embed {
+    margin: 32px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--hover);
+  }
+
+  .codepen-embed iframe {
+    display: block;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .embed-caption {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--hover);
+    border-top: 1px solid var(--border);
+    justify-content: space-between;
+  }
+
+  .embed-caption-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .embed-icon {
+    font-size: 16px;
+  }
+
+  .embed-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .embed-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .embed-link:hover {
+    text-decoration: underline;
+  }
+
+  .embed-fallback {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .embed-fallback a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .embed-fallback a:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .codepen-embed {
+      margin: 24px 0;
+    }
+    
+    .embed-caption {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+  }
+</style>

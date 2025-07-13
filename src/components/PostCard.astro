@@ -1,0 +1,426 @@
+---
+import LinkPreviewDynamic from './LinkPreviewDynamic.astro';
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import SpotifyEmbed from './SpotifyEmbed.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
+import TwitterEmbed from './TwitterEmbed.astro';
+import CodePenEmbed from './CodePenEmbed.astro';
+import GenericEmbed from './GenericEmbed.astro';
+import { formatDate, calculateReadingTime } from '../utils/shared';
+
+export interface Props {
+  post: any;
+  showExcerpt?: boolean;
+}
+
+const { post, showExcerpt = true } = Astro.props;
+const { Content } = await post.render();
+
+// Helper functions to detect embed types
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  return match ? match[1] : null;
+}
+
+function getVimeoId(url: string): string | null {
+  const match = url.match(/vimeo\.com\/(?:.*#|.*\/videos\/)?([0-9]+)/);
+  return match ? match[1] : null;
+}
+
+function getSpotifyId(url: string): string | null {
+  const match = url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+  return match ? match[2] : null;
+}
+
+function isTwitterUrl(url: string): boolean {
+  return /twitter\.com\/[^\/]+\/status\/\d+/.test(url) || /x\.com\/[^\/]+\/status\/\d+/.test(url);
+}
+
+function isCodePenUrl(url: string): boolean {
+  return /codepen\.io\/[^\/]+\/pen\/[^\/\?]+/.test(url);
+}
+
+// Detect embed type for the URL
+function detectEmbedType(url: string) {
+  if (!url) return 'link';
+  
+  if (getYouTubeId(url)) return 'youtube';
+  if (getVimeoId(url)) return 'vimeo';
+  if (getSpotifyId(url)) return 'spotify';
+  if (isTwitterUrl(url)) return 'twitter';
+  if (isCodePenUrl(url)) return 'codepen';
+  
+  // Check for other embeddable services
+  const domain = new URL(url).hostname.toLowerCase();
+  if (domain.includes('instagram.com') || 
+      domain.includes('tiktok.com') || 
+      domain.includes('soundcloud.com') || 
+      domain.includes('figma.com') || 
+      domain.includes('gist.github.com') || 
+      domain.includes('observablehq.com')) {
+    return 'generic';
+  }
+  
+  return 'link';
+}
+---
+
+<article class={`post ${post.data.type}`}>
+  <div class="post-meta">
+    <span class={`post-type-icon ${post.data.type}`}></span>
+    <span class="post-date">{formatDate(new Date(post.data.date))}</span>
+    <span class="post-type-label">{post.data.type}</span>
+    <span class="post-reading-time">{calculateReadingTime(post.body || '')} min read</span>
+  </div>
+
+  <h2 class="post-title">
+    <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+  </h2>
+
+  <div class="post-content">
+    {showExcerpt ? (
+      <div class="post-excerpt">
+        <Content />
+      </div>
+    ) : (
+      <Content />
+    )}
+  </div>
+
+  {/* Enhanced embed handling for all URL types */}
+  {post.data.url && (() => {
+    const embedType = detectEmbedType(post.data.url);
+    
+    switch (embedType) {
+      case 'youtube':
+        return <YouTubeEmbed videoId={getYouTubeId(post.data.url)} />;
+      
+      case 'vimeo':
+        return <VimeoEmbed url={post.data.url} />;
+      
+      case 'spotify':
+        return <SpotifyEmbed url={post.data.url} title={post.data.title} />;
+      
+      case 'twitter':
+        return <TwitterEmbed url={post.data.url} />;
+      
+      case 'codepen':
+        return <CodePenEmbed url={post.data.url} />;
+      
+      case 'generic':
+        return <GenericEmbed url={post.data.url} title={post.data.title} />;
+      
+      case 'link':
+      default:
+        return <LinkPreviewDynamic url={post.data.url} />;
+    }
+  })()}
+
+  {/* Dive Deeper section */}
+  {post.data.dive_deeper && post.data.dive_deeper.length > 0 && (
+    <div class="dive-deeper">
+      <h3>🐰 Dive Deeper</h3>
+      <ul>
+        {post.data.dive_deeper.map((item: string) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {/* Tags */}
+  {post.data.tags && post.data.tags.length > 0 && (
+    <div class="post-tags">
+      {post.data.tags.map((tag: string) => (
+        <a href={`/tags/${tag}`} class="tag">#{tag}</a>
+      ))}
+    </div>
+  )}
+
+  {/* Post actions */}
+  <div class="post-actions">
+    <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
+    <div class="post-meta-actions">
+      <button class="share-btn" data-title={post.data.title} data-url={`/posts/${post.slug}`} title="Share post" aria-label={`Share ${post.data.title}`}>
+        🔗
+      </button>
+      <a href={`/posts/${post.slug}#comments`} class="comments-link" title="Comments">
+        💬
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .post {
+    margin-bottom: 48px;
+    position: relative;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+    max-width: 100%;
+  }
+  
+  .post:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+
+  .post-meta {
+    color: var(--text-tertiary);
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-weight: 600;
+  }
+
+  .post-type-icon {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .post.musing .post-type-icon { background: var(--yellow); }
+  .post.link .post-type-icon { background: var(--blue); }
+  .post.video .post-type-icon { background: var(--pink); }
+  .post.music .post-type-icon { background: var(--green); }
+
+  .post-title {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+  }
+
+  .post-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .post-title a:hover {
+    color: var(--accent);
+  }
+
+  .post-content {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-xl);
+    color: var(--text-secondary);
+  }
+
+  .post-excerpt {
+    color: var(--text-secondary);
+  }
+
+  /* Dive Deeper section */
+  .dive-deeper {
+    margin-top: var(--space-xl);
+    padding-left: var(--space-lg);
+    border-left: 3px solid var(--accent);
+  }
+
+  .dive-deeper h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .dive-deeper ul {
+    margin: 0;
+    padding-left: var(--space-lg);
+    color: var(--text-secondary);
+  }
+
+  .dive-deeper li {
+    margin-bottom: var(--space-sm);
+    line-height: var(--leading-relaxed);
+  }
+
+  /* Tags with minimal styling */
+  .post-tags {
+    margin-top: var(--space-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+  }
+
+  .tag {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .tag:hover {
+    color: var(--accent);
+  }
+
+  /* Post actions */
+  .post-actions {
+    margin-top: var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .read-more {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--text-sm);
+    transition: color 0.2s ease;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+
+  .read-more:hover {
+    color: var(--accent);
+  }
+
+  .post-meta-actions {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+  }
+
+  .share-btn {
+    background: none;
+    border: none;
+    font-size: var(--text-base);
+    cursor: pointer;
+    padding: var(--space-md);
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-btn:hover {
+    background: var(--hover);
+  }
+
+  .comments-link {
+    font-size: var(--text-base);
+    text-decoration: none;
+    padding: var(--space-md);
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .comments-link:hover {
+    background: var(--hover);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .post {
+      margin-bottom: var(--space-3xl);
+      padding-bottom: var(--space-2xl);
+    }
+    
+    .post-content {
+      font-size: var(--text-base);
+    }
+
+    .post-title {
+      font-size: var(--text-2xl);
+    }
+
+    .post-tags {
+      gap: var(--space-md);
+    }
+
+    .post-actions {
+      flex-direction: column;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .post-title {
+      font-size: var(--text-xl);
+    }
+    
+    .post-meta {
+      gap: var(--space-sm);
+    }
+  }
+</style>
+
+<script>
+  // Enhanced share functionality with proper event handling
+  document.addEventListener('DOMContentLoaded', function() {
+    const shareButtons = document.querySelectorAll('.share-btn');
+    
+    shareButtons.forEach(button => {
+      button.addEventListener('click', async function() {
+        const title = this.dataset.title;
+        const url = this.dataset.url;
+        const fullUrl = window.location.origin + url;
+        
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: title,
+              url: fullUrl
+            });
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              console.log('Error sharing:', err);
+              copyToClipboard(fullUrl);
+            }
+          }
+        } else {
+          copyToClipboard(fullUrl);
+        }
+      });
+    });
+    
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          console.log('Link copied to clipboard');
+          // Could add toast notification here
+        }).catch(err => {
+          console.error('Failed to copy to clipboard:', err);
+        });
+      } else {
+        // Legacy fallback
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          console.log('Link copied to clipboard (legacy method)');
+        } catch (err) {
+          console.error('Failed to copy to clipboard:', err);
+        }
+        document.body.removeChild(textArea);
+      }
+    }
+  });
+</script>

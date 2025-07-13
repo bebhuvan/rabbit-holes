@@ -1,0 +1,289 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About - Rabbit Holes" description="Learn about Rabbit Holes, a curiosity-driven blog exploring technology, ideas, and discoveries. Find your next intellectual adventure to explore.">
+  <div class="about-container">
+    <div class="about-header">
+      <h1>About</h1>
+    </div>
+
+    <div class="about-content">
+      <div class="intro-section">
+        <div class="profile-area">
+          <div class="profile-placeholder">🧠</div>
+          <div class="profile-text">
+            <h2>Hi, I'm Bhuvan</h2>
+            <p class="tagline">Curiosity-driven explorer of ideas</p>
+          </div>
+        </div>
+        
+        <div class="bio-text">
+          <p>I'm fascinated by the connections between seemingly unrelated ideas. This blog is my attempt to share the rabbit holes I discover – from technology and science to philosophy and culture.</p>
+          
+          <p>The goal isn't to be an expert on everything, but to maintain a sense of wonder about the world. Sometimes the most interesting insights come from wandering without a destination in mind.</p>
+          
+          <p>I believe in serendipitous discovery, the power of diverse perspectives, and the joy of learning something completely unexpected.</p>
+        </div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-card">
+          <h3>🎯 What I write about</h3>
+          <ul>
+            <li><strong>Musings</strong> – Random thoughts and observations</li>
+            <li><strong>Links</strong> – Interesting things I've found online</li>
+            <li><strong>Videos</strong> – Educational content worth watching</li>
+            <li><strong>Music</strong> – Tracks that inspire or intrigue</li>
+          </ul>
+        </div>
+
+        <div class="detail-card">
+          <h3>🌱 How this works</h3>
+          <p>Each post includes AI-generated "Dive Deeper" suggestions – related topics, questions, and learning paths to extend your exploration.</p>
+          <p>Think of them as breadcrumbs leading to new rabbit holes.</p>
+        </div>
+
+        <div class="detail-card">
+          <h3>🔗 Connect</h3>
+          <div class="social-links">
+            <a href="mailto:hello@bhuvan.dev" class="social-link">📧 Email</a>
+            <a href="https://twitter.com/bhuvan" class="social-link">🐦 Twitter</a>
+            <a href="https://github.com/bhuvan" class="social-link">🐙 GitHub</a>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3>💡 Philosophy</h3>
+          <blockquote>
+            "The important thing is not to stop questioning. Curiosity has its own reason for existing."
+            <cite>– Albert Einstein</cite>
+          </blockquote>
+        </div>
+      </div>
+
+      <div class="colophon">
+        <h3>Colophon</h3>
+        <p>This site is built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>, enhanced with AI assistance from Claude, and hosted on Cloudflare Pages. The design is inspired by the clean, content-first ethos of early web blogging.</p>
+        <p>Typography is set in system fonts for optimal reading across devices. The color palette centers around a warm orange (#fb923c) to create an inviting, accessible experience.</p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .about-container {
+      max-width: var(--width-content);
+      margin: 0 auto;
+      padding: var(--space-4xl) var(--space-lg);
+    }
+
+    .about-header {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .about-header h1 {
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.025em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .intro-section {
+      margin-bottom: var(--space-3xl);
+    }
+
+    .profile-area {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-placeholder {
+      font-size: 48px;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .profile-text h2 {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .tagline {
+      color: var(--text-secondary);
+      font-size: var(--text-lg);
+      margin: 0;
+      font-style: italic;
+    }
+
+    .bio-text {
+      font-size: var(--text-lg);
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .bio-text p {
+      margin-bottom: var(--space-lg);
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-3xl);
+    }
+
+    .detail-card {
+      padding: var(--space-lg) 0;
+      transition: all 0.2s ease;
+    }
+
+    .detail-card h3 {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      color: var(--text-primary);
+    }
+
+    .detail-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .detail-card li {
+      margin-bottom: var(--space-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .detail-card li strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .detail-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--space-md);
+    }
+
+    .detail-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .social-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: var(--space-sm);
+      border-radius: 6px;
+    }
+
+    .social-link:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    blockquote {
+      margin: 0;
+      padding: var(--space-lg);
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    cite {
+      display: block;
+      margin-top: var(--space-sm);
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      font-style: normal;
+    }
+
+    .colophon {
+      border-top: 1px solid var(--border);
+      padding-top: var(--space-2xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .colophon h3 {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      color: var(--text-primary);
+    }
+
+    .colophon p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--space-md);
+    }
+
+    .colophon a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .colophon a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .about-container {
+        padding: var(--space-3xl) var(--space-md);
+      }
+      
+      @media (max-width: 480px) {
+        .about-container {
+          padding: var(--space-2xl) var(--space-sm);
+        }
+      }
+
+      .about-header h1 {
+        font-size: var(--text-3xl);
+      }
+
+      .profile-area {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-md);
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bio-text {
+        font-size: var(--text-base);
+      }
+    }
+  </style>
+</Base>

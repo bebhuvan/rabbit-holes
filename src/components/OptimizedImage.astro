@@ -1,0 +1,215 @@
+---
+import { Image } from 'astro:assets';
+
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  quality?: number;
+  format?: 'auto' | 'webp' | 'avif' | 'jpeg' | 'png';
+  sizes?: string;
+}
+
+const { 
+  src, 
+  alt, 
+  width = 800, 
+  height, 
+  class: className = '',
+  loading = 'lazy',
+  quality = 80,
+  format = 'auto',
+  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+} = Astro.props;
+
+// Check if src is a remote URL or local asset
+const isRemoteImage = src.startsWith('http://') || src.startsWith('https://');
+---
+
+<div class="image-container">
+  {isRemoteImage ? (
+    <!-- Remote images: use regular img with optimization hints -->
+    <img 
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      class={`optimized-image ${className}`}
+      loading={loading}
+      decoding="async"
+      sizes={sizes}
+      style="max-width: 100%; height: auto;"
+      onerror="this.parentElement.classList.add('error'); this.style.display='none';"
+    />
+  ) : (
+    <!-- Local images: use Astro's Image component with optimization -->
+    <Image 
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      class={`optimized-image ${className}`}
+      loading={loading}
+      quality={quality}
+      format={format}
+      sizes={sizes}
+    />
+  )}
+  
+  <!-- Error fallback -->
+  <div class="image-error" style="display: none;">
+    <div class="error-icon">📷</div>
+    <p>Image unavailable</p>
+    {alt && <small>{alt}</small>}
+  </div>
+  
+  <!-- Loading indicator -->
+  <div class="image-loading">
+    <div class="loading-spinner"></div>
+  </div>
+</div>
+
+<style>
+  .image-container {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--hover);
+  }
+
+  .optimized-image {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, opacity 0.3s ease;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  .optimized-image:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Dark mode adjustments */
+  [data-theme="dark"] .optimized-image {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Loading state */
+  .image-container:not(.loaded):not(.error) .optimized-image {
+    opacity: 0;
+  }
+
+  .image-container.loaded .optimized-image {
+    opacity: 1;
+  }
+
+  .image-container.loaded .image-loading {
+    display: none;
+  }
+
+  /* Error state */
+  .image-container.error .image-error {
+    display: flex !important;
+  }
+
+  .image-container.error .image-loading {
+    display: none;
+  }
+
+  .image-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--hover);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    min-height: 120px;
+  }
+
+  .error-icon {
+    font-size: 32px;
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+
+  .image-error p {
+    color: var(--text-secondary);
+    margin: 0 0 4px 0;
+    font-size: 14px;
+  }
+
+  .image-error small {
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+
+  /* Loading indicator */
+  .image-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .optimized-image {
+      transition: none;
+    }
+    
+    .loading-spinner {
+      animation: none;
+      border-top-color: var(--accent);
+    }
+  }
+</style>
+
+<script>
+  // Enhanced loading state handling for optimized images
+  document.addEventListener('DOMContentLoaded', function() {
+    const imageContainers = document.querySelectorAll('.image-container');
+    
+    imageContainers.forEach(container => {
+      const img = container.querySelector('.optimized-image');
+      if (!img) return;
+      
+      if (img.complete && img.naturalHeight !== 0) {
+        container.classList.add('loaded');
+      } else {
+        img.addEventListener('load', () => {
+          container.classList.add('loaded');
+        });
+        
+        img.addEventListener('error', () => {
+          container.classList.add('error');
+        });
+      }
+    });
+  });
+</script>

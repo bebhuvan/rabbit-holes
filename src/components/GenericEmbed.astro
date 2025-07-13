@@ -1,0 +1,269 @@
+---
+export interface Props {
+  url: string;
+  title?: string;
+  description?: string;
+  embedUrl?: string;
+  type?: 'iframe' | 'link';
+  height?: string;
+}
+
+const { 
+  url, 
+  title = 'External Content', 
+  description,
+  embedUrl,
+  type = 'link',
+  height = '400'
+} = Astro.props;
+
+// Auto-detect embed type and URL for common services
+function detectEmbedInfo(url: string) {
+  const domain = new URL(url).hostname.toLowerCase();
+  
+  // Instagram
+  if (domain.includes('instagram.com')) {
+    const postMatch = url.match(/instagram\.com\/p\/([^\/\?]+)/);
+    if (postMatch) {
+      return {
+        type: 'iframe',
+        embedUrl: `https://www.instagram.com/p/${postMatch[1]}/embed/`,
+        service: 'Instagram',
+        icon: '📸'
+      };
+    }
+  }
+  
+  // TikTok
+  if (domain.includes('tiktok.com')) {
+    const videoMatch = url.match(/tiktok\.com\/@[^\/]+\/video\/(\d+)/);
+    if (videoMatch) {
+      return {
+        type: 'iframe',
+        embedUrl: `https://www.tiktok.com/embed/v2/${videoMatch[1]}`,
+        service: 'TikTok',
+        icon: '🎵'
+      };
+    }
+  }
+  
+  // SoundCloud
+  if (domain.includes('soundcloud.com')) {
+    return {
+      type: 'iframe',
+      embedUrl: `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23fb923c&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`,
+      service: 'SoundCloud',
+      icon: '🔊'
+    };
+  }
+  
+  // Figma
+  if (domain.includes('figma.com')) {
+    const fileMatch = url.match(/figma\.com\/file\/([^\/\?]+)/);
+    if (fileMatch) {
+      return {
+        type: 'iframe',
+        embedUrl: `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url)}`,
+        service: 'Figma',
+        icon: '🎨'
+      };
+    }
+  }
+  
+  // GitHub Gist
+  if (domain.includes('gist.github.com')) {
+    const gistMatch = url.match(/gist\.github\.com\/[^\/]+\/([^\/\?]+)/);
+    if (gistMatch) {
+      return {
+        type: 'iframe',
+        embedUrl: `${url}.pibb`,
+        service: 'GitHub Gist',
+        icon: '📝'
+      };
+    }
+  }
+  
+  // Observable
+  if (domain.includes('observablehq.com')) {
+    return {
+      type: 'iframe',
+      embedUrl: `${url}?embed=true`,
+      service: 'Observable',
+      icon: '📊'
+    };
+  }
+  
+  // Default fallback
+  return {
+    type: 'link',
+    embedUrl: null,
+    service: new URL(url).hostname,
+    icon: '🔗'
+  };
+}
+
+const embedInfo = detectEmbedInfo(url);
+const finalEmbedUrl = embedUrl || embedInfo.embedUrl;
+const finalType = type === 'iframe' && finalEmbedUrl ? 'iframe' : 'link';
+---
+
+<div class="generic-embed">
+  {finalType === 'iframe' && finalEmbedUrl ? (
+    <div class="embed-container">
+      <iframe 
+        src={finalEmbedUrl}
+        title={title}
+        style={`height: ${height}px; width: 100%;`}
+        frameborder="0"
+        scrolling="no"
+        allowtransparency="true"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+  ) : (
+    <div class="embed-link-preview">
+      <div class="embed-content">
+        <h4 class="embed-title">{title}</h4>
+        {description && <p class="embed-description">{description}</p>}
+        <div class="embed-meta">
+          <span class="embed-domain">{embedInfo.service}</span>
+          <span class="embed-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  )}
+  
+  <div class="embed-caption">
+    <div class="embed-caption-left">
+      <span class="embed-icon">{embedInfo.icon}</span>
+      <span class="embed-text">{embedInfo.service}</span>
+    </div>
+    <a href={url} target="_blank" rel="noopener noreferrer" class="embed-link">
+      View Original
+    </a>
+  </div>
+</div>
+
+<style>
+  .generic-embed {
+    margin: 32px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--hover);
+    transition: all 0.2s ease;
+  }
+
+  .generic-embed:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .embed-container {
+    background: var(--bg);
+  }
+
+  .embed-container iframe {
+    display: block;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .embed-link-preview {
+    padding: 24px;
+    background: var(--bg);
+  }
+
+  .embed-content {
+    text-align: center;
+  }
+
+  .embed-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .embed-description {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .embed-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+  }
+
+  .embed-domain {
+    font-weight: 500;
+  }
+
+  .embed-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .generic-embed:hover .embed-arrow {
+    transform: translateX(4px);
+  }
+
+  .embed-caption {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--hover);
+    border-top: 1px solid var(--border);
+  }
+
+  .embed-caption-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .embed-icon {
+    font-size: 16px;
+  }
+
+  .embed-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .embed-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .embed-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .generic-embed {
+      margin: 24px 0;
+    }
+
+    .embed-link-preview {
+      padding: 20px;
+    }
+    
+    .embed-caption {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+  }
+</style>

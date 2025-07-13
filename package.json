@@ -1,0 +1,18 @@
+{
+  "name": "rabbit-holes",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "cms": "echo 'Visit https://app.pagescms.org to use PagesCMS'"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.12",
+    "astro": "^5.11.0",
+    "sharp": "^0.34.3"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,321 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Blogroll data - in a real implementation, this could come from a CMS or external API
+const blogrollData = [
+  {
+    title: "Kottke.org",
+    url: "https://kottke.org",
+    description: "The original curiosity blog. Jason Kottke's observations on culture, technology, and human nature.",
+    tags: ["culture", "technology", "design"],
+    status: "active",
+    lastPost: "2 days ago"
+  },
+  {
+    title: "Marginal Revolution",
+    url: "https://marginalrevolution.com",
+    description: "Tyler Cowen's economics blog with fascinating insights on culture and society.",
+    tags: ["economics", "culture", "books"],
+    status: "active", 
+    lastPost: "1 day ago"
+  },
+  {
+    title: "Brain Pickings",
+    url: "https://www.themarginalian.org",
+    description: "Maria Popova's curated collection of cross-disciplinary ideas and beautiful thinking.",
+    tags: ["literature", "philosophy", "art"],
+    status: "active",
+    lastPost: "3 days ago"
+  },
+  {
+    title: "Stratechery",
+    url: "https://stratechery.com",
+    description: "Ben Thompson's analysis of the strategy and business side of technology and media.",
+    tags: ["business", "technology", "strategy"],
+    status: "active",
+    lastPost: "1 day ago"
+  },
+  {
+    title: "Wait But Why",
+    url: "https://waitbutwhy.com",
+    description: "Tim Urban's long-form explorations of complex topics with stick figures and humor.",
+    tags: ["science", "futurism", "philosophy"],
+    status: "active",
+    lastPost: "2 weeks ago"
+  },
+  {
+    title: "Daring Fireball",
+    url: "https://daringfireball.net",
+    description: "John Gruber's Apple-focused tech commentary with occasional baseball tangents.",
+    tags: ["technology", "apple", "design"],
+    status: "active",
+    lastPost: "4 hours ago"
+  }
+];
+---
+
+<Base title="Blogroll - Bhuvan's Blog">
+  <div class="blogroll-container">
+    <div class="blogroll-header">
+      <h1>Blogroll</h1>
+      <div class="blogroll-intro">
+        <p>A collection of blogs and websites that consistently spark my curiosity. These are the places I visit when I want to discover something new, think differently, or simply enjoy excellent writing.</p>
+        <p>If you're looking for rabbit holes to tumble down, these are excellent starting points.</p>
+      </div>
+    </div>
+
+    <div class="blogroll-grid">
+      {blogrollData.map(blog => (
+        <div class="blog-card">
+          <div class="blog-header">
+            <h3 class="blog-title">
+              <a href={blog.url} target="_blank" rel="noopener noreferrer">
+                {blog.title}
+              </a>
+            </h3>
+            <div class="blog-url">{new URL(blog.url).hostname}</div>
+          </div>
+
+          <p class="blog-description">{blog.description}</p>
+
+          <div class="blog-tags">
+            {blog.tags.map(tag => (
+              <span class="blog-tag">{tag}</span>
+            ))}
+          </div>
+
+          <div class="blog-meta">
+            <div class="blog-status">
+              <span class={`status-indicator status-${blog.status}`}></span>
+              <span class="status-text">{blog.status}</span>
+            </div>
+            <div class="blog-activity">
+              Last post: {blog.lastPost}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="blogroll-footer">
+      <h2>Suggest a Blog</h2>
+      <p>Know of a blog that belongs here? <a href="mailto:hello@bhuvan.dev?subject=Blogroll Suggestion">Send me a suggestion</a> with a brief note about why you think it's worth adding.</p>
+    </div>
+  </div>
+
+  <style>
+    .blogroll-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    .blogroll-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .blogroll-header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
+    .blogroll-intro {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .blogroll-intro p {
+      color: var(--text-secondary);
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .blogroll-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .blog-card {
+      background: var(--hover);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent);
+    }
+
+    .blog-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .blog-header {
+      margin-bottom: 12px;
+    }
+
+    .blog-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .blog-title a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .blog-title a:hover {
+      color: var(--accent);
+    }
+
+    .blog-url {
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .blog-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+
+    .blog-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .blog-tag {
+      background: var(--bg);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .blog-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .status-active { 
+      background: var(--green); 
+      box-shadow: 0 0 0 2px rgba(187, 247, 208, 0.3);
+    }
+
+    .status-inactive { 
+      background: var(--text-tertiary); 
+    }
+
+    .status-text {
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+
+    .blog-activity {
+      font-size: 13px;
+    }
+
+    .blogroll-footer {
+      text-align: center;
+      padding-top: 60px;
+      border-top: 1px solid var(--border);
+    }
+
+    .blogroll-footer h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .blogroll-footer p {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .blogroll-footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .blogroll-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .blogroll-container {
+        padding: 60px 16px;
+      }
+
+      .blogroll-header h1 {
+        font-size: 28px;
+      }
+
+      .blogroll-intro p {
+        font-size: 16px;
+      }
+
+      .blogroll-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .blog-card {
+        padding: 20px;
+      }
+
+      .blog-meta {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</Base>

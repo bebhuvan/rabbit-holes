@@ -1,0 +1,630 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journey through ideas, discoveries, and fascinating tangents. Find your next intellectual adventure here.", image } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={image} />}
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    {image && <meta property="twitter:image" content={image} />}
+    
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
+    
+    <!-- Sitemap for search engines -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    
+    <!-- SEO and Performance optimizations -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Bhuvan" />
+    <meta name="theme-color" content="#fb923c" />
+    <link rel="canonical" href={Astro.url} />
+    
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://open.spotify.com" />
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Rabbit Holes",
+        "description": "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
+        "url": "https://bhuvan.dev",
+        "author": {
+          "@type": "Person",
+          "name": "Bhuvan",
+          "url": "https://bhuvan.dev/about"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Rabbit Holes",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://bhuvan.dev/favicon.svg"
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Skip link for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav class="header-nav" aria-label="Main navigation">
+      <div class="nav-container">
+        <a href="/" class="logo">Rabbit Holes</a>
+        
+        <!-- Mobile menu button -->
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="hamburger"></span>
+          <span class="hamburger"></span>
+          <span class="hamburger"></span>
+        </button>
+        
+        <div class="nav-links" id="nav-links">
+          <a href="/about" class="nav-link">About</a>
+          <a href="/archive" class="nav-link">Archive</a>
+          <a href="/tags" class="nav-link">Tags</a>
+          <a href="/blogroll" class="nav-link">Blogroll</a>
+          <a href="/search" class="nav-link" title="Search (Cmd+K)">Search</a>
+          <a href="/rss.xml" class="nav-link">RSS</a>
+          <button class="nav-link" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">🌙</button>
+        </div>
+      </div>
+    </nav>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Search Modal -->
+    <div class="search-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-title">
+      <div class="search-container">
+        <h2 id="search-title" class="sr-only">Search Posts</h2>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search posts..." 
+          id="search-input"
+          autocomplete="off"
+          aria-label="Search blog posts"
+          aria-describedby="search-help"
+        />
+        <div id="search-help" class="sr-only">
+          Search through blog posts by title, content, or tags
+        </div>
+        <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
+        <div class="search-footer">
+          <span>Press <kbd>Esc</kbd> to close</span>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text-primary: #111111;
+        --text-secondary: #666666;
+        --text-tertiary: #999999;
+        --accent: #fb923c;
+        --accent-light: #fed7aa;
+        --border: #e5e5e5;
+        --hover: #f8fafc;
+        --yellow: #f3e8a6;
+        --green: #bbf7d0;
+        --pink: #fbb6ce;
+        --blue: #bfdbfe;
+        
+        /* Optimized spacing system for reading comfort */
+        --space-xs: 6px;
+        --space-sm: 12px;
+        --space-md: 20px;
+        --space-lg: 32px;
+        --space-xl: 48px;
+        --space-2xl: 64px;
+        --space-3xl: 96px;
+        --space-4xl: 128px;
+        
+        /* Industry-standard content widths for optimal readability */
+        --width-content: 672px;     /* CSS-Tricks/A List Apart standard - 45-75 chars per line */
+        --width-nav: 800px;         /* Navigation container width */
+        --width-wide: 800px;        /* For archive and wider content */
+        --width-full: 1200px;       /* Maximum container width */
+        
+        /* Refined typography scale */
+        --text-xs: 12px;
+        --text-sm: 14px;
+        --text-base: 16px;
+        --text-lg: 18px;
+        --text-xl: 21px;
+        --text-2xl: 28px;
+        --text-3xl: 36px;
+        --text-4xl: 48px;
+        
+        /* Line heights for optimal reading */
+        --leading-tight: 1.25;
+        --leading-normal: 1.5;
+        --leading-relaxed: 1.75;
+      }
+
+      [data-theme="dark"] {
+        --bg: #0a0a0a;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-tertiary: #64748b;
+        --accent: #fb923c;
+        --accent-light: #ea580c;
+        --border: #1e293b;
+        --hover: #0f172a;
+        --yellow: #92743f;
+        --green: #276749;
+        --pink: #7c2d5a;
+        --blue: #1e3a8a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        line-height: 1.65;
+        font-size: var(--text-base);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Navigation */
+      .header-nav {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px) saturate(180%);
+        border-bottom: 1px solid var(--border);
+        z-index: 100;
+        transition: all 0.3s ease;
+      }
+
+      [data-theme="dark"] .header-nav {
+        background: rgba(10, 10, 10, 0.95);
+      }
+
+      .nav-container {
+        max-width: var(--width-nav);
+        margin: 0 auto;
+        padding: 24px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 64px;
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-decoration: none;
+        letter-spacing: -0.015em;
+        flex-shrink: 0;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .nav-link {
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        padding: 0;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+
+      .nav-link:hover {
+        color: var(--accent);
+      }
+
+      /* Theme toggle special styling */
+      #theme-toggle {
+        font-size: 16px;
+        padding: 0;
+        border-radius: 0;
+        width: auto;
+        height: auto;
+        display: inline;
+        align-items: center;
+        justify-content: center;
+        margin-left: 0;
+        text-transform: none;
+      }
+
+      /* Mobile menu button */
+      .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 8px;
+        gap: 4px;
+        border-radius: 4px;
+        transition: background 0.2s ease;
+      }
+
+      .mobile-menu-toggle:hover {
+        background: var(--hover);
+      }
+
+      .hamburger {
+        width: 20px;
+        height: 2px;
+        background: var(--text-primary);
+        border-radius: 1px;
+        transition: all 0.3s ease;
+      }
+
+      .mobile-menu-toggle.active .hamburger:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .mobile-menu-toggle.active .hamburger:nth-child(2) {
+        opacity: 0;
+      }
+
+      .mobile-menu-toggle.active .hamburger:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+      }
+
+      /* Search Modal */
+      .search-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .search-overlay.active {
+        display: flex;
+      }
+
+      .search-container {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 16px;
+        font-size: 18px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text-primary);
+        outline: none;
+        margin-bottom: 20px;
+      }
+
+      .search-input:focus {
+        border-color: var(--accent);
+      }
+
+      .search-results {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .search-footer {
+        margin-top: 20px;
+        text-align: center;
+        color: var(--text-tertiary);
+        font-size: 14px;
+      }
+
+      kbd {
+        background: var(--hover);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 12px;
+        font-family: monospace;
+      }
+
+      /* Skip link for accessibility */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: var(--accent);
+        color: white;
+        padding: 8px;
+        z-index: 1000;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: top 0.3s ease;
+      }
+
+      .skip-link:focus {
+        top: 6px;
+      }
+
+      /* Screen reader only content */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Enhanced focus indicators */
+      *:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      /* Respect reduced motion preferences */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Tablet responsive */
+      @media (max-width: 1024px) {
+        .nav-container {
+          padding: 20px 32px;
+        }
+        
+        .nav-links {
+          gap: 24px;
+        }
+      }
+      
+      /* Mobile responsive */
+      @media (max-width: 768px) {
+        .nav-container {
+          padding: 16px 24px;
+        }
+
+        .mobile-menu-toggle {
+          display: flex;
+        }
+
+        .nav-links {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: var(--bg);
+          border-bottom: 1px solid var(--border);
+          flex-direction: column;
+          gap: 0;
+          padding: 20px 24px;
+          display: none;
+        }
+
+        .nav-links.open {
+          display: flex;
+        }
+
+        .nav-link {
+          font-size: 14px;
+          padding: 16px 0;
+          border-bottom: 1px solid var(--border);
+          text-align: left;
+          width: 100%;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+        }
+
+        .nav-link:last-child {
+          border-bottom: none;
+        }
+
+        #theme-toggle {
+          font-size: 16px;
+          padding: 16px 0;
+          text-align: left;
+          justify-content: flex-start;
+          min-height: 44px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 16px;
+        }
+
+        .nav-container {
+          padding: 16px 20px;
+          min-height: 60px;
+        }
+
+        .logo {
+          font-size: 20px;
+        }
+
+        .nav-links {
+          gap: 16px;
+        }
+
+        .nav-link {
+          font-size: 12px;
+        }
+
+        #theme-toggle {
+          font-size: 14px;
+        }
+
+        .search-container {
+          padding: 24px;
+          margin: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 12px 16px;
+        }
+
+        .nav-links {
+          padding: 16px 20px;
+        }
+
+        .nav-link {
+          font-size: 14px;
+        }
+      }
+    </style>
+
+    <script>
+      // Theme toggle
+      const themeToggle = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      
+      // Check for saved theme preference or default to system preference
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme) {
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.setAttribute('aria-pressed', savedTheme === 'dark' ? 'true' : 'false');
+      } else if (systemPrefersDark) {
+        html.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+        themeToggle.setAttribute('aria-pressed', 'true');
+      }
+
+      themeToggle?.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.setAttribute('aria-pressed', newTheme === 'dark' ? 'true' : 'false');
+      });
+
+      // Mobile menu toggle
+      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+      const navLinks = document.getElementById('nav-links');
+      
+      mobileMenuToggle?.addEventListener('click', () => {
+        const isOpen = navLinks.classList.contains('open');
+        
+        if (isOpen) {
+          navLinks.classList.remove('open');
+          mobileMenuToggle.classList.remove('active');
+          mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          navLinks.classList.add('open');
+          mobileMenuToggle.classList.add('active');
+          mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Close mobile menu when clicking nav links
+      navLinks?.addEventListener('click', (e) => {
+        if (e.target.classList.contains('nav-link') && !e.target.id.includes('theme-toggle')) {
+          navLinks.classList.remove('open');
+          mobileMenuToggle.classList.remove('active');
+          mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Close mobile menu on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+          navLinks.classList.remove('open');
+          mobileMenuToggle.classList.remove('active');
+          mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Search navigation (now goes to /search page instead of modal)
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          window.location.href = '/search';
+        }
+        
+        if ((e.metaKey || e.ctrlKey) && e.key === 'r') {
+          e.preventDefault();
+          // Random post functionality would go here
+          console.log('Random post');
+        }
+      });
+
+      // Random post
+      const randomBtn = document.getElementById('random-btn');
+      randomBtn?.addEventListener('click', () => {
+        // Simple fallback: redirect to home since we don't need random post API
+        window.location.href = '/';
+      });
+    </script>
+  </body>
+</html>

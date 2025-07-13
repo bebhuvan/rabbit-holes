@@ -1,0 +1,36 @@
+# Robots.txt for Rabbit Holes
+# https://bhuvan.dev
+
+User-agent: *
+Allow: /
+
+# Allow all search engines to index the site
+# Block indexing of API endpoints and admin areas
+Disallow: /api/
+Disallow: /cms
+
+# Block common bot traps and sensitive areas
+Disallow: /*.json$
+Disallow: /404
+Disallow: /*?*
+
+# Sitemaps
+Sitemap: https://bhuvan.dev/sitemap.xml
+Sitemap: https://bhuvan.dev/rss.xml
+
+# Crawl delay (optional - remove if you want faster crawling)
+# Crawl-delay: 1
+
+# Specific rules for different bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block aggressive crawlers (uncomment if needed)
+# User-agent: AhrefsBot
+# Disallow: /
+# 
+# User-agent: MJ12bot
+# Disallow: /

@@ -1,0 +1,398 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+
+const posts = await getCollection('posts', ({ data }) => {
+  return data.published !== false;
+});
+
+// Sort posts by date (newest first)
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Get all unique tags for the tag cloud
+const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
+---
+
+<Base title="Rabbit Holes - Curiosity-Driven Discovery">
+  <div class="container">
+    <section class="bio">
+      <h1>Hi, I'm Bhuvan</h1>
+      <p>Here are the things I find interesting. I hope you find your next rabbit hole to go tumbling down here.</p>
+      <button id="random-btn" class="random-button" title="Random post (Cmd+R)">
+        <span class="random-icon">🎲</span>
+        <span class="random-text">Surprise Me</span>
+      </button>
+    </section>
+
+    <section class="posts">
+      {sortedPosts.slice(0, 10).map((post) => (
+        <PostCard post={post} />
+      ))}
+    </section>
+
+    <div class="load-more" id="load-more-container" style="display: none;">
+      <button class="load-more-btn" id="load-more-btn">
+        Load more posts
+      </button>
+    </div>
+    
+    <div class="loading-indicator" id="loading-indicator" style="display: none;" aria-live="polite" aria-label="Loading status">
+      <div class="loading-spinner"></div>
+      <span>Loading more posts...</span>
+    </div>
+
+    <section class="discovery">
+      <h2>Discover More</h2>
+      
+      <div class="discovery-grid">
+        <div class="discovery-section">
+          <h3>Popular Tags</h3>
+          <div class="tag-cloud">
+            {allTags.slice(0, 15).map((tag) => (
+              <a href={`/tags/${tag}`} class="tag-cloud-item">
+                {tag}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="discovery-section">
+          <h3>Recent Posts</h3>
+          <div class="recent-posts">
+            {sortedPosts.slice(0, 5).map((post) => (
+              <a href={`/posts/${post.slug}`} class="recent-post-item">
+                <span class={`post-type-indicator ${post.data.type}`}></span>
+                {post.data.title}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    .container {
+      max-width: var(--width-content);
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-lg);
+    }
+
+    .bio {
+      margin-bottom: var(--space-xl);
+      text-align: center;
+    }
+
+    .random-button {
+      background: var(--hover);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: var(--space-md) var(--space-lg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: 500;
+      min-height: 44px;
+    }
+
+    .random-button:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .random-icon {
+      font-size: var(--text-base);
+    }
+
+    .random-text {
+      font-weight: 500;
+    }
+
+    .bio h1 {
+      font-size: var(--text-3xl);
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: var(--leading-tight);
+    }
+
+    .bio p {
+      color: var(--text-tertiary);
+      font-size: var(--text-lg);
+      max-width: 520px;
+      margin: 0 auto var(--space-sm);
+      line-height: var(--leading-relaxed);
+      font-weight: 400;
+    }
+
+    .posts {
+      margin-bottom: var(--space-4xl);
+    }
+
+    .load-more {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+    
+    .loading-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      padding: var(--space-xl);
+      color: var(--text-tertiary);
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top: 2px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .load-more-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-tertiary);
+      padding: var(--space-lg) var(--space-xl);
+      border-radius: 0;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      min-height: 44px;
+    }
+
+    .load-more-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .discovery {
+      border-top: 1px solid var(--border);
+      padding-top: var(--space-3xl);
+      margin-top: var(--space-3xl);
+    }
+
+    .discovery h2 {
+      font-size: var(--text-xl);
+      font-weight: 500;
+      margin-bottom: var(--space-xl);
+      color: var(--text-secondary);
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+
+    .discovery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+    }
+
+    .discovery-section h3 {
+      font-size: var(--text-base);
+      font-weight: 500;
+      margin-bottom: var(--space-lg);
+      color: var(--text-secondary);
+      letter-spacing: 0;
+    }
+
+    /* Tag Cloud with optimized spacing */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      line-height: var(--leading-normal);
+    }
+
+    .tag-cloud-item {
+      color: var(--text-tertiary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      transition: color 0.2s ease;
+      white-space: nowrap;
+      font-weight: 400;
+    }
+
+    .tag-cloud-item:hover {
+      color: var(--accent);
+    }
+
+    /* Recent Posts */
+    .recent-posts {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .recent-post-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-xs) 0;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-size: var(--text-sm);
+      font-weight: 400;
+    }
+
+    .recent-post-item:hover {
+      color: var(--accent);
+    }
+
+    .post-type-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .post-type-indicator.musing { background: var(--yellow); }
+    .post-type-indicator.link { background: var(--blue); }
+    .post-type-indicator.video { background: var(--pink); }
+    .post-type-indicator.music { background: var(--green); }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--space-3xl) var(--space-md);
+      }
+
+      .bio h1 {
+        font-size: var(--text-3xl);
+      }
+
+      .bio p {
+        font-size: var(--text-lg);
+        max-width: 100%;
+      }
+
+      .discovery-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+      }
+
+      .tag-cloud {
+        gap: var(--space-xs);
+      }
+
+      .tag-cloud-item {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 13px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-2xl) var(--space-sm);
+      }
+      
+      .bio h1 {
+        font-size: var(--text-3xl);
+      }
+      
+      .bio p {
+        font-size: var(--text-base);
+      }
+    }
+  </style>
+
+  <script>
+    // Enhanced load more functionality with infinite scroll
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const loadMoreContainer = document.getElementById('load-more-container');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const postsContainer = document.querySelector('.posts');
+    
+    let currentPage = 1;
+    const postsPerPage = 10;
+    let isLoading = false;
+    let hasMorePosts = true;
+    
+    // Show load more button if there are more posts
+    if (postsContainer && postsContainer.children.length >= postsPerPage) {
+      loadMoreContainer.style.display = 'block';
+    }
+    
+    // Intersection Observer for infinite scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && hasMorePosts && !isLoading) {
+          loadMorePosts();
+        }
+      });
+    }, {
+      rootMargin: '100px'
+    });
+    
+    // Observe the load more button
+    if (loadMoreBtn) {
+      observer.observe(loadMoreBtn);
+    }
+    
+    async function loadMorePosts() {
+      if (isLoading || !hasMorePosts) return;
+      
+      isLoading = true;
+      loadingIndicator.style.display = 'flex';
+      loadMoreBtn.style.display = 'none';
+      
+      try {
+        // Simulate loading more posts
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        currentPage++;
+        
+        // Simulate reaching end of posts
+        if (currentPage >= 3) {
+          hasMorePosts = false;
+          loadMoreContainer.style.display = 'none';
+          loadingIndicator.innerHTML = '<span>✨ You\'ve reached the end! Time to explore the archives.</span>';
+          loadingIndicator.setAttribute('aria-label', 'All posts loaded');
+          setTimeout(() => {
+            loadingIndicator.style.display = 'none';
+          }, 3000);
+        } else {
+          loadMoreBtn.style.display = 'block';
+        }
+        
+      } catch (error) {
+        console.error('Error loading more posts:', error);
+        loadingIndicator.innerHTML = '<span>Failed to load more posts. Please try again.</span>';
+        loadingIndicator.setAttribute('aria-label', 'Error loading posts');
+        setTimeout(() => {
+          loadingIndicator.style.display = 'none';
+          loadMoreBtn.style.display = 'block';
+        }, 3000);
+      } finally {
+        isLoading = false;
+        loadingIndicator.style.display = 'none';
+      }
+    }
+    
+    // Manual load more button click
+    loadMoreBtn?.addEventListener('click', loadMorePosts);
+  </script>
+</Base>

@@ -1,0 +1,159 @@
+---
+export interface Props {
+  url: string;
+  title?: string;
+}
+
+const { url, title = 'Spotify Content' } = Astro.props;
+
+// Enhanced Spotify URL parsing to support tracks, albums, and playlists
+function parseSpotifyUrl(url: string) {
+  const match = url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+  if (match) {
+    return {
+      type: match[1],
+      id: match[2]
+    };
+  }
+  return null;
+}
+
+const spotifyData = parseSpotifyUrl(url);
+
+// Generate appropriate iframe height based on content type
+function getEmbedHeight(type: string): string {
+  switch (type) {
+    case 'track':
+      return '152';
+    case 'album':
+      return '352';
+    case 'playlist':
+      return '452';
+    default:
+      return '152';
+  }
+}
+
+function getEmbedLabel(type: string): string {
+  switch (type) {
+    case 'track':
+      return 'Spotify Track';
+    case 'album':
+      return 'Spotify Album';
+    case 'playlist':
+      return 'Spotify Playlist';
+    default:
+      return 'Spotify Content';
+  }
+}
+---
+
+{spotifyData ? (
+  <div class="spotify-embed">
+    <div class="embed-container">
+      <iframe 
+        src={`https://open.spotify.com/embed/${spotifyData.type}/${spotifyData.id}`}
+        width="100%" 
+        height={getEmbedHeight(spotifyData.type)}
+        frameborder="0" 
+        allowtransparency="true" 
+        allow="encrypted-media"
+        loading="lazy"
+        title={`${getEmbedLabel(spotifyData.type)}: ${title}`}>
+      </iframe>
+    </div>
+    <div class="embed-caption">
+      <span class="embed-icon">🎵</span>
+      <span class="embed-text">{getEmbedLabel(spotifyData.type)}</span>
+    </div>
+  </div>
+) : (
+  <div class="spotify-embed">
+    <div class="embed-error">
+      <div class="error-icon">🎵</div>
+      <p>Invalid Spotify URL</p>
+      <a href={url} target="_blank" rel="noopener noreferrer" class="fallback-link">
+        Open in Spotify
+      </a>
+    </div>
+  </div>
+)}
+
+<style>
+  .spotify-embed {
+    margin: 32px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--hover);
+  }
+
+  .embed-container {
+    background: var(--bg);
+  }
+
+  .embed-container iframe {
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .embed-caption {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--hover);
+    border-top: 1px solid var(--border);
+  }
+
+  .embed-icon {
+    font-size: 16px;
+  }
+
+  .embed-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Error state */
+  .embed-error {
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--hover);
+  }
+
+  .error-icon {
+    font-size: 32px;
+    opacity: 0.5;
+    margin-bottom: 12px;
+  }
+
+  .embed-error p {
+    color: var(--text-secondary);
+    margin: 0 0 16px 0;
+    font-size: 14px;
+  }
+
+  .fallback-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .fallback-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .spotify-embed {
+      margin: 24px 0;
+    }
+
+    .embed-error {
+      padding: 30px 16px;
+    }
+  }
+</style>

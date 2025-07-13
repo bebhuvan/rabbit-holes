@@ -1,0 +1,257 @@
+---
+export interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+
+// Get domain for immediate display
+const domain = new URL(url).hostname;
+---
+
+<div class="link-preview" data-url={url}>
+  <div class="link-preview-content">
+    <div class="link-preview-text">
+      <h4 class="link-preview-title">Loading...</h4>
+      <p class="link-preview-description">Fetching link preview...</p>
+      <div class="link-preview-meta">
+        <span class="link-preview-domain">{domain}</span>
+        <span class="link-preview-arrow">→</span>
+      </div>
+    </div>
+    <div class="link-preview-image" style="display: none;">
+      <img alt="" loading="lazy" />
+    </div>
+  </div>
+  <a href={url} target="_blank" rel="noopener noreferrer" class="link-preview-overlay">
+    <span class="sr-only">Visit link</span>
+  </a>
+</div>
+
+<style>
+  .link-preview {
+    margin: 32px 0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .link-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  .link-preview:hover::before {
+    transform: scaleX(1);
+  }
+
+  .link-preview:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .link-preview-content {
+    padding: 24px;
+    background: var(--hover);
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .link-preview-text {
+    flex: 1;
+  }
+
+  .link-preview-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .link-preview-description {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .link-preview-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+  }
+
+  .link-preview-domain {
+    font-weight: 500;
+  }
+
+  .link-preview-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .link-preview:hover .link-preview-arrow {
+    transform: translateX(4px);
+  }
+
+  .link-preview-image {
+    width: 120px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+
+  .link-preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: opacity 0.3s ease;
+  }
+
+  .link-preview-image img[loading="lazy"] {
+    opacity: 0;
+  }
+
+  .link-preview-image img.loaded {
+    opacity: 1;
+  }
+
+  .link-preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-decoration: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .link-preview.error {
+    opacity: 0.7;
+  }
+
+  .link-preview.loading {
+    opacity: 0.8;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .link-preview-content {
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .link-preview-image {
+      width: 100%;
+      height: 120px;
+    }
+  }
+</style>
+
+<script>
+  // Initialize link preview fetching when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    initializeLinkPreviews();
+  });
+
+  async function initializeLinkPreviews() {
+    const linkPreviews = document.querySelectorAll('.link-preview[data-url]');
+    
+    for (const preview of linkPreviews) {
+      const url = preview.getAttribute('data-url');
+      if (url) {
+        await fetchLinkPreview(preview, url);
+      }
+    }
+  }
+
+  async function fetchLinkPreview(element, url) {
+    try {
+      element.classList.add('loading');
+      
+      const response = await fetch('/api/metadata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const metadata = await response.json();
+      updateLinkPreview(element, metadata);
+      
+    } catch (error) {
+      console.error('Failed to fetch link preview:', error);
+      handleLinkPreviewError(element, url);
+    } finally {
+      element.classList.remove('loading');
+    }
+  }
+
+  function updateLinkPreview(element, metadata) {
+    const titleEl = element.querySelector('.link-preview-title');
+    const descriptionEl = element.querySelector('.link-preview-description');
+    const imageContainer = element.querySelector('.link-preview-image');
+    const imageEl = element.querySelector('.link-preview-image img');
+
+    if (titleEl) {
+      titleEl.textContent = metadata.title || 'Link Title';
+    }
+
+    if (descriptionEl) {
+      descriptionEl.textContent = metadata.description || 'No description available';
+    }
+
+    if (metadata.image && imageContainer && imageEl) {
+      imageEl.src = metadata.image;
+      imageEl.alt = metadata.title || 'Link preview';
+      imageEl.loading = 'lazy';
+      imageEl.addEventListener('load', () => {
+        imageEl.classList.add('loaded');
+      });
+      imageContainer.style.display = 'block';
+    }
+  }
+
+  function handleLinkPreviewError(element, url) {
+    const titleEl = element.querySelector('.link-preview-title');
+    const descriptionEl = element.querySelector('.link-preview-description');
+
+    if (titleEl) {
+      titleEl.textContent = new URL(url).hostname;
+    }
+
+    if (descriptionEl) {
+      descriptionEl.textContent = 'Unable to fetch preview';
+    }
+
+    element.classList.add('error');
+  }
+</script>

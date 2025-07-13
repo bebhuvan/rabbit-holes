@@ -1,0 +1,185 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page Not Found - Bhuvan's Blog">
+  <div class="not-found-container">
+    <div class="not-found-content">
+      <div class="not-found-icon">🐰</div>
+      <h1>Rabbit Hole Not Found</h1>
+      <p>Looks like this particular rabbit hole doesn't exist. But that's okay – sometimes the best discoveries happen when we get a little lost.</p>
+      
+      <div class="suggestions">
+        <h2>Try exploring these instead:</h2>
+        <div class="suggestion-links">
+          <a href="/" class="suggestion-link">
+            <span class="suggestion-icon">🏠</span>
+            <span class="suggestion-text">Return Home</span>
+          </a>
+          <a href="/archive" class="suggestion-link">
+            <span class="suggestion-icon">📚</span>
+            <span class="suggestion-text">Browse Archive</span>
+          </a>
+          <a href="/tags" class="suggestion-link">
+            <span class="suggestion-icon">🏷️</span>
+            <span class="suggestion-text">Explore Tags</span>
+          </a>
+          <button onclick="randomPost()" class="suggestion-link">
+            <span class="suggestion-icon">🎲</span>
+            <span class="suggestion-text">Random Post</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="search-prompt">
+        <p>Or search for something specific:</p>
+        <button onclick="openSearch()" class="search-button">
+          🔍 Search Posts
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .not-found-container {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    .not-found-content {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .not-found-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+
+    .not-found-content h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .not-found-content > p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 48px;
+    }
+
+    .suggestions {
+      margin-bottom: 48px;
+    }
+
+    .suggestions h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
+    .suggestion-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .suggestion-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--hover);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 16px;
+    }
+
+    .suggestion-link:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .suggestion-icon {
+      font-size: 20px;
+    }
+
+    .suggestion-text {
+      font-weight: 500;
+    }
+
+    .search-prompt p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .search-button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .search-button:hover {
+      background: var(--accent-light);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .not-found-content h1 {
+        font-size: 28px;
+      }
+
+      .not-found-content > p {
+        font-size: 16px;
+      }
+
+      .suggestion-links {
+        grid-template-columns: 1fr;
+      }
+
+      .not-found-container {
+        padding: 40px 16px;
+      }
+    }
+  </style>
+
+  <script>
+    function randomPost() {
+      // This would navigate to a random post
+      // For now, redirect to home
+      window.location.href = '/';
+    }
+
+    function openSearch() {
+      // Trigger the search modal
+      const searchOverlay = document.getElementById('search-overlay');
+      if (searchOverlay) {
+        searchOverlay.classList.add('active');
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }
+    }
+  </script>
+</Base>
