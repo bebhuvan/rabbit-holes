@@ -145,6 +145,37 @@ git push origin master  # Auto-deploys to Cloudflare Pages
 - ✅ **Continued development** with solid foundation
 - ✅ **Community engagement** through discovery-focused content
 
+## 🔧 Required Setup (IMPORTANT)
+
+### ⚠️ Environment Variables Required
+**Current State**: AI CMS requires environment variables to function
+- **Issue**: Missing `CLAUDE_API_KEY` causes 401 errors
+- **Impact**: AI enhancement and content refinement won't work
+
+### 🔑 Required Environment Variables
+Add these in **Cloudflare Pages → Settings → Environment Variables**:
+
+1. **`CLAUDE_API_KEY`** (Required for AI features)
+   - Get from: [Claude API Console](https://console.anthropic.com/)
+   - Format: `sk-ant-api03-...`
+   - Used for: Content enhancement, refinement, suggestions
+
+2. **`GITHUB_TOKEN`** (Required for publishing)
+   - Get from: [GitHub Settings → Personal Access Tokens](https://github.com/settings/tokens)
+   - Scope: `repo` (full control)
+   - Used for: Publishing posts to repository
+
+3. **`GITHUB_REPO`** (Required for publishing)
+   - Format: `username/repository-name`
+   - Example: `bebhuvan/rabbit-holes`
+   - Used for: Target repository for published posts
+
+### 📋 Quick Setup Steps
+1. **Add environment variables** in Cloudflare Pages dashboard
+2. **Wait for redeployment** (1-2 minutes)
+3. **Test at `/cms`** - "Test Functions" button should work
+4. **See `SETUP_GUIDE.md`** for detailed instructions
+
 ## 🔒 Security Consideration (To Address)
 
 ### ⚠️ CMS Public Access Issue

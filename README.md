@@ -2,6 +2,12 @@
 
 A sophisticated, AI-enhanced blog built with Astro featuring a dual CMS approach for maximum flexibility and content creation power. Welcome to your next intellectual adventure.
 
+## 🚀 Quick Start
+
+**New to setup?** → See [`SETUP_GUIDE.md`](./SETUP_GUIDE.md) for complete step-by-step instructions
+
+**TL;DR:** Add `CLAUDE_API_KEY` to Cloudflare Pages environment variables, then visit `/cms` to start creating content.
+
 ## ✨ Current Features (v1.0.0)
 
 ### 🎯 **Core Discovery System**
