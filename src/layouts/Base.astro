@@ -536,6 +536,42 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           font-size: 14px;
         }
       }
+
+      /* Utility classes for consistent container styling */
+      .content-container {
+        max-width: var(--width-content);
+        margin: 0 auto;
+        padding: var(--space-4xl) var(--space-lg);
+      }
+      
+      .content-container-wide {
+        max-width: var(--width-wide);
+        margin: 0 auto;
+        padding: var(--space-4xl) var(--space-lg);
+      }
+      
+      .content-container-full {
+        max-width: var(--width-full);
+        margin: 0 auto;
+        padding: var(--space-4xl) var(--space-lg);
+      }
+      
+      /* Responsive container variants */
+      @media (max-width: 768px) {
+        .content-container,
+        .content-container-wide,
+        .content-container-full {
+          padding: var(--space-3xl) var(--space-md);
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .content-container,
+        .content-container-wide,
+        .content-container-full {
+          padding: var(--space-2xl) var(--space-sm);
+        }
+      }
     </style>
 
     <script>

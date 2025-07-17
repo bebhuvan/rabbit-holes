@@ -6,7 +6,7 @@ import VimeoEmbed from './VimeoEmbed.astro';
 import TwitterEmbed from './TwitterEmbed.astro';
 import CodePenEmbed from './CodePenEmbed.astro';
 import GenericEmbed from './GenericEmbed.astro';
-import { formatDate, calculateReadingTime } from '../utils/shared';
+import { formatDate, calculateReadingTime, sharePost } from '../utils/shared';
 
 export interface Props {
   post: any;
@@ -141,7 +141,7 @@ function detectEmbedType(url: string) {
   <div class="post-actions">
     <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
     <div class="post-meta-actions">
-      <button class="share-btn" data-title={post.data.title} data-url={`/posts/${post.slug}`} title="Share post" aria-label={`Share ${post.data.title}`}>
+      <button class="share-btn" onclick={`sharePost('${post.data.title}', '/posts/${post.slug}')`} title="Share post" aria-label={`Share ${post.data.title}`}>
         🔗
       </button>
       <a href={`/posts/${post.slug}#comments`} class="comments-link" title="Comments">
@@ -369,58 +369,9 @@ function detectEmbedType(url: string) {
 </style>
 
 <script>
-  // Enhanced share functionality with proper event handling
-  document.addEventListener('DOMContentLoaded', function() {
-    const shareButtons = document.querySelectorAll('.share-btn');
-    
-    shareButtons.forEach(button => {
-      button.addEventListener('click', async function() {
-        const title = this.dataset.title;
-        const url = this.dataset.url;
-        const fullUrl = window.location.origin + url;
-        
-        if (navigator.share) {
-          try {
-            await navigator.share({
-              title: title,
-              url: fullUrl
-            });
-          } catch (err) {
-            if (err.name !== 'AbortError') {
-              console.log('Error sharing:', err);
-              copyToClipboard(fullUrl);
-            }
-          }
-        } else {
-          copyToClipboard(fullUrl);
-        }
-      });
-    });
-    
-    function copyToClipboard(text) {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-          console.log('Link copied to clipboard');
-          // Could add toast notification here
-        }).catch(err => {
-          console.error('Failed to copy to clipboard:', err);
-        });
-      } else {
-        // Legacy fallback
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          console.log('Link copied to clipboard (legacy method)');
-        } catch (err) {
-          console.error('Failed to copy to clipboard:', err);
-        }
-        document.body.removeChild(textArea);
-      }
-    }
-  });
+  // Import shared utilities for share functionality
+  import { sharePost } from '../utils/shared.ts';
+  
+  // Make sharePost available globally for onclick handlers
+  window.sharePost = sharePost;
 </script>
