@@ -579,7 +579,15 @@
       showStatus('Enhancing content with AI...', 'loading');
 
       try {
-        const response = await fetch('/api/ai/enhance', {
+        console.log('Calling enhance API with:', {
+          type: postType,
+          title: title || null,
+          url: url || null,
+          content: content.substring(0, 100) + '...',
+          tags: currentTags
+        });
+
+        const response = await fetch('/enhance', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -593,11 +601,17 @@
           })
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response headers:', [...response.headers.entries()]);
+
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorText = await response.text();
+          console.error('API Error:', errorText);
+          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
         }
 
         const result = await response.json();
+        console.log('API Response:', result);
         
         enhancedContent = result.content;
         document.getElementById('enhanced-content').value = enhancedContent;
@@ -651,7 +665,7 @@
       showStatus('Refining content...', 'loading');
 
       try {
-        const response = await fetch('/api/ai/refine', {
+        const response = await fetch('/refine', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -703,7 +717,7 @@
         const type = document.getElementById('post-type').value;
         const url = document.getElementById('post-url').value;
         
-        const response = await fetch('/api/publish', {
+        const response = await fetch('/publish', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
