@@ -381,6 +381,7 @@
         </div>
 
         <div class="btn-group">
+          <button id="test-functions-btn" class="btn btn-secondary">Test Functions</button>
           <button id="enhance-btn" class="btn">
             <span class="btn-text">Enhance with AI</span>
           </button>
@@ -485,6 +486,7 @@
       });
 
       // Buttons
+      document.getElementById('test-functions-btn').addEventListener('click', testFunctions);
       document.getElementById('enhance-btn').addEventListener('click', enhanceContent);
       document.getElementById('refine-btn').addEventListener('click', showRefineModal);
       document.getElementById('publish-btn').addEventListener('click', publishContent);
@@ -561,6 +563,34 @@
       document.getElementById('status-message').style.display = 'none';
     }
 
+    async function testFunctions() {
+      console.log('Testing Cloudflare Functions...');
+      showStatus('Testing functions...', 'loading');
+      
+      try {
+        const response = await fetch('/test', {
+          method: 'GET'
+        });
+        
+        console.log('Test response:', response);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Test failed:', errorText);
+          showStatus(`Functions test failed: ${response.status} - ${errorText}`, 'error');
+          return;
+        }
+        
+        const result = await response.json();
+        console.log('Test result:', result);
+        showStatus('Functions are working! Check console for details.', 'success');
+        
+      } catch (error) {
+        console.error('Test error:', error);
+        showStatus(`Functions test error: ${error.message}`, 'error');
+      }
+    }
+
     async function enhanceContent() {
       const postType = document.getElementById('post-type').value;
       const title = document.getElementById('post-title').value;
@@ -607,6 +637,12 @@
         if (!response.ok) {
           const errorText = await response.text();
           console.error('API Error:', errorText);
+          console.error('Response details:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: [...response.headers.entries()],
+            url: response.url
+          });
           throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
         }
 
