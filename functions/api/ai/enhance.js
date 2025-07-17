@@ -9,9 +9,9 @@ export async function onRequest(context) {
   }
   
   try {
-    const { title, content, tags, type } = await request.json();
+    const { title, content, tags, type, url } = await request.json();
     
-    if (!title || !content) {
+    if (!content) {
       return new Response('Missing required fields', { status: 400 });
     }
     
@@ -25,25 +25,31 @@ export async function onRequest(context) {
       },
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1000,
+        max_tokens: 2000,
         messages: [{
           role: 'user',
-          content: `You are a curious, thoughtful blogger who loves to explore connections between ideas. 
+          content: `You are a curious, thoughtful blogger who loves to explore connections between ideas and create engaging content for a "rabbit holes" blog.
 
 Given this blog post:
-Title: "${title}"
+Title: "${title || 'Untitled'}"
 Type: ${type}
+${url ? `URL: ${url}` : ''}
 Tags: ${tags?.join(', ') || 'none'}
 Content: "${content}"
 
-Generate 3-5 "Dive Deeper" suggestions that would genuinely intrigue readers and lead them down interesting rabbit holes. Each suggestion should be:
-1. Specific and actionable (not vague)
-2. Related but not obvious
-3. Intellectually curious
-4. Lead to further exploration
+Please enhance this content and return a JSON object with:
+1. "content": Enhanced markdown content with better structure, flow, and engaging writing
+2. "frontmatter": YAML frontmatter with title, date, type, tags, and other metadata
+3. "dive_deeper": Array of 3-5 specific, actionable suggestions for further exploration
+4. "suggested_tags": Array of 3-5 relevant tags
 
-Format as a simple array of strings, nothing else:
-["suggestion 1", "suggestion 2", "suggestion 3"]`
+Make the content curiosity-driven and focused on exploration. Format as valid JSON:
+{
+  "content": "enhanced markdown content",
+  "frontmatter": "yaml frontmatter",
+  "dive_deeper": ["suggestion 1", "suggestion 2"],
+  "suggested_tags": ["tag1", "tag2"]
+}`
         }]
       })
     });
@@ -53,38 +59,13 @@ Format as a simple array of strings, nothing else:
     }
     
     const claudeData = await claudeResponse.json();
-    const suggestions = JSON.parse(claudeData.content[0].text);
-    
-    // Also generate related tags
-    const tagsResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': env.CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: `Given this blog post title and content, suggest 3-5 relevant tags that capture the key themes and topics:
-
-Title: "${title}"
-Content: "${content}"
-
-Return only a JSON array of lowercase tag strings:
-["tag1", "tag2", "tag3"]`
-        }]
-      })
-    });
-    
-    const tagsData = await tagsResponse.json();
-    const suggestedTags = JSON.parse(tagsData.content[0].text);
+    const result = JSON.parse(claudeData.content[0].text);
     
     return new Response(JSON.stringify({
-      dive_deeper: suggestions,
-      suggested_tags: suggestedTags,
+      content: result.content,
+      frontmatter: result.frontmatter,
+      dive_deeper: result.dive_deeper,
+      suggested_tags: result.suggested_tags,
       enhanced: true
     }), {
       headers: {

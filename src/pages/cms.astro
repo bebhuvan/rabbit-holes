@@ -579,7 +579,7 @@
       showStatus('Enhancing content with AI...', 'loading');
 
       try {
-        const response = await fetch('/api/enhance-content', {
+        const response = await fetch('/api/ai/enhance', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -651,7 +651,7 @@
       showStatus('Refining content...', 'loading');
 
       try {
-        const response = await fetch('/api/refine-content', {
+        const response = await fetch('/api/ai/refine', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -699,16 +699,23 @@
       showStatus('Publishing to blog...', 'loading');
 
       try {
-        const frontmatter = document.getElementById('frontmatter-content').value;
+        const title = document.getElementById('post-title').value;
+        const type = document.getElementById('post-type').value;
+        const url = document.getElementById('post-url').value;
         
-        const response = await fetch('/api/publish-post', {
+        const response = await fetch('/api/publish', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            frontmatter,
-            content: enhancedContent
+            title: title || 'Untitled Post',
+            content: enhancedContent,
+            type: type,
+            tags: currentTags,
+            url: url || null,
+            description: enhancedContent.substring(0, 150) + '...',
+            publish: true
           })
         });
 
