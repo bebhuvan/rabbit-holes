@@ -153,9 +153,9 @@ function detectEmbedType(url: string) {
 
 <style>
   .post {
-    margin-bottom: 48px;
+    margin-bottom: var(--space-3xl);
     position: relative;
-    padding-bottom: 48px;
+    padding-bottom: var(--space-2xl);
     border-bottom: 1px solid var(--border);
     max-width: 100%;
   }
@@ -334,8 +334,8 @@ function detectEmbedType(url: string) {
   /* Mobile responsive */
   @media (max-width: 768px) {
     .post {
-      margin-bottom: var(--space-3xl);
-      padding-bottom: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+      padding-bottom: var(--space-xl);
     }
     
     .post-content {
