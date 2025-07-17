@@ -1,0 +1,275 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Rabbit Hole Bookmarklet - Quick Capture Tool">
+  <div class="content-container">
+    <div class="bookmarklet-page">
+      <h1>🐰 Rabbit Hole Quick Capture</h1>
+      <p>Instantly share interesting discoveries with AI enhancement</p>
+
+      <section class="setup-section">
+        <h2>📌 Setup (One-time only)</h2>
+        <p>Drag this bookmarklet to your bookmarks bar:</p>
+        
+        <div class="bookmarklet-container">
+          <a href="javascript:(function(){var url=encodeURIComponent(window.location.href);var title=encodeURIComponent(document.title);var selection=encodeURIComponent(window.getSelection().toString());var context=encodeURIComponent('Found while browsing: '+document.title);window.open('https://rabbit-holes.pages.dev/quick-share?url='+url+'&title='+title+'&content='+selection+'&context='+context,'_blank','width=600,height=700');})();" class="bookmarklet-link">
+            🐰 Share Rabbit Hole
+          </a>
+        </div>
+        
+        <p class="setup-instructions">
+          <strong>How to use:</strong> Drag the button above to your bookmarks bar. 
+          Then, when you find something interesting on any website, click the bookmark to instantly capture it!
+        </p>
+      </section>
+
+      <section class="features-section">
+        <h2>✨ What it does</h2>
+        <div class="features-grid">
+          <div class="feature">
+            <h3>🚀 Instant Capture</h3>
+            <p>One click from any webpage saves the URL, title, and any selected text</p>
+          </div>
+          
+          <div class="feature">
+            <h3>🤖 AI Enhancement</h3>
+            <p>Automatically generates engaging content, tags, and "dive deeper" suggestions</p>
+          </div>
+          
+          <div class="feature">
+            <h3>📝 Smart Context</h3>
+            <p>Remembers where you found things and why they caught your attention</p>
+          </div>
+          
+          <div class="feature">
+            <h3>⚡ Fast Publishing</h3>
+            <p>Option to publish immediately or save as draft for later refinement</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow-section">
+        <h2>🔄 Workflow</h2>
+        <div class="workflow-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Discover</h3>
+              <p>Find something interesting while browsing</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Capture</h3>
+              <p>Click the bookmarklet (select text for quotes)</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Enhance</h3>
+              <p>AI automatically creates engaging content</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Share</h3>
+              <p>Publish immediately or refine further</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="alternatives-section">
+        <h2>📱 Other Quick Capture Methods</h2>
+        <div class="alternatives-grid">
+          <div class="alternative">
+            <h3>Mobile Share</h3>
+            <p>Add this site to your home screen for quick sharing on mobile</p>
+            <button class="btn btn-secondary" onclick="showMobileInstructions()">Setup Mobile</button>
+          </div>
+          
+          <div class="alternative">
+            <h3>Email to Post</h3>
+            <p>Forward interesting newsletters or articles via email</p>
+            <code>capture@your-domain.com</code>
+          </div>
+          
+          <div class="alternative">
+            <h3>API Integration</h3>
+            <p>Connect from other tools like Zapier, IFTTT, or custom scripts</p>
+            <a href="/api/quick-capture" class="api-link">View API docs</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .bookmarklet-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .setup-section {
+    background: var(--hover);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+  }
+
+  .bookmarklet-container {
+    margin: var(--space-lg) 0;
+    padding: var(--space-lg);
+    background: var(--bg);
+    border: 2px dashed var(--accent);
+    border-radius: 8px;
+  }
+
+  .bookmarklet-link {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--text-lg);
+    cursor: move;
+    transition: all 0.2s ease;
+  }
+
+  .bookmarklet-link:hover {
+    background: var(--accent-light);
+    transform: translateY(-2px);
+  }
+
+  .setup-instructions {
+    margin-top: var(--space-lg);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .features-grid, .alternatives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+  }
+
+  .feature, .alternative {
+    background: var(--hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--space-lg);
+  }
+
+  .feature h3, .alternative h3 {
+    margin-bottom: var(--space-sm);
+    color: var(--accent);
+  }
+
+  .workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .step-number {
+    background: var(--accent);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .step-content h3 {
+    margin-bottom: var(--space-xs);
+    color: var(--text-primary);
+  }
+
+  .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s ease;
+  }
+
+  .btn-secondary {
+    background: var(--hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .btn:hover {
+    background: var(--accent-light);
+  }
+
+  .btn-secondary:hover {
+    background: var(--border);
+  }
+
+  .api-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: monospace;
+    font-size: var(--text-sm);
+  }
+
+  code {
+    background: var(--hover);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    .workflow-steps {
+      grid-template-columns: 1fr;
+    }
+    
+    .features-grid, .alternatives-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function showMobileInstructions() {
+    alert(`Mobile Setup:
+    
+1. Open this site on your mobile device
+2. Add to home screen (Share → Add to Home Screen)
+3. Use the mobile quick-share interface
+4. Or use the share function in your browser to send URLs here
+
+This creates a PWA-like experience for quick sharing on mobile!`);
+  }
+</script>

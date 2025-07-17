@@ -804,6 +804,45 @@
     }
 
     function loadDraftFromStorage() {
+      // First, check for URL parameters (from quick capture)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlParam = urlParams.get('url');
+      const titleParam = urlParams.get('title');
+      const contentParam = urlParams.get('content');
+      
+      if (urlParam || titleParam || contentParam) {
+        // Pre-fill from quick capture
+        if (titleParam) document.getElementById('post-title').value = decodeURIComponent(titleParam);
+        if (urlParam) {
+          document.getElementById('post-url').value = decodeURIComponent(urlParam);
+          // Auto-detect type based on URL
+          const url = decodeURIComponent(urlParam);
+          if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com')) {
+            document.getElementById('post-type').value = 'video';
+          } else if (url.includes('spotify.com') || url.includes('soundcloud.com')) {
+            document.getElementById('post-type').value = 'music';
+          } else {
+            document.getElementById('post-type').value = 'link';
+          }
+          // Show URL field
+          document.getElementById('url-group').style.display = 'block';
+        }
+        if (contentParam) document.getElementById('post-content').value = decodeURIComponent(contentParam);
+        
+        // Auto-add some smart tags
+        if (urlParam) {
+          const domain = new URL(decodeURIComponent(urlParam)).hostname;
+          addTag('discovery');
+          addTag('rabbit-hole');
+          if (domain.includes('github')) addTag('technology');
+          if (domain.includes('arxiv')) addTag('research');
+          if (domain.includes('youtube')) addTag('video');
+        }
+        
+        return; // Don't load from localStorage if we have URL params
+      }
+      
+      // Then check localStorage for saved draft
       const draft = localStorage.getItem('blog-cms-draft');
       if (draft) {
         try {
