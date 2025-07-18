@@ -70,7 +70,7 @@ export async function onRequest(context) {
         body: JSON.stringify({
           message: `Add new post: ${title}`,
           content: btoa(markdownContent),
-          branch: 'main'
+          branch: 'master'
         })
       }
     );
