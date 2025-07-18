@@ -24,32 +24,11 @@ export async function onRequest(context) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000,
+        model: 'claude-3-haiku-20240307',
+        max_tokens: 1500,
         messages: [{
           role: 'user',
-          content: `You are a curious, thoughtful blogger who loves to explore connections between ideas and create engaging content for a "rabbit holes" blog.
-
-Given this blog post:
-Title: "${title || 'Untitled'}"
-Type: ${type}
-${url ? `URL: ${url}` : ''}
-Tags: ${tags?.join(', ') || 'none'}
-Content: "${content}"
-
-Please enhance this content and return a JSON object with:
-1. "content": Enhanced markdown content with better structure, flow, and engaging writing
-2. "frontmatter": YAML frontmatter with title, date, type, tags, and other metadata
-3. "dive_deeper": Array of 3-5 specific, actionable suggestions for further exploration
-4. "suggested_tags": Array of 3-5 relevant tags
-
-Make the content curiosity-driven and focused on exploration. Format as valid JSON:
-{
-  "content": "enhanced markdown content",
-  "frontmatter": "yaml frontmatter",
-  "dive_deeper": ["suggestion 1", "suggestion 2"],
-  "suggested_tags": ["tag1", "tag2"]
-}`
+          content: await buildEnhancePrompt(title, type, url, content, tags, env)
         }]
       })
     });
@@ -89,6 +68,83 @@ Make the content curiosity-driven and focused on exploration. Format as valid JS
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
+  }
+}
+
+async function buildEnhancePrompt(title, type, url, content, tags, env) {
+  let enhancedContent = content;
+  
+  // If it's a link post, fetch and read the URL content
+  if (url && (type === 'link' || type === 'video' || type === 'music')) {
+    try {
+      const urlContent = await fetchUrlContent(url);
+      enhancedContent = `${content}\n\n[URL Content Summary: ${urlContent.slice(0, 500)}...]`;
+    } catch (error) {
+      console.log('Could not fetch URL content:', error.message);
+    }
+  }
+  
+  const basePrompt = `Hey! You're a fun, curious information connoisseur who just discovered something cool and wants to share it. Write like you're telling a friend about something fascinating you found.
+
+Given this discovery:
+Title: "${title || 'Untitled'}"
+Type: ${type}
+${url ? `URL: ${url}` : ''}
+Tags: ${tags?.join(', ') || 'none'}
+Content: "${enhancedContent}"
+
+Write this in a casual, enthusiastic tone - like "Hey, I found this interesting thing!" Keep it simple and engaging, not academic or formal.
+
+${url ? `
+After your main content, add a "## Rabbit Holes" section with:
+- 3-5 related concepts/ideas to explore
+- Include verified links (Wikipedia, YouTube, research papers, quality blogs)
+- Each item should be: "**Topic**: Brief description [Link](URL)"
+- Make connections between ideas - show how they relate to the main topic
+` : ''}
+
+Return a JSON object with:
+1. "content": Enhanced markdown content with casual, fun writing
+2. "frontmatter": YAML frontmatter with title, date, type, tags, and other metadata
+3. "dive_deeper": Array of 3-5 specific, actionable suggestions for further exploration
+4. "suggested_tags": Array of 3-5 relevant tags
+
+Format as valid JSON:
+{
+  "content": "enhanced markdown content",
+  "frontmatter": "yaml frontmatter", 
+  "dive_deeper": ["suggestion 1", "suggestion 2"],
+  "suggested_tags": ["tag1", "tag2"]
+}`;
+
+  return basePrompt;
+}
+
+async function fetchUrlContent(url) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; RabbitHolesBlog/1.0)'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const html = await response.text();
+    
+    // Extract text content from HTML (basic extraction)
+    const textContent = html
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    return textContent.slice(0, 2000); // Limit to 2000 chars
+  } catch (error) {
+    throw new Error(`Failed to fetch URL: ${error.message}`);
   }
 }
 
