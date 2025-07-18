@@ -157,14 +157,23 @@ async function fetchUrlContent(url) {
     const html = await response.text();
     
     // Extract text content from HTML (basic extraction)
-    const textContent = html
+    let textContent = html
       .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
       .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
       .replace(/<[^>]*>/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
     
-    return textContent.slice(0, 2000); // Limit to 2000 chars
+    // Sanitize content for JSON safety
+    textContent = textContent
+      .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+      .replace(/"/g, '\\"') // Escape quotes
+      .replace(/\\/g, '\\\\') // Escape backslashes
+      .replace(/\n/g, '\\n') // Escape newlines
+      .replace(/\r/g, '\\r') // Escape carriage returns
+      .replace(/\t/g, '\\t'); // Escape tabs
+    
+    return textContent.slice(0, 1500); // Limit to 1500 chars after sanitization
   } catch (error) {
     throw new Error(`Failed to fetch URL: ${error.message}`);
   }
