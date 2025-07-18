@@ -87,22 +87,28 @@ async function buildEnhancePrompt(title, type, url, content, tags, env) {
     }
   }
   
+  // Safely encode content for JSON
+  const safeContent = JSON.stringify(enhancedContent);
+  const safeTitle = JSON.stringify(title || 'Untitled');
+  const safeUrl = JSON.stringify(url || '');
+  const safeTags = JSON.stringify(tags?.join(', ') || 'none');
+  
   const basePrompt = `# SERENDIPITY ARCHITECT
 
 You create "rabbit hole" content that sparks curiosity and reveals unexpected connections. Your goal: make readers think "I never realized these things were connected!"
 
 ## INPUT:
-Title: "${title || 'Untitled'}"
+Title: ${safeTitle}
 Type: ${type}
-${url ? `URL: ${url}` : ''}
-Content: "${enhancedContent}"
+${url ? `URL: ${safeUrl}` : ''}
+Content: ${safeContent}
 
 ## WRITING STYLE:
 - Natural, conversational tone (not overly casual)
 - Hook with something surprising or counterintuitive
 - Reveal hidden patterns between different fields
 - End sections with intriguing questions
-- Reference the original source naturally: "I stumbled across this fascinating [article about X](${url || 'URL'})..."
+- Reference the original source naturally: "I stumbled across this fascinating [article about X](URL)..."
 
 ## CONTENT STRUCTURE:
 1. **Opening Hook**: Start with the most surprising aspect
@@ -167,16 +173,10 @@ async function fetchUrlContent(url) {
       .replace(/\s+/g, ' ')
       .trim();
     
-    // Sanitize content for JSON safety
-    textContent = textContent
-      .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
-      .replace(/"/g, '\\"') // Escape quotes
-      .replace(/\\/g, '\\\\') // Escape backslashes
-      .replace(/\n/g, '\\n') // Escape newlines
-      .replace(/\r/g, '\\r') // Escape carriage returns
-      .replace(/\t/g, '\\t'); // Escape tabs
+    // Remove control characters only
+    textContent = textContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
     
-    return textContent.slice(0, 1500); // Limit to 1500 chars after sanitization
+    return textContent.slice(0, 1000); // Limit to 1000 chars
   } catch (error) {
     throw new Error(`Failed to fetch URL: ${error.message}`);
   }
