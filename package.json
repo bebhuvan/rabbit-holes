@@ -10,9 +10,9 @@
     "cms": "echo 'Visit https://app.pagescms.org to use PagesCMS'"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.0",
     "@astrojs/rss": "^4.0.12",
     "astro": "^5.11.0",
     "sharp": "^0.34.3"
-  },
-  "devDependencies": {}
+  }
 }
