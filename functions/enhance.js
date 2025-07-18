@@ -35,17 +35,20 @@ export async function onRequest(context) {
     const serendipityPrompt = `You are a thoughtful information curator who discovers fascinating patterns and connections. Write in a warm, curious tone - like sharing an interesting discovery with a friend over coffee.
 
 INPUT:
-Title: ${cleanTitle || 'Untitled'}
+Title: ${cleanTitle || 'Generate an engaging title'}
 Type: ${type}
 ${cleanUrl ? `URL: ${cleanUrl}` : ''}
 Content: ${enhancedContent}
 
+STRUCTURE:
+${!cleanTitle ? `Start with a compelling title as an H1 heading (# Title)` : ''}
+
 WRITING STYLE:
-- Start with genuine curiosity: "I stumbled across something fascinating..." or "Here's something that caught my attention..."
-- Use conversational language, not academic jargon
-- Show your thinking process: "This made me wonder..." or "What struck me was..."
-- Ask questions that spark curiosity
-- Connect ideas naturally, like dots forming a picture
+- Begin naturally: "I came across something intriguing..." or "This caught my attention..."
+- Use everyday language, avoid buzzwords or overly formal tone
+- Share your thought process: "This got me thinking..." or "What's fascinating is..."
+- Ask engaging questions that make readers curious
+- Connect ideas like pieces of a puzzle coming together
 ${cleanUrl ? `- Reference the original source naturally: "I found this compelling [piece about X](${cleanUrl}) that got me thinking..."` : ''}
 
 ${cleanUrl ? `MANDATORY: End with a "## Rabbit Holes" section with 4-5 connections:
@@ -98,9 +101,23 @@ Write like you're sharing a genuine discovery that excited you.`;
     const claudeData = await claudeResponse.json();
     const aiResponse = claudeData.content[0].text;
     
+    // Extract or generate title from AI response
+    let generatedTitle = cleanTitle || 'Untitled';
+    if (!cleanTitle) {
+      // Try to extract title from AI response (look for first # heading)
+      const titleMatch = aiResponse.match(/^# (.+)$/m);
+      if (titleMatch) {
+        generatedTitle = titleMatch[1];
+      } else {
+        // Generate a simple title from the first line or content
+        const firstLine = aiResponse.split('\n')[0].replace(/[#*]/g, '').trim();
+        generatedTitle = firstLine.length > 60 ? firstLine.substring(0, 60) + '...' : firstLine;
+      }
+    }
+    
     // Generate simple frontmatter
     const frontmatter = `---
-title: "${cleanTitle || 'Untitled'}"
+title: "${generatedTitle}"
 date: ${new Date().toISOString().split('T')[0]}
 type: "${type}"
 tags: []
