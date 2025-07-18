@@ -83,7 +83,7 @@ Write engaging content that makes readers curious to explore further.`;
     }
     
     const claudeData = await claudeResponse.json();
-    const enhancedContent = claudeData.content[0].text;
+    const aiResponse = claudeData.content[0].text;
     
     // Generate simple frontmatter
     const frontmatter = `---
@@ -95,10 +95,10 @@ published: false
 ---`;
     
     // Generate HTML preview
-    const preview = generatePreview(enhancedContent, cleanTitle);
+    const preview = generatePreview(aiResponse, cleanTitle);
     
     return new Response(JSON.stringify({
-      content: enhancedContent,
+      content: aiResponse,
       frontmatter: frontmatter,
       dive_deeper: ["Explore this topic further", "Find related concepts", "Discover connections"],
       suggested_tags: ["discovery", "exploration"],
