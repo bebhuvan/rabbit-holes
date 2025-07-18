@@ -21,18 +21,28 @@ export async function onRequest(context) {
     // Debug log
     console.log('Prompt first 200 chars:', prompt.substring(0, 200));
     
-    // Create the request body manually to avoid JSON parsing issues
+    // Escape the prompt properly for JSON
+    const escapedPrompt = prompt
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t')
+      .replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+    
+    // Create the request body manually
     const requestBodyString = `{
       "model": "claude-3-haiku-20240307",
       "max_tokens": 1500,
       "messages": [{
         "role": "user",
-        "content": ${JSON.stringify(prompt)}
+        "content": "${escapedPrompt}"
       }]
     }`;
     
     // Debug the request body
     console.log('Request body length:', requestBodyString.length);
+    console.log('Escaped prompt first 100 chars:', escapedPrompt.substring(0, 100));
     
     // Claude API integration
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
