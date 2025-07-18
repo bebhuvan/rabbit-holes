@@ -21,18 +21,18 @@ export async function onRequest(context) {
     // Debug log
     console.log('Prompt first 200 chars:', prompt.substring(0, 200));
     
-    // Create the request body
-    const requestBody = {
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 1500,
-      messages: [{
-        role: 'user',
-        content: prompt
+    // Create the request body manually to avoid JSON parsing issues
+    const requestBodyString = `{
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 1500,
+      "messages": [{
+        "role": "user",
+        "content": ${JSON.stringify(prompt)}
       }]
-    };
+    }`;
     
     // Debug the request body
-    console.log('Request body:', JSON.stringify(requestBody).substring(0, 300));
+    console.log('Request body length:', requestBodyString.length);
     
     // Claude API integration
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
@@ -42,7 +42,7 @@ export async function onRequest(context) {
         'x-api-key': env.CLAUDE_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(requestBody)
+      body: requestBodyString
     });
     
     if (!claudeResponse.ok) {
