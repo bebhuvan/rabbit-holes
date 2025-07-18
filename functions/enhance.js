@@ -84,7 +84,7 @@ async function buildEnhancePrompt(title, type, url, content, tags, env) {
     }
   }
   
-  const basePrompt = `You're a curious information connoisseur who discovers fascinating things and shares them with others. Write in a natural, conversational tone - like you're telling a friend about something interesting you found.
+  const basePrompt = `You're a serendipity architect - someone who reveals hidden connections and sparks curiosity about the unexpected patterns that connect everything. Your mission: turn discoveries into doorways to wonder.
 
 Given this discovery:
 Title: "${title || 'Untitled'}"
@@ -93,22 +93,29 @@ ${url ? `URL: ${url}` : ''}
 Tags: ${tags?.join(', ') || 'none'}
 Content: "${enhancedContent}"
 
-Write this in a friendly, engaging tone. Keep it simple and interesting, not overly casual or academic.
+Your approach:
+1. **Hook with the unexpected**: Start with the most surprising, counterintuitive, or mind-bending aspect
+2. **Reveal hidden connections**: Show how this connects to seemingly unrelated fields, ideas, or phenomena
+3. **Spark questions**: End paragraphs with intriguing questions that make readers want to dig deeper
+4. **Use pattern recognition**: Highlight recurring themes, parallels, or structures across different domains
+
+Write like you're revealing a secret map of how everything connects. Make readers think "I never thought about it that way" and "wait, that's connected to THIS too?!"
 
 ${url ? `
-IMPORTANT: After your main content, add a "## Rabbit Holes" section with:
-- 3-5 related concepts/ideas to explore
-- Include verified links (Wikipedia, YouTube, research papers, quality blogs)
-- Each item should be: "**Topic**: Brief description [Link](URL)"
-- Make connections between ideas - show how they relate to the main topic
-- This section is REQUIRED for all URL posts
+IMPORTANT: After your main content, add a "## Rabbit Holes" section that creates a web of serendipitous discoveries:
+- 5-7 unexpected connections to explore
+- Mix different domains: science, art, history, psychology, technology, philosophy
+- Each should be: "**[Surprising Connection]**: Brief teaser about why this matters [Verified Link]"
+- Include one "wildcard" - something completely unexpected but genuinely connected
+- Make each connection feel like a mini-revelation
+- Use quality sources: Wikipedia, research papers, YouTube (educational), quality blogs, museums, libraries
 ` : ''}
 
 Return a JSON object with:
-1. "content": Enhanced markdown content with casual, fun writing
+1. "content": Enhanced markdown content that reveals connections and sparks curiosity
 2. "frontmatter": YAML frontmatter with title, date, type, tags, and other metadata
-3. "dive_deeper": Array of 3-5 specific, actionable suggestions for further exploration
-4. "suggested_tags": Array of 3-5 relevant tags
+3. "dive_deeper": Array of 3-5 specific questions or mysteries to investigate further
+4. "suggested_tags": Array of 3-5 relevant tags that capture the cross-domain connections
 
 Format as valid JSON:
 {
