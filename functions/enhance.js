@@ -63,7 +63,8 @@ Requirements:
 - Make connections feel like genuine discoveries` : ''}
 
 ${cleanUrl ? `Add this disclaimer at the very end:
-"*This summary was enhanced with Claude AI to explore connections and spark curiosity.*"` : ''}
+"---
+*This content was enhanced using Claude AI to discover connections and generate the Rabbit Holes section. The original source was read and analyzed to create this exploration of related topics.*"` : ''}
 
 Write like you're sharing a genuine discovery that excited you.`;
     
