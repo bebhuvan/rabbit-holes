@@ -15,30 +15,32 @@ export async function onRequest(context) {
       return new Response('Missing required fields', { status: 400 });
     }
     
-    // Build the prompt
-    const prompt = await buildEnhancePrompt(title, type, url, content, tags, env);
+    // Clean ALL inputs immediately to remove problematic characters
+    const cleanContent = content.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim();
+    const cleanTitle = title ? title.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
+    const cleanUrl = url ? url.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
     
-    // Clean the prompt of problematic characters
-    const cleanPrompt = prompt.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+    // Use a simple, clean prompt with the cleaned inputs
+    const simplePrompt = `Enhance this blog content for a discovery-focused blog:
+
+Title: ${cleanTitle || 'Untitled'}
+Type: ${type}
+Content: ${cleanContent}
+
+Make it engaging and curious, with a natural conversational tone. Include connections to other topics when relevant.`;
     
     // Debug log
-    console.log('Clean prompt first 200 chars:', cleanPrompt.substring(0, 200));
+    console.log('Simple prompt length:', simplePrompt.length);
     
-    // Use native JSON.stringify with proper error handling
-    let requestBody;
-    try {
-      requestBody = JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 1500,
-        messages: [{
-          role: 'user',
-          content: cleanPrompt
-        }]
-      });
-    } catch (jsonError) {
-      console.error('JSON stringify error:', jsonError);
-      throw new Error('Failed to create request body: ' + jsonError.message);
-    }
+    // Standard Claude API call
+    const requestBody = JSON.stringify({
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 1500,
+      messages: [{
+        role: 'user',
+        content: simplePrompt
+      }]
+    });
     
     // Debug the request body
     console.log('Request body length:', requestBody.length);
@@ -59,16 +61,25 @@ export async function onRequest(context) {
     }
     
     const claudeData = await claudeResponse.json();
-    const result = JSON.parse(claudeData.content[0].text);
+    const enhancedContent = claudeData.content[0].text;
     
-    // Generate HTML preview from markdown content
-    const preview = generatePreview(result.content, title);
+    // Generate simple frontmatter
+    const frontmatter = `---
+title: "${cleanTitle || 'Untitled'}"
+date: ${new Date().toISOString().split('T')[0]}
+type: "${type}"
+tags: []
+published: false
+---`;
+    
+    // Generate HTML preview
+    const preview = generatePreview(enhancedContent, cleanTitle);
     
     return new Response(JSON.stringify({
-      content: result.content,
-      frontmatter: result.frontmatter,
-      dive_deeper: result.dive_deeper,
-      suggested_tags: result.suggested_tags,
+      content: enhancedContent,
+      frontmatter: frontmatter,
+      dive_deeper: ["Explore this topic further", "Find related concepts", "Discover connections"],
+      suggested_tags: ["discovery", "exploration"],
       preview: preview,
       enhanced: true
     }), {
