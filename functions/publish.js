@@ -35,7 +35,7 @@ export async function onRequest(context) {
     // Create frontmatter
     const frontmatter = {
       title,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date(),
       type,
       published: publish,
       tags: tags || [],
@@ -49,6 +49,9 @@ export async function onRequest(context) {
       .map(([key, value]) => {
         if (Array.isArray(value)) {
           return `${key}:\n${value.map(item => `  - "${item}"`).join('\n')}`;
+        }
+        if (value instanceof Date) {
+          return `${key}: ${value.toISOString()}`;
         }
         if (typeof value === 'string') {
           return `${key}: "${value}"`; 
