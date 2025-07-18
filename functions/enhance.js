@@ -18,31 +18,30 @@ export async function onRequest(context) {
     // Build the prompt
     const prompt = await buildEnhancePrompt(title, type, url, content, tags, env);
     
+    // Clean the prompt of problematic characters
+    const cleanPrompt = prompt.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+    
     // Debug log
-    console.log('Prompt first 200 chars:', prompt.substring(0, 200));
+    console.log('Clean prompt first 200 chars:', cleanPrompt.substring(0, 200));
     
-    // Escape the prompt properly for JSON
-    const escapedPrompt = prompt
-      .replace(/\\/g, '\\\\')
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
-      .replace(/\t/g, '\\t')
-      .replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-    
-    // Create the request body manually
-    const requestBodyString = `{
-      "model": "claude-3-haiku-20240307",
-      "max_tokens": 1500,
-      "messages": [{
-        "role": "user",
-        "content": "${escapedPrompt}"
-      }]
-    }`;
+    // Use native JSON.stringify with proper error handling
+    let requestBody;
+    try {
+      requestBody = JSON.stringify({
+        model: 'claude-3-haiku-20240307',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: cleanPrompt
+        }]
+      });
+    } catch (jsonError) {
+      console.error('JSON stringify error:', jsonError);
+      throw new Error('Failed to create request body: ' + jsonError.message);
+    }
     
     // Debug the request body
-    console.log('Request body length:', requestBodyString.length);
-    console.log('Escaped prompt first 100 chars:', escapedPrompt.substring(0, 100));
+    console.log('Request body length:', requestBody.length);
     
     // Claude API integration
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
@@ -52,7 +51,7 @@ export async function onRequest(context) {
         'x-api-key': env.CLAUDE_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-      body: requestBodyString
+      body: requestBody
     });
     
     if (!claudeResponse.ok) {
