@@ -204,15 +204,47 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         transition: background-color 0.3s ease, color 0.3s ease;
       }
 
-      /* Global link styling */
+      /* Global link styling - Cache busting v2 */
       a {
-        color: var(--accent);
+        color: #fb923c !important;
         text-decoration: none;
         transition: color 0.2s ease;
       }
 
       a:hover {
-        color: var(--accent-light);
+        color: #fed7aa !important;
+      }
+
+      /* Content links specifically */
+      .post-content a,
+      main a,
+      article a,
+      .link-preview a {
+        color: #fb923c !important;
+        text-decoration: underline;
+        text-decoration-color: #fb923c;
+        text-underline-offset: 2px;
+      }
+
+      .post-content a:hover,
+      main a:hover,
+      article a:hover,
+      .link-preview a:hover {
+        color: #fed7aa !important;
+        text-decoration-color: #fed7aa;
+      }
+
+      /* Override any default blue links */
+      a[href^="http"],
+      a[href^="https"],
+      a[href^="//"] {
+        color: #fb923c !important;
+      }
+
+      /* Link preview overlay link */
+      .link-preview-overlay {
+        color: inherit !important;
+        text-decoration: none !important;
       }
 
       /* Navigation */

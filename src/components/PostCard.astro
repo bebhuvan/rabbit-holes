@@ -138,9 +138,11 @@ function detectEmbedType(url: string) {
   )}
 
   {/* Post actions */}
-  <div class="post-actions">
-    <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
-  </div>
+  {showExcerpt && (
+    <div class="post-actions">
+      <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
+    </div>
+  )}
 </article>
 
 <style>

@@ -102,10 +102,10 @@ const structuredData = {
       <!-- Post Actions -->
       <div class="post-actions">
         <div class="action-buttons">
-          <button class="copy-link-btn" onclick={`copyToClipboard('${Astro.url.origin}/posts/${post.slug}')`}>
+          <button class="copy-link-btn" onclick={`copyToClipboard('${new URL(`/posts/${post.slug}`, Astro.url).href}')`}>
             📋 Copy Link
           </button>
-          <button class="share-btn" onclick={`sharePost('${post.data.title}', '/posts/${post.slug}')`}>
+          <button class="share-btn" onclick={`sharePost('${post.data.title.replace(/'/g, "\\'")}', '/posts/${post.slug}')`}>
             📤 Share Post
           </button>
         </div>
@@ -412,6 +412,7 @@ const structuredData = {
   <script>
     // Share functionality
     function sharePost(title, url) {
+      console.log('Share button clicked:', title, url);
       const fullUrl = window.location.origin + url;
       
       if (navigator.share) {
@@ -428,11 +429,14 @@ const structuredData = {
     }
 
     function copyToClipboard(text) {
+      console.log('Copy to clipboard:', text);
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
           console.log('Link copied to clipboard');
+          alert('Link copied to clipboard!');
         }).catch(err => {
           console.error('Failed to copy to clipboard:', err);
+          alert('Failed to copy link');
         });
       } else {
         const textArea = document.createElement('textarea');
@@ -444,8 +448,10 @@ const structuredData = {
         try {
           document.execCommand('copy');
           console.log('Link copied to clipboard (legacy method)');
+          alert('Link copied to clipboard!');
         } catch (err) {
           console.error('Failed to copy to clipboard:', err);
+          alert('Failed to copy link');
         }
         document.body.removeChild(textArea);
       }
@@ -454,5 +460,8 @@ const structuredData = {
     // Make functions available globally for onclick handlers
     window.sharePost = sharePost;
     window.copyToClipboard = copyToClipboard;
+    
+    // Debug: Log when script loads
+    console.log('Post page script loaded');
   </script>
 </Base>
