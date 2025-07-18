@@ -20,17 +20,39 @@ export async function onRequest(context) {
     const cleanTitle = title ? title.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
     const cleanUrl = url ? url.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
     
-    // Use a simple, clean prompt with the cleaned inputs
-    const simplePrompt = `Enhance this blog content for a discovery-focused blog:
+    // Enhance content with URL fetching if it's a link post
+    let enhancedContent = cleanContent;
+    if (cleanUrl && (type === 'link' || type === 'video' || type === 'music')) {
+      try {
+        const urlContent = await fetchUrlContent(cleanUrl);
+        enhancedContent = `${cleanContent}\n\n[URL Content Summary: ${urlContent.slice(0, 400)}...]`;
+      } catch (error) {
+        console.log('Could not fetch URL content:', error.message);
+      }
+    }
+    
+    // Use serendipity-focused prompt
+    const serendipityPrompt = `You create "rabbit hole" content that sparks curiosity and reveals unexpected connections. Your goal: make readers think "I never realized these things were connected!"
 
+INPUT:
 Title: ${cleanTitle || 'Untitled'}
 Type: ${type}
-Content: ${cleanContent}
+${cleanUrl ? `URL: ${cleanUrl}` : ''}
+Content: ${enhancedContent}
 
-Make it engaging and curious, with a natural conversational tone. Include connections to other topics when relevant.`;
+APPROACH:
+- Hook with something surprising or counterintuitive
+- Reveal hidden patterns between different fields
+- Show how this connects to seemingly unrelated topics
+- Use natural, conversational tone
+- Reference the original source naturally if URL provided
+
+${cleanUrl ? `IMPORTANT: After your main content, add a "## Rabbit Holes" section with 3-5 unexpected connections across different domains (science, art, history, psychology, etc.). Each should be: "**Topic**: Brief description with connection to main topic"` : ''}
+
+Write engaging content that makes readers curious to explore further.`;
     
     // Debug log
-    console.log('Simple prompt length:', simplePrompt.length);
+    console.log('Serendipity prompt length:', serendipityPrompt.length);
     
     // Standard Claude API call
     const requestBody = JSON.stringify({
@@ -38,7 +60,7 @@ Make it engaging and curious, with a natural conversational tone. Include connec
       max_tokens: 1500,
       messages: [{
         role: 'user',
-        content: simplePrompt
+        content: serendipityPrompt
       }]
     });
     
