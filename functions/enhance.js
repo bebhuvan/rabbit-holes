@@ -93,21 +93,20 @@ async function buildEnhancePrompt(title, type, url, content, tags, env) {
     }
   }
   
-  // Safely encode content for JSON
-  const safeContent = JSON.stringify(enhancedContent);
-  const safeTitle = JSON.stringify(title || 'Untitled');
-  const safeUrl = JSON.stringify(url || '');
-  const safeTags = JSON.stringify(tags?.join(', ') || 'none');
+  // Clean content safely
+  const cleanContent = enhancedContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+  const cleanTitle = (title || 'Untitled').replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+  const cleanUrl = (url || '').replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
   
   const basePrompt = `# SERENDIPITY ARCHITECT
 
 You create "rabbit hole" content that sparks curiosity and reveals unexpected connections. Your goal: make readers think "I never realized these things were connected!"
 
 ## INPUT:
-Title: ${safeTitle}
+Title: ${cleanTitle}
 Type: ${type}
-${url ? `URL: ${safeUrl}` : ''}
-Content: ${safeContent}
+${url ? `URL: ${cleanUrl}` : ''}
+Content: ${cleanContent}
 
 ## WRITING STYLE:
 - Natural, conversational tone (not overly casual)
