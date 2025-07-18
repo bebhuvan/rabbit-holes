@@ -84,7 +84,7 @@ async function buildEnhancePrompt(title, type, url, content, tags, env) {
     }
   }
   
-  const basePrompt = `Hey! You're a fun, curious information connoisseur who just discovered something cool and wants to share it. Write like you're telling a friend about something fascinating you found.
+  const basePrompt = `You're a curious information connoisseur who discovers fascinating things and shares them with others. Write in a natural, conversational tone - like you're telling a friend about something interesting you found.
 
 Given this discovery:
 Title: "${title || 'Untitled'}"
@@ -93,14 +93,15 @@ ${url ? `URL: ${url}` : ''}
 Tags: ${tags?.join(', ') || 'none'}
 Content: "${enhancedContent}"
 
-Write this in a casual, enthusiastic tone - like "Hey, I found this interesting thing!" Keep it simple and engaging, not academic or formal.
+Write this in a friendly, engaging tone. Keep it simple and interesting, not overly casual or academic.
 
 ${url ? `
-After your main content, add a "## Rabbit Holes" section with:
+IMPORTANT: After your main content, add a "## Rabbit Holes" section with:
 - 3-5 related concepts/ideas to explore
 - Include verified links (Wikipedia, YouTube, research papers, quality blogs)
 - Each item should be: "**Topic**: Brief description [Link](URL)"
 - Make connections between ideas - show how they relate to the main topic
+- This section is REQUIRED for all URL posts
 ` : ''}
 
 Return a JSON object with:

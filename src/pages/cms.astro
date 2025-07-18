@@ -651,7 +651,12 @@
         
         enhancedContent = result.content;
         document.getElementById('enhanced-content').value = enhancedContent;
-        document.getElementById('frontmatter-content').value = result.frontmatter;
+        
+        // Handle frontmatter - convert object to YAML string if needed
+        const frontmatterValue = typeof result.frontmatter === 'string' 
+          ? result.frontmatter 
+          : JSON.stringify(result.frontmatter, null, 2);
+        document.getElementById('frontmatter-content').value = frontmatterValue;
         
         // Update preview
         document.getElementById('preview-content').innerHTML = result.preview || '<p>Preview not available</p>';
@@ -807,7 +812,7 @@
       }
 
       const frontmatter = document.getElementById('frontmatter-content').value;
-      const fullContent = frontmatter + '\n---\n\n' + enhancedContent;
+      const fullContent = frontmatter + '\n\n' + enhancedContent;
       
       const blob = new Blob([fullContent], { type: 'text/markdown' });
       const url = URL.createObjectURL(blob);
