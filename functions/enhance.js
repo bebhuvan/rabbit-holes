@@ -84,59 +84,60 @@ async function buildEnhancePrompt(title, type, url, content, tags, env) {
     }
   }
   
-  const basePrompt = `You're a serendipity architect - someone who reveals hidden connections and sparks curiosity about the unexpected patterns that connect everything. Your mission: turn discoveries into doorways to wonder.
+  const basePrompt = `# SERENDIPITY ARCHITECT
 
-Given this discovery:
+You create "rabbit hole" content that sparks curiosity and reveals unexpected connections. Your goal: make readers think "I never realized these things were connected!"
+
+## INPUT:
 Title: "${title || 'Untitled'}"
 Type: ${type}
 ${url ? `URL: ${url}` : ''}
-Tags: ${tags?.join(', ') || 'none'}
 Content: "${enhancedContent}"
 
-Your approach:
-1. **Hook with the unexpected**: Start with the most surprising, counterintuitive, or mind-bending aspect
-2. **Reveal hidden connections**: Show how this connects to seemingly unrelated fields, ideas, or phenomena
-3. **Spark questions**: End paragraphs with intriguing questions that make readers want to dig deeper
-4. **Use pattern recognition**: Highlight recurring themes, parallels, or structures across different domains
+## WRITING STYLE:
+- Natural, conversational tone (not overly casual)
+- Hook with something surprising or counterintuitive
+- Reveal hidden patterns between different fields
+- End sections with intriguing questions
+- Reference the original source naturally: "I stumbled across this fascinating [article about X](${url || 'URL'})..."
 
-Write like you're revealing a secret map of how everything connects. Make readers think "I never thought about it that way" and "wait, that's connected to THIS too?!"
-
-IMPORTANT: Always include the original URL as a hyperlink in your content (e.g., "I discovered this fascinating [article about Netflix's AI experiment](${url || 'URL'})...")
+## CONTENT STRUCTURE:
+1. **Opening Hook**: Start with the most surprising aspect
+2. **Main Content**: Explore connections across disciplines
+3. **Cross-domain Insights**: Show how this relates to other fields
+${url ? `4. **Rabbit Holes Section**: MANDATORY - see requirements below` : ''}
 
 ${url ? `
-IMPORTANT: After your main content, add a "## Rabbit Holes" section that creates a web of serendipitous discoveries:
-- 5-7 unexpected connections to explore
-- Mix different domains: science, art, history, psychology, technology, philosophy
-- Each should be: "**[Surprising Connection]**: Brief teaser about why this matters [Verified Link]"
-- Include one "wildcard" - something completely unexpected but genuinely connected
+## RABBIT HOLES SECTION (MANDATORY):
+After your main content, add exactly this structure:
+
+## Rabbit Holes
+
+**[Domain 1 Connection]**: Why this matters [Link](URL)
+**[Domain 2 Connection]**: Why this matters [Link](URL)
+**[Domain 3 Connection]**: Why this matters [Link](URL)
+**[Domain 4 Connection]**: Why this matters [Link](URL)
+**[Domain 5 Connection]**: Why this matters [Link](URL)
+**[Wildcard Connection]**: Something completely unexpected [Link](URL)
+
+REQUIREMENTS:
+- Mix domains: science, art, history, psychology, philosophy, technology
+- Use quality sources: Wikipedia, research papers, YouTube (educational), museums
 - Make each connection feel like a mini-revelation
-- Use quality sources: Wikipedia, research papers, YouTube (educational), quality blogs, museums, libraries
+- Include actual working hyperlinks
 ` : ''}
 
-Return a JSON object with:
-1. "content": Enhanced markdown content that reveals connections and sparks curiosity${url ? ' - MUST include ## Rabbit Holes section with 5-7 cross-domain links' : ''}
-2. "frontmatter": YAML frontmatter string starting with --- (not JSON object)
-3. "dive_deeper": Array of 3-5 specific questions or mysteries to investigate further
-4. "suggested_tags": Array of 3-5 relevant tags that capture the cross-domain connections
+## OUTPUT FORMAT:
+Return this exact JSON structure:
 
-EXAMPLE frontmatter format:
----
-title: "Your Title Here"
-date: 2025-01-18
-type: "link"
-tags: ["tag1", "tag2", "tag3"]
-published: true
----
-
-Format as valid JSON:
 {
-  "content": "enhanced markdown content with ## Rabbit Holes section",
-  "frontmatter": "---\ntitle: \"Title\"\ndate: 2025-01-18\ntype: \"link\"\ntags: [\"tag1\", \"tag2\"]\npublished: true\n---", 
-  "dive_deeper": ["suggestion 1", "suggestion 2"],
-  "suggested_tags": ["tag1", "tag2"]
+  "content": "Your enhanced markdown content${url ? ' with ## Rabbit Holes section' : ''}",
+  "frontmatter": "---\ntitle: \"Your Title\"\ndate: 2025-01-18\ntype: \"${type}\"\ntags: [\"tag1\", \"tag2\"]\npublished: true\n---",
+  "dive_deeper": ["Intriguing question 1", "Mystery to explore 2", "Connection to investigate 3"],
+  "suggested_tags": ["cross-domain tag 1", "interdisciplinary tag 2"]
 }
 
-${url ? `CRITICAL: Do not forget the ## Rabbit Holes section with actual hyperlinks. This is mandatory for URL posts.` : ''}`;
+${url ? `⚠️ CRITICAL: The ## Rabbit Holes section with 6 hyperlinked connections is MANDATORY for URL posts. Do not omit this.` : ''}`;
 
   return basePrompt;
 }
