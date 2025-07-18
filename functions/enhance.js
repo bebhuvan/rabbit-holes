@@ -112,18 +112,29 @@ IMPORTANT: After your main content, add a "## Rabbit Holes" section that creates
 ` : ''}
 
 Return a JSON object with:
-1. "content": Enhanced markdown content that reveals connections and sparks curiosity
-2. "frontmatter": YAML frontmatter with title, date, type, tags, and other metadata
+1. "content": Enhanced markdown content that reveals connections and sparks curiosity${url ? ' - MUST include ## Rabbit Holes section with 5-7 cross-domain links' : ''}
+2. "frontmatter": YAML frontmatter string starting with --- (not JSON object)
 3. "dive_deeper": Array of 3-5 specific questions or mysteries to investigate further
 4. "suggested_tags": Array of 3-5 relevant tags that capture the cross-domain connections
 
+EXAMPLE frontmatter format:
+---
+title: "Your Title Here"
+date: 2025-01-18
+type: "link"
+tags: ["tag1", "tag2", "tag3"]
+published: true
+---
+
 Format as valid JSON:
 {
-  "content": "enhanced markdown content",
-  "frontmatter": "yaml frontmatter", 
+  "content": "enhanced markdown content with ## Rabbit Holes section",
+  "frontmatter": "---\ntitle: \"Title\"\ndate: 2025-01-18\ntype: \"link\"\ntags: [\"tag1\", \"tag2\"]\npublished: true\n---", 
   "dive_deeper": ["suggestion 1", "suggestion 2"],
   "suggested_tags": ["tag1", "tag2"]
-}`;
+}
+
+${url ? `CRITICAL: Do not forget the ## Rabbit Holes section with actual hyperlinks. This is mandatory for URL posts.` : ''}`;
 
   return basePrompt;
 }
