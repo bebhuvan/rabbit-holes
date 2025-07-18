@@ -715,6 +715,14 @@
         enhancedContent = result.content;
         document.getElementById('enhanced-content').value = enhancedContent;
         
+        // Extract title from AI response if not provided
+        if (!document.getElementById('post-title').value.trim()) {
+          const titleMatch = result.content.match(/^# (.+)$/m);
+          if (titleMatch) {
+            document.getElementById('post-title').value = titleMatch[1];
+          }
+        }
+        
         // Handle frontmatter - convert object to YAML string if needed
         const frontmatterValue = typeof result.frontmatter === 'string' 
           ? result.frontmatter 

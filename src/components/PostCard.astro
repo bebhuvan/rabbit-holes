@@ -142,11 +142,8 @@ function detectEmbedType(url: string) {
     <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
     <div class="post-meta-actions">
       <button class="share-btn" onclick={`sharePost('${post.data.title}', '/posts/${post.slug}')`} title="Share post" aria-label={`Share ${post.data.title}`}>
-        🔗
+        Share
       </button>
-      <a href={`/posts/${post.slug}#comments`} class="comments-link" title="Comments">
-        💬
-      </a>
     </div>
   </div>
 </article>
@@ -296,40 +293,25 @@ function detectEmbedType(url: string) {
   }
 
   .share-btn {
-    background: none;
+    background: var(--accent);
     border: none;
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
+    color: white;
     cursor: pointer;
-    padding: var(--space-md);
+    padding: 6px 12px;
     border-radius: 6px;
-    transition: background 0.2s ease;
-    min-width: 44px;
-    min-height: 44px;
+    transition: all 0.2s ease;
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .share-btn:hover {
-    background: var(--hover);
+    background: var(--accent-light);
+    transform: translateY(-1px);
   }
 
-  .comments-link {
-    font-size: var(--text-base);
-    text-decoration: none;
-    padding: var(--space-md);
-    border-radius: 6px;
-    transition: background 0.2s ease;
-    min-width: 44px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .comments-link:hover {
-    background: var(--hover);
-  }
 
   /* Mobile responsive */
   @media (max-width: 768px) {
@@ -369,8 +351,46 @@ function detectEmbedType(url: string) {
 </style>
 
 <script>
-  // Import shared utilities for share functionality
-  import { sharePost } from '../utils/shared.ts';
+  // Share functionality using native Web Share API with clipboard fallback
+  function sharePost(title, url) {
+    const fullUrl = window.location.origin + url;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: title,
+        url: fullUrl
+      }).catch(err => {
+        console.log('Error sharing:', err);
+        copyToClipboard(fullUrl);
+      });
+    } else {
+      copyToClipboard(fullUrl);
+    }
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        console.log('Link copied to clipboard');
+      }).catch(err => {
+        console.error('Failed to copy to clipboard:', err);
+      });
+    } else {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        console.log('Link copied to clipboard (legacy method)');
+      } catch (err) {
+        console.error('Failed to copy to clipboard:', err);
+      }
+      document.body.removeChild(textArea);
+    }
+  }
   
   // Make sharePost available globally for onclick handlers
   window.sharePost = sharePost;

@@ -62,9 +62,9 @@ Requirements:
 - Use real, working URLs (Wikipedia, YouTube, research papers, museums)
 - Make connections feel like genuine discoveries` : ''}
 
-${cleanUrl ? `Add this disclaimer at the very end:
-"---
-*This content was enhanced using Claude AI to discover connections and generate the Rabbit Holes section. The original source was read and analyzed to create this exploration of related topics.*"` : ''}
+${cleanUrl ? `Add this disclaimer at the very end (separated by a single line break):
+
+*This content was enhanced using Claude AI to discover connections and generate the Rabbit Holes section. The original source was read and analyzed to create this exploration of related topics.*` : ''}
 
 Write like you're sharing a genuine discovery that excited you.`;
     
