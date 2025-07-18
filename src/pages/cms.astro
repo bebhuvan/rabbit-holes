@@ -387,6 +387,7 @@
           </button>
           <button id="save-draft-btn" class="btn btn-secondary">Save Draft</button>
           <button id="clear-form-btn" class="btn btn-secondary">Clear All</button>
+          <button id="logout-btn" class="btn btn-secondary">Logout</button>
         </div>
       </div>
 
@@ -457,9 +458,61 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      initializeEventListeners();
-      loadDraftFromStorage();
+      checkAuthentication();
     });
+
+    async function checkAuthentication() {
+      // Check if already authenticated
+      const sessionToken = localStorage.getItem('cms_session');
+      const expiresAt = localStorage.getItem('cms_expires');
+      
+      if (sessionToken && expiresAt && Date.now() < parseInt(expiresAt)) {
+        // Already authenticated and not expired
+        initializeEventListeners();
+        loadDraftFromStorage();
+        return;
+      }
+      
+      // Need to authenticate
+      await promptForPassword();
+    }
+
+    async function promptForPassword() {
+      const password = prompt('Enter CMS password:');
+      if (!password) {
+        window.location.href = '/';
+        return;
+      }
+      
+      try {
+        const response = await fetch('/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Store session info
+          localStorage.setItem('cms_session', result.sessionToken);
+          localStorage.setItem('cms_expires', result.expiresAt);
+          
+          // Initialize CMS
+          initializeEventListeners();
+          loadDraftFromStorage();
+        } else {
+          alert('Access denied: ' + result.message);
+          window.location.href = '/';
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        alert('Authentication failed');
+        window.location.href = '/';
+      }
+    }
 
     function initializeEventListeners() {
       // Post type change
@@ -494,6 +547,7 @@
       document.getElementById('download-btn').addEventListener('click', downloadContent);
       document.getElementById('save-draft-btn').addEventListener('click', saveDraft);
       document.getElementById('clear-form-btn').addEventListener('click', clearForm);
+      document.getElementById('logout-btn').addEventListener('click', logout);
 
       // Refinement modal
       document.getElementById('apply-refinement-btn').addEventListener('click', applyRefinement);
@@ -976,6 +1030,15 @@
       
       // Clear preview content
       document.getElementById('preview-content').innerHTML = '<p style="color: var(--text-secondary);">Preview will appear here after enhancement...</p>';
+    }
+
+    function logout() {
+      // Clear session data
+      localStorage.removeItem('cms_session');
+      localStorage.removeItem('cms_expires');
+      
+      // Redirect to home page
+      window.location.href = '/';
     }
 
     // Global functions for onclick handlers
