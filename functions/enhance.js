@@ -15,6 +15,12 @@ export async function onRequest(context) {
       return new Response('Missing required fields', { status: 400 });
     }
     
+    // Build the prompt
+    const prompt = await buildEnhancePrompt(title, type, url, content, tags, env);
+    
+    // Debug log
+    console.log('Prompt first 200 chars:', prompt.substring(0, 200));
+    
     // Claude API integration
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -28,7 +34,7 @@ export async function onRequest(context) {
         max_tokens: 1500,
         messages: [{
           role: 'user',
-          content: await buildEnhancePrompt(title, type, url, content, tags, env)
+          content: prompt
         }]
       })
     });
