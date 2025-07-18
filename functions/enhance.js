@@ -99,10 +99,29 @@ async function buildEnhancePrompt(title, type, url, content, tags, env) {
     }
   }
   
-  // Clean content safely
-  const cleanContent = enhancedContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-  const cleanTitle = (title || 'Untitled').replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-  const cleanUrl = (url || '').replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+  // Clean content aggressively for JSON safety
+  const cleanContent = enhancedContent
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+    .replace(/[\u2000-\u206F\u2E00-\u2E7F\u3000-\u303F]/g, '') // Remove Unicode spaces/punctuation
+    .replace(/[\uFFF0-\uFFFF]/g, '') // Remove Unicode specials
+    .replace(/\r\n/g, ' ') // Replace CRLF with space
+    .replace(/\n/g, ' ') // Replace LF with space
+    .replace(/\r/g, ' ') // Replace CR with space
+    .replace(/\t/g, ' ') // Replace tabs with space
+    .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .trim();
+    
+  const cleanTitle = (title || 'Untitled')
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')
+    .replace(/[\u2000-\u206F\u2E00-\u2E7F\u3000-\u303F]/g, '')
+    .replace(/[\uFFF0-\uFFFF]/g, '')
+    .replace(/[\r\n\t]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+    
+  const cleanUrl = (url || '')
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')
+    .trim();
   
   const basePrompt = `# SERENDIPITY ARCHITECT
 
