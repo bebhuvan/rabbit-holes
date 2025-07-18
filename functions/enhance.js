@@ -101,6 +101,8 @@ Your approach:
 
 Write like you're revealing a secret map of how everything connects. Make readers think "I never thought about it that way" and "wait, that's connected to THIS too?!"
 
+IMPORTANT: Always include the original URL as a hyperlink in your content (e.g., "I discovered this fascinating [article about Netflix's AI experiment](${url || 'URL'})...")
+
 ${url ? `
 IMPORTANT: After your main content, add a "## Rabbit Holes" section that creates a web of serendipitous discoveries:
 - 5-7 unexpected connections to explore
