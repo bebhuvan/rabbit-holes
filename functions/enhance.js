@@ -32,7 +32,7 @@ export async function onRequest(context) {
     }
     
     // Use serendipity-focused prompt
-    const serendipityPrompt = `You create "rabbit hole" content that sparks curiosity and reveals unexpected connections. Your goal: make readers think "I never realized these things were connected!"
+    const serendipityPrompt = `You are a thoughtful information curator who discovers fascinating patterns and connections. Write in a warm, curious tone - like sharing an interesting discovery with a friend over coffee.
 
 INPUT:
 Title: ${cleanTitle || 'Untitled'}
@@ -40,21 +40,29 @@ Type: ${type}
 ${cleanUrl ? `URL: ${cleanUrl}` : ''}
 Content: ${enhancedContent}
 
-APPROACH:
-- Hook with something surprising or counterintuitive
-- Reveal hidden patterns between different fields
-- Show how this connects to seemingly unrelated topics
-- Use natural, conversational tone
-${cleanUrl ? `- MUST include the original URL as a hyperlink in your content like: "I found this fascinating [article about X](${cleanUrl})..."` : ''}
+WRITING STYLE:
+- Start with genuine curiosity: "I stumbled across something fascinating..." or "Here's something that caught my attention..."
+- Use conversational language, not academic jargon
+- Show your thinking process: "This made me wonder..." or "What struck me was..."
+- Ask questions that spark curiosity
+- Connect ideas naturally, like dots forming a picture
+${cleanUrl ? `- Reference the original source naturally: "I found this compelling [piece about X](${cleanUrl}) that got me thinking..."` : ''}
 
-${cleanUrl ? `MANDATORY: After your main content, add a "## Rabbit Holes" section with 3-5 unexpected connections:
-- Each must be: "**Topic**: Brief description [Link](actual-working-URL)"
-- Use real URLs: Wikipedia links, YouTube videos, research papers, quality articles
-- Example: "**Quantum Jazz**: How improvisation mirrors quantum uncertainty [Link](https://en.wikipedia.org/wiki/Quantum_mechanics)"
-- Mix domains: science, art, history, psychology, philosophy
-- Each link must be a real, working URL` : ''}
+${cleanUrl ? `MANDATORY: End with a "## Rabbit Holes" section with 4-5 connections:
+Format: "**Topic**: 2-3 sentence description explaining the connection. [Explore this →](working-URL)"
 
-Write engaging content that makes readers curious to explore further.`;
+Example: "**Jazz and Quantum Physics**: Both involve improvisation within structured frameworks. Jazz musicians work within chord progressions while creating spontaneous variations, much like quantum particles exist in probability states until observed. [Explore this →](https://en.wikipedia.org/wiki/Quantum_mechanics)"
+
+Requirements:
+- Mix domains: science, art, history, psychology, philosophy, technology
+- Each needs 2-3 sentences explaining WHY it connects
+- Use real, working URLs (Wikipedia, YouTube, research papers, museums)
+- Make connections feel like genuine discoveries` : ''}
+
+${cleanUrl ? `Add this disclaimer at the very end:
+"*This summary was enhanced with Claude AI to explore connections and spark curiosity.*"` : ''}
+
+Write like you're sharing a genuine discovery that excited you.`;
     
     // Debug log
     console.log('Serendipity prompt length:', serendipityPrompt.length);
