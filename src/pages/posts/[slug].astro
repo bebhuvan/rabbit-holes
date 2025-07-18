@@ -101,9 +101,14 @@ const structuredData = {
 
       <!-- Post Actions -->
       <div class="post-actions">
-        <button class="share-btn" onclick={`sharePost('${post.data.title}', '/posts/${post.slug}')`}>
-          📤 Share Post
-        </button>
+        <div class="action-buttons">
+          <button class="copy-link-btn" onclick={`copyToClipboard('${Astro.url.origin}/posts/${post.slug}')`}>
+            📋 Copy Link
+          </button>
+          <button class="share-btn" onclick={`sharePost('${post.data.title}', '/posts/${post.slug}')`}>
+            📤 Share Post
+          </button>
+        </div>
         <a href="/" class="back-link">← Back to Home</a>
       </div>
 
@@ -249,8 +254,15 @@ const structuredData = {
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       margin-bottom: 48px;
+      gap: 12px;
     }
 
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .copy-link-btn,
     .share-btn {
       background: var(--accent);
       color: white;
@@ -263,6 +275,7 @@ const structuredData = {
       transition: all 0.2s ease;
     }
 
+    .copy-link-btn:hover,
     .share-btn:hover {
       background: var(--accent-light);
       transform: translateY(-1px);
@@ -397,9 +410,49 @@ const structuredData = {
   </style>
 
   <script>
-    import { sharePost } from '../../utils/shared.ts';
+    // Share functionality
+    function sharePost(title, url) {
+      const fullUrl = window.location.origin + url;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          url: fullUrl
+        }).catch(err => {
+          console.log('Error sharing:', err);
+          copyToClipboard(fullUrl);
+        });
+      } else {
+        copyToClipboard(fullUrl);
+      }
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          console.log('Link copied to clipboard');
+        }).catch(err => {
+          console.error('Failed to copy to clipboard:', err);
+        });
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          console.log('Link copied to clipboard (legacy method)');
+        } catch (err) {
+          console.error('Failed to copy to clipboard:', err);
+        }
+        document.body.removeChild(textArea);
+      }
+    }
     
-    // Make sharePost available globally for onclick handlers
+    // Make functions available globally for onclick handlers
     window.sharePost = sharePost;
+    window.copyToClipboard = copyToClipboard;
   </script>
 </Base>

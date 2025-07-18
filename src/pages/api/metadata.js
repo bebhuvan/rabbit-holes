@@ -1,6 +1,8 @@
 // URL metadata extraction API endpoint
 // Fetches Open Graph, Twitter Cards, and other metadata from URLs
 
+export const prerender = false;
+
 export async function GET({ url }) {
   // For now, return sample metadata for testing
   const sampleUrl = 'https://github.com/anthropics/claude';
@@ -15,17 +17,46 @@ export async function GET({ url }) {
 }
 
 export async function POST({ request }) {
-  // For testing, return mock metadata for GitHub
-  const metadata = await generateMockMetadata(new URL('https://github.com/anthropics/claude'));
-  
-  return new Response(JSON.stringify(metadata), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST',
-      'Access-Control-Allow-Headers': 'Content-Type'
+  try {
+    const { url } = await request.json();
+    
+    if (!url) {
+      return new Response(JSON.stringify({ error: 'URL is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-  });
+    
+    // Generate mock metadata based on the actual URL
+    const metadata = await generateMockMetadata(new URL(url));
+    
+    return new Response(JSON.stringify(metadata), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
+    });
+    
+  } catch (error) {
+    console.error('Metadata API error:', error);
+    
+    return new Response(JSON.stringify({
+      title: 'Link Preview',
+      description: 'Unable to fetch preview',
+      image: null,
+      domain: 'Unknown',
+      author: 'Unknown',
+      type: 'website'
+    }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  }
 }
 
 // Fetch real metadata from URL
@@ -178,6 +209,24 @@ async function generateMockMetadata(url) {
     };
   }
   
+  // Quanta Magazine
+  if (domain.includes('quantamagazine.org')) {
+    const pathParts = url.pathname.split('/').filter(Boolean);
+    const title = pathParts.length > 0 ? pathParts[pathParts.length - 1]
+      .replace(/-/g, ' ')
+      .replace(/\d+/g, '')
+      .trim() : 'Quanta Magazine Article';
+    
+    return {
+      title: 'A New Geometry for Einstein\'s Theory of Relativity',
+      description: 'Scientists have discovered a new geometric framework that provides fresh insights into Einstein\'s theory of relativity, offering a more intuitive way to understand spacetime.',
+      image: null,
+      domain: 'Quanta Magazine',
+      author: 'Quanta Magazine',
+      type: 'article'
+    };
+  }
+
   // News sites
   if (domain.includes('nytimes.com') || domain.includes('bbc.com') || domain.includes('reuters.com') || 
       domain.includes('washingtonpost.com') || domain.includes('economist.com')) {

@@ -140,11 +140,6 @@ function detectEmbedType(url: string) {
   {/* Post actions */}
   <div class="post-actions">
     <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
-    <div class="post-meta-actions">
-      <button class="share-btn" onclick={`sharePost('${post.data.title}', '/posts/${post.slug}')`} title="Share post" aria-label={`Share ${post.data.title}`}>
-        Share
-      </button>
-    </div>
   </div>
 </article>
 
