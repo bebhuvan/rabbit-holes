@@ -386,6 +386,7 @@
             <span class="btn-text">Enhance with AI</span>
           </button>
           <button id="save-draft-btn" class="btn btn-secondary">Save Draft</button>
+          <button id="clear-form-btn" class="btn btn-secondary">Clear All</button>
         </div>
       </div>
 
@@ -492,13 +493,21 @@
       document.getElementById('publish-btn').addEventListener('click', publishContent);
       document.getElementById('download-btn').addEventListener('click', downloadContent);
       document.getElementById('save-draft-btn').addEventListener('click', saveDraft);
+      document.getElementById('clear-form-btn').addEventListener('click', clearForm);
 
       // Refinement modal
       document.getElementById('apply-refinement-btn').addEventListener('click', applyRefinement);
       document.getElementById('cancel-refinement-btn').addEventListener('click', hideRefineModal);
 
-      // Auto-save
-      setInterval(saveDraftToStorage, 30000); // Auto-save every 30 seconds
+      // Auto-save (only if content exists)
+      setInterval(() => {
+        const hasContent = document.getElementById('post-content').value.trim() || 
+                          document.getElementById('post-title').value.trim() ||
+                          currentTags.length > 0;
+        if (hasContent) {
+          saveDraftToStorage();
+        }
+      }, 30000); // Auto-save every 30 seconds
 
       // Ensure paste functionality works
       const contentTextarea = document.getElementById('post-content');
@@ -961,7 +970,12 @@
       document.getElementById('publish-btn').disabled = true;
       document.getElementById('download-btn').disabled = true;
       
+      // Clear localStorage and add timestamp to prevent cache issues
       localStorage.removeItem('blog-cms-draft');
+      localStorage.setItem('blog-cms-cleared', new Date().getTime().toString());
+      
+      // Clear preview content
+      document.getElementById('preview-content').innerHTML = '<p style="color: var(--text-secondary);">Preview will appear here after enhancement...</p>';
     }
 
     // Global functions for onclick handlers
