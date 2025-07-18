@@ -61,11 +61,15 @@ Make the content curiosity-driven and focused on exploration. Format as valid JS
     const claudeData = await claudeResponse.json();
     const result = JSON.parse(claudeData.content[0].text);
     
+    // Generate HTML preview from markdown content
+    const preview = generatePreview(result.content, title);
+    
     return new Response(JSON.stringify({
       content: result.content,
       frontmatter: result.frontmatter,
       dive_deeper: result.dive_deeper,
       suggested_tags: result.suggested_tags,
+      preview: preview,
       enhanced: true
     }), {
       headers: {
@@ -86,4 +90,25 @@ Make the content curiosity-driven and focused on exploration. Format as valid JS
       headers: { 'Content-Type': 'application/json' }
     });
   }
+}
+
+function generatePreview(markdown, title) {
+  // Simple markdown to HTML conversion for preview
+  let html = markdown
+    .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+    .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+    .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  
+  // Wrap in paragraphs
+  html = '<p>' + html + '</p>';
+  
+  // Clean up empty paragraphs
+  html = html.replace(/<p><\/p>/g, '');
+  
+  return html;
 }

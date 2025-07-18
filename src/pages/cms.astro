@@ -656,6 +656,16 @@
         // Update preview
         document.getElementById('preview-content').innerHTML = result.preview || '<p>Preview not available</p>';
         
+        // Auto-add suggested tags
+        if (result.suggested_tags && result.suggested_tags.length > 0) {
+          result.suggested_tags.forEach(tag => {
+            if (!currentTags.includes(tag)) {
+              currentTags.push(tag);
+            }
+          });
+          updateTagsDisplay();
+        }
+        
         // Enable buttons
         document.getElementById('refine-btn').disabled = false;
         document.getElementById('publish-btn').disabled = false;
