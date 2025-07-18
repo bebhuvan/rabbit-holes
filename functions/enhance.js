@@ -45,9 +45,14 @@ APPROACH:
 - Reveal hidden patterns between different fields
 - Show how this connects to seemingly unrelated topics
 - Use natural, conversational tone
-- Reference the original source naturally if URL provided
+${cleanUrl ? `- MUST include the original URL as a hyperlink in your content like: "I found this fascinating [article about X](${cleanUrl})..."` : ''}
 
-${cleanUrl ? `IMPORTANT: After your main content, add a "## Rabbit Holes" section with 3-5 unexpected connections across different domains (science, art, history, psychology, etc.). Each should be: "**Topic**: Brief description with connection to main topic"` : ''}
+${cleanUrl ? `MANDATORY: After your main content, add a "## Rabbit Holes" section with 3-5 unexpected connections:
+- Each must be: "**Topic**: Brief description [Link](actual-working-URL)"
+- Use real URLs: Wikipedia links, YouTube videos, research papers, quality articles
+- Example: "**Quantum Jazz**: How improvisation mirrors quantum uncertainty [Link](https://en.wikipedia.org/wiki/Quantum_mechanics)"
+- Mix domains: science, art, history, psychology, philosophy
+- Each link must be a real, working URL` : ''}
 
 Write engaging content that makes readers curious to explore further.`;
     
