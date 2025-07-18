@@ -89,15 +89,15 @@ export async function onRequest(context) {
 async function buildEnhancePrompt(title, type, url, content, tags, env) {
   let enhancedContent = content;
   
-  // If it's a link post, fetch and read the URL content
-  if (url && (type === 'link' || type === 'video' || type === 'music')) {
-    try {
-      const urlContent = await fetchUrlContent(url);
-      enhancedContent = `${content}\n\n[URL Content Summary: ${urlContent.slice(0, 500)}...]`;
-    } catch (error) {
-      console.log('Could not fetch URL content:', error.message);
-    }
-  }
+  // TEMPORARILY DISABLE URL FETCHING TO ISOLATE JSON ISSUE
+  // if (url && (type === 'link' || type === 'video' || type === 'music')) {
+  //   try {
+  //     const urlContent = await fetchUrlContent(url);
+  //     enhancedContent = `${content}\n\n[URL Content Summary: ${urlContent.slice(0, 500)}...]`;
+  //   } catch (error) {
+  //     console.log('Could not fetch URL content:', error.message);
+  //   }
+  // }
   
   // Clean content aggressively for JSON safety
   const cleanContent = enhancedContent
