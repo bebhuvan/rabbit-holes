@@ -1,10 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://bhuvan.dev', // Replace with your actual domain
-  output: 'static',
+  output: 'hybrid', // Changed from 'static' to support both static and server-side rendering
+  adapter: cloudflare(),
   build: {
     inlineStylesheets: 'auto',
   },
