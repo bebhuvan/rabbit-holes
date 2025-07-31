@@ -35,44 +35,43 @@ const tweetId = getTweetId(url);
 
 <style>
   .twitter-embed {
-    margin: 32px 0;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    margin: var(--space-xl) 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    background: var(--hover);
+    background: var(--color-surface);
   }
 
   .twitter-tweet {
     margin: 0 !important;
-    border-radius: 8px 8px 0 0 !important;
+    border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
   }
 
   .embed-caption {
-    padding: 12px 16px;
+    padding: var(--space-sm) var(--space-md);
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: var(--hover);
-    border-top: 1px solid var(--border);
+    gap: var(--space-sm);
+    background: var(--color-surface);
   }
 
   .embed-icon {
-    font-size: 16px;
+    font-size: var(--text-base);
   }
 
   .embed-text {
-    color: var(--text-secondary);
-    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
     font-weight: 500;
   }
 
   .embed-fallback {
-    padding: 20px;
+    padding: var(--space-lg);
     text-align: center;
   }
 
   .embed-fallback a {
-    color: var(--accent);
+    color: var(--color-accent);
     text-decoration: none;
   }
 
@@ -83,7 +82,7 @@ const tweetId = getTweetId(url);
   /* Mobile responsive */
   @media (max-width: 768px) {
     .twitter-embed {
-      margin: 24px 0;
+      margin: var(--space-lg) 0;
     }
   }
 </style>

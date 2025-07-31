@@ -29,8 +29,6 @@ const allPosts = await getCollection('posts', ({ data }) => {
 // Use advanced related posts algorithm
 const relatedPostsWithScores = getRelatedPosts(post, allPosts, 3);
 
-// Format date
-
 // Structured data for individual posts
 const structuredData = {
   "@context": "https://schema.org",
@@ -69,46 +67,46 @@ const structuredData = {
 >
   <!-- Structured Data for SEO -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+  
   <article class="post-page">
-    <div class="post-container">
+    <div class="container">
       <!-- Post Header -->
-      <header class="post-header">
-        <div class="post-meta">
-          <span class={`post-type-badge ${post.data.type}`}>
-            {post.data.type}
-          </span>
-          <time class="post-date">{formatDate(new Date(post.data.date))}</time>
-          <span class="post-reading-time">{calculateReadingTime(post.body || '')} min read</span>
+      <header class="post-header text-center mb-xl">
+        <div class="post-meta flex items-center justify-center gap-md mb-lg">
+          <div class="post-type-badge flex items-center gap-xs">
+            <span class={`post-type-indicator post-type-indicator--${post.data.type}`}></span>
+            <span class="post-type-label text-sm font-semibold uppercase">{post.data.type}</span>
+          </div>
+          <time class="post-date text-tertiary text-sm font-medium">{formatDate(new Date(post.data.date))}</time>
+          <span class="post-reading-time text-tertiary text-sm">{calculateReadingTime(post.body || '')} min read</span>
         </div>
         
-        <h1 class="post-title">{post.data.title}</h1>
+        <h1 class="post-title text-4xl font-bold mb-lg">{post.data.title}</h1>
         
         {post.data.description && (
-          <p class="post-description">{post.data.description}</p>
-        )}
-        
-        {post.data.tags && post.data.tags.length > 0 && (
-          <div class="post-tags">
-            {post.data.tags.map((tag: string) => (
-              <a href={`/tags/${tag}`} class="tag">#{tag}</a>
-            ))}
-          </div>
+          <p class="post-description text-lg text-secondary mb-lg max-w-2xl mx-auto">{post.data.description}</p>
         )}
       </header>
 
       <!-- Post Content -->
-      <div class="post-content">
+      <div class="post-content mb-2xl">
         <PostCard post={post} showExcerpt={false} />
       </div>
 
       <!-- Post Actions -->
-      <div class="post-actions">
-        <div class="action-buttons">
-          <button class="copy-link-btn" onclick={`copyToClipboard('${new URL(`/posts/${post.slug}`, Astro.url).href}')`}>
-            📋 Copy Link
+      <div class="post-actions flex justify-between items-center py-lg border-t mb-2xl">
+        <div class="post-actions-buttons flex gap-sm">
+          <button 
+            class="btn" 
+            onclick={`sharePost('${post.data.title.replace(/'/g, "\\'")}', '/posts/${post.slug}')`}
+          >
+            Share
           </button>
-          <button class="share-btn" onclick={`sharePost('${post.data.title.replace(/'/g, "\\'")}', '/posts/${post.slug}')`}>
-            📤 Share Post
+          <button 
+            class="btn" 
+            onclick={`copyPostLink('/posts/${post.slug}')`}
+          >
+            Copy Link
           </button>
         </div>
         <a href="/" class="back-link">← Back to Home</a>
@@ -117,30 +115,30 @@ const structuredData = {
       <!-- Related Posts with Intelligence -->
       {relatedPostsWithScores.length > 0 && (
         <section class="related-posts">
-          <h2>Related Posts</h2>
-          <div class="related-posts-grid">
+          <h2 class="text-2xl font-semibold mb-xl text-center">Related Posts</h2>
+          <div class="related-posts-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
             {relatedPostsWithScores.map(({ post: relatedPost, score, reasons }) => (
-              <article class="related-post-card">
-                <div class="related-post-meta">
-                  <span class={`post-type-indicator ${relatedPost.data.type}`}></span>
-                  <span class="related-post-date">
+              <article class="related-post-card bg-surface border rounded-lg p-lg transition hover-lift">
+                <div class="related-post-meta flex items-center gap-xs mb-sm">
+                  <span class={`post-type-indicator post-type-indicator--${relatedPost.data.type}`}></span>
+                  <span class="related-post-date text-tertiary text-xs">
                     {formatDate(new Date(relatedPost.data.date))}
                   </span>
-                  <span class="similarity-score" title={`Similarity: ${score} - ${formatRelatedPostReasons(reasons)}`}>
+                  <span class="similarity-score text-base" title={`Similarity: ${score} - ${formatRelatedPostReasons(reasons)}`}>
                     {score > 15 ? '🔥' : score > 10 ? '✨' : '🔗'}
                   </span>
                 </div>
-                <h3 class="related-post-title">
-                  <a href={`/posts/${relatedPost.slug}`}>
+                <h3 class="related-post-title text-lg font-semibold mb-xs">
+                  <a href={`/posts/${relatedPost.slug}`} class="hover-accent">
                     {relatedPost.data.title}
                   </a>
                 </h3>
                 {relatedPost.data.description && (
-                  <p class="related-post-description">
+                  <p class="related-post-description text-secondary text-sm mb-xs">
                     {relatedPost.data.description}
                   </p>
                 )}
-                <div class="similarity-reasons">
+                <div class="similarity-reasons text-tertiary text-xs italic">
                   {formatRelatedPostReasons(reasons)}
                 </div>
               </article>
@@ -153,317 +151,68 @@ const structuredData = {
 
   <style>
     .post-page {
-      min-height: 100vh;
+      padding: var(--space-2xl) 0;
     }
-
-    .post-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 60px 24px 80px;
-    }
-
-    /* Post Header */
-    .post-header {
-      margin-bottom: 48px;
-      text-align: center;
-    }
-
-    .post-meta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
+    
     .post-type-badge {
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: capitalize;
-      color: white;
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--color-surface);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
     }
-
-    .post-type-badge.musing { background: var(--yellow); color: var(--text-primary); }
-    .post-type-badge.link { background: var(--blue); }
-    .post-type-badge.video { background: var(--pink); }
-    .post-type-badge.music { background: var(--green); }
-
-    .post-date {
-      color: var(--text-tertiary);
-      font-size: 14px;
-      font-weight: 500;
+    
+    .post-type-label {
+      color: var(--color-text-secondary);
     }
-
-    .post-title {
-      font-size: 42px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 20px;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-
-    .post-description {
-      font-size: 20px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 32px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .post-tags {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 8px 16px;
-      background: var(--hover);
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      transition: all 0.2s ease;
-      font-family: monospace;
-    }
-
-    .tag:hover {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
-
-    /* Post Content */
-    .post-content {
-      margin-bottom: 48px;
-    }
-
-    /* Post Actions */
-    .post-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 48px;
-      gap: 12px;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    .copy-link-btn,
-    .share-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .copy-link-btn:hover,
-    .share-btn:hover {
-      background: var(--accent-light);
-      transform: translateY(-1px);
-    }
-
-    .back-link {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .back-link:hover {
-      color: var(--accent);
-    }
-
-    /* Related Posts */
+    
     .related-posts {
-      margin-top: 60px;
+      margin-top: var(--space-3xl);
     }
-
-    .related-posts h2 {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 32px;
-      color: var(--text-primary);
-      text-align: center;
-    }
-
-    .related-posts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px;
-    }
-
-    .related-post-card {
-      background: var(--hover);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.2s ease;
-    }
-
+    
     .related-post-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .related-post-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .post-type-indicator {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-    }
-
-    .post-type-indicator.musing { background: var(--yellow); }
-    .post-type-indicator.link { background: var(--blue); }
-    .post-type-indicator.video { background: var(--pink); }
-    .post-type-indicator.music { background: var(--green); }
-
-    .related-post-date {
-      color: var(--text-tertiary);
-      font-size: 12px;
-    }
-
-    .related-post-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-
-    .related-post-title a {
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .related-post-title a:hover {
-      color: var(--accent);
-    }
-
-    .related-post-description {
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 8px;
+      box-shadow: var(--shadow-md);
     }
     
     .similarity-score {
-      font-size: 16px;
       cursor: help;
     }
     
-    .similarity-reasons {
-      color: var(--text-tertiary);
-      font-size: 12px;
-      line-height: 1.4;
-      font-style: italic;
-    }
-
     /* Mobile responsive */
     @media (max-width: 768px) {
-      .post-container {
-        padding: 40px 20px 60px;
+      .post-page {
+        padding: var(--space-xl) 0;
       }
-
-      .post-title {
-        font-size: 32px;
+      
+      .post-header .post-meta {
+        flex-direction: column;
+        gap: var(--space-xs);
       }
-
-      .post-description {
-        font-size: 18px;
-      }
-
+      
       .post-actions {
         flex-direction: column;
-        gap: 16px;
-        text-align: center;
+        gap: var(--space-md);
+        align-items: flex-start;
       }
-
+      
       .related-posts-grid {
         grid-template-columns: 1fr;
       }
     }
   </style>
 
-  <script>
-    // Share functionality
-    function sharePost(title, url) {
-      console.log('Share button clicked:', title, url);
+  <script type="module">
+    import { share } from '/src/scripts/utils.js';
+    
+    // Make share functions available globally
+    window.sharePost = async function(title, url) {
+      const result = await share.sharePost(title, url);
+      console.log('Share result:', result);
+    };
+    
+    window.copyPostLink = async function(url) {
       const fullUrl = window.location.origin + url;
-      
-      if (navigator.share) {
-        navigator.share({
-          title: title,
-          url: fullUrl
-        }).catch(err => {
-          console.log('Error sharing:', err);
-          copyToClipboard(fullUrl);
-        });
-      } else {
-        copyToClipboard(fullUrl);
-      }
-    }
-
-    function copyToClipboard(text) {
-      console.log('Copy to clipboard:', text);
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-          console.log('Link copied to clipboard');
-          alert('Link copied to clipboard!');
-        }).catch(err => {
-          console.error('Failed to copy to clipboard:', err);
-          alert('Failed to copy link');
-        });
-      } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          console.log('Link copied to clipboard (legacy method)');
-          alert('Link copied to clipboard!');
-        } catch (err) {
-          console.error('Failed to copy to clipboard:', err);
-          alert('Failed to copy link');
-        }
-        document.body.removeChild(textArea);
-      }
-    }
-    
-    // Make functions available globally for onclick handlers
-    window.sharePost = sharePost;
-    window.copyToClipboard = copyToClipboard;
-    
-    // Debug: Log when script loads
-    console.log('Post page script loaded');
+      const result = await share.copyToClipboard(fullUrl);
+      console.log('Copy result:', result);
+    };
   </script>
 </Base>

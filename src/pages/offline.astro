@@ -1,0 +1,208 @@
+---
+export const prerender = true;
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="You're Offline - Rabbit Holes">
+  <div class="offline-container">
+    <div class="offline-content">
+      <div class="offline-icon">🐰</div>
+      <h1>Down the Offline Rabbit Hole</h1>
+      <p>Looks like you've lost your internet connection. Don't worry – some of the best discoveries happen when we're disconnected from the digital world.</p>
+      
+      <div class="offline-suggestions">
+        <h2>What you can do:</h2>
+        <ul>
+          <li>📖 Check out the cached posts below</li>
+          <li>🔍 Use the search (if you visited it before)</li>
+          <li>🎲 Try the random post button when you're back online</li>
+          <li>💭 Take a moment to reflect on what you've read</li>
+        </ul>
+      </div>
+
+      <div class="offline-actions">
+        <button onclick="window.location.reload()" class="btn">
+          Try Again
+        </button>
+        <a href="/" class="btn btn-secondary">
+          Go Home
+        </a>
+      </div>
+
+      <div class="cached-content" id="cached-posts">
+        <h3>Recently Viewed Posts</h3>
+        <p class="loading-text">Looking for cached content...</p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .offline-container {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-3xl) var(--space-lg);
+    }
+
+    .offline-content {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .offline-icon {
+      font-size: 4rem;
+      margin-bottom: var(--space-xl);
+    }
+
+    .offline-content h1 {
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+      color: var(--color-text-primary);
+    }
+
+    .offline-content > p {
+      font-size: var(--text-lg);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .offline-suggestions {
+      background: var(--color-surface);
+      padding: var(--space-xl);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-2xl);
+      text-align: left;
+    }
+
+    .offline-suggestions h2 {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      color: var(--color-text-primary);
+    }
+
+    .offline-suggestions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .offline-suggestions li {
+      padding: var(--space-sm) 0;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .offline-suggestions li:last-child {
+      border-bottom: none;
+    }
+
+    .offline-actions {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .cached-content {
+      background: var(--color-surface);
+      padding: var(--space-xl);
+      border-radius: var(--radius-lg);
+      text-align: left;
+    }
+
+    .cached-content h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      color: var(--color-text-primary);
+    }
+
+    .loading-text {
+      color: var(--color-text-tertiary);
+      font-style: italic;
+    }
+
+    .cached-post {
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .cached-post:last-child {
+      border-bottom: none;
+    }
+
+    .cached-post a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .cached-post a:hover {
+      color: var(--color-accent);
+    }
+
+    .cached-post-meta {
+      font-size: var(--text-sm);
+      color: var(--color-text-tertiary);
+      margin-top: var(--space-xs);
+    }
+
+    @media (max-width: 768px) {
+      .offline-container {
+        padding: var(--space-2xl) var(--space-md);
+      }
+
+      .offline-content h1 {
+        font-size: var(--text-2xl);
+      }
+
+      .offline-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script>
+    // Try to load cached posts
+    if ('caches' in window) {
+      caches.open('rabbit-holes-v1')
+        .then(cache => cache.keys())
+        .then(requests => {
+          const cachedPosts = requests
+            .filter(req => req.url.includes('/posts/'))
+            .slice(0, 5); // Show last 5 cached posts
+          
+          const container = document.getElementById('cached-posts');
+          const loadingText = container.querySelector('.loading-text');
+          
+          if (cachedPosts.length === 0) {
+            loadingText.textContent = 'No cached posts found. Visit some posts when online to cache them for offline reading.';
+            return;
+          }
+          
+          loadingText.remove();
+          
+          cachedPosts.forEach(request => {
+            const url = new URL(request.url);
+            const slug = url.pathname.split('/').pop();
+            const title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            const postEl = document.createElement('div');
+            postEl.className = 'cached-post';
+            postEl.innerHTML = `
+              <a href="${url.pathname}">${title}</a>
+              <div class="cached-post-meta">Cached • Available offline</div>
+            `;
+            
+            container.appendChild(postEl);
+          });
+        })
+        .catch(() => {
+          document.querySelector('.loading-text').textContent = 'Cache unavailable';
+        });
+    }
+  </script>
+</Base>

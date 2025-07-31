@@ -6,7 +6,7 @@ import VimeoEmbed from './VimeoEmbed.astro';
 import TwitterEmbed from './TwitterEmbed.astro';
 import CodePenEmbed from './CodePenEmbed.astro';
 import GenericEmbed from './GenericEmbed.astro';
-import { formatDate, calculateReadingTime, sharePost } from '../utils/shared';
+import { formatDate, calculateReadingTime } from '../utils/shared';
 
 export interface Props {
   post: any;
@@ -65,11 +65,13 @@ function detectEmbedType(url: string) {
 }
 ---
 
-<article class={`post ${post.data.type}`}>
+<article class="post-card">
   <div class="post-meta">
-    <span class={`post-type-icon ${post.data.type}`}></span>
-    <span class="post-date">{formatDate(new Date(post.data.date))}</span>
-    <span class="post-type-label">{post.data.type}</span>
+    <div class="post-type-badge">
+      <span class={`post-type-indicator post-type-indicator--${post.data.type}`}></span>
+      <span class="post-type-label">{post.data.type}</span>
+    </div>
+    <time class="post-date">{formatDate(new Date(post.data.date))}</time>
     <span class="post-reading-time">{calculateReadingTime(post.body || '')} min read</span>
   </div>
 
@@ -77,13 +79,19 @@ function detectEmbedType(url: string) {
     <a href={`/posts/${post.slug}`}>{post.data.title}</a>
   </h2>
 
-  <div class="post-content">
+  <div class="post-content prose">
     {showExcerpt ? (
       <div class="post-excerpt">
-        <Content />
+        {post.data.description ? (
+          <p>{post.data.description.replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 180).trim()}…</p>
+        ) : (
+          <p>{post.body.replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 160).trim()}…</p>
+        )}
       </div>
     ) : (
-      <Content />
+      <div class="post-full-content">
+        <Content />
+      </div>
     )}
   </div>
 
@@ -132,7 +140,7 @@ function detectEmbedType(url: string) {
   {post.data.tags && post.data.tags.length > 0 && (
     <div class="post-tags">
       {post.data.tags.map((tag: string) => (
-        <a href={`/tags/${tag}`} class="tag">#{tag}</a>
+        <a href={`/tags/${tag}`} class="tag">{tag}</a>
       ))}
     </div>
   )}
@@ -140,255 +148,38 @@ function detectEmbedType(url: string) {
   {/* Post actions */}
   {showExcerpt && (
     <div class="post-actions">
-      <a href={`/posts/${post.slug}`} class="read-more">Read more</a>
+      <a href={`/posts/${post.slug}`} class="btn">Read more</a>
+    </div>
+  )}
+  
+  {/* Post actions for full content posts */}
+  {!showExcerpt && (
+    <div class="post-actions">
+      <button class="action-btn copy-link-btn" data-url={`${Astro.site || 'http://localhost:4321'}/posts/${post.slug}`} title="Copy link to this post">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        </svg>
+        Copy Link
+      </button>
+      
+      <button class="action-btn share-btn" data-url={`${Astro.site || 'http://localhost:4321'}/posts/${post.slug}`} data-title={post.data.title} title="Share this post">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+          <polyline points="16,6 12,2 8,6"></polyline>
+          <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+        Share
+      </button>
+      
+      <a href={`/posts/${post.slug}`} class="action-btn permalink-btn" title="View full post page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 12l2 2 4-4"></path>
+          <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+          <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+        </svg>
+        View Post
+      </a>
     </div>
   )}
 </article>
-
-<style>
-  .post {
-    margin-bottom: var(--space-md);
-    position: relative;
-    padding-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--border);
-    max-width: 100%;
-  }
-  
-  .post:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-  }
-
-
-  .post-meta {
-    color: var(--text-tertiary);
-    font-size: var(--text-xs);
-    margin-bottom: var(--space-lg);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    font-weight: 600;
-  }
-
-  .post-type-icon {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  .post.musing .post-type-icon { background: var(--yellow); }
-  .post.link .post-type-icon { background: var(--blue); }
-  .post.video .post-type-icon { background: var(--pink); }
-  .post.music .post-type-icon { background: var(--green); }
-
-  .post-title {
-    font-size: var(--text-2xl);
-    font-weight: 600;
-    margin-bottom: var(--space-lg);
-    line-height: var(--leading-tight);
-    letter-spacing: -0.02em;
-  }
-
-  .post-title a {
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .post-title a:hover {
-    color: var(--accent);
-  }
-
-  .post-content {
-    font-size: var(--text-lg);
-    line-height: var(--leading-relaxed);
-    margin-bottom: var(--space-xl);
-    color: var(--text-secondary);
-  }
-
-  .post-excerpt {
-    color: var(--text-secondary);
-  }
-
-  /* Dive Deeper section */
-  .dive-deeper {
-    margin-top: var(--space-xl);
-    padding-left: var(--space-lg);
-    border-left: 3px solid var(--accent);
-  }
-
-  .dive-deeper h3 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    margin-bottom: var(--space-lg);
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-  }
-
-  .dive-deeper ul {
-    margin: 0;
-    padding-left: var(--space-lg);
-    color: var(--text-secondary);
-  }
-
-  .dive-deeper li {
-    margin-bottom: var(--space-sm);
-    line-height: var(--leading-relaxed);
-  }
-
-  /* Tags with minimal styling */
-  .post-tags {
-    margin-top: var(--space-lg);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
-  }
-
-  .tag {
-    color: var(--text-tertiary);
-    text-decoration: none;
-    font-size: var(--text-sm);
-    transition: color 0.2s ease;
-    white-space: nowrap;
-    font-weight: 500;
-  }
-
-  .tag:hover {
-    color: var(--accent);
-  }
-
-  /* Post actions */
-  .post-actions {
-    margin-top: var(--space-xl);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .read-more {
-    color: var(--text-tertiary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: var(--text-sm);
-    transition: color 0.2s ease;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-  }
-
-  .read-more:hover {
-    color: var(--accent);
-  }
-
-  .post-meta-actions {
-    display: flex;
-    gap: var(--space-md);
-    align-items: center;
-  }
-
-  .share-btn {
-    background: var(--accent);
-    border: none;
-    font-size: var(--text-sm);
-    color: white;
-    cursor: pointer;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .share-btn:hover {
-    background: var(--accent-light);
-    transform: translateY(-1px);
-  }
-
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .post {
-      margin-bottom: var(--space-sm);
-      padding-bottom: var(--space-xs);
-    }
-    
-    .post-content {
-      font-size: var(--text-base);
-    }
-
-    .post-title {
-      font-size: var(--text-2xl);
-    }
-
-    .post-tags {
-      gap: var(--space-md);
-    }
-
-    .post-actions {
-      flex-direction: column;
-      gap: var(--space-md);
-      align-items: flex-start;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .post-title {
-      font-size: var(--text-xl);
-    }
-    
-    .post-meta {
-      gap: var(--space-sm);
-    }
-  }
-</style>
-
-<script>
-  // Share functionality using native Web Share API with clipboard fallback
-  function sharePost(title, url) {
-    const fullUrl = window.location.origin + url;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: title,
-        url: fullUrl
-      }).catch(err => {
-        console.log('Error sharing:', err);
-        copyToClipboard(fullUrl);
-      });
-    } else {
-      copyToClipboard(fullUrl);
-    }
-  }
-
-  function copyToClipboard(text) {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
-        console.log('Link copied to clipboard');
-      }).catch(err => {
-        console.error('Failed to copy to clipboard:', err);
-      });
-    } else {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        console.log('Link copied to clipboard (legacy method)');
-      } catch (err) {
-        console.error('Failed to copy to clipboard:', err);
-      }
-      document.body.removeChild(textArea);
-    }
-  }
-  
-  // Make sharePost available globally for onclick handlers
-  window.sharePost = sharePost;
-</script>

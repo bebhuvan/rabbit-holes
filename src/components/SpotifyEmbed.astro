@@ -81,64 +81,63 @@ function getEmbedLabel(type: string): string {
 
 <style>
   .spotify-embed {
-    margin: 32px 0;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    margin: var(--space-xl) 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    background: var(--hover);
+    background: var(--color-surface);
   }
 
   .embed-container {
-    background: var(--bg);
+    background: var(--color-bg);
   }
 
   .embed-container iframe {
     width: 100%;
-    border-radius: 8px 8px 0 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
 
   .embed-caption {
-    padding: 12px 16px;
+    padding: var(--space-sm) var(--space-md);
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: var(--hover);
-    border-top: 1px solid var(--border);
+    gap: var(--space-sm);
+    background: var(--color-surface);
   }
 
   .embed-icon {
-    font-size: 16px;
+    font-size: var(--text-base);
   }
 
   .embed-text {
-    color: var(--text-secondary);
-    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
     font-weight: 500;
   }
 
   /* Error state */
   .embed-error {
-    padding: 40px 20px;
+    padding: var(--space-2xl) var(--space-lg);
     text-align: center;
-    background: var(--hover);
+    background: var(--color-surface);
   }
 
   .error-icon {
-    font-size: 32px;
+    font-size: var(--text-3xl);
     opacity: 0.5;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-sm);
   }
 
   .embed-error p {
-    color: var(--text-secondary);
-    margin: 0 0 16px 0;
-    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-md) 0;
+    font-size: var(--text-sm);
   }
 
   .fallback-link {
-    color: var(--accent);
+    color: var(--color-accent);
     text-decoration: none;
-    font-size: 14px;
+    font-size: var(--text-sm);
     font-weight: 500;
   }
 
@@ -149,11 +148,11 @@ function getEmbedLabel(type: string): string {
   /* Mobile responsive */
   @media (max-width: 768px) {
     .spotify-embed {
-      margin: 24px 0;
+      margin: var(--space-lg) 0;
     }
 
     .embed-error {
-      padding: 30px 16px;
+      padding: var(--space-xl) var(--space-md);
     }
   }
 </style>

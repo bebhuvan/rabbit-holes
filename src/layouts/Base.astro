@@ -9,13 +9,18 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
 ---
 
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/src/styles/globals.css" />
+    <link rel="stylesheet" href="/src/styles/components.css" />
+    <link rel="stylesheet" href="/src/styles/utilities.css" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -43,6 +48,20 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <meta name="theme-color" content="#fb923c" />
     <link rel="canonical" href={Astro.url} />
     
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Rabbit Holes" />
+    <meta name="msapplication-TileColor" content="#fb923c" />
+    
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+
     <!-- Preconnect to external domains for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://www.youtube.com" />
@@ -74,13 +93,14 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
   </head>
   <body>
     <!-- Skip link for keyboard navigation -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    <nav class="header-nav" aria-label="Main navigation">
-      <div class="nav-container">
-        <a href="/" class="logo">Rabbit Holes</a>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn btn-primary z-50">Skip to main content</a>
+    
+    <nav class="nav" aria-label="Main navigation">
+      <div class="container nav-container">
+        <a href="/" class="nav-logo">🐰 Rabbit Holes</a>
         
         <!-- Mobile menu button -->
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <button class="mobile-menu-toggle md-hidden" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
           <span class="hamburger"></span>
           <span class="hamburger"></span>
           <span class="hamburger"></span>
@@ -93,7 +113,15 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           <a href="/blogroll" class="nav-link">Blogroll</a>
           <a href="/search" class="nav-link" title="Search (Cmd+K)">Search</a>
           <a href="/rss.xml" class="nav-link">RSS</a>
-          <button class="nav-link" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">🌙</button>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+            <svg class="theme-icon theme-icon--light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+            </svg>
+            <svg class="theme-icon theme-icon--dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </nav>
@@ -101,394 +129,50 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <main id="main-content">
       <slot />
     </main>
-
-    <!-- Search Modal -->
-    <div class="search-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-title">
-      <div class="search-container">
-        <h2 id="search-title" class="sr-only">Search Posts</h2>
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="Search posts..." 
-          id="search-input"
-          autocomplete="off"
-          aria-label="Search blog posts"
-          aria-describedby="search-help"
-        />
-        <div id="search-help" class="sr-only">
-          Search through blog posts by title, content, or tags
-        </div>
-        <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
-        <div class="search-footer">
-          <span>Press <kbd>Esc</kbd> to close</span>
-        </div>
-      </div>
-    </div>
+    
+    <!-- Share Feedback -->
+    <div class="share-feedback" id="share-feedback"></div>
 
     <style>
-      :root {
-        --bg: #ffffff;
-        --text-primary: #111111;
-        --text-secondary: #666666;
-        --text-tertiary: #999999;
-        --accent: #fb923c;
-        --accent-light: #fed7aa;
-        --border: #e5e5e5;
-        --hover: #f8fafc;
-        --yellow: #f3e8a6;
-        --green: #bbf7d0;
-        --pink: #fbb6ce;
-        --blue: #bfdbfe;
-        
-        /* Optimized spacing system for reading comfort */
-        --space-xs: 6px;
-        --space-sm: 12px;
-        --space-md: 20px;
-        --space-lg: 32px;
-        --space-xl: 48px;
-        --space-2xl: 64px;
-        --space-3xl: 96px;
-        --space-4xl: 128px;
-        
-        /* Industry-standard content widths for optimal readability */
-        --width-content: 672px;     /* CSS-Tricks/A List Apart standard - 45-75 chars per line */
-        --width-nav: 800px;         /* Navigation container width */
-        --width-wide: 800px;        /* For archive and wider content */
-        --width-full: 1200px;       /* Maximum container width */
-        
-        /* Refined typography scale */
-        --text-xs: 12px;
-        --text-sm: 14px;
-        --text-base: 16px;
-        --text-lg: 18px;
-        --text-xl: 21px;
-        --text-2xl: 28px;
-        --text-3xl: 36px;
-        --text-4xl: 48px;
-        
-        /* Line heights for optimal reading */
-        --leading-tight: 1.25;
-        --leading-normal: 1.5;
-        --leading-relaxed: 1.75;
-      }
-
-      [data-theme="dark"] {
-        --bg: #0a0a0a;
-        --text-primary: #f8fafc;
-        --text-secondary: #94a3b8;
-        --text-tertiary: #64748b;
-        --accent: #fb923c;
-        --accent-light: #ea580c;
-        --border: #1e293b;
-        --hover: #0f172a;
-        --yellow: #92743f;
-        --green: #276749;
-        --pink: #7c2d5a;
-        --blue: #1e3a8a;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-        background: var(--bg);
-        color: var(--text-primary);
-        line-height: 1.65;
-        font-size: var(--text-base);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
-
-      /* Global link styling - Cache busting v2 */
-      a {
-        color: #fb923c !important;
-        text-decoration: none;
-        transition: color 0.2s ease;
-      }
-
-      a:hover {
-        color: #fed7aa !important;
-      }
-
-      /* Content links specifically */
-      .post-content a,
-      main a,
-      article a,
-      .link-preview a {
-        color: #fb923c !important;
-        text-decoration: underline;
-        text-decoration-color: #fb923c;
-        text-underline-offset: 2px;
-      }
-
-      .post-content a:hover,
-      main a:hover,
-      article a:hover,
-      .link-preview a:hover {
-        color: #fed7aa !important;
-        text-decoration-color: #fed7aa;
-      }
-
-      /* Override any default blue links */
-      a[href^="http"],
-      a[href^="https"],
-      a[href^="//"] {
-        color: #fb923c !important;
-      }
-
-      /* Link preview overlay link */
-      .link-preview-overlay {
-        color: inherit !important;
-        text-decoration: none !important;
-      }
-
-      /* Navigation */
-      .header-nav {
-        position: sticky;
-        top: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px) saturate(180%);
-        border-bottom: 1px solid var(--border);
-        z-index: 100;
-        transition: all 0.3s ease;
-      }
-
-      [data-theme="dark"] .header-nav {
-        background: rgba(10, 10, 10, 0.95);
-      }
-
-      .nav-container {
-        max-width: var(--width-nav);
-        margin: 0 auto;
-        padding: 24px 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        min-height: 64px;
-      }
-
-      .logo {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--text-primary);
-        text-decoration: none;
-        letter-spacing: -0.015em;
-        flex-shrink: 0;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 32px;
-        align-items: center;
-      }
-
-      .nav-link {
-        color: var(--text-tertiary);
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: color 0.2s ease;
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-family: inherit;
-        padding: 0;
-        letter-spacing: 0.02em;
-        white-space: nowrap;
-        text-transform: uppercase;
-      }
-
-      .nav-link:hover {
-        color: var(--accent);
-      }
-
-      /* Theme toggle special styling */
-      #theme-toggle {
-        font-size: 16px;
-        padding: 0;
-        border-radius: 0;
-        width: auto;
-        height: auto;
-        display: inline;
-        align-items: center;
-        justify-content: center;
-        margin-left: 0;
-        text-transform: none;
-      }
-
-      /* Mobile menu button */
+      /* Mobile Menu States */
       .mobile-menu-toggle {
         display: none;
         background: none;
         border: none;
         flex-direction: column;
         cursor: pointer;
-        padding: 8px;
+        padding: var(--space-xs);
         gap: 4px;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         transition: background 0.2s ease;
       }
 
       .mobile-menu-toggle:hover {
-        background: var(--hover);
+        background: var(--color-surface);
       }
 
       .hamburger {
         width: 20px;
         height: 2px;
-        background: var(--text-primary);
+        background: var(--color-text-primary);
         border-radius: 1px;
         transition: all 0.3s ease;
       }
 
-      .mobile-menu-toggle.active .hamburger:nth-child(1) {
+      .mobile-menu-toggle--active .hamburger:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
       }
 
-      .mobile-menu-toggle.active .hamburger:nth-child(2) {
+      .mobile-menu-toggle--active .hamburger:nth-child(2) {
         opacity: 0;
       }
 
-      .mobile-menu-toggle.active .hamburger:nth-child(3) {
+      .mobile-menu-toggle--active .hamburger:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -6px);
       }
-
-      /* Search Modal */
-      .search-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
-        z-index: 1000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .search-overlay.active {
-        display: flex;
-      }
-
-      .search-container {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 40px;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      }
-
-      .search-input {
-        width: 100%;
-        padding: 16px;
-        font-size: 18px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        background: var(--bg);
-        color: var(--text-primary);
-        outline: none;
-        margin-bottom: 20px;
-      }
-
-      .search-input:focus {
-        border-color: var(--accent);
-      }
-
-      .search-results {
-        max-height: 300px;
-        overflow-y: auto;
-      }
-
-      .search-footer {
-        margin-top: 20px;
-        text-align: center;
-        color: var(--text-tertiary);
-        font-size: 14px;
-      }
-
-      kbd {
-        background: var(--hover);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        padding: 2px 6px;
-        font-size: 12px;
-        font-family: monospace;
-      }
-
-      /* Skip link for accessibility */
-      .skip-link {
-        position: absolute;
-        top: -40px;
-        left: 6px;
-        background: var(--accent);
-        color: white;
-        padding: 8px;
-        z-index: 1000;
-        text-decoration: none;
-        border-radius: 4px;
-        font-weight: 500;
-        transition: top 0.3s ease;
-      }
-
-      .skip-link:focus {
-        top: 6px;
-      }
-
-      /* Screen reader only content */
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
-      /* Enhanced focus indicators */
-      *:focus {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-        border-radius: 2px;
-      }
-
-      /* Respect reduced motion preferences */
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
-      }
-
-      /* Tablet responsive */
-      @media (max-width: 1024px) {
-        .nav-container {
-          padding: 20px 32px;
-        }
-        
-        .nav-links {
-          gap: 24px;
-        }
-      }
       
-      /* Mobile responsive */
+      /* Mobile Navigation */
       @media (max-width: 768px) {
-        .nav-container {
-          padding: 16px 24px;
-        }
-
         .mobile-menu-toggle {
           display: flex;
         }
@@ -498,23 +182,21 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           top: 100%;
           left: 0;
           right: 0;
-          background: var(--bg);
-          border-bottom: 1px solid var(--border);
+          background: var(--color-bg);
+          border-bottom: 1px solid var(--color-border);
           flex-direction: column;
           gap: 0;
-          padding: 20px 24px;
+          padding: var(--space-lg) var(--space-lg);
           display: none;
         }
 
-        .nav-links.open {
+        .nav-links--open {
           display: flex;
         }
 
         .nav-link {
-          font-size: 14px;
-          padding: 16px 0;
-          border-bottom: 1px solid var(--border);
-          text-align: left;
+          padding: var(--space-md) 0;
+          border-bottom: 1px solid var(--color-border);
           width: 100%;
           min-height: 44px;
           display: flex;
@@ -524,185 +206,201 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         .nav-link:last-child {
           border-bottom: none;
         }
-
-        #theme-toggle {
-          font-size: 16px;
-          padding: 16px 0;
-          text-align: left;
-          justify-content: flex-start;
-          min-height: 44px;
-        }
-      }
-
-      @media (max-width: 640px) {
-        body {
-          font-size: 16px;
-        }
-
-        .nav-container {
-          padding: 16px 20px;
-          min-height: 60px;
-        }
-
-        .logo {
-          font-size: 20px;
-        }
-
-        .nav-links {
-          gap: 16px;
-        }
-
-        .nav-link {
-          font-size: 12px;
-        }
-
-        #theme-toggle {
-          font-size: 14px;
-        }
-
-        .search-container {
-          padding: 24px;
-          margin: 20px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .nav-container {
-          padding: 12px 16px;
-        }
-
-        .nav-links {
-          padding: 16px 20px;
-        }
-
-        .nav-link {
-          font-size: 14px;
-        }
-      }
-
-      /* Utility classes for consistent container styling */
-      .content-container {
-        max-width: var(--width-content);
-        margin: 0 auto;
-        padding: var(--space-4xl) var(--space-lg);
-      }
-      
-      .content-container-wide {
-        max-width: var(--width-wide);
-        margin: 0 auto;
-        padding: var(--space-4xl) var(--space-lg);
-      }
-      
-      .content-container-full {
-        max-width: var(--width-full);
-        margin: 0 auto;
-        padding: var(--space-4xl) var(--space-lg);
-      }
-      
-      /* Responsive container variants */
-      @media (max-width: 768px) {
-        .content-container,
-        .content-container-wide,
-        .content-container-full {
-          padding: var(--space-3xl) var(--space-md);
+        
+        .theme-toggle {
+          margin-top: var(--space-md);
+          align-self: center;
         }
       }
       
-      @media (max-width: 480px) {
-        .content-container,
-        .content-container-wide,
-        .content-container-full {
-          padding: var(--space-2xl) var(--space-sm);
-        }
+      /* Share Feedback */
+      .share-feedback {
+        position: fixed;
+        bottom: var(--space-lg);
+        right: var(--space-lg);
+        background: var(--color-accent);
+        color: white;
+        padding: var(--space-sm) var(--space-md);
+        border-radius: var(--radius-md);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        pointer-events: none;
       }
+      
+      .share-feedback--visible {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      
+      .share-feedback--error {
+        background: var(--color-error);
+      }
+      
+      .share-feedback--success {
+        background: var(--color-accent);
+      }
+      
+      /* Theme toggle styles moved to components.css for global scope */
     </style>
 
+    <!-- Theme initialization - must run immediately before render -->
     <script>
-      // Theme toggle
-      const themeToggle = document.getElementById('theme-toggle');
-      const html = document.documentElement;
+      // Initialize theme immediately to prevent flash
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+        
+        document.documentElement.setAttribute('data-theme', initialTheme);
+        localStorage.setItem('theme', initialTheme);
+        
+        console.log('Theme initialized:', initialTheme);
+      })();
       
-      // Check for saved theme preference or default to system preference
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme) {
-        html.setAttribute('data-theme', savedTheme);
-        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        themeToggle.setAttribute('aria-pressed', savedTheme === 'dark' ? 'true' : 'false');
-      } else if (systemPrefersDark) {
-        html.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-        themeToggle.setAttribute('aria-pressed', 'true');
-      }
-
-      themeToggle?.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme');
+      // Theme toggle function - available immediately
+      function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
-        html.setAttribute('data-theme', newTheme);
+        console.log('Toggling theme from', currentTheme, 'to', newTheme);
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        themeToggle.setAttribute('aria-pressed', newTheme === 'dark' ? 'true' : 'false');
-      });
-
-      // Mobile menu toggle
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-      const navLinks = document.getElementById('nav-links');
+        
+        // Update button aria-pressed state
+        const toggle = document.getElementById('theme-toggle');
+        if (toggle) {
+          toggle.setAttribute('aria-pressed', (newTheme === 'dark').toString());
+        }
+        
+        console.log('Theme toggled to:', newTheme);
+      }
       
-      mobileMenuToggle?.addEventListener('click', () => {
-        const isOpen = navLinks.classList.contains('open');
+      // Make function globally available
+      window.toggleTheme = toggleTheme;
+      
+      // Initialize when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', toggleTheme);
+          
+          // Set initial aria-pressed state
+          const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+          themeToggle.setAttribute('aria-pressed', (currentTheme === 'dark').toString());
+          
+          console.log('Theme toggle initialized. Current theme:', currentTheme);
+        }
+      });
+    </script>
+    
+    <script type="module">
+      import { app } from '/src/scripts/utils.js';
+      app.init();
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+              
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (newWorker) {
+                  newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      // New content available, show update notification
+                      showUpdateNotification();
+                    }
+                  });
+                }
+              });
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
+            showUpdateNotification();
+          }
+        });
+      }
+
+      function showUpdateNotification() {
+        // Create a subtle update notification
+        const notification = document.createElement('div');
+        notification.innerHTML = `
+          <div style="
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--color-accent);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(251, 146, 60, 0.3);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+          ">
+            <span>🚀 New content available!</span>
+            <button onclick="window.location.reload()" style="
+              background: rgba(255,255,255,0.2);
+              border: none;
+              color: white;
+              padding: 8px 16px;
+              border-radius: 4px;
+              cursor: pointer;
+              font-weight: 500;
+            ">Update</button>
+          </div>
+        `;
         
-        if (isOpen) {
-          navLinks.classList.remove('open');
-          mobileMenuToggle.classList.remove('active');
-          mobileMenuToggle.setAttribute('aria-expanded', 'false');
-        } else {
-          navLinks.classList.add('open');
-          mobileMenuToggle.classList.add('active');
-          mobileMenuToggle.setAttribute('aria-expanded', 'true');
-        }
-      });
-
-      // Close mobile menu when clicking nav links
-      navLinks?.addEventListener('click', (e) => {
-        if (e.target.classList.contains('nav-link') && !e.target.id.includes('theme-toggle')) {
-          navLinks.classList.remove('open');
-          mobileMenuToggle.classList.remove('active');
-          mobileMenuToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      // Close mobile menu on escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-          navLinks.classList.remove('open');
-          mobileMenuToggle.classList.remove('active');
-          mobileMenuToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      // Search navigation (now goes to /search page instead of modal)
-
-      // Keyboard shortcuts
-      document.addEventListener('keydown', (e) => {
-        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-          e.preventDefault();
-          window.location.href = '/search';
-        }
+        document.body.appendChild(notification);
         
-        if ((e.metaKey || e.ctrlKey) && e.key === 'r') {
-          e.preventDefault();
-          // Random post functionality would go here
-          console.log('Random post');
-        }
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 10000);
+      }
+
+      // Install prompt handling
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show custom install button if desired
+        showInstallButton();
       });
 
-      // Random post
-      const randomBtn = document.getElementById('random-btn');
-      randomBtn?.addEventListener('click', () => {
-        // Simple fallback: redirect to home since we don't need random post API
-        window.location.href = '/';
+      function showInstallButton() {
+        // You can add a custom "Add to Home Screen" button here
+        console.log('PWA install available');
+      }
+
+      // Handle successful installation
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed successfully');
+        deferredPrompt = null;
       });
     </script>
   </body>

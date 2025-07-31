@@ -58,340 +58,245 @@ const uncategorizedTags = Object.entries(tagFrequency)
 ---
 
 <Base title="Tags - Bhuvan's Blog">
-  <div class="tags-container">
-    <div class="tags-header">
-      <h1>Tags</h1>
-      <p>Explore {Object.keys(tagFrequency).length} topics across {posts.length} posts</p>
+  <div class="container tags-page">
+    <header class="page-header">
+      <h1 class="page-title">Topics</h1>
+      <p class="page-subtitle">{Object.keys(tagFrequency).length} topics across {posts.length} posts</p>
+    </header>
+
+    <div class="tags-grid">
+      <div class="tags-section">
+        <h2 class="section-label">All Topics</h2>
+        <div class="tags-list">
+          {Object.entries(tagFrequency)
+            .sort(([,a], [,b]) => b - a)
+            .map(([tag, count]) => (
+              <a href={`/tags/${tag}`} class="tag-item">
+                <span class="tag-name">{tag}</span>
+                <span class="tag-count">{count}</span>
+              </a>
+            ))}
+        </div>
+      </div>
+
+      <aside class="tags-sidebar">
+        <div class="stats-summary">
+          <div class="stat">
+            <span class="stat-number">{Object.keys(tagFrequency).length}</span>
+            <span class="stat-label">Topics</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{posts.length}</span>
+            <span class="stat-label">Posts</span>
+          </div>
+        </div>
+
+        <div class="popular-tags">
+          <h3 class="sidebar-title">Most Popular</h3>
+          <div class="popular-list">
+            {Object.entries(tagFrequency)
+              .sort(([,a], [,b]) => b - a)
+              .slice(0, 5)
+              .map(([tag, count]) => (
+                <a href={`/tags/${tag}`} class="popular-item">
+                  <span class="popular-name">{tag}</span>
+                  <span class="popular-count">{count}</span>
+                </a>
+              ))}
+          </div>
+        </div>
+      </aside>
     </div>
-
-    <!-- Tag Cloud -->
-    <section class="tag-cloud-section">
-      <h2>All Tags</h2>
-      <div class="tag-cloud">
-        {tagCloud.map(({ tag, count, size }) => (
-          <a 
-            href={`/tags/${tag}`} 
-            class={`tag-cloud-item tag-size-${size}`}
-            data-count={count}
-          >
-            {tag}
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- Categorized Tags -->
-    {categorizedTags.length > 0 && (
-      <section class="tag-categories-section">
-        <h2>By Category</h2>
-        <div class="tag-categories">
-          {categorizedTags.map(({ category, tags }) => (
-            <div class="tag-category">
-              <h3 class="tag-category-title">{category}</h3>
-              <div class="tag-category-list">
-                {tags.map(({ tag, count }) => (
-                  <a href={`/tags/${tag}`} class="tag-category-item">
-                    {tag} <span class="tag-count">({count})</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )}
-
-    <!-- Uncategorized Tags -->
-    {uncategorizedTags.length > 0 && (
-      <section class="uncategorized-section">
-        <h2>Other Topics</h2>
-        <div class="uncategorized-tags">
-          {uncategorizedTags.map(({ tag, count }) => (
-            <a href={`/tags/${tag}`} class="uncategorized-tag">
-              {tag} <span class="tag-count">({count})</span>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-
-    <!-- Tag Statistics -->
-    <section class="tag-stats">
-      <h2>Tag Statistics</h2>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-number">{Object.keys(tagFrequency).length}</span>
-          <span class="stat-label">Unique Tags</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">{Math.max(...Object.values(tagFrequency))}</span>
-          <span class="stat-label">Most Used</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">{Object.values(tagFrequency).reduce((a, b) => a + b, 0)}</span>
-          <span class="stat-label">Total Tags</span>
-        </div>
-      </div>
-    </section>
   </div>
 
   <style>
-    .tags-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 80px 20px;
+    .tags-page {
+      padding: var(--space-3xl) 0;
     }
 
-    .tags-header {
+    .page-header {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: var(--space-3xl);
     }
 
-    .tags-header h1 {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: var(--text-primary);
-    }
-
-    .tags-header p {
-      color: var(--text-secondary);
-      font-size: 18px;
-    }
-
-    /* Sections */
-    section {
-      margin-bottom: 60px;
-    }
-
-    section h2 {
-      font-size: 24px;
+    .page-title {
+      font-size: var(--text-3xl);
       font-weight: 600;
-      margin-bottom: 24px;
-      color: var(--text-primary);
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-sm);
     }
 
-    /* Tag Cloud with proper spacing */
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      align-items: baseline;
-      line-height: 1.4;
+    .page-subtitle {
+      color: var(--color-text-secondary);
+      font-size: var(--text-base);
+      margin: 0;
     }
 
-    .tag-cloud-item {
-      display: inline-block;
-      padding: 10px 16px;
-      background: var(--hover);
-      color: var(--text-secondary);
-      text-decoration: none;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      transition: all 0.2s ease;
-      position: relative;
-      white-space: nowrap;
-      margin: 4px;
-    }
-
-    .tag-cloud-item:hover {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .tag-cloud-item::after {
-      content: attr(data-count);
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: var(--accent);
-      color: white;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
-
-    .tag-cloud-item:hover::after {
-      background: var(--text-primary);
-    }
-
-    /* Tag sizes based on frequency */
-    .tag-size-1 { 
-      font-size: 14px; 
-      opacity: 0.7;
-      padding: 8px 12px;
-    }
-    .tag-size-2 { 
-      font-size: 16px; 
-      opacity: 0.8;
-      padding: 9px 14px;
-    }
-    .tag-size-3 { 
-      font-size: 18px; 
-      opacity: 0.9;
-      padding: 10px 16px;
-    }
-    .tag-size-4 { 
-      font-size: 20px; 
-      opacity: 1;
-      padding: 11px 18px;
-    }
-    .tag-size-5 { 
-      font-size: 24px; 
-      opacity: 1; 
-      font-weight: 600;
-      padding: 12px 20px;
-    }
-
-    /* Tag Categories */
-    .tag-categories {
+    .tags-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 32px;
+      grid-template-columns: 1fr 280px;
+      gap: var(--space-3xl);
+      align-items: start;
     }
 
-    .tag-category {
-      background: var(--hover);
-      padding: 24px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      transition: all 0.2s ease;
-    }
-
-    .tag-category:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .tag-category-title {
-      font-size: 18px;
+    .section-label {
+      font-size: var(--text-sm);
       font-weight: 600;
-      margin-bottom: 16px;
-      color: var(--text-primary);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xs);
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .tag-category-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .tags-list {
+      display: grid;
+      gap: 1px;
     }
 
-    .tag-category-item {
-      padding: 6px 12px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 13px;
-      color: var(--text-secondary);
+    .tag-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
       text-decoration: none;
+      border-bottom: 1px solid transparent;
       transition: all 0.2s ease;
-      white-space: nowrap;
     }
 
-    .tag-category-item:hover {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
+    .tag-item:hover {
+      border-bottom-color: var(--color-border);
+      padding-left: var(--space-sm);
+    }
+
+    .tag-name {
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      transition: color 0.2s ease;
+    }
+
+    .tag-item:hover .tag-name {
+      color: var(--color-accent);
     }
 
     .tag-count {
-      color: var(--text-tertiary);
-      font-size: 0.9em;
-    }
-
-    /* Uncategorized Tags */
-    .uncategorized-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .uncategorized-tag {
-      padding: 8px 16px;
-      background: var(--hover);
-      color: var(--text-secondary);
-      text-decoration: none;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      transition: all 0.2s ease;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .uncategorized-tag:hover {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
-
-    /* Tag Statistics */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 24px;
-    }
-
-    .stat-item {
-      background: var(--hover);
-      padding: 24px;
-      border-radius: 12px;
+      font-size: var(--text-xs);
+      color: var(--color-text-tertiary);
+      background: var(--color-surface);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      min-width: 24px;
       text-align: center;
-      border: 1px solid var(--border);
+    }
+
+    /* Sidebar */
+    .tags-sidebar {
+      position: sticky;
+      top: var(--space-2xl);
+    }
+
+    .stats-summary {
+      background: var(--color-surface);
+      padding: var(--space-xl);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      gap: var(--space-xl);
+    }
+
+    .stat {
+      text-align: center;
+      flex: 1;
     }
 
     .stat-number {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--accent);
       display: block;
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: var(--color-accent);
+      line-height: 1;
     }
 
     .stat-label {
-      color: var(--text-secondary);
-      font-size: 14px;
-      margin-top: 4px;
+      font-size: var(--text-xs);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-top: var(--space-xs);
+    }
+
+    .popular-tags {
+      background: var(--color-surface);
+      padding: var(--space-xl);
+      border-radius: var(--radius-md);
+    }
+
+    .sidebar-title {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-lg);
+      margin-top: 0;
+    }
+
+    .popular-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .popular-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) 0;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .popular-item:hover {
+      border-bottom-color: var(--color-border);
+    }
+
+    .popular-name {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      transition: color 0.2s ease;
+    }
+
+    .popular-item:hover .popular-name {
+      color: var(--color-accent);
+    }
+
+    .popular-count {
+      font-size: var(--text-xs);
+      color: var(--color-text-tertiary);
+      font-weight: 600;
     }
 
     /* Mobile responsive */
     @media (max-width: 768px) {
-      .tags-container {
-        padding: 60px 16px;
-      }
-
-      .tags-header h1 {
-        font-size: 28px;
-      }
-
-      .tag-cloud {
-        gap: 12px;
-      }
-
-      .tag-cloud-item {
-        margin: 2px;
-      }
-
-      .tag-size-1 { font-size: 13px; padding: 6px 10px; }
-      .tag-size-2 { font-size: 14px; padding: 7px 12px; }
-      .tag-size-3 { font-size: 16px; padding: 8px 14px; }
-      .tag-size-4 { font-size: 18px; padding: 9px 16px; }
-      .tag-size-5 { font-size: 20px; padding: 10px 18px; }
-
-      .tag-categories {
+      .tags-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: var(--space-2xl);
       }
 
-      .tag-category {
-        padding: 20px;
+      .tags-sidebar {
+        position: static;
+        order: -1;
+      }
+
+      .stats-summary {
+        padding: var(--space-lg);
+      }
+
+      .popular-tags {
+        padding: var(--space-lg);
       }
     }
   </style>

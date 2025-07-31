@@ -1,0 +1,733 @@
+---
+export const prerender = false;
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="AI Publishing Dashboard - Rabbit Holes">
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1 class="dashboard-title">🧠 AI Publishing Dashboard</h1>
+      <p class="dashboard-subtitle">Create and publish content with AI assistance</p>
+    </header>
+
+    <div class="dashboard-tabs">
+      <button class="tab-btn active" data-tab="single-link">Single Link</button>
+      <button class="tab-btn" data-tab="bulk-links">Bulk Links</button>
+      <button class="tab-btn" data-tab="prompt">Freeform</button>
+      <button class="tab-btn" data-tab="pdf">PDF Upload</button>
+    </div>
+
+    <!-- Single Link Tab -->
+    <div class="tab-content active" id="single-link">
+      <div class="input-section">
+        <label for="single-url" class="input-label">URL to Process</label>
+        <input type="url" id="single-url" class="url-input" placeholder="https://example.com/article">
+        
+        <label for="single-prompt" class="input-label">AI Instructions (Optional)</label>
+        <textarea id="single-prompt" class="prompt-input" placeholder="Summarize this article focusing on key insights..."></textarea>
+        
+        <button class="process-btn" onclick="processSingleLink()">
+          <span class="btn-text">Process Link</span>
+          <span class="btn-loader hidden">Processing...</span>
+        </button>
+      </div>
+      
+      <div class="output-section">
+        <div class="output-header">
+          <h3>Generated Content</h3>
+          <div class="output-actions">
+            <button class="edit-btn" onclick="toggleEdit()">Edit</button>
+            <button class="publish-btn" onclick="publishPost()">Publish</button>
+          </div>
+        </div>
+        <div class="content-preview" id="single-preview">
+          <p class="placeholder-text">Processed content will appear here...</p>
+        </div>
+        <textarea class="content-editor hidden" id="single-editor"></textarea>
+      </div>
+    </div>
+
+    <!-- Bulk Links Tab -->
+    <div class="tab-content" id="bulk-links">
+      <div class="input-section">
+        <label for="bulk-urls" class="input-label">URLs (one per line, max 10)</label>
+        <textarea id="bulk-urls" class="bulk-input" placeholder="https://example.com/article1&#10;https://example.com/article2&#10;https://example.com/article3"></textarea>
+        
+        <label for="bulk-prompt" class="input-label">AI Instructions (Optional)</label>
+        <textarea id="bulk-prompt" class="prompt-input" placeholder="Create a summary post linking these articles..."></textarea>
+        
+        <button class="process-btn" onclick="processBulkLinks()">
+          <span class="btn-text">Process Links</span>
+          <span class="btn-loader hidden">Processing...</span>
+        </button>
+      </div>
+      
+      <div class="output-section">
+        <div class="bulk-results" id="bulk-results">
+          <p class="placeholder-text">Processed content will appear here...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Freeform Prompt Tab -->
+    <div class="tab-content" id="prompt">
+      <div class="input-section">
+        <label for="freeform-prompt" class="input-label">What would you like to write about?</label>
+        <textarea id="freeform-prompt" class="freeform-input" placeholder="Write an article about the future of space exploration..."></textarea>
+        
+        <div class="prompt-options">
+          <label class="option-label">
+            <input type="checkbox" id="include-links"> Include relevant links
+          </label>
+          <label class="option-label">
+            <input type="checkbox" id="include-sections"> Add section headings
+          </label>
+        </div>
+        
+        <button class="process-btn" onclick="processFreeform()">
+          <span class="btn-text">Generate Article</span>
+          <span class="btn-loader hidden">Generating...</span>
+        </button>
+      </div>
+      
+      <div class="output-section">
+        <div class="output-header">
+          <h3>Generated Article</h3>
+          <div class="output-actions">
+            <button class="edit-btn" onclick="toggleEdit('freeform')">Edit</button>
+            <button class="publish-btn" onclick="publishPost('freeform')">Publish</button>
+          </div>
+        </div>
+        <div class="content-preview" id="freeform-preview">
+          <p class="placeholder-text">Generated article will appear here...</p>
+        </div>
+        <textarea class="content-editor hidden" id="freeform-editor"></textarea>
+      </div>
+    </div>
+
+    <!-- PDF Upload Tab -->
+    <div class="tab-content" id="pdf">
+      <div class="input-section">
+        <label for="pdf-upload" class="input-label">Upload PDF</label>
+        <div class="file-upload-area" onclick="document.getElementById('pdf-upload').click()">
+          <input type="file" id="pdf-upload" accept=".pdf" style="display: none;" onchange="handleFileUpload(this)">
+          <div class="upload-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
+            <p>Click to upload PDF or drag and drop</p>
+            <span class="file-info">⚠️ Limited support - see output for details</span>
+          </div>
+        </div>
+        
+        <div class="feature-notice">
+          <p><strong>Note:</strong> PDF processing has technical limitations. The system will explain alternatives when you upload a file.</p>
+        </div>
+        
+        <label for="pdf-prompt" class="input-label">AI Instructions (Optional)</label>
+        <textarea id="pdf-prompt" class="prompt-input" placeholder="Summarize the key findings from this paper..."></textarea>
+        
+        <button class="process-btn" onclick="processPDF()">
+          <span class="btn-text">Process PDF</span>
+          <span class="btn-loader hidden">Processing...</span>
+        </button>
+      </div>
+      
+      <div class="output-section">
+        <div class="output-header">
+          <h3>Extracted Content</h3>
+          <div class="output-actions">
+            <button class="edit-btn" onclick="toggleEdit('pdf')">Edit</button>
+            <button class="publish-btn" onclick="publishPost('pdf')">Publish</button>
+          </div>
+        </div>
+        <div class="content-preview" id="pdf-preview">
+          <p class="placeholder-text">Processed PDF content will appear here...</p>
+        </div>
+        <textarea class="content-editor hidden" id="pdf-editor"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-3xl) var(--space-lg);
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .dashboard-title {
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .dashboard-subtitle {
+      color: var(--color-text-secondary);
+      font-size: var(--text-lg);
+      margin: 0;
+    }
+
+    .dashboard-tabs {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-2xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .tab-btn {
+      padding: var(--space-md) var(--space-lg);
+      background: none;
+      border: none;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--color-text-secondary);
+    }
+
+    .tab-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+
+    .tab-content {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    .tab-content.active {
+      display: grid;
+    }
+
+    .input-section {
+      background: var(--color-surface);
+      padding: var(--space-2xl);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .input-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .url-input, .prompt-input, .bulk-input, .freeform-input {
+      width: 100%;
+      padding: var(--space-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--text-base);
+      font-family: inherit;
+      background: var(--color-bg);
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-lg);
+      transition: border-color 0.2s ease;
+    }
+
+    .url-input:focus, .prompt-input:focus, .bulk-input:focus, .freeform-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    .prompt-input {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .bulk-input, .freeform-input {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .prompt-options {
+      margin-bottom: var(--space-lg);
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+
+    .file-upload-area {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3xl);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: var(--space-lg);
+    }
+
+    .file-upload-area:hover {
+      border-color: var(--color-accent);
+      background: var(--color-surface);
+    }
+
+    .upload-placeholder svg {
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--space-md);
+    }
+
+    .upload-placeholder p {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .file-info {
+      color: var(--color-text-tertiary);
+      font-size: var(--text-xs);
+    }
+
+    .feature-notice {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .feature-notice p {
+      margin: 0;
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .process-btn {
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-base);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .process-btn:hover {
+      background: var(--color-accent-light);
+      transform: translateY(-1px);
+    }
+
+    .process-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-loader {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .output-section {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .output-header {
+      background: var(--color-surface);
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .output-header h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .edit-btn, .publish-btn {
+      padding: var(--space-xs) var(--space-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .edit-btn {
+      background: var(--color-bg);
+      color: var(--color-text-secondary);
+    }
+
+    .edit-btn:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    .publish-btn {
+      background: var(--color-accent);
+      color: white;
+      border-color: var(--color-accent);
+    }
+
+    .publish-btn:hover {
+      background: var(--color-accent-light);
+    }
+
+    .content-preview, .content-editor {
+      padding: var(--space-xl);
+      min-height: 400px;
+    }
+
+    .content-editor {
+      width: 100%;
+      border: none;
+      font-family: ui-monospace, 'SF Mono', monospace;
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      background: var(--color-bg);
+      color: var(--color-text-primary);
+      resize: vertical;
+    }
+
+    .content-editor:focus {
+      outline: none;
+    }
+
+    .placeholder-text {
+      color: var(--color-text-tertiary);
+      font-style: italic;
+      text-align: center;
+      margin-top: var(--space-3xl);
+    }
+
+    .bulk-results {
+      padding: var(--space-xl);
+    }
+
+    .result-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .result-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .result-url {
+      font-size: var(--text-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: var(--space-2xl) var(--space-md);
+      }
+
+      .tab-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+      }
+
+      .dashboard-tabs {
+        flex-wrap: wrap;
+      }
+
+      .input-section, .output-section {
+        padding: var(--space-lg);
+      }
+    }
+  </style>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        
+        // Update active tab button
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update active tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // Placeholder functions - these would integrate with Cloudflare Workers
+    async function processSingleLink() {
+      const url = document.getElementById('single-url').value;
+      const prompt = document.getElementById('single-prompt').value;
+      
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+      
+      showLoading('single-link');
+      
+      try {
+        // This would call your Cloudflare Worker API
+        const response = await fetch('/api/process-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, prompt })
+        });
+        
+        const result = await response.json();
+        displayResult('single-preview', result.content);
+      } catch (error) {
+        displayError('single-preview', 'Failed to process link');
+      } finally {
+        hideLoading('single-link');
+      }
+    }
+
+    async function processBulkLinks() {
+      const urls = document.getElementById('bulk-urls').value.split('\n').filter(url => url.trim());
+      const prompt = document.getElementById('bulk-prompt').value;
+      
+      if (urls.length === 0) {
+        alert('Please enter at least one URL');
+        return;
+      }
+      
+      if (urls.length > 10) {
+        alert('Maximum 10 URLs allowed');
+        return;
+      }
+      
+      showLoading('bulk-links');
+      
+      try {
+        const response = await fetch('/api/process-bulk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ urls, prompt })
+        });
+        
+        const results = await response.json();
+        displayBulkResults(results);
+      } catch (error) {
+        displayError('bulk-results', 'Failed to process links');
+      } finally {
+        hideLoading('bulk-links');
+      }
+    }
+
+    async function processFreeform() {
+      const prompt = document.getElementById('freeform-prompt').value;
+      const includeLinks = document.getElementById('include-links').checked;
+      const includeSections = document.getElementById('include-sections').checked;
+      
+      if (!prompt.trim()) {
+        alert('Please enter a prompt');
+        return;
+      }
+      
+      showLoading('prompt');
+      
+      try {
+        const response = await fetch('/api/generate-content', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, includeLinks, includeSections })
+        });
+        
+        const result = await response.json();
+        displayResult('freeform-preview', result.content);
+      } catch (error) {
+        displayError('freeform-preview', 'Failed to generate content');
+      } finally {
+        hideLoading('prompt');
+      }
+    }
+
+    async function processPDF() {
+      const fileInput = document.getElementById('pdf-upload');
+      const prompt = document.getElementById('pdf-prompt').value;
+      
+      if (!fileInput.files[0]) {
+        alert('Please upload a PDF file');
+        return;
+      }
+      
+      showLoading('pdf');
+      
+      const formData = new FormData();
+      formData.append('pdf', fileInput.files[0]);
+      formData.append('prompt', prompt);
+      
+      try {
+        const response = await fetch('/api/process-pdf', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        displayResult('pdf-preview', result.content);
+      } catch (error) {
+        displayError('pdf-preview', 'Failed to process PDF');
+      } finally {
+        hideLoading('pdf');
+      }
+    }
+
+    function showLoading(tabId) {
+      const tab = document.getElementById(tabId);
+      const btn = tab.querySelector('.process-btn');
+      const btnText = btn.querySelector('.btn-text');
+      const btnLoader = btn.querySelector('.btn-loader');
+      
+      btn.disabled = true;
+      btnText.classList.add('hidden');
+      btnLoader.classList.remove('hidden');
+    }
+
+    function hideLoading(tabId) {
+      const tab = document.getElementById(tabId);
+      const btn = tab.querySelector('.process-btn');
+      const btnText = btn.querySelector('.btn-text');
+      const btnLoader = btn.querySelector('.btn-loader');
+      
+      btn.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+    }
+
+    function displayResult(previewId, content) {
+      const preview = document.getElementById(previewId);
+      preview.innerHTML = `<div class="generated-content">${content}</div>`;
+    }
+
+    function displayError(containerId, message) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `<p class="error-text" style="color: var(--color-error); text-align: center; margin-top: var(--space-3xl);">${message}</p>`;
+    }
+
+    function displayBulkResults(results) {
+      const container = document.getElementById('bulk-results');
+      container.innerHTML = results.map(result => `
+        <div class="result-item">
+          <div class="result-header">
+            <div class="result-title">${result.title}</div>
+            <div class="result-url">${result.url}</div>
+          </div>
+          <div class="result-content">${result.content}</div>
+          <div class="result-actions" style="margin-top: var(--space-md);">
+            <button class="edit-btn" onclick="editResult(this)">Edit</button>
+            <button class="publish-btn" onclick="publishResult(this)">Publish</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleEdit(tabType = 'single') {
+      const preview = document.getElementById(`${tabType}-preview`);
+      const editor = document.getElementById(`${tabType}-editor`);
+      
+      if (preview.classList.contains('hidden')) {
+        // Switch back to preview
+        preview.classList.remove('hidden');
+        editor.classList.add('hidden');
+      } else {
+        // Switch to editor
+        editor.value = preview.innerHTML;
+        preview.classList.add('hidden');
+        editor.classList.remove('hidden');
+      }
+    }
+
+    async function publishPost(tabType = 'single') {
+      const preview = document.getElementById(`${tabType}-preview`);
+      const content = preview.innerHTML;
+      
+      if (!content || content.includes('placeholder-text')) {
+        alert('No content to publish');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/publish-post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content })
+        });
+        
+        if (response.ok) {
+          alert('Post published successfully!');
+        } else {
+          alert('Failed to publish post');
+        }
+      } catch (error) {
+        alert('Failed to publish post');
+      }
+    }
+
+    function handleFileUpload(input) {
+      const file = input.files[0];
+      if (file) {
+        const uploadArea = input.parentElement;
+        uploadArea.querySelector('p').textContent = `Selected: ${file.name}`;
+      }
+    }
+  </script>
+</Base>

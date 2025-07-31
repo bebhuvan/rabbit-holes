@@ -26,11 +26,11 @@ const { videoId, title = 'YouTube Video' } = Astro.props;
 
 <style>
   .youtube-embed {
-    margin: 32px 0;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    margin: var(--space-xl) 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    background: var(--hover);
+    background: var(--color-surface);
   }
 
   .embed-container {
@@ -49,28 +49,27 @@ const { videoId, title = 'YouTube Video' } = Astro.props;
   }
 
   .embed-caption {
-    padding: 12px 16px;
+    padding: var(--space-sm) var(--space-md);
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: var(--hover);
-    border-top: 1px solid var(--border);
+    gap: var(--space-sm);
+    background: var(--color-surface);
   }
 
   .embed-icon {
-    font-size: 16px;
+    font-size: var(--text-base);
   }
 
   .embed-text {
-    color: var(--text-secondary);
-    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
     font-weight: 500;
   }
 
   /* Mobile responsive */
   @media (max-width: 768px) {
     .youtube-embed {
-      margin: 24px 0;
+      margin: var(--space-lg) 0;
     }
   }
 </style>
