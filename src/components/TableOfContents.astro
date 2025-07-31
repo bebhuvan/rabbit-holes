@@ -1,0 +1,280 @@
+---
+// Table of Contents Component
+// Automatically generates TOC from markdown headings
+
+export interface Props {
+  headings: Array<{
+    depth: number;
+    slug: string;
+    text: string;
+  }>;
+  title?: string;
+}
+
+const { headings, title = "Table of Contents" } = Astro.props;
+
+// Filter to only show h2 and h3 headings for cleaner TOC
+const filteredHeadings = headings.filter(heading => heading.depth <= 3 && heading.depth >= 2);
+
+// Don't show TOC if there are fewer than 2 headings
+if (filteredHeadings.length < 2) {
+  return null;
+}
+---
+
+<nav class="table-of-contents" aria-label="Table of contents">
+  <div class="toc-header">
+    <h3 class="toc-title">{title}</h3>
+    <button class="toc-toggle" aria-label="Toggle table of contents" data-toc-toggle>
+      <svg class="toc-icon toc-icon--expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6,9 12,15 18,9"></polyline>
+      </svg>
+      <svg class="toc-icon toc-icon--collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="18,15 12,9 6,15"></polyline>
+      </svg>
+    </button>
+  </div>
+  
+  <ol class="toc-list" data-toc-list>
+    {filteredHeadings.map((heading) => (
+      <li class={`toc-item toc-item--h${heading.depth}`}>
+        <a href={`#${heading.slug}`} class="toc-link" data-toc-link={heading.slug}>
+          {heading.text}
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .table-of-contents {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin: var(--space-xl) 0;
+    position: sticky;
+    top: calc(80px + var(--space-lg));
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .toc-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .toc-toggle {
+    background: none;
+    border: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toc-toggle:hover {
+    color: var(--color-accent);
+    background: var(--color-bg);
+  }
+
+  .toc-icon {
+    transition: opacity 0.2s ease;
+  }
+
+  .toc-icon--collapse {
+    display: none;
+  }
+
+  .table-of-contents.collapsed .toc-icon--expand {
+    display: none;
+  }
+
+  .table-of-contents.collapsed .toc-icon--collapse {
+    display: block;
+  }
+
+  .table-of-contents.collapsed .toc-list {
+    display: none;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    margin: 0;
+  }
+
+  .toc-item--h2 {
+    margin-bottom: var(--space-xs);
+  }
+
+  .toc-item--h3 {
+    margin-left: var(--space-md);
+    margin-bottom: var(--space-xs);
+  }
+
+  .toc-link {
+    display: block;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    transition: all 0.2s ease;
+    border-left: 2px solid transparent;
+  }
+
+  .toc-link:hover {
+    color: var(--color-accent);
+    background: var(--color-bg);
+    border-left-color: var(--color-accent);
+  }
+
+  .toc-link.active {
+    color: var(--color-accent);
+    background: var(--color-bg);
+    border-left-color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .toc-item--h3 .toc-link {
+    font-size: var(--text-xs);
+    padding-left: var(--space-sm);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 1024px) {
+    .table-of-contents {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .table-of-contents {
+      margin: var(--space-lg) calc(-1 * var(--space-md));
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+  }
+</style>
+
+<script>
+  // Table of Contents functionality
+  class TableOfContents {
+    constructor() {
+      this.toc = document.querySelector('.table-of-contents');
+      this.toggle = document.querySelector('[data-toc-toggle]');
+      this.links = document.querySelectorAll('[data-toc-link]');
+      this.headings = [];
+      
+      if (!this.toc) return;
+      
+      this.init();
+    }
+
+    init() {
+      // Collect headings
+      this.collectHeadings();
+      
+      // Set up toggle functionality
+      if (this.toggle) {
+        this.toggle.addEventListener('click', () => this.toggleTOC());
+      }
+
+      // Set up scroll spy
+      this.setupScrollSpy();
+      
+      // Set up smooth scrolling
+      this.setupSmoothScrolling();
+    }
+
+    collectHeadings() {
+      this.headings = Array.from(document.querySelectorAll('h2, h3')).map(heading => ({
+        element: heading,
+        id: heading.id,
+        offsetTop: heading.offsetTop
+      }));
+    }
+
+    toggleTOC() {
+      this.toc.classList.toggle('collapsed');
+    }
+
+    setupScrollSpy() {
+      if (!this.headings.length) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            const link = document.querySelector(`[data-toc-link="${entry.target.id}"]`);
+            if (link) {
+              if (entry.isIntersecting) {
+                // Remove active from all links
+                this.links.forEach(l => l.classList.remove('active'));
+                // Add active to current link
+                link.classList.add('active');
+              }
+            }
+          });
+        },
+        {
+          rootMargin: '-80px 0px -80% 0px',
+          threshold: 0.1
+        }
+      );
+
+      this.headings.forEach(heading => {
+        if (heading.element) {
+          observer.observe(heading.element);
+        }
+      });
+    }
+
+    setupSmoothScrolling() {
+      this.links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('data-toc-link');
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            const offsetTop = targetElement.offsetTop - 100; // Account for sticky nav
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => new TableOfContents());
+  } else {
+    new TableOfContents();
+  }
+</script>

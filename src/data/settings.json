@@ -1,0 +1,48 @@
+{
+  "site": {
+    "title": "Rabbit Holes",
+    "description": "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
+    "url": "https://bhuvan.dev",
+    "author": "Bhuvan"
+  },
+  "navigation": {
+    "primary": [
+      {
+        "label": "About",
+        "url": "/about",
+        "external": false
+      },
+      {
+        "label": "Archive",
+        "url": "/archive",
+        "external": false
+      },
+      {
+        "label": "Tags",
+        "url": "/tags",
+        "external": false
+      },
+      {
+        "label": "Blogroll",
+        "url": "/blogroll",
+        "external": false
+      },
+      {
+        "label": "Search",
+        "url": "/search",
+        "external": false
+      }
+    ]
+  },
+  "social": {
+    "twitter": "bebhuvan",
+    "github": "bebhuvan",
+    "email": "hello@bhuvan.dev"
+  },
+  "features": {
+    "rss": true,
+    "search": true,
+    "comments": false,
+    "analytics": ""
+  }
+}

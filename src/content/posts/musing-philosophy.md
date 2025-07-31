@@ -1,7 +1,7 @@
 ---
 title: "On the Paradox of Choice in Modern Life"
 date: 2025-01-31T08:30:00.000Z
-type: "musing"
+type: "musings"
 published: true
 tags:
   - "philosophy"

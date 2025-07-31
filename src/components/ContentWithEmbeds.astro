@@ -1,0 +1,182 @@
+---
+// Content renderer with automatic embed processing
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
+import TwitterEmbed from './TwitterEmbed.astro';
+import CodePenEmbed from './CodePenEmbed.astro';
+import SpotifyEmbed from './SpotifyEmbed.astro';
+import LinkPreviewDynamic from './LinkPreviewDynamic.astro';
+
+export interface Props {
+  post: any;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Helper functions to extract IDs from URLs
+function getYouTubeId(url: string): string | undefined {
+  if (!url) return undefined;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+    /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  
+  return undefined;
+}
+
+function getVimeoId(url: string): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/vimeo\.com\/(?:.*\/)?(\d+)/);
+  return match ? match[1] : undefined;
+}
+
+function getCodePenId(url: string): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/codepen\.io\/[^\/]+\/pen\/([^\/\?]+)/);
+  return match ? match[1] : undefined;
+}
+
+// Check if URL should be embedded
+function shouldEmbed(url: string): { type: string; id?: string } | null {
+  if (!url) return null;
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+  
+  if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
+    const id = getYouTubeId(url);
+    return { type: 'youtube', id };
+  }
+  
+  if (hostname.includes('vimeo.com')) {
+    const id = getVimeoId(url);
+    return { type: 'vimeo', id };
+  }
+  
+  if (hostname.includes('twitter.com') || hostname.includes('x.com')) {
+    return { type: 'twitter' };
+  }
+  
+  if (hostname.includes('codepen.io')) {
+    const id = getCodePenId(url);
+    return { type: 'codepen', id };
+  }
+  
+  if (hostname.includes('spotify.com')) {
+    return { type: 'spotify' };
+  }
+  
+  return { type: 'generic' };
+  } catch {
+    return null;
+  }
+}
+
+// Process post body to find standalone URLs
+const processedEmbeds: Array<{ url: string; embedInfo: any }> = [];
+
+// Check the raw markdown content for standalone URLs
+const lines = post.body.split('\n');
+
+for (const line of lines) {
+  const trimmedLine = line.trim();
+  // Check if line is just a URL (standalone URL)
+  if (trimmedLine.match(/^https?:\/\/[^\s]+$/)) {
+    const embedInfo = shouldEmbed(trimmedLine);
+    if (embedInfo) {
+      processedEmbeds.push({ url: trimmedLine, embedInfo: { ...embedInfo, url: trimmedLine } });
+    }
+  }
+}
+---
+
+<div class="content-with-embeds">
+  <!-- First render the normal content -->
+  <Content />
+  
+  <!-- Then add embeds for standalone URLs found in the content -->
+  <div class="detected-embeds">
+    {processedEmbeds.map((embed, index) => {
+      const { embedInfo } = embed;
+      
+      switch (embedInfo.type) {
+        case 'youtube':
+          if (embedInfo.id) {
+            return <YouTubeEmbed videoId={embedInfo.id} title="YouTube Video" />;
+          }
+          break;
+          
+        case 'vimeo':
+          return <VimeoEmbed url={embedInfo.url} title="Vimeo Video" />;
+          
+        case 'twitter':
+          return <TwitterEmbed url={embedInfo.url} />;
+          
+        case 'codepen':
+          return <CodePenEmbed url={embedInfo.url} />;
+          
+        case 'spotify':
+          return <SpotifyEmbed url={embedInfo.url} />;
+          
+        default:
+          return <LinkPreviewDynamic url={embedInfo.url} />;
+      }
+    })}
+  </div>
+</div>
+
+<script>
+  // Client-side enhancement for link handling
+  document.addEventListener('DOMContentLoaded', () => {
+    // Handle any links that should be converted to embeds
+    const links = document.querySelectorAll('a[href^="http"]');
+    
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+      const text = link.textContent;
+      
+      // Check if the link text is the same as the href (indicating a standalone URL)
+      if (href === text && link.parentElement?.tagName === 'P') {
+        const p = link.parentElement;
+        // Check if this paragraph only contains this link
+        if (p.children.length === 1 && p.textContent?.trim() === text) {
+          // Mark for embed conversion
+          p.classList.add('standalone-url');
+          p.setAttribute('data-url', href);
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .content-with-embeds {
+    /* Ensure proper spacing between content and embeds */
+  }
+  
+  .detected-embeds {
+    margin-top: var(--space-2xl);
+  }
+  
+  .detected-embeds > * {
+    margin-bottom: var(--space-2xl);
+  }
+  
+  .detected-embeds > *:last-child {
+    margin-bottom: 0;
+  }
+  
+  .content-with-embeds :global(.standalone-url) {
+    margin: var(--space-xl) 0;
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+</style>

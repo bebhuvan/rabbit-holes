@@ -1,7 +1,7 @@
 ---
 title: "The Future of Quantum Computing"
 date: 2025-01-31T09:00:00.000Z
-type: "link"
+type: "links"
 published: true
 tags:
   - "quantum"

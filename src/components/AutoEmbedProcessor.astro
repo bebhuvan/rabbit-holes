@@ -1,0 +1,43 @@
+---
+// Auto Embed Processor - converts auto-embed divs to proper embed components
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
+import TwitterEmbed from './TwitterEmbed.astro';
+import CodePenEmbed from './CodePenEmbed.astro';
+import SpotifyEmbed from './SpotifyEmbed.astro';
+import LinkPreviewDynamic from './LinkPreviewDynamic.astro';
+
+export interface Props {
+  embedInfo: {
+    type: 'youtube' | 'vimeo' | 'twitter' | 'codepen' | 'spotify' | 'generic';
+    id?: string;
+    url: string;
+  };
+}
+
+const { embedInfo } = Astro.props;
+---
+
+{embedInfo.type === 'youtube' && embedInfo.id && (
+  <YouTubeEmbed videoId={embedInfo.id} title="YouTube Video" />
+)}
+
+{embedInfo.type === 'vimeo' && embedInfo.id && (
+  <VimeoEmbed videoId={embedInfo.id} title="Vimeo Video" />
+)}
+
+{embedInfo.type === 'twitter' && (
+  <TwitterEmbed url={embedInfo.url} />
+)}
+
+{embedInfo.type === 'codepen' && embedInfo.id && (
+  <CodePenEmbed penId={embedInfo.id} title="CodePen" />
+)}
+
+{embedInfo.type === 'spotify' && (
+  <SpotifyEmbed url={embedInfo.url} />
+)}
+
+{(embedInfo.type === 'generic' || (!embedInfo.id && (embedInfo.type === 'youtube' || embedInfo.type === 'vimeo' || embedInfo.type === 'codepen'))) && (
+  <LinkPreviewDynamic url={embedInfo.url} />
+)}

@@ -17,7 +17,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     
-    <!-- External CSS -->
+    <!-- Styles - Astro will handle bundling -->
     <link rel="stylesheet" href="/src/styles/globals.css" />
     <link rel="stylesheet" href="/src/styles/components.css" />
     <link rel="stylesheet" href="/src/styles/utilities.css" />
@@ -258,7 +258,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         document.documentElement.setAttribute('data-theme', initialTheme);
         localStorage.setItem('theme', initialTheme);
         
-        console.log('Theme initialized:', initialTheme);
+        // Theme initialized silently
       })();
       
       // Theme toggle function - available immediately
@@ -266,7 +266,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
-        console.log('Toggling theme from', currentTheme, 'to', newTheme);
+        // Toggling theme
         
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
@@ -277,7 +277,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           toggle.setAttribute('aria-pressed', (newTheme === 'dark').toString());
         }
         
-        console.log('Theme toggled to:', newTheme);
+        // Theme toggled successfully
       }
       
       // Make function globally available
@@ -293,7 +293,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
           themeToggle.setAttribute('aria-pressed', (currentTheme === 'dark').toString());
           
-          console.log('Theme toggle initialized. Current theme:', currentTheme);
+          // Theme toggle initialized
         }
       });
     </script>
@@ -309,7 +309,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
-              console.log('SW registered: ', registration);
+              // Service worker registered successfully
               
               // Check for updates
               registration.addEventListener('updatefound', () => {
@@ -325,7 +325,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
               });
             })
             .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
+              // Service worker registration failed
             });
         });
 
@@ -394,12 +394,12 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
 
       function showInstallButton() {
         // You can add a custom "Add to Home Screen" button here
-        console.log('PWA install available');
+        // PWA install available
       }
 
       // Handle successful installation
       window.addEventListener('appinstalled', () => {
-        console.log('PWA was installed successfully');
+        // PWA installed successfully
         deferredPrompt = null;
       });
     </script>

@@ -279,5 +279,33 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
     
     // Manual load more button click
     loadMoreBtn?.addEventListener('click', loadMorePosts);
+    
+    // Random post functionality
+    const randomBtn = document.getElementById('random-btn');
+    const allPosts = [
+      '/posts/link-preview-test',
+      '/posts/musing-philosophy', 
+      '/posts/codepen-creativity',
+      '/posts/external-link-test',
+      '/posts/spotify-music-discovery',
+      '/posts/twitter-social-media',
+      '/posts/youtube-embed-test'
+    ];
+    
+    function goToRandomPost() {
+      const randomIndex = Math.floor(Math.random() * allPosts.length);
+      const randomPost = allPosts[randomIndex];
+      window.location.href = randomPost;
+    }
+    
+    randomBtn?.addEventListener('click', goToRandomPost);
+    
+    // Keyboard shortcut for random post (Cmd+R or Ctrl+R)
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'r' && !e.shiftKey) {
+        e.preventDefault();
+        goToRandomPost();
+      }
+    });
   </script>
 </Base>

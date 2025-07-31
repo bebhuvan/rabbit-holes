@@ -206,13 +206,13 @@ const structuredData = {
     // Make share functions available globally
     window.sharePost = async function(title, url) {
       const result = await share.sharePost(title, url);
-      console.log('Share result:', result);
+      // Share completed
     };
     
     window.copyPostLink = async function(url) {
       const fullUrl = window.location.origin + url;
       const result = await share.copyToClipboard(fullUrl);
-      console.log('Copy result:', result);
+      // Copy completed
     };
   </script>
 </Base>

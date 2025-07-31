@@ -473,31 +473,153 @@ import Base from '../layouts/Base.astro';
       display: none !important;
     }
 
-    /* Mobile responsive */
+    /* Better mobile responsive design */
     @media (max-width: 768px) {
       .dashboard-container {
-        padding: var(--space-2xl) var(--space-md);
+        padding: var(--space-xl) var(--space-sm);
+      }
+
+      .dashboard-title {
+        font-size: var(--text-2xl);
+      }
+
+      .dashboard-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-xs);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tab-btn {
+        font-size: var(--text-xs);
+        padding: var(--space-sm) var(--space-md);
+        white-space: nowrap;
       }
 
       .tab-content {
         grid-template-columns: 1fr;
-        gap: var(--space-2xl);
-      }
-
-      .dashboard-tabs {
-        flex-wrap: wrap;
+        gap: var(--space-xl);
       }
 
       .input-section, .output-section {
-        padding: var(--space-lg);
+        padding: var(--space-md);
+      }
+
+      .output-header {
+        flex-direction: column;
+        gap: var(--space-sm);
+        align-items: stretch;
+      }
+
+      .output-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-preview, .content-editor {
+        min-height: 300px;
+        padding: var(--space-md);
+      }
+
+      .file-upload-area {
+        padding: var(--space-xl);
+      }
+
+      /* Notification positioning */
+      .notification {
+        right: 10px !important;
+        left: 10px !important;
+        max-width: none !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .process-btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--text-sm);
       }
     }
   </style>
 
   <script>
+    // Notification system for better error handling
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `notification notification--${type}`;
+      notification.innerHTML = `
+        <div class="notification-content">
+          <span class="notification-icon">${type === 'error' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️'}</span>
+          <span class="notification-message">${message}</span>
+        </div>
+      `;
+      
+      // Style the notification
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? 'var(--color-error)' : type === 'success' ? 'var(--color-success)' : 'var(--color-accent)'};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 5000);
+    }
+    
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+      .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Clean up event listeners to prevent memory leaks
+    const cleanupListeners = [];
+    
     // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      const clickHandler = () => {
         const tabId = btn.dataset.tab;
         
         // Update active tab button
@@ -509,33 +631,66 @@ import Base from '../layouts/Base.astro';
           content.classList.remove('active');
         });
         document.getElementById(tabId).classList.add('active');
-      });
+      };
+      
+      btn.addEventListener('click', clickHandler);
+      cleanupListeners.push(() => btn.removeEventListener('click', clickHandler));
     });
 
-    // Placeholder functions - these would integrate with Cloudflare Workers
+    // Improved processing functions with better error handling
     async function processSingleLink() {
-      const url = document.getElementById('single-url').value;
-      const prompt = document.getElementById('single-prompt').value;
+      const url = document.getElementById('single-url').value.trim();
+      const prompt = document.getElementById('single-prompt').value.trim();
       
       if (!url) {
-        alert('Please enter a URL');
+        showNotification('Please enter a URL', 'error');
+        return;
+      }
+      
+      // Validate URL format
+      try {
+        new URL(url);
+      } catch {
+        showNotification('Please enter a valid URL', 'error');
         return;
       }
       
       showLoading('single-link');
       
       try {
-        // This would call your Cloudflare Worker API
         const response = await fetch('/api/process-link', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, prompt })
+          body: JSON.stringify({ url, prompt }),
+          signal: AbortSignal.timeout(30000) // 30 second timeout
         });
         
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || `Server error: ${response.status}`);
+        }
+        
         const result = await response.json();
-        displayResult('single-preview', result.content);
+        
+        if (result.success) {
+          displayResult('single-preview', result.content);
+          document.getElementById('single-editor').value = result.content;
+          showNotification('Content processed successfully!', 'success');
+        } else {
+          throw new Error(result.error || 'Processing failed');
+        }
       } catch (error) {
-        displayError('single-preview', 'Failed to process link');
+        console.error('Process link error:', error);
+        
+        if (error.name === 'AbortError') {
+          showNotification('Request timed out. Please try again.', 'error');
+        } else if (error.message.includes('429')) {
+          showNotification('Rate limit exceeded. Please wait a minute.', 'error');
+        } else {
+          showNotification(error.message || 'Failed to process link', 'error');
+        }
+        
+        displayError('single-preview', 'Unable to process this URL. Please check the link and try again.');
       } finally {
         hideLoading('single-link');
       }
@@ -683,16 +838,34 @@ import Base from '../layouts/Base.astro';
     function toggleEdit(tabType = 'single') {
       const preview = document.getElementById(`${tabType}-preview`);
       const editor = document.getElementById(`${tabType}-editor`);
+      const editBtn = event.target;
       
-      if (preview.classList.contains('hidden')) {
-        // Switch back to preview
-        preview.classList.remove('hidden');
-        editor.classList.add('hidden');
-      } else {
-        // Switch to editor
-        editor.value = preview.innerHTML;
+      if (!preview || !editor) {
+        console.error('Preview or editor element not found');
+        return;
+      }
+      
+      if (editor.classList.contains('hidden')) {
+        // Switch to editor mode
+        const content = preview.querySelector('.generated-content');
+        if (content) {
+          editor.value = content.innerHTML.trim();
+        } else {
+          showNotification('No content to edit', 'error');
+          return;
+        }
         preview.classList.add('hidden');
         editor.classList.remove('hidden');
+        editBtn.textContent = 'Preview';
+        editor.focus();
+      } else {
+        // Switch back to preview mode
+        if (editor.value.trim()) {
+          displayResult(`${tabType}-preview`, editor.value);
+        }
+        preview.classList.remove('hidden');
+        editor.classList.add('hidden');
+        editBtn.textContent = 'Edit';
       }
     }
 

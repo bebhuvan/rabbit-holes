@@ -1,7 +1,7 @@
 ---
 title: "The Art of Creative Coding"
 date: 2025-01-31T07:30:00.000Z
-type: "link"
+type: "links"
 published: true
 tags:
   - "coding"

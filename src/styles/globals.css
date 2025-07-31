@@ -14,11 +14,14 @@
   --color-error: #ef4444;
   --color-success: #10b981;
   
-  /* Color semantic tokens */
-  --color-type-musing: #f3e8a6;
-  --color-type-link: #bfdbfe;
-  --color-type-video: #fbb6ce; 
+  /* Color semantic tokens for post types */
+  --color-type-musings: #f3e8a6;
+  --color-type-links: #bfdbfe;
+  --color-type-videos: #fbb6ce; 
   --color-type-music: #bbf7d0;
+  --color-type-articles: #ddd6fe;
+  --color-type-photos: #fed7d7;
+  --color-type-quotes: #d1fae5;
   
   /* Spacing Scale - Logical 8px base */
   --space-xs: 4px;
@@ -76,10 +79,13 @@
   --color-error: #ef4444;
   --color-success: #10b981;
   
-  --color-type-musing: #92743f;
-  --color-type-link: #1e3a8a;
-  --color-type-video: #7c2d5a;
+  --color-type-musings: #92743f;
+  --color-type-links: #1e3a8a;
+  --color-type-videos: #7c2d5a;
   --color-type-music: #276749;
+  --color-type-articles: #4c1d95;
+  --color-type-photos: #991b1b;
+  --color-type-quotes: #047857;
 }
 
 /* Reset & Base Styles */

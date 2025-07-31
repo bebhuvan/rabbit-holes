@@ -1,7 +1,7 @@
 ---
 title: "The Beauty of Mathematical Patterns"
 date: 2025-01-31T10:00:00.000Z
-type: "video"
+type: "videos"
 published: true
 tags:
   - "mathematics"

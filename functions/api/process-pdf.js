@@ -133,12 +133,11 @@ Format as clean markdown. Be honest about limitations while providing value.`;
     const frontmatter = {
       title,
       date: new Date().toISOString(),
-      type: 'analysis',
+      type: 'articles', // Fixed: use valid type from schema
       published: false,
       tags: ['analysis', 'research', 'pdf-summary'],
       description: `Analysis and insights from ${pdfFile.name}`,
-      source_file: pdfFile.name,
-      file_size: `${(pdfFile.size / 1024).toFixed(1)} KB`
+      // Note: source_file and file_size are not in the schema, removed
     };
     
     const markdownContent = `---\n${Object.entries(frontmatter)

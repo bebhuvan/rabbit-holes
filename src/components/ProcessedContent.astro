@@ -1,0 +1,162 @@
+---
+// Processed Content Component
+// Automatically detects and renders embeds from standalone links
+
+import { processMarkdownContent } from '../utils/linkProcessor';
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
+import TwitterEmbed from './TwitterEmbed.astro';
+import CodePenEmbed from './CodePenEmbed.astro';
+import SpotifyEmbed from './SpotifyEmbed.astro';
+import LinkPreviewDynamic from './LinkPreviewDynamic.astro';
+
+export interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+
+// Process the content to detect and convert standalone links
+const processedContent = processMarkdownContent(content);
+
+// Parse the processed content to render components
+const lines = processedContent.split('\n');
+const renderedContent: any[] = [];
+
+let i = 0;
+while (i < lines.length) {
+  const line = lines[i];
+  
+  // Check for embed containers
+  if (line.includes('<div class="embed-container">')) {
+    // Find the embed component
+    const nextLine = lines[i + 1];
+    
+    if (nextLine?.includes('<YouTubeEmbed')) {
+      const match = nextLine.match(/videoId="([^"]+)" title="([^"]+)"/);
+      if (match) {
+        renderedContent.push({
+          type: 'youtube',
+          videoId: match[1],
+          title: match[2]
+        });
+      }
+      i += 3; // Skip container div, component, and closing div
+      continue;
+    }
+    
+    if (nextLine?.includes('<VimeoEmbed')) {
+      const match = nextLine.match(/videoId="([^"]+)" title="([^"]+)"/);
+      if (match) {
+        renderedContent.push({
+          type: 'vimeo',
+          videoId: match[1],
+          title: match[2]
+        });
+      }
+      i += 3;
+      continue;
+    }
+    
+    if (nextLine?.includes('<TwitterEmbed')) {
+      const match = nextLine.match(/url="([^"]+)"/);
+      if (match) {
+        renderedContent.push({
+          type: 'twitter',
+          url: match[1]
+        });
+      }
+      i += 3;
+      continue;
+    }
+    
+    if (nextLine?.includes('<CodePenEmbed')) {
+      const match = nextLine.match(/penId="([^"]+)" title="([^"]+)"/);
+      if (match) {
+        renderedContent.push({
+          type: 'codepen',
+          penId: match[1],
+          title: match[2]
+        });
+      }
+      i += 3;
+      continue;
+    }
+    
+    if (nextLine?.includes('<SpotifyEmbed')) {
+      const match = nextLine.match(/url="([^"]+)"/);
+      if (match) {
+        renderedContent.push({
+          type: 'spotify',
+          url: match[1]
+        });
+      }
+      i += 3;
+      continue;
+    }
+    
+    if (nextLine?.includes('<LinkPreviewDynamic')) {
+      const match = nextLine.match(/url="([^"]+)"/);
+      if (match) {
+        renderedContent.push({
+          type: 'link',
+          url: match[1]
+        });
+      }
+      i += 3;
+      continue;
+    }
+  }
+  
+  // Regular markdown content
+  if (line.trim()) {
+    renderedContent.push({
+      type: 'markdown',
+      content: line
+    });
+  }
+  
+  i++;
+}
+---
+
+<div class="processed-content">
+  {renderedContent.map((item) => {
+    switch (item.type) {
+      case 'youtube':
+        return <YouTubeEmbed videoId={item.videoId} title={item.title} />;
+      
+      case 'vimeo':
+        return <VimeoEmbed videoId={item.videoId} title={item.title} />;
+      
+      case 'twitter':
+        return <TwitterEmbed url={item.url} />;
+      
+      case 'codepen':
+        return <CodePenEmbed penId={item.penId} title={item.title} />;
+      
+      case 'spotify':
+        return <SpotifyEmbed url={item.url} />;
+      
+      case 'link':
+        return <LinkPreviewDynamic url={item.url} />;
+      
+      default:
+        return <div set:html={item.content} />;
+    }
+  })}
+</div>
+
+<style>
+  .processed-content {
+    line-height: var(--leading-relaxed);
+  }
+  
+  .processed-content > * + * {
+    margin-top: var(--space-lg);
+  }
+  
+  .processed-content :global(.embed-container) {
+    margin: var(--space-xl) 0;
+  }
+</style>

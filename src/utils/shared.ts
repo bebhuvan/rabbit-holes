@@ -15,7 +15,7 @@ export function sharePost(title: string, url: string): void {
       title: title,
       url: fullUrl
     }).catch(err => {
-      console.log('Error sharing:', err);
+      // Share error handled
       // Fallback to clipboard
       copyToClipboard(fullUrl);
     });
@@ -32,7 +32,7 @@ export function sharePost(title: string, url: string): void {
 export function copyToClipboard(text: string): void {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
-      console.log('Link copied to clipboard');
+      // Link copied successfully
       // Could trigger a toast notification here in the future
     }).catch(err => {
       console.error('Failed to copy to clipboard:', err);
@@ -48,7 +48,7 @@ export function copyToClipboard(text: string): void {
     textArea.select();
     try {
       document.execCommand('copy');
-      console.log('Link copied to clipboard (legacy method)');
+      // Link copied via legacy method
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
     }

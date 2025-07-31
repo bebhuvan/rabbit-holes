@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
+import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +18,10 @@ export default defineConfig({
   },
   experimental: {
     contentIntellisense: true
+  },
+  markdown: {
+    remarkPlugins: [remarkLinkEmbed],
+    extendDefaultPlugins: true
   },
   vite: {
     build: {

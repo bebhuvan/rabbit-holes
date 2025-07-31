@@ -6,6 +6,7 @@ import VimeoEmbed from './VimeoEmbed.astro';
 import TwitterEmbed from './TwitterEmbed.astro';
 import CodePenEmbed from './CodePenEmbed.astro';
 import GenericEmbed from './GenericEmbed.astro';
+import ContentWithEmbeds from './ContentWithEmbeds.astro';
 import { formatDate, calculateReadingTime } from '../utils/shared';
 
 export interface Props {
@@ -90,7 +91,7 @@ function detectEmbedType(url: string) {
       </div>
     ) : (
       <div class="post-full-content">
-        <Content />
+        <ContentWithEmbeds post={post} />
       </div>
     )}
   </div>

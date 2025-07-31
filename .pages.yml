@@ -34,15 +34,21 @@ content:
         type: select
         required: true
         options:
-          - value: musing
-            label: Musing
-          - value: link
-            label: Link
-          - value: video
-            label: Video
+          - value: musings
+            label: 🤔 Musings (Personal thoughts)
+          - value: links
+            label: 🔗 Links (External links)
+          - value: videos
+            label: 📹 Videos (Video embeds)
           - value: music
-            label: Music
-        description: "The type of content this post represents"
+            label: 🎵 Music (Music embeds)
+          - value: articles
+            label: 📝 Articles (Long-form content)
+          - value: photos
+            label: 📸 Photos (Image posts)
+          - value: quotes
+            label: 💭 Quotes (Quotes & excerpts)
+        description: "The type of content this post represents - determines visual styling"
       
       - name: url
         label: External URL

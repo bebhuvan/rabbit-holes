@@ -1,30 +1,32 @@
 // AI-powered single link processing for the /xyz dashboard
 // This function analyzes a URL and generates blog post content
 
+import { sanitizeInput, validateUrl, createErrorResponse, createSuccessResponse } from './utils/validation.js';
+
 export async function onRequest(context) {
   const { request, env } = context;
   
   if (request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return createErrorResponse('Method not allowed', 405);
   }
   
   try {
-    const { url, prompt } = await request.json();
+    const body = await request.json().catch(() => ({}));
+    const { url, prompt } = body;
     
     if (!url) {
-      return new Response('URL is required', { status: 400 });
+      return createErrorResponse('URL is required');
     }
     
-    // Validate URL format
+    // Validate and clean inputs
+    let cleanUrl;
     try {
-      new URL(url);
-    } catch {
-      return new Response('Invalid URL format', { status: 400 });
+      cleanUrl = validateUrl(url);
+    } catch (error) {
+      return createErrorResponse(error.message);
     }
     
-    // Clean inputs
-    const cleanUrl = url.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim();
-    const cleanPrompt = prompt ? prompt.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : '';
+    const cleanPrompt = prompt ? sanitizeInput(prompt) : '';
     
     // Fetch URL content
     let urlContent = '';
@@ -129,7 +131,7 @@ Format as clean markdown suitable for a blog post. Make it feel like discovering
     const frontmatter = {
       title,
       date: new Date().toISOString(),
-      type: 'link',
+      type: 'links', // Fixed: plural form to match schema
       published: false,
       tags: ['discovery', 'exploration'],
       url: cleanUrl,
@@ -148,31 +150,27 @@ Format as clean markdown suitable for a blog post. Make it feel like discovering
       })
       .join('\n')}\n---\n\n${generatedContent}`;
     
-    return new Response(JSON.stringify({
-      success: true,
+    return createSuccessResponse({
       content: generatedContent,
       frontmatter: markdownContent,
       title,
       slug,
-      url: cleanUrl,
-      processing_time: Date.now()
-    }), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
+      url: cleanUrl
     });
     
   } catch (error) {
     console.error('Process link error:', error);
-    return new Response(JSON.stringify({
-      error: 'Failed to process link',
-      details: error.message
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    
+    // Handle specific error types
+    if (error.message.includes('Claude API error')) {
+      return createErrorResponse('AI service temporarily unavailable. Please try again.', 503);
+    }
+    
+    if (error.message.includes('fetch')) {
+      return createErrorResponse('Unable to access the provided URL. Please check if it\'s accessible.', 400);
+    }
+    
+    // Generic error
+    return createErrorResponse('Failed to process link. Please try again.', 500);
   }
 }

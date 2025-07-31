@@ -1,0 +1,151 @@
+---
+// Pages CMS Admin Interface
+// This page provides the CMS interface for content management
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pages CMS - Rabbit Holes Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Pages CMS Styles -->
+  <link rel="stylesheet" href="https://unpkg.com/@pages-cms/ui@latest/dist/pages-cms.css">
+  
+  <!-- Custom admin styles -->
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8fafc;
+    }
+    
+    .admin-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .admin-loading .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #fb923c;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .admin-loading p {
+      color: #64748b;
+      margin: 0;
+    }
+    
+    /* Custom CMS theme to match site colors */
+    :root {
+      --pages-primary: #fb923c;
+      --pages-primary-light: #fed7aa;
+      --pages-primary-dark: #ea580c;
+    }
+  </style>
+</head>
+<body>
+  <div id="pages-cms" class="admin-loading">
+    <div class="spinner"></div>
+    <p>Loading Pages CMS...</p>
+  </div>
+
+  <!-- Pages CMS Script -->
+  <script type="module">
+    import { PagesCMS } from 'https://unpkg.com/@pages-cms/ui@latest/dist/pages-cms.js';
+    
+    // Initialize Pages CMS
+    const cms = new PagesCMS({
+      // Repository configuration
+      repo: {
+        name: 'rabbit-holes',
+        owner: 'bebhuvan',
+        branch: 'master'
+      },
+      
+      // Authentication
+      auth: {
+        github: {
+          client_id: 'your_github_app_client_id', // Replace with your GitHub App client ID
+        }
+      },
+      
+      // Media configuration
+      media: {
+        folder: 'public/uploads',
+        public_folder: '/uploads'
+      },
+      
+      // Site configuration
+      site: {
+        title: 'Rabbit Holes CMS',
+        description: 'Content management for the Rabbit Holes blog',
+        url: 'https://bhuvan.dev'
+      },
+      
+      // Custom styling
+      theme: {
+        primary: '#fb923c',
+        success: '#10b981',
+        warning: '#f59e0b', 
+        error: '#ef4444'
+      }
+    });
+    
+    // Mount the CMS
+    cms.mount('#pages-cms');
+    
+    // Custom post-mount styling
+    cms.on('mount', () => {
+      document.querySelector('.admin-loading')?.remove();
+      
+      // Add custom CSS for better integration
+      const style = document.createElement('style');
+      style.textContent = `
+        .pages-cms-header {
+          background: #fb923c !important;
+        }
+        
+        .pages-cms-sidebar {
+          border-right: 1px solid #e5e5e5;
+        }
+        
+        .pages-cms-button-primary {
+          background: #fb923c !important;
+          border-color: #fb923c !important;
+        }
+        
+        .pages-cms-button-primary:hover {
+          background: #ea580c !important;
+          border-color: #ea580c !important;
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+  
+  <!-- Fallback for users without JavaScript -->
+  <noscript>
+    <div style="padding: 40px; text-align: center; color: #64748b;">
+      <h2>JavaScript Required</h2>
+      <p>Pages CMS requires JavaScript to function. Please enable JavaScript in your browser.</p>
+      <p><a href="/" style="color: #fb923c;">Return to site</a></p>
+    </div>
+  </noscript>
+</body>
+</html>

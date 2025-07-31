@@ -1,7 +1,7 @@
 ---
 title: "The Death and Rebirth of Social Media"
 date: 2025-01-31T08:00:00.000Z
-type: "link"
+type: "links"
 published: true
 tags:
   - "social-media"
