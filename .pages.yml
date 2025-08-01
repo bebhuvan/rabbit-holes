@@ -33,11 +33,15 @@ content:
         type: select
         required: true
         options:
-          - musing
-          - link
-          - video
-          - music
-        default: musing
+          - label: Musings
+            value: musings
+          - label: Links
+            value: links
+          - label: Videos
+            value: videos
+          - label: Music
+            value: music
+        default: musings
       
       - name: url
         label: External URL
@@ -46,8 +50,8 @@ content:
       
       - name: tags
         label: Tags
-        type: string[]
-        default: []
+        type: string
+        list: true
       
       - name: description
         label: Description
@@ -55,13 +59,13 @@ content:
       
       - name: dive_deeper
         label: Dive Deeper
-        type: string[]
-        default: []
+        type: string
+        list: true
       
       - name: related_posts
         label: Related Posts
-        type: string[]
-        default: []
+        type: string
+        list: true
       
       - name: published
         label: Published
@@ -117,8 +121,8 @@ content:
       
       - name: tags
         label: Tags
-        type: string[]
-        default: []
+        type: string
+        list: true
       
       - name: featured
         label: Featured
