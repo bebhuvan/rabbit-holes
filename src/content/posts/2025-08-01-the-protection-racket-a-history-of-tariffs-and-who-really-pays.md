@@ -27,6 +27,7 @@ published: true
 
 *Of course, this doesn’t mean we should ignore the tough questions around AI. Far from it. But still, these are exciting and terrifying times.*
 
+---
 
 In the grand theater of economic policy, the tariff is a character actor that refuses to leave the stage. The curtain rose on its latest act on August 1, 2025, with an announcement from the White House that crystallized the new era of American protectionism.
 
