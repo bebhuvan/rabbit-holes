@@ -158,7 +158,7 @@ TONE & STYLE:
 - Share your genuine curiosity: "This got me thinking..." or "What's fascinating is..."
 - Ask questions that spark curiosity
 - Connect ideas naturally
-${cleanUrl ? `- Reference the source casually: "I found this interesting [piece about X](${cleanUrl}) that got me thinking..."` : ''}
+${cleanUrl ? `- MANDATORY: Reference and hyperlink the original source early in the post: "I found this interesting [piece about X](${cleanUrl}) that got me thinking..." or "This [fascinating article](${cleanUrl}) caught my attention because..."` : ''}
 
 ${cleanUrl ? `MANDATORY: End with a "## Rabbit Holes" section with 4-5 connections:
 Format: "**Topic**: 2-3 sentence description explaining the connection. [Explore this →](working-URL)"
@@ -168,15 +168,37 @@ Example: "**Jazz and Quantum Physics**: Both involve improvisation within struct
 Requirements:
 - Mix domains: science, art, history, psychology, philosophy, technology
 - Each needs 2-3 sentences explaining WHY it connects
-- Use ONLY real Wikipedia links that actually exist:
-  • For behavioral economics: https://en.wikipedia.org/wiki/Behavioral_economics
-  • For game theory: https://en.wikipedia.org/wiki/Game_theory
-  • For protectionism: https://en.wikipedia.org/wiki/Protectionism
-  • For cognitive bias: https://en.wikipedia.org/wiki/Cognitive_bias
-  • For complex systems: https://en.wikipedia.org/wiki/Complex_system
-  • For psychology topics: https://en.wikipedia.org/wiki/[exact-psychology-topic]
-  • For science topics: https://en.wikipedia.org/wiki/[exact-science-topic]
-- CRITICAL: Only use verified Wikipedia URLs that definitely exist, no made-up links
+- Use ONLY these verified, reliable sources:
+
+**Wikipedia (primary choice):**
+• https://en.wikipedia.org/wiki/Behavioral_economics
+• https://en.wikipedia.org/wiki/Game_theory
+• https://en.wikipedia.org/wiki/Protectionism
+• https://en.wikipedia.org/wiki/Cognitive_bias
+• https://en.wikipedia.org/wiki/Complex_system
+• https://en.wikipedia.org/wiki/[exact-topic-name]
+
+**Educational institutions:**
+• https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics
+• https://www.coursera.org/learn/behavioral-economics
+• https://www.edx.org/course/introduction-to-psychology
+
+**Museums & Cultural:**
+• https://www.smithsonianmag.com/
+• https://www.metmuseum.org/
+• https://www.moma.org/
+
+**Trusted science sources:**
+• https://www.scientificamerican.com/
+• https://www.nature.com/
+• https://www.nationalgeographic.com/
+
+**Government/Academic:**
+• https://www.nasa.gov/
+• https://www.nih.gov/
+• https://www.ted.com/talks
+
+- CRITICAL: Only use domains listed above, no made-up or unverified links
 - Make connections feel like genuine discoveries` : ''}
 
 Add this disclaimer at the very end (separated by a single line break):
