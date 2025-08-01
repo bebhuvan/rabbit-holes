@@ -99,7 +99,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         <a href="/" class="nav-logo">🐰 Rabbit Holes</a>
         
         <!-- Mobile menu button -->
-        <button class="mobile-menu-toggle md-hidden" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
           <span class="hamburger"></span>
           <span class="hamburger"></span>
           <span class="hamburger"></span>
@@ -170,23 +170,23 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         transform: rotate(-45deg) translate(7px, -6px);
       }
       
-      /* Mobile Navigation */
-      .md-hidden { 
-        display: none; 
+      /* Desktop Navigation - nav links visible by default */
+      .nav-links {
+        display: flex;
       }
       
-      @media (min-width: 769px) {
-        .md-hidden { 
-          display: flex; 
-        }
+      /* Mobile Navigation */
+      .mobile-menu-toggle {
+        display: none; /* Hidden on desktop */
       }
       
       @media (max-width: 768px) {
         .mobile-menu-toggle {
-          display: flex;
+          display: flex; /* Show hamburger on mobile */
         }
 
         .nav-links {
+          /* Mobile menu - hidden by default, shown when opened */
           position: absolute;
           top: 100%;
           left: 0;
@@ -196,13 +196,13 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           flex-direction: column;
           gap: 0;
           padding: var(--space-lg) var(--space-lg);
-          display: none;
+          display: none; /* Hidden by default on mobile */
           z-index: 100;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .nav-links--open {
-          display: flex;
+          display: flex; /* Show when toggled open */
         }
 
         .nav-link {
