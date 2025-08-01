@@ -227,19 +227,21 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .model-option {
-      display: flex;
+      display: flex !important;
       align-items: center;
       gap: 0.75rem;
       padding: 1rem;
-      background: var(--bg-secondary);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-lg);
+      background: var(--bg-secondary, #f8f9fa);
+      border: 2px solid var(--border, #e2e8f0);
+      border-radius: var(--radius-lg, 8px);
       cursor: pointer;
       transition: all 0.2s ease;
       position: relative;
+      min-height: 80px;
     }
 
     .model-option:hover {
@@ -249,8 +251,8 @@
     }
 
     .model-option.active {
-      border-color: var(--accent);
-      background: var(--accent-bg);
+      border-color: var(--accent, #fb923c);
+      background: var(--accent-bg, #fff7ed);
       box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
     }
 
