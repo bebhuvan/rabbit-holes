@@ -140,6 +140,11 @@ Write like you're sharing a genuine discovery that excited you.`;
     // Debug the request body
     console.log('Request body length:', requestBody.length);
     
+    // Check if API key exists
+    if (!env.CLAUDE_API_KEY) {
+      throw new Error('CLAUDE_API_KEY is not configured. Please add it in Cloudflare Pages dashboard under Settings > Environment variables.');
+    }
+    
     // Claude API integration
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -152,7 +157,12 @@ Write like you're sharing a genuine discovery that excited you.`;
     });
     
     if (!claudeResponse.ok) {
-      throw new Error(`Claude API error: ${claudeResponse.status}`);
+      const errorText = await claudeResponse.text();
+      console.error('Claude API Error:', {
+        status: claudeResponse.status,
+        error: errorText
+      });
+      throw new Error(`Claude API error: ${claudeResponse.status} - ${errorText}`);
     }
     
     const claudeData = await claudeResponse.json();
@@ -225,10 +235,16 @@ published: false
     
   } catch (error) {
     console.error('AI enhancement error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      hasApiKey: !!env.CLAUDE_API_KEY
+    });
     return new Response(JSON.stringify({
       success: false,
       error: 'Failed to enhance content',
-      details: error.message
+      details: error.message,
+      hasApiKey: !!env.CLAUDE_API_KEY
     }), {
       status: 500,
       headers: { 

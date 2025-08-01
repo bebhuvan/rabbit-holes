@@ -1021,7 +1021,23 @@
         }
       } catch (error) {
         console.error('Enhancement error:', error);
-        showStatus('Failed to enhance content. Please try again.', 'error');
+        let errorMsg = 'Failed to enhance content. ';
+        
+        if (result && result.details) {
+          if (result.details.includes('CLAUDE_API_KEY is not configured')) {
+            errorMsg = 'API key not configured. Please add CLAUDE_API_KEY in Cloudflare Pages settings.';
+          } else if (result.details.includes('401')) {
+            errorMsg = 'Invalid API key. Please check your CLAUDE_API_KEY in Cloudflare Pages settings.';
+          } else if (result.details.includes('429')) {
+            errorMsg = 'Rate limit exceeded. Please try again later.';
+          } else {
+            errorMsg += result.details;
+          }
+        } else if (error.message) {
+          errorMsg += error.message;
+        }
+        
+        showStatus(errorMsg, 'error');
       } finally {
         setLoading('enhance-btn', false);
       }
