@@ -176,7 +176,7 @@ End with a simple conclusion tying them together or a question for readers.
 
 Add this disclaimer at the very end (separated by a single line break):
 
-*This is Claude AI's answer to my question, shared directly.*
+*This is ${model === 'chatgpt' ? 'ChatGPT' : 'Claude AI'}'s answer to my question, shared directly.*
 
 CRITICAL: Return ONLY the content as plain markdown text. Do NOT wrap in JSON. Do NOT include frontmatter. Do NOT return any JSON structure. Just return the markdown content directly.
 
@@ -273,7 +273,7 @@ Requirements:
 
 Add this disclaimer at the very end (separated by a single line break):
 
-*This is Claude AI's answer to my question, shared directly${cleanUrl ? '. The original source was read and analyzed to create this exploration of related topics' : ''}.*
+*This is ${model === 'chatgpt' ? 'ChatGPT' : 'Claude AI'}'s answer to my question, shared directly${cleanUrl ? '. The original source was read and analyzed to create this exploration of related topics' : ''}.*
 
 CRITICAL: Return ONLY the content as plain markdown text. Do NOT wrap in JSON. Do NOT include frontmatter. Do NOT return any JSON structure. Just return the markdown content directly.
 
