@@ -90,9 +90,29 @@ content:
         label: Content
         type: markdown
         required: true
-        options:
-          toolbar: true
-          commands: true
+        widget: markdown
+        editor_components:
+          - bold
+          - italic
+          - heading
+          - link
+          - image
+          - code
+          - quote
+          - list
+          - ordered-list
+          - horizontal-rule
+        buttons:
+          - bold
+          - italic
+          - heading
+          - link
+          - quote
+          - bulleted-list
+          - numbered-list
+          - code
+        minimal: false
+        default_style: true
 
   # Site Settings
   - name: settings
