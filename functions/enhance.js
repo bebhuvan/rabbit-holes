@@ -105,8 +105,37 @@ Return only the title, nothing else. Make it intriguing and click-worthy while b
       }
     }
     
-    // Use serendipity-focused prompt
-    const serendipityPrompt = `You are a thoughtful information curator who discovers fascinating patterns and connections. Write in a warm, curious tone - like sharing an interesting discovery with a friend over coffee.
+    // Create prompt based on content type
+    let mainPrompt = '';
+    
+    if (type === 'roundup') {
+      // Special handling for link roundups
+      mainPrompt = `You're a curious curator sharing interesting finds. Create a link roundup with a casual, conversational tone - like sharing cool discoveries with a friend.
+
+INPUT:
+${enhancedContent}
+
+TONE & STYLE:
+- Simple, direct, informal language
+- No buzzwords or over-the-top professional language
+- Write like someone who genuinely finds things interesting
+- Use "I found this..." or "This caught my eye..." 
+- Be enthusiastic but not hyperbolic
+
+STRUCTURE:
+${!cleanTitle ? `Start with an engaging title as # heading` : ''}
+
+Brief intro explaining the theme or what caught your attention about these links.
+
+Then for each link:
+**[Link Title or Description]**: Brief summary of what makes it interesting. Why did it catch your attention? What's the key insight? [Original Link](url)
+
+End with a simple conclusion tying them together or a question for readers.
+
+Keep it conversational and genuine - like a curator sharing genuinely interesting discoveries.`;
+    } else {
+      // Standard prompt for other types
+      mainPrompt = `You're a curious curator who loves discovering interesting patterns and connections. Write in a simple, direct, informal tone - like sharing a fascinating discovery with a friend.
 
 INPUT:
 Title: ${cleanTitle || 'Generate an engaging title'}
@@ -117,13 +146,15 @@ Content: ${enhancedContent}
 STRUCTURE:
 ${!cleanTitle ? `Start with a compelling title as an H1 heading (# Title)` : ''}
 
-WRITING STYLE:
-- Begin naturally: "I came across something intriguing..." or "This caught my attention..."
-- Use everyday language, avoid buzzwords or overly formal tone
-- Share your thought process: "This got me thinking..." or "What's fascinating is..."
-- Ask engaging questions that make readers curious
-- Connect ideas like pieces of a puzzle coming together
-${cleanUrl ? `- Reference the original source naturally: "I found this compelling [piece about X](${cleanUrl}) that got me thinking..."` : ''}
+TONE & STYLE:
+- Simple, direct, informal and blog-like language
+- No professional or over the top language  
+- Write in the voice of a curator sharing interesting things
+- Begin naturally: "I came across something interesting..." or "This caught my attention..."
+- Share your genuine curiosity: "This got me thinking..." or "What's fascinating is..."
+- Ask questions that spark curiosity
+- Connect ideas naturally
+${cleanUrl ? `- Reference the source casually: "I found this interesting [piece about X](${cleanUrl}) that got me thinking..."` : ''}
 
 ${cleanUrl ? `MANDATORY: End with a "## Rabbit Holes" section with 4-5 connections:
 Format: "**Topic**: 2-3 sentence description explaining the connection. [Explore this →](working-URL)"
@@ -140,10 +171,11 @@ ${cleanUrl ? `Add this disclaimer at the very end (separated by a single line br
 
 *This content was enhanced using Claude AI to discover connections and generate the Rabbit Holes section. The original source was read and analyzed to create this exploration of related topics.*` : ''}
 
-Write like you're sharing a genuine discovery that excited you.`;
+Write like you're genuinely excited about sharing something cool you discovered.`;
+    }
     
     // Debug log
-    console.log('Serendipity prompt length:', serendipityPrompt.length);
+    console.log('Main prompt length:', mainPrompt.length);
     
     // Standard Claude API call
     const requestBody = JSON.stringify({
@@ -151,7 +183,7 @@ Write like you're sharing a genuine discovery that excited you.`;
       max_tokens: 1500,
       messages: [{
         role: 'user',
-        content: serendipityPrompt
+        content: mainPrompt
       }]
     });
     
