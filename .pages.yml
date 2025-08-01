@@ -1,21 +1,15 @@
 # PagesCMS Configuration
 # https://pagescms.org/docs/configuration/
 
-# Media handling
 media:
   input: public/images
   output: images
 
-# Content collections
 content:
-  # Blog Posts
   - name: posts
     label: Blog Posts
     type: collection
     path: src/content/posts
-    view:
-      primary: title
-      fields: [title, type, date]
     fields:
       - name: title
         label: Title
@@ -26,27 +20,15 @@ content:
         label: Date
         type: date
         required: true
-        default: now
       
       - name: type
         label: Post Type
-        type: select
-        required: true
-        options:
-          - label: Musings
-            value: musings
-          - label: Links
-            value: links
-          - label: Videos
-            value: videos
-          - label: Music
-            value: music
+        type: string
         default: musings
       
       - name: url
         label: External URL
         type: string
-        description: "For links, videos, and music"
       
       - name: tags
         label: Tags
@@ -76,55 +58,3 @@ content:
         label: Content
         type: markdown
         required: true
-
-  # Site Settings
-  - name: settings
-    label: Site Settings
-    type: file
-    path: src/data/settings.json
-    fields:
-      - name: title
-        label: Site Title
-        type: string
-      
-      - name: description
-        label: Site Description
-        type: text
-      
-      - name: author
-        label: Author
-        type: string
-
-  # Blogroll
-  - name: blogroll
-    label: Blogroll
-    type: collection
-    path: src/data/blogroll
-    view:
-      primary: title
-      fields: [title, url, featured]
-    fields:
-      - name: title
-        label: Title
-        type: string
-        required: true
-      
-      - name: url
-        label: URL
-        type: string
-        required: true
-      
-      - name: description
-        label: Description
-        type: text
-        required: true
-      
-      - name: tags
-        label: Tags
-        type: string
-        list: true
-      
-      - name: featured
-        label: Featured
-        type: boolean
-        default: false
