@@ -6,14 +6,15 @@ media:
   output: images
 
 content:
-  # All Blog Posts (for general management)
-  - name: all-posts
-    label: All Posts
+  # Blog Posts Collection
+  - name: posts
+    label: Blog Posts
     type: collection
     path: src/content/posts
     view:
       primary: title
       fields: [title, type, date]
+      sort: [date, title]
     fields:
       - name: title
         label: Title
@@ -27,255 +28,23 @@ content:
       
       - name: type
         label: Post Type
-        type: string
+        type: select
+        required: true
+        options:
+          - label: 🤔 Musings
+            value: musings
+          - label: 🔗 Links
+            value: links
+          - label: 📹 Videos
+            value: videos
+          - label: 🎵 Music
+            value: music
         default: musings
       
       - name: url
         label: External URL
         type: string
-      
-      - name: tags
-        label: Tags
-        type: string
-        list: true
-      
-      - name: description
-        label: Description
-        type: text
-      
-      - name: dive_deeper
-        label: Dive Deeper
-        type: string
-        list: true
-      
-      - name: related_posts
-        label: Related Posts
-        type: string
-        list: true
-      
-      - name: published
-        label: Published
-        type: boolean
-        default: true
-      
-      - name: body
-        label: Content
-        type: markdown
-        required: true
-
-  # Musings Collection
-  - name: musings
-    label: 🤔 Musings
-    type: collection
-    path: src/content/posts
-    filter:
-      field: type
-      value: musings
-    view:
-      primary: title
-      fields: [title, date]
-    fields:
-      - name: title
-        label: Title
-        type: string
-        required: true
-      
-      - name: date
-        label: Date
-        type: date
-        required: true
-      
-      - name: type
-        label: Post Type
-        type: string
-        default: musings
-        hidden: true
-      
-      - name: tags
-        label: Tags
-        type: string
-        list: true
-      
-      - name: description
-        label: Description
-        type: text
-      
-      - name: dive_deeper
-        label: Dive Deeper
-        type: string
-        list: true
-      
-      - name: related_posts
-        label: Related Posts
-        type: string
-        list: true
-      
-      - name: published
-        label: Published
-        type: boolean
-        default: true
-      
-      - name: body
-        label: Content
-        type: markdown
-        required: true
-
-  # Links Collection
-  - name: links
-    label: 🔗 Links
-    type: collection
-    path: src/content/posts
-    filter:
-      field: type
-      value: links
-    view:
-      primary: title
-      fields: [title, url, date]
-    fields:
-      - name: title
-        label: Title
-        type: string
-        required: true
-      
-      - name: date
-        label: Date
-        type: date
-        required: true
-      
-      - name: type
-        label: Post Type
-        type: string
-        default: links
-        hidden: true
-      
-      - name: url
-        label: External URL
-        type: string
-        required: true
-      
-      - name: tags
-        label: Tags
-        type: string
-        list: true
-      
-      - name: description
-        label: Description
-        type: text
-      
-      - name: dive_deeper
-        label: Dive Deeper
-        type: string
-        list: true
-      
-      - name: related_posts
-        label: Related Posts
-        type: string
-        list: true
-      
-      - name: published
-        label: Published
-        type: boolean
-        default: true
-      
-      - name: body
-        label: Content
-        type: markdown
-        required: true
-
-  # Videos Collection
-  - name: videos
-    label: 📹 Videos
-    type: collection
-    path: src/content/posts
-    filter:
-      field: type
-      value: videos
-    view:
-      primary: title
-      fields: [title, url, date]
-    fields:
-      - name: title
-        label: Title
-        type: string
-        required: true
-      
-      - name: date
-        label: Date
-        type: date
-        required: true
-      
-      - name: type
-        label: Post Type
-        type: string
-        default: videos
-        hidden: true
-      
-      - name: url
-        label: Video URL
-        type: string
-        required: true
-      
-      - name: tags
-        label: Tags
-        type: string
-        list: true
-      
-      - name: description
-        label: Description
-        type: text
-      
-      - name: dive_deeper
-        label: Dive Deeper
-        type: string
-        list: true
-      
-      - name: related_posts
-        label: Related Posts
-        type: string
-        list: true
-      
-      - name: published
-        label: Published
-        type: boolean
-        default: true
-      
-      - name: body
-        label: Content
-        type: markdown
-        required: true
-
-  # Music Collection
-  - name: music
-    label: 🎵 Music
-    type: collection
-    path: src/content/posts
-    filter:
-      field: type
-      value: music
-    view:
-      primary: title
-      fields: [title, url, date]
-    fields:
-      - name: title
-        label: Title
-        type: string
-        required: true
-      
-      - name: date
-        label: Date
-        type: date
-        required: true
-      
-      - name: type
-        label: Post Type
-        type: string
-        default: music
-        hidden: true
-      
-      - name: url
-        label: Music URL
-        type: string
-        required: true
+        description: "Required for Links, Videos, and Music"
       
       - name: tags
         label: Tags
