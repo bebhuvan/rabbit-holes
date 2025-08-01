@@ -130,8 +130,23 @@ function detectEmbedType(url: string) {
     <div class="dive-deeper">
       <h3>🐰 Dive Deeper</h3>
       <ul>
-        {post.data.dive_deeper.map((item: string) => (
-          <li>{item}</li>
+        {post.data.dive_deeper.map((item: any) => (
+          <li>
+            {typeof item === 'string' ? (
+              // Support legacy string format
+              item
+            ) : (
+              // New object format with text and URL
+              <>
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  {item.text}
+                </a>
+                {item.description && (
+                  <span class="dive-deeper-desc"> - {item.description}</span>
+                )}
+              </>
+            )}
+          </li>
         ))}
       </ul>
     </div>

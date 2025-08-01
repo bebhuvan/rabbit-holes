@@ -355,6 +355,22 @@
   margin-bottom: var(--space-sm);
 }
 
+.dive-deeper a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dive-deeper a:hover {
+  text-decoration: underline;
+}
+
+.dive-deeper-desc {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  font-style: italic;
+}
+
 /* Post Actions - Clean & Functional */
 .post-actions {
   display: flex;

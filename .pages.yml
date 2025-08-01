@@ -58,8 +58,23 @@ content:
       
       - name: dive_deeper
         label: Dive Deeper
-        type: string
+        type: object
         list: true
+        fields:
+          - name: text
+            label: Link Text
+            type: string
+            required: true
+            description: "The text to display for the link"
+          - name: url
+            label: URL
+            type: string
+            required: true
+            description: "The destination URL"
+          - name: description
+            label: Description
+            type: text
+            description: "Optional description of why this link is relevant"
       
       - name: related_posts
         label: Related Posts
@@ -75,6 +90,9 @@ content:
         label: Content
         type: markdown
         required: true
+        options:
+          toolbar: true
+          commands: true
 
   # Site Settings
   - name: settings
