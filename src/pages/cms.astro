@@ -1,1070 +1,1000 @@
 ---
-// CMS page that serves the static HTML
+export const prerender = false;
 ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI CMS - Bhuvan's Blog</title>
+  <title>Content Studio - Rabbit Holes</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
   <style>
+    /* Modern CSS Variables */
     :root {
-      --bg: #ffffff;
-      --text-primary: #111111;
-      --text-secondary: #666666;
-      --text-tertiary: #999999;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #94a3b8;
       --accent: #fb923c;
+      --accent-hover: #ea580c;
       --accent-light: #fed7aa;
-      --border: #e5e5e5;
-      --hover: #f8fafc;
-      --success: #10b981;
-      --error: #ef4444;
-      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --success: #059669;
+      --success-bg: #d1fae5;
+      --error: #dc2626;
+      --error-bg: #fee2e2;
+      --warning: #d97706;
+      --warning-bg: #fef3c7;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
     }
 
     [data-theme="dark"] {
-      --bg: #0a0a0a;
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
       --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
+      --text-secondary: #cbd5e1;
       --text-tertiary: #64748b;
-      --accent: #fb923c;
-      --accent-light: #ea580c;
-      --border: #1e293b;
-      --hover: #0f172a;
+      --border: #334155;
+      --border-hover: #475569;
+      --success-bg: #064e3b;
+      --error-bg: #7f1d1d;
+      --warning-bg: #78350f;
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--color-text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.6;
-      font-size: 16px;
       -webkit-font-smoothing: antialiased;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 40px 20px;
+      padding: 2rem 1rem;
+      min-height: 100vh;
     }
 
+    /* Header */
     .header {
       text-align: center;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
     }
 
     .header h1 {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--color-text-primary);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .header p {
-      color: var(--color-text-secondary);
-      font-size: 18px;
+      color: var(--text-secondary);
+      font-size: 1.125rem;
     }
 
+    /* Status Messages */
+    .status-message {
+      margin-bottom: 2rem;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-lg);
+      font-weight: 500;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    .status-message.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .status-message.error {
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid var(--error);
+    }
+
+    .status-message.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Main Layout */
     .cms-layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 40px;
+      gap: 3rem;
+      align-items: start;
     }
 
-    .input-section,
-    .output-section {
-      background: var(--hover);
+    @media (max-width: 768px) {
+      .cms-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    /* Card Style */
+    .card {
+      background: var(--bg-secondary);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
     }
 
-    .section-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: var(--color-text-primary);
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-hover);
     }
 
+    .card h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Form Elements */
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
     }
 
     .form-label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--color-text-primary);
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
     }
 
-    .form-input,
-    .form-textarea,
-    .form-select {
+    .form-input, .form-select, .form-textarea {
       width: 100%;
-      padding: 12px;
+      padding: 0.75rem 1rem;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--bg);
-      color: var(--color-text-primary);
-      font-size: 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.2s ease;
       font-family: inherit;
-      transition: border-color 0.2s ease;
     }
 
-    .form-input:focus,
-    .form-textarea:focus,
-    .form-select:focus {
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       outline: none;
       border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgb(251 146 60 / 0.1);
     }
 
     .form-textarea {
       min-height: 200px;
       resize: vertical;
-      font-family: ui-monospace, 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+      font-family: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', monospace;
       line-height: 1.5;
     }
 
-    .content-textarea {
-      min-height: 300px;
+    .form-input::placeholder, .form-textarea::placeholder {
+      color: var(--text-tertiary);
     }
 
-    .tag-input-container {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
+    /* Post Type Selection */
+    .post-type-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
 
-    .tag-item {
-      background: var(--accent-light);
-      color: var(--color-text-primary);
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 12px;
+    .post-type-option {
       display: flex;
       align-items: center;
-      gap: 4px;
-    }
-
-    .tag-remove {
-      cursor: pointer;
-      color: var(--color-text-secondary);
-      font-weight: bold;
-    }
-
-    .tag-remove:hover {
-      color: var(--color-text-primary);
-    }
-
-    .btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
+      gap: 0.75rem;
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-primary);
       cursor: pointer;
       transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .post-type-option:hover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .post-type-option.active {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      color: var(--accent-hover);
+    }
+
+    .post-type-icon {
+      font-size: 1.25rem;
+    }
+
+    /* Buttons */
+    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      justify-content: center;
+      min-height: 44px;
     }
 
-    .btn:hover {
-      background: var(--accent-light);
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
       transform: translateY(-1px);
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
+      box-shadow: var(--shadow-md);
     }
 
     .btn-secondary {
-      background: var(--hover);
-      color: var(--color-text-primary);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
       border: 1px solid var(--border);
     }
 
-    .btn-secondary:hover {
-      background: var(--border);
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg-tertiary);
+      border-color: var(--border-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-full {
+      width: 100%;
     }
 
     .btn-group {
       display: flex;
-      gap: 12px;
-      margin-top: 20px;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
     }
 
-    .status-message {
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: none;
+    /* AI Enhancement Section */
+    .ai-section {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
     }
 
-    .status-success {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-    }
-
-    .status-error {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--error);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .status-loading {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-
-    .tabs {
+    .ai-section h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
       display: flex;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .tab {
-      padding: 12px 20px;
-      background: none;
-      border: none;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      transition: color 0.2s ease;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    .tab.active {
-      color: var(--accent);
-      border-bottom: 2px solid var(--accent);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
+    /* Preview Section */
+    .preview-area {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      min-height: 400px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
     }
 
     .preview-content {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      min-height: 200px;
+      line-height: 1.7;
     }
 
-    .iteration-history {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
+    .preview-content h1, .preview-content h2, .preview-content h3 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
     }
 
-    .iteration-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
+    .preview-content p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
     }
 
-    .iteration-header {
+    .preview-content a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .preview-content a:hover {
+      text-decoration: underline;
+    }
+
+    .preview-placeholder {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      margin-bottom: 8px;
+      justify-content: center;
+      height: 300px;
+      color: var(--text-tertiary);
+      text-align: center;
     }
 
-    .iteration-timestamp {
-      color: var(--color-text-tertiary);
-      font-size: 12px;
+    .preview-placeholder svg {
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
     }
 
-    .loading-spinner {
+    /* Loading States */
+    .loading {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.1), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      to { left: 100%; }
+    }
+
+    .spinner {
       display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid var(--border);
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
       border-radius: 50%;
-      border-top-color: var(--accent);
-      animation: spin 1s ease-in-out infinite;
+      animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    /* Mobile responsive */
-    @media (max-width: 768px) {
+    /* Tag Input */
+    .tag-input-container {
+      position: relative;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--accent-light);
+      color: var(--accent-hover);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .tag-remove {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 0;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
       .container {
-        padding: 20px 16px;
+        padding: 1rem 0.75rem;
       }
-
-      .cms-layout {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-
+      
       .header h1 {
-        font-size: 24px;
+        font-size: 2rem;
       }
-
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .post-type-grid {
+        grid-template-columns: 1fr;
+      }
+      
       .btn-group {
         flex-direction: column;
       }
     }
+
+    /* Utility Classes */
+    .text-center { text-align: center; }
+    .text-sm { font-size: 0.875rem; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .hidden { display: none !important; }
+    .mb-0 { margin-bottom: 0; }
+    .mt-4 { margin-top: 1rem; }
   </style>
 </head>
+
 <body>
   <div class="container">
+    <!-- Header -->
     <div class="header">
-      <h1>AI-Enhanced Content Creation</h1>
-      <p>Create and enhance blog posts with AI assistance</p>
+      <h1>🎨 Content Studio</h1>
+      <p>Create beautiful posts with AI assistance</p>
     </div>
 
+    <!-- Status Messages -->
     <div id="status-message" class="status-message"></div>
 
+    <!-- Main Layout -->
     <div class="cms-layout">
       <!-- Input Section -->
-      <div class="input-section">
-        <h2 class="section-title">Content Input</h2>
-        
+      <div class="card">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          Create Content
+        </h2>
+
+        <!-- Post Type Selection -->
         <div class="form-group">
-          <label class="form-label" for="post-type">Post Type</label>
-          <select id="post-type" class="form-select">
-            <option value="musing">Musing</option>
-            <option value="link">Link</option>
-            <option value="video">Video</option>
-            <option value="music">Music</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="post-title">Title (optional)</label>
-          <input type="text" id="post-title" class="form-input" placeholder="Leave blank for AI to generate">
-        </div>
-
-        <div class="form-group" id="url-group" style="display: none;">
-          <label class="form-label" for="post-url">URL</label>
-          <input type="url" id="post-url" class="form-input" placeholder="https://...">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="post-tags">Tags</label>
-          <input type="text" id="post-tags" class="form-input" placeholder="Add tags (press Enter or comma to add)">
-          <div id="tags-container" class="tag-input-container" style="margin-top: 8px;"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="post-content">Content</label>
-          <textarea id="post-content" class="form-textarea content-textarea" 
-                    placeholder="Paste your content, links, thoughts, or notes here..."
-                    spellcheck="false"></textarea>
-        </div>
-
-        <div class="btn-group">
-          <button id="test-functions-btn" class="btn btn-secondary">Test Functions</button>
-          <button id="enhance-btn" class="btn">
-            <span class="btn-text">Enhance with AI</span>
-          </button>
-          <button id="save-draft-btn" class="btn btn-secondary">Save Draft</button>
-          <button id="clear-form-btn" class="btn btn-secondary">Clear All</button>
-          <button id="logout-btn" class="btn btn-secondary">Logout</button>
-        </div>
-      </div>
-
-      <!-- Output Section -->
-      <div class="output-section">
-        <h2 class="section-title">Enhanced Output</h2>
-        
-        <div class="tabs">
-          <button class="tab active" data-tab="markdown">Markdown</button>
-          <button class="tab" data-tab="preview">Preview</button>
-          <button class="tab" data-tab="frontmatter">Frontmatter</button>
-        </div>
-
-        <div id="markdown-tab" class="tab-content active">
-          <textarea id="enhanced-content" class="form-textarea content-textarea" 
-                    placeholder="AI-enhanced content will appear here..."></textarea>
-        </div>
-
-        <div id="preview-tab" class="tab-content">
-          <div id="preview-content" class="preview-content">
-            <p style="color: var(--color-text-secondary);">Preview will appear here after enhancement...</p>
+          <label class="form-label">Content Type</label>
+          <div class="post-type-grid">
+            <div class="post-type-option active" data-type="musings">
+              <span class="post-type-icon">🤔</span>
+              <span>Musing</span>
+            </div>
+            <div class="post-type-option" data-type="links">
+              <span class="post-type-icon">🔗</span>
+              <span>Link</span>
+            </div>
+            <div class="post-type-option" data-type="videos">
+              <span class="post-type-icon">📹</span>
+              <span>Video</span>
+            </div>
+            <div class="post-type-option" data-type="music">
+              <span class="post-type-icon">🎵</span>
+              <span>Music</span>
+            </div>
           </div>
         </div>
 
-        <div id="frontmatter-tab" class="tab-content">
-          <textarea id="frontmatter-content" class="form-textarea" 
-                    placeholder="YAML frontmatter will be generated here..."></textarea>
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" id="title" class="form-input" placeholder="Enter a compelling title...">
         </div>
 
-        <div class="btn-group">
-          <button id="refine-btn" class="btn" disabled>
-            Refine Further
-          </button>
-          <button id="publish-btn" class="btn" disabled>
-            Publish to Blog
-          </button>
-          <button id="download-btn" class="btn btn-secondary" disabled>
-            Download .md
-          </button>
+        <!-- URL (for links/videos/music) -->
+        <div class="form-group hidden" id="url-group">
+          <label for="url" class="form-label">URL</label>
+          <input type="url" id="url" class="form-input" placeholder="https://example.com">
         </div>
 
-        <div class="iteration-history" id="iteration-history" style="display: none;">
-          <h3>Iteration History</h3>
-          <div id="iterations-list"></div>
+        <!-- Content -->
+        <div class="form-group">
+          <label for="content" class="form-label">Content</label>
+          <textarea 
+            id="content" 
+            class="form-textarea" 
+            placeholder="Share your thoughts, insights, or discoveries...&#10;&#10;Write in Markdown for rich formatting."></textarea>
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+          <label for="tags" class="form-label">Tags</label>
+          <div class="tag-input-container">
+            <div class="tag-list" id="tag-list"></div>
+            <input type="text" id="tag-input" class="form-input" placeholder="Add tags (press Enter)">
+          </div>
+        </div>
+
+        <!-- AI Enhancement Section -->
+        <div class="ai-section">
+          <h3>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            AI Enhancement
+          </h3>
+          
+          <div class="btn-group">
+            <button id="enhance-btn" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              Enhance with AI
+            </button>
+            <button id="refine-btn" class="btn btn-secondary" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Refine
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Refinement Modal -->
-    <div id="refine-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-      <div style="background: var(--bg); padding: 32px; border-radius: 12px; max-width: 500px; width: 90%;">
-        <h3>Refine Content</h3>
-        <p>Tell the AI how you'd like to improve the content:</p>
-        <textarea id="refine-instructions" class="form-textarea" placeholder="e.g., 'make it shorter', 'add more examples', 'focus on the technical aspects'"></textarea>
+      <!-- Preview Section -->
+      <div class="card">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Preview
+        </h2>
+
+        <div class="preview-area" id="preview-area">
+          <div class="preview-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="font-medium">Preview will appear here</p>
+            <p class="text-sm">Start typing or enhance with AI to see your content</p>
+          </div>
+        </div>
+
         <div class="btn-group">
-          <button id="apply-refinement-btn" class="btn">Apply Refinement</button>
-          <button id="cancel-refinement-btn" class="btn btn-secondary">Cancel</button>
+          <button id="publish-btn" class="btn btn-primary btn-full" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+            </svg>
+            Publish to Blog
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <script define:vars={{ API_BASE: import.meta.env.DEV ? '' : '' }}>
+  <!-- Refine Modal -->
+  <div id="refine-modal" class="hidden" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  ">
+    <div style="
+      background: var(--bg-primary);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    ">
+      <h3 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: 700;">Refine Content</h3>
+      <textarea 
+        id="refine-instructions" 
+        placeholder="How would you like to refine this content?&#10;&#10;Examples:&#10;- Make it more engaging&#10;- Add more technical details&#10;- Simplify the language&#10;- Focus on practical applications"
+        style="
+          width: 100%;
+          min-height: 120px;
+          padding: 0.75rem;
+          border: 1px solid var(--border);
+          border-radius: var(--radius-md);
+          background: var(--bg-secondary);
+          color: var(--text-primary);
+          font-family: inherit;
+          resize: vertical;
+          margin-bottom: 1.5rem;
+        "></textarea>
+      <div style="display: flex; gap: 0.75rem;">
+        <button id="apply-refinement" class="btn btn-primary" style="flex: 1;">Apply Refinement</button>
+        <button id="cancel-refinement" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
     // Global state
+    let currentPostType = 'musings';
     let currentTags = [];
-    let enhancedContent = '';
-    let iterationHistory = [];
+    let isEnhanced = false;
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      checkAuthentication();
+      initializeEventListeners();
+      updatePreview();
     });
 
-    async function checkAuthentication() {
-      // Check if already authenticated
-      const sessionToken = localStorage.getItem('cms_session');
-      const expiresAt = localStorage.getItem('cms_expires');
-      
-      if (sessionToken && expiresAt && Date.now() < parseInt(expiresAt)) {
-        // Already authenticated and not expired
-        initializeEventListeners();
-        loadDraftFromStorage();
-        return;
-      }
-      
-      // Need to authenticate
-      await promptForPassword();
-    }
-
-    async function promptForPassword() {
-      const password = prompt('Enter CMS password:');
-      if (!password) {
-        window.location.href = '/';
-        return;
-      }
-      
-      try {
-        const response = await fetch('/auth', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ password })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-          // Store session info
-          localStorage.setItem('cms_session', result.sessionToken);
-          localStorage.setItem('cms_expires', result.expiresAt);
-          
-          // Initialize CMS
-          initializeEventListeners();
-          loadDraftFromStorage();
-        } else {
-          alert('Access denied: ' + result.message);
-          window.location.href = '/';
-        }
-      } catch (error) {
-        console.error('Authentication error:', error);
-        alert('Authentication failed');
-        window.location.href = '/';
-      }
-    }
-
     function initializeEventListeners() {
-      // Post type change
-      document.getElementById('post-type').addEventListener('change', function() {
-        const urlGroup = document.getElementById('url-group');
-        const value = this.value;
-        urlGroup.style.display = (value === 'link' || value === 'video' || value === 'music') ? 'block' : 'none';
+      // Post type selection
+      document.querySelectorAll('.post-type-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.post-type-option').forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          currentPostType = this.dataset.type;
+          toggleUrlField();
+        });
       });
 
+      // Form inputs
+      document.getElementById('title').addEventListener('input', updatePreview);
+      document.getElementById('content').addEventListener('input', updatePreview);
+      document.getElementById('url').addEventListener('input', updatePreview);
+
       // Tag input
-      const tagInput = document.getElementById('post-tags');
-      tagInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ',') {
+      document.getElementById('tag-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
           e.preventDefault();
           addTag(this.value.trim());
           this.value = '';
         }
       });
 
-      // Tab switching
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          switchTab(this.dataset.tab);
-        });
-      });
-
-      // Buttons
-      document.getElementById('test-functions-btn').addEventListener('click', testFunctions);
+      // AI buttons
       document.getElementById('enhance-btn').addEventListener('click', enhanceContent);
       document.getElementById('refine-btn').addEventListener('click', showRefineModal);
       document.getElementById('publish-btn').addEventListener('click', publishContent);
-      document.getElementById('download-btn').addEventListener('click', downloadContent);
-      document.getElementById('save-draft-btn').addEventListener('click', saveDraft);
-      document.getElementById('clear-form-btn').addEventListener('click', clearForm);
-      document.getElementById('logout-btn').addEventListener('click', logout);
 
-      // Refinement modal
-      document.getElementById('apply-refinement-btn').addEventListener('click', applyRefinement);
-      document.getElementById('cancel-refinement-btn').addEventListener('click', hideRefineModal);
+      // Modal buttons
+      document.getElementById('apply-refinement').addEventListener('click', applyRefinement);
+      document.getElementById('cancel-refinement').addEventListener('click', hideRefineModal);
 
-      // Auto-save (only if content exists)
-      setInterval(() => {
-        const hasContent = document.getElementById('post-content').value.trim() || 
-                          document.getElementById('post-title').value.trim() ||
-                          currentTags.length > 0;
-        if (hasContent) {
-          saveDraftToStorage();
-        }
-      }, 30000); // Auto-save every 30 seconds
-
-      // Ensure paste functionality works
-      const contentTextarea = document.getElementById('post-content');
-      contentTextarea.addEventListener('paste', function(e) {
-        // Allow default paste behavior
-        setTimeout(() => {
-          saveDraftToStorage();
-        }, 100);
+      // Close modal on outside click
+      document.getElementById('refine-modal').addEventListener('click', function(e) {
+        if (e.target === this) hideRefineModal();
       });
     }
 
-    function addTag(tag) {
-      if (tag && !currentTags.includes(tag)) {
-        currentTags.push(tag);
-        updateTagsDisplay();
+    function toggleUrlField() {
+      const urlGroup = document.getElementById('url-group');
+      const needsUrl = ['links', 'videos', 'music'].includes(currentPostType);
+      
+      if (needsUrl) {
+        urlGroup.classList.remove('hidden');
+        document.getElementById('url').required = true;
+      } else {
+        urlGroup.classList.add('hidden');
+        document.getElementById('url').required = false;
+        document.getElementById('url').value = '';
       }
     }
 
-    function removeTag(tag) {
-      currentTags = currentTags.filter(t => t !== tag);
-      updateTagsDisplay();
+    function addTag(tagText) {
+      if (!tagText || currentTags.includes(tagText)) return;
+      
+      currentTags.push(tagText);
+      renderTags();
+      updatePreview();
     }
 
-    function updateTagsDisplay() {
-      const container = document.getElementById('tags-container');
-      container.innerHTML = currentTags.map(tag => 
-        `<div class="tag-item">
+    function removeTag(tagText) {
+      currentTags = currentTags.filter(tag => tag !== tagText);
+      renderTags();
+      updatePreview();
+    }
+
+    function renderTags() {
+      const tagList = document.getElementById('tag-list');
+      tagList.innerHTML = currentTags.map(tag => `
+        <span class="tag">
           ${tag}
-          <span class="tag-remove" onclick="removeTag('${tag}')">&times;</span>
-        </div>`
-      ).join('');
+          <button type="button" class="tag-remove" onclick="removeTag('${tag}')">&times;</button>
+        </span>
+      `).join('');
     }
 
-    function switchTab(tabName) {
-      // Update tab buttons
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    function updatePreview() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const url = document.getElementById('url').value;
+      const previewArea = document.getElementById('preview-area');
 
-      // Update tab content
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      document.getElementById(`${tabName}-tab`).classList.add('active');
+      if (!title && !content) {
+        previewArea.innerHTML = `
+          <div class="preview-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="font-medium">Preview will appear here</p>
+            <p class="text-sm">Start typing or enhance with AI to see your content</p>
+          </div>
+        `;
+        return;
+      }
+
+      let previewHtml = '<div class="preview-content">';
+      
+      if (title) {
+        previewHtml += `<h1>${escapeHtml(title)}</h1>`;
+      }
+      
+      if (url && ['links', 'videos', 'music'].includes(currentPostType)) {
+        const emoji = currentPostType === 'links' ? '🔗' : currentPostType === 'videos' ? '📹' : '🎵';
+        previewHtml += `<p><strong>${emoji} Source:</strong> <a href="${escapeHtml(url)}" target="_blank">${escapeHtml(url)}</a></p>`;
+      }
+      
+      if (content) {
+        // Simple markdown-like rendering
+        const processedContent = content
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/\n/g, '<br>');
+        previewHtml += `<p>${processedContent}</p>`;
+      }
+
+      if (currentTags.length > 0) {
+        previewHtml += `<p><small><strong>Tags:</strong> ${currentTags.join(', ')}</small></p>`;
+      }
+      
+      previewHtml += '</div>';
+      previewArea.innerHTML = previewHtml;
     }
 
-    function showStatus(message, type) {
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showStatus(message, type = 'success') {
       const statusEl = document.getElementById('status-message');
       statusEl.textContent = message;
-      statusEl.className = `status-message status-${type}`;
+      statusEl.className = `status-message ${type}`;
       statusEl.style.display = 'block';
       
-      if (type !== 'loading') {
-        setTimeout(() => {
-          statusEl.style.display = 'none';
-        }, 5000);
-      }
+      setTimeout(() => {
+        statusEl.style.display = 'none';
+      }, 5000);
     }
 
-    function hideStatus() {
-      document.getElementById('status-message').style.display = 'none';
-    }
-
-    async function testFunctions() {
-      // Testing Cloudflare Functions
-      showStatus('Testing functions...', 'loading');
+    function setLoading(buttonId, isLoading) {
+      const button = document.getElementById(buttonId);
+      const originalText = button.innerHTML;
       
-      try {
-        const response = await fetch('/test', {
-          method: 'GET'
-        });
-        
-        // Test response received
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Test failed:', errorText);
-          showStatus(`Functions test failed: ${response.status} - ${errorText}`, 'error');
-          return;
-        }
-        
-        const result = await response.json();
-        // Test completed successfully
-        showStatus('Functions are working! Check console for details.', 'success');
-        
-      } catch (error) {
-        console.error('Test error:', error);
-        showStatus(`Functions test error: ${error.message}`, 'error');
+      if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner"></span> Processing...';
+      } else {
+        button.disabled = false;
+        button.innerHTML = originalText;
       }
     }
 
     async function enhanceContent() {
-      const postType = document.getElementById('post-type').value;
-      const title = document.getElementById('post-title').value;
-      const url = document.getElementById('post-url').value;
-      const content = document.getElementById('post-content').value;
-
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      
       if (!content.trim()) {
-        showStatus('Please enter some content to enhance', 'error');
+        showStatus('Please add some content to enhance', 'error');
         return;
       }
 
-      const enhanceBtn = document.getElementById('enhance-btn');
-      enhanceBtn.disabled = true;
-      enhanceBtn.innerHTML = '<span class="loading-spinner"></span> Enhancing...';
-      
-      showStatus('Enhancing content with AI...', 'loading');
+      setLoading('enhance-btn', true);
 
       try {
-        // Calling enhance API
-          type: postType,
-          title: title || null,
-          url: url || null,
-          content: content.substring(0, 100) + '...',
-          tags: currentTags
-        });
-
         const response = await fetch('/enhance', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            type: postType,
-            title: title || null,
-            url: url || null,
+            title: title || 'Untitled',
             content,
-            tags: currentTags
+            type: currentPostType,
+            url: document.getElementById('url').value
           })
         });
 
-        // Response received
-        // Response headers processed
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('API Error:', errorText);
-          console.error('Response details:', {
-            status: response.status,
-            statusText: response.statusText,
-            headers: [...response.headers.entries()],
-            url: response.url
-          });
-          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-        }
-
         const result = await response.json();
-        // API response processed
-        
-        enhancedContent = result.content;
-        document.getElementById('enhanced-content').value = enhancedContent;
-        
-        // Extract title from AI response if not provided
-        if (!document.getElementById('post-title').value.trim()) {
-          const titleMatch = result.content.match(/^# (.+)$/m);
-          if (titleMatch) {
-            document.getElementById('post-title').value = titleMatch[1];
+
+        if (result.success) {
+          // Update form with enhanced content
+          if (result.title && result.title !== title) {
+            document.getElementById('title').value = result.title;
           }
+          
+          document.getElementById('content').value = result.content;
+          
+          if (result.tags && result.tags.length > 0) {
+            currentTags = [...new Set([...currentTags, ...result.tags])];
+            renderTags();
+          }
+
+          updatePreview();
+          isEnhanced = true;
+          
+          // Enable other buttons
+          document.getElementById('refine-btn').disabled = false;
+          document.getElementById('publish-btn').disabled = false;
+          
+          showStatus('Content enhanced successfully!', 'success');
+        } else {
+          throw new Error(result.error || 'Enhancement failed');
         }
-        
-        // Handle frontmatter - convert object to YAML string if needed
-        const frontmatterValue = typeof result.frontmatter === 'string' 
-          ? result.frontmatter 
-          : JSON.stringify(result.frontmatter, null, 2);
-        document.getElementById('frontmatter-content').value = frontmatterValue;
-        
-        // Update preview
-        document.getElementById('preview-content').innerHTML = result.preview || '<p>Preview not available</p>';
-        
-        // Auto-add suggested tags
-        if (result.suggested_tags && result.suggested_tags.length > 0) {
-          result.suggested_tags.forEach(tag => {
-            if (!currentTags.includes(tag)) {
-              currentTags.push(tag);
-            }
-          });
-          updateTagsDisplay();
-        }
-        
-        // Enable buttons
-        document.getElementById('refine-btn').disabled = false;
-        document.getElementById('publish-btn').disabled = false;
-        document.getElementById('download-btn').disabled = false;
-        
-        // Add to history
-        addToHistory('Initial Enhancement', enhancedContent);
-        
-        showStatus('Content enhanced successfully!', 'success');
-        
       } catch (error) {
-        console.error('Enhancement failed:', error);
+        console.error('Enhancement error:', error);
         showStatus('Failed to enhance content. Please try again.', 'error');
       } finally {
-        enhanceBtn.disabled = false;
-        enhanceBtn.innerHTML = '<span class="btn-text">Enhance with AI</span>';
-        hideStatus();
+        setLoading('enhance-btn', false);
       }
     }
 
     function showRefineModal() {
-      document.getElementById('refine-modal').style.display = 'flex';
+      document.getElementById('refine-modal').classList.remove('hidden');
+      document.getElementById('refine-instructions').focus();
     }
 
     function hideRefineModal() {
-      document.getElementById('refine-modal').style.display = 'none';
+      document.getElementById('refine-modal').classList.add('hidden');
       document.getElementById('refine-instructions').value = '';
     }
 
     async function applyRefinement() {
-      const instructions = document.getElementById('refine-instructions').value;
-      if (!instructions.trim()) {
-        showStatus('Please enter refinement instructions', 'error');
+      const instructions = document.getElementById('refine-instructions').value.trim();
+      
+      if (!instructions) {
+        showStatus('Please provide refinement instructions', 'error');
         return;
       }
 
-      hideRefineModal();
+      const content = document.getElementById('content').value;
       
-      const refineBtn = document.getElementById('refine-btn');
-      refineBtn.disabled = true;
-      refineBtn.innerHTML = '<span class="loading-spinner"></span> Refining...';
-      
-      showStatus('Refining content...', 'loading');
+      setLoading('apply-refinement', true);
 
       try {
         const response = await fetch('/refine', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            content: enhancedContent,
-            instructions
+            content,
+            instructions,
+            type: currentPostType
           })
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const result = await response.json();
-        
-        enhancedContent = result.content;
-        document.getElementById('enhanced-content').value = enhancedContent;
-        
-        // Add to history
-        addToHistory(`Refinement: ${instructions}`, enhancedContent);
-        
-        showStatus('Content refined successfully!', 'success');
-        
+
+        if (result.success) {
+          document.getElementById('content').value = result.content;
+          updatePreview();
+          hideRefineModal();
+          showStatus('Content refined successfully!', 'success');
+        } else {
+          throw new Error(result.error || 'Refinement failed');
+        }
       } catch (error) {
-        console.error('Refinement failed:', error);
-        showStatus(`Failed to refine content: ${error.message}`, 'error');
+        console.error('Refinement error:', error);
+        showStatus('Failed to refine content. Please try again.', 'error');
       } finally {
-        refineBtn.disabled = false;
-        refineBtn.innerHTML = 'Refine Further';
+        setLoading('apply-refinement', false);
       }
     }
 
     async function publishContent() {
-      if (!enhancedContent) {
-        showStatus('No content to publish', 'error');
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+      
+      if (!title || !content) {
+        showStatus('Please fill in title and content before publishing', 'error');
         return;
       }
 
-      const publishBtn = document.getElementById('publish-btn');
-      publishBtn.disabled = true;
-      publishBtn.innerHTML = '<span class="loading-spinner"></span> Publishing...';
-      
-      showStatus('Publishing to blog...', 'loading');
+      // Check URL requirement for certain post types
+      const url = document.getElementById('url').value.trim();
+      if (['links', 'videos', 'music'].includes(currentPostType) && !url) {
+        showStatus(`URL is required for ${currentPostType}`, 'error');
+        return;
+      }
+
+      setLoading('publish-btn', true);
 
       try {
-        const title = document.getElementById('post-title').value;
-        const type = document.getElementById('post-type').value;
-        const url = document.getElementById('post-url').value;
-        
-        // Publishing content
-          title: title || 'Untitled Post',
-          type: type,
+        const postData = {
+          title,
+          content,
+          type: currentPostType,
           tags: currentTags,
-          url: url || null,
-          contentLength: enhancedContent.length
-        });
-        
+          url: url || undefined
+        };
+
         const response = await fetch('/publish', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: title || 'Untitled Post',
-            content: enhancedContent,
-            type: type,
-            tags: currentTags,
-            url: url || null,
-            description: enhancedContent.substring(0, 150) + '...',
-            publish: true
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postData)
         });
 
-        // Publish response received
-        // Publish headers processed
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Publish API Error:', errorText);
-          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-        }
-
         const result = await response.json();
-        // Publish completed
-        
-        showStatus(`Post published successfully! ${result.github_url || ''}`, 'success');
-        
-        // Clear form after a delay
-        setTimeout(() => {
-          clearForm();
-        }, 2000);
-        
+
+        if (result.success) {
+          showStatus('Post published successfully!', 'success');
+          
+          // Reset form
+          setTimeout(() => {
+            document.getElementById('title').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('url').value = '';
+            currentTags = [];
+            renderTags();
+            updatePreview();
+            
+            document.getElementById('refine-btn').disabled = true;
+            document.getElementById('publish-btn').disabled = true;
+            isEnhanced = false;
+          }, 2000);
+        } else {
+          throw new Error(result.error || 'Publishing failed');
+        }
       } catch (error) {
-        console.error('Publishing failed:', error);
-        showStatus(`Failed to publish post: ${error.message}`, 'error');
+        console.error('Publishing error:', error);
+        showStatus('Failed to publish post. Please try again.', 'error');
       } finally {
-        publishBtn.disabled = false;
-        publishBtn.innerHTML = 'Publish to Blog';
+        setLoading('publish-btn', false);
       }
     }
 
-    function downloadContent() {
-      if (!enhancedContent) {
-        showStatus('No content to download', 'error');
-        return;
-      }
-
-      const frontmatter = document.getElementById('frontmatter-content').value;
-      const fullContent = frontmatter + '\n\n' + enhancedContent;
-      
-      const blob = new Blob([fullContent], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `blog-post-${Date.now()}.md`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      showStatus('Content downloaded successfully!', 'success');
-    }
-
-    function addToHistory(action, content) {
-      iterationHistory.push({
-        timestamp: new Date().toLocaleString(),
-        action,
-        content: content.substring(0, 200) + '...'
-      });
-      
-      updateHistoryDisplay();
-    }
-
-    function updateHistoryDisplay() {
-      const historyContainer = document.getElementById('iteration-history');
-      const historyList = document.getElementById('iterations-list');
-      
-      if (iterationHistory.length > 0) {
-        historyContainer.style.display = 'block';
-        historyList.innerHTML = iterationHistory.map(item => 
-          `<div class="iteration-item">
-            <div class="iteration-header">
-              <strong>${item.action}</strong>
-              <span class="iteration-timestamp">${item.timestamp}</span>
-            </div>
-            <div>${item.content}</div>
-          </div>`
-        ).reverse().join('');
-      }
-    }
-
-    function saveDraft() {
-      saveDraftToStorage();
-      showStatus('Draft saved!', 'success');
-    }
-
-    function saveDraftToStorage() {
-      const draft = {
-        type: document.getElementById('post-type').value,
-        title: document.getElementById('post-title').value,
-        url: document.getElementById('post-url').value,
-        content: document.getElementById('post-content').value,
-        tags: currentTags,
-        enhanced: enhancedContent,
-        frontmatter: document.getElementById('frontmatter-content').value
-      };
-      
-      localStorage.setItem('blog-cms-draft', JSON.stringify(draft));
-    }
-
-    function loadDraftFromStorage() {
-      // First, check for URL parameters (from quick capture)
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlParam = urlParams.get('url');
-      const titleParam = urlParams.get('title');
-      const contentParam = urlParams.get('content');
-      
-      if (urlParam || titleParam || contentParam) {
-        // Pre-fill from quick capture
-        if (titleParam) document.getElementById('post-title').value = decodeURIComponent(titleParam);
-        if (urlParam) {
-          document.getElementById('post-url').value = decodeURIComponent(urlParam);
-          // Auto-detect type based on URL
-          const url = decodeURIComponent(urlParam);
-          if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com')) {
-            document.getElementById('post-type').value = 'video';
-          } else if (url.includes('spotify.com') || url.includes('soundcloud.com')) {
-            document.getElementById('post-type').value = 'music';
-          } else {
-            document.getElementById('post-type').value = 'link';
-          }
-          // Show URL field
-          document.getElementById('url-group').style.display = 'block';
-        }
-        if (contentParam) document.getElementById('post-content').value = decodeURIComponent(contentParam);
-        
-        // Auto-add some smart tags
-        if (urlParam) {
-          const domain = new URL(decodeURIComponent(urlParam)).hostname;
-          addTag('discovery');
-          addTag('rabbit-hole');
-          if (domain.includes('github')) addTag('technology');
-          if (domain.includes('arxiv')) addTag('research');
-          if (domain.includes('youtube')) addTag('video');
-        }
-        
-        return; // Don't load from localStorage if we have URL params
-      }
-      
-      // Then check localStorage for saved draft
-      const draft = localStorage.getItem('blog-cms-draft');
-      if (draft) {
-        try {
-          const data = JSON.parse(draft);
-          
-          document.getElementById('post-type').value = data.type || 'musing';
-          document.getElementById('post-title').value = data.title || '';
-          document.getElementById('post-url').value = data.url || '';
-          document.getElementById('post-content').value = data.content || '';
-          document.getElementById('enhanced-content').value = data.enhanced || '';
-          document.getElementById('frontmatter-content').value = data.frontmatter || '';
-          
-          currentTags = data.tags || [];
-          updateTagsDisplay();
-          
-          enhancedContent = data.enhanced || '';
-          
-          if (enhancedContent) {
-            document.getElementById('refine-btn').disabled = false;
-            document.getElementById('publish-btn').disabled = false;
-            document.getElementById('download-btn').disabled = false;
-          }
-          
-        } catch (e) {
-          console.error('Failed to load draft:', e);
-        }
-      }
-    }
-
-    function clearForm() {
-      document.getElementById('post-title').value = '';
-      document.getElementById('post-url').value = '';
-      document.getElementById('post-content').value = '';
-      document.getElementById('enhanced-content').value = '';
-      document.getElementById('frontmatter-content').value = '';
-      
-      currentTags = [];
-      updateTagsDisplay();
-      
-      enhancedContent = '';
-      iterationHistory = [];
-      
-      document.getElementById('refine-btn').disabled = true;
-      document.getElementById('publish-btn').disabled = true;
-      document.getElementById('download-btn').disabled = true;
-      
-      // Clear localStorage and add timestamp to prevent cache issues
-      localStorage.removeItem('blog-cms-draft');
-      localStorage.setItem('blog-cms-cleared', new Date().getTime().toString());
-      
-      // Clear preview content
-      document.getElementById('preview-content').innerHTML = '<p style="color: var(--color-text-secondary);">Preview will appear here after enhancement...</p>';
-    }
-
-    function logout() {
-      // Clear session data
-      localStorage.removeItem('cms_session');
-      localStorage.removeItem('cms_expires');
-      
-      // Redirect to home page
-      window.location.href = '/';
-    }
-
-    // Global functions for onclick handlers
-    window.removeTag = removeTag;
+    // Initialize URL field visibility
+    toggleUrlField();
   </script>
 </body>
 </html>

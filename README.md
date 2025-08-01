@@ -21,10 +21,10 @@ A sophisticated, AI-enhanced blog built with Astro featuring a dual CMS approach
 - **RSS feed** - Full-featured feed generation for content syndication
 
 ### 🤖 **AI Enhancement System**
-- **Custom AI-enhanced CMS** at `/cms` with Claude API integration
+- **Modern Content Studio** at `/cms` - Beautiful, redesigned interface with Claude AI integration
 - **Content refinement** - AI-powered content enhancement and "Dive Deeper" suggestions
 - **Smart publishing** - AI-assisted content workflows for better discovery
-- **Link preview generation** - Real URL metadata fetching with `/api/metadata.js`
+- **Image optimization** - Automatic image compression and WebP conversion via GitHub Actions
 - **Intelligent tagging** - AI-suggested tags for better content organization
 
 ### 🎨 **Design & User Experience**
