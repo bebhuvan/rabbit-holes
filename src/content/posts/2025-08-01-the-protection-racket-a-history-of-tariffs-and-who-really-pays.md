@@ -7,6 +7,9 @@ tags:
   - Trump
   - Trade
   - Economy
+dive_deeper:
+  - https://www.nber.org/books-and-chapters/clashing-over-commerce-history-us-trade-policy
+  - https://www.cambridge.org/core/journals/journal-of-economic-history/article/trade-policy-exchange-rates-and-the-globalization-surge-of-the-1990s/C84E92EE2205A55462A9E09CA9359CEA
 published: true
 ---
 *I asked Gemini to write me a long-form essay on tariffs after President Trump imposed sweeping new trade barriers. I requested a detailed, nuanced, and fact-checked analysis covering their history and evolution, success and failure stories, the spectrum of economic opinion, key research, and some of the most entertaining stories about them.*
