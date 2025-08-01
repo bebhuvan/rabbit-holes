@@ -548,6 +548,26 @@ import Base from '../layouts/Base.astro';
   </style>
 
   <script>
+    // Check if running locally and warn user
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const warningDiv = document.createElement('div');
+      warningDiv.innerHTML = `
+        <div style="
+          background: #fbbf24; 
+          color: #92400e; 
+          padding: 16px; 
+          margin: 16px; 
+          border-radius: 8px; 
+          text-align: center;
+          font-weight: 500;
+        ">
+          ⚠️ <strong>Local Development Warning:</strong> The AI CMS functions require Cloudflare Workers. 
+          Please visit <a href="https://bhuvan.dev/xyz" style="color: #92400e; text-decoration: underline;">https://bhuvan.dev/xyz</a> to use the AI features.
+        </div>
+      `;
+      document.querySelector('.dashboard-container').prepend(warningDiv);
+    }
+
     // Notification system for better error handling
     function showNotification(message, type = 'info') {
       const notification = document.createElement('div');

@@ -7,7 +7,7 @@ const posts = defineCollection({
     date: z.date(),
     type: z.enum(['musings', 'links', 'videos', 'music', 'articles', 'photos', 'quotes']),
     url: z.string().url().optional(),
-    tags: z.array(z.string()),
+    tags: z.array(z.string()).default([]),
     description: z.string().optional(),
     dive_deeper: z.array(z.string()).optional(),
     related_posts: z.array(z.string()).optional(),
