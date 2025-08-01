@@ -1389,9 +1389,10 @@ Examples:
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            originalContent: currentContent,
-            followOnPrompt: followOnText,
-            type: getTabType(tab)
+            content: currentContent,
+            instructions: followOnText,
+            type: getTabType(tab),
+            followOn: true
           })
         });
 

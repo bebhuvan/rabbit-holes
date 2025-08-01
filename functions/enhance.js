@@ -164,7 +164,15 @@ Example: "**Jazz and Quantum Physics**: Both involve improvisation within struct
 Requirements:
 - Mix domains: science, art, history, psychology, philosophy, technology
 - Each needs 2-3 sentences explaining WHY it connects
-- Use real, working URLs (Wikipedia, YouTube, research papers, museums)
+- Use ONLY real Wikipedia links that actually exist:
+  • For behavioral economics: https://en.wikipedia.org/wiki/Behavioral_economics
+  • For game theory: https://en.wikipedia.org/wiki/Game_theory
+  • For protectionism: https://en.wikipedia.org/wiki/Protectionism
+  • For cognitive bias: https://en.wikipedia.org/wiki/Cognitive_bias
+  • For complex systems: https://en.wikipedia.org/wiki/Complex_system
+  • For psychology topics: https://en.wikipedia.org/wiki/[exact-psychology-topic]
+  • For science topics: https://en.wikipedia.org/wiki/[exact-science-topic]
+- CRITICAL: Only use verified Wikipedia URLs that definitely exist, no made-up links
 - Make connections feel like genuine discoveries` : ''}
 
 ${cleanUrl ? `Add this disclaimer at the very end (separated by a single line break):
