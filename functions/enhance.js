@@ -136,7 +136,7 @@ Add this disclaimer at the very end (separated by a single line break):
 
 *This is Claude AI's answer to my question, shared directly.*
 
-Return only the content as markdown text. Do NOT return JSON format.
+CRITICAL: Return ONLY the content as plain markdown text. Do NOT wrap in JSON. Do NOT include frontmatter. Do NOT return any JSON structure. Just return the markdown content directly.
 
 Tags will be generated separately - focus only on writing engaging content.
 
@@ -233,7 +233,7 @@ Add this disclaimer at the very end (separated by a single line break):
 
 *This is Claude AI's answer to my question, shared directly${cleanUrl ? '. The original source was read and analyzed to create this exploration of related topics' : ''}.*
 
-Return only the content as markdown text. Do NOT return JSON format.
+CRITICAL: Return ONLY the content as plain markdown text. Do NOT wrap in JSON. Do NOT include frontmatter. Do NOT return any JSON structure. Just return the markdown content directly.
 
 Tags will be generated separately - focus only on writing engaging content.
 
@@ -416,100 +416,7 @@ published: false
   }
 }
 
-async function buildEnhancePrompt(title, type, url, content, tags, env) {
-  let enhancedContent = content;
-  
-  // TEMPORARILY DISABLE URL FETCHING TO ISOLATE JSON ISSUE
-  // if (url && (type === 'link' || type === 'video' || type === 'music')) {
-  //   try {
-  //     const urlContent = await fetchUrlContent(url);
-  //     enhancedContent = `${content}\n\n[URL Content Summary: ${urlContent.slice(0, 500)}...]`;
-  //   } catch (error) {
-  //     console.log('Could not fetch URL content:', error.message);
-  //   }
-  // }
-  
-  // Clean content aggressively for JSON safety
-  const cleanContent = enhancedContent
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
-    .replace(/[\u2000-\u206F\u2E00-\u2E7F\u3000-\u303F]/g, '') // Remove Unicode spaces/punctuation
-    .replace(/[\uFFF0-\uFFFF]/g, '') // Remove Unicode specials
-    .replace(/\r\n/g, ' ') // Replace CRLF with space
-    .replace(/\n/g, ' ') // Replace LF with space
-    .replace(/\r/g, ' ') // Replace CR with space
-    .replace(/\t/g, ' ') // Replace tabs with space
-    .replace(/\s+/g, ' ') // Collapse multiple spaces
-    .trim();
-    
-  const cleanTitle = (title || 'Untitled')
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')
-    .replace(/[\u2000-\u206F\u2E00-\u2E7F\u3000-\u303F]/g, '')
-    .replace(/[\uFFF0-\uFFFF]/g, '')
-    .replace(/[\r\n\t]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-    
-  const cleanUrl = (url || '')
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '')
-    .trim();
-  
-  const basePrompt = `# SERENDIPITY ARCHITECT
-
-You create "rabbit hole" content that sparks curiosity and reveals unexpected connections. Your goal: make readers think "I never realized these things were connected!"
-
-## INPUT:
-Title: ${cleanTitle}
-Type: ${type}
-${url ? `URL: ${cleanUrl}` : ''}
-Content: ${cleanContent}
-
-## WRITING STYLE:
-- Natural, conversational tone (not overly casual)
-- Hook with something surprising or counterintuitive
-- Reveal hidden patterns between different fields
-- End sections with intriguing questions
-- Reference the original source naturally: "I stumbled across this fascinating [article about X](URL)..."
-
-## CONTENT STRUCTURE:
-1. **Opening Hook**: Start with the most surprising aspect
-2. **Main Content**: Explore connections across disciplines
-3. **Cross-domain Insights**: Show how this relates to other fields
-${url ? `4. **Rabbit Holes Section**: MANDATORY - see requirements below` : ''}
-
-${url ? `
-## RABBIT HOLES SECTION (MANDATORY):
-After your main content, add exactly this structure:
-
-## Rabbit Holes
-
-**[Domain 1 Connection]**: Why this matters [Link](URL)
-**[Domain 2 Connection]**: Why this matters [Link](URL)
-**[Domain 3 Connection]**: Why this matters [Link](URL)
-**[Domain 4 Connection]**: Why this matters [Link](URL)
-**[Domain 5 Connection]**: Why this matters [Link](URL)
-**[Wildcard Connection]**: Something completely unexpected [Link](URL)
-
-REQUIREMENTS:
-- Mix domains: science, art, history, psychology, philosophy, technology
-- Use quality sources: Wikipedia, research papers, YouTube (educational), museums
-- Make each connection feel like a mini-revelation
-- Include actual working hyperlinks
-` : ''}
-
-## OUTPUT FORMAT:
-Return this exact JSON structure:
-
-{
-  "content": "Your enhanced markdown content${url ? ' with ## Rabbit Holes section' : ''}",
-  "frontmatter": "---\ntitle: \"Your Title\"\ndate: 2025-01-18\ntype: \"${type}\"\ntags: [\"tag1\", \"tag2\"]\npublished: true\n---",
-  "dive_deeper": ["Intriguing question 1", "Mystery to explore 2", "Connection to investigate 3"],
-  "suggested_tags": ["cross-domain tag 1", "interdisciplinary tag 2"]
-}
-
-${url ? `⚠️ CRITICAL: The ## Rabbit Holes section with 6 hyperlinked connections is MANDATORY for URL posts. Do not omit this.` : ''}`;
-
-  return basePrompt;
-}
+// Removed unused buildEnhancePrompt function that was requesting JSON format
 
 async function fetchUrlContent(url) {
   try {
