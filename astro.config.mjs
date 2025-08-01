@@ -7,7 +7,10 @@ import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.ts';
 export default defineConfig({
   site: 'https://bhuvan.dev', // Replace with your actual domain
   output: 'static', // Static for better performance + Functions via /functions folder
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    mode: 'directory', // Enable /functions directory support
+    functionPerRoute: false
+  }),
   build: {
     inlineStylesheets: 'auto',
   },
