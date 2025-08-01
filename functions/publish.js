@@ -21,7 +21,18 @@ export async function onRequest(context) {
     } = await request.json();
     
     if (!title || !content || !type) {
-      return new Response('Missing required fields', { status: 400 });
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Missing required fields: title, content, and type are required'
+      }), { 
+        status: 400,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Headers': 'Content-Type'
+        }
+      });
     }
     
     // Generate slug from title
@@ -103,11 +114,17 @@ export async function onRequest(context) {
   } catch (error) {
     console.error('Publishing error:', error);
     return new Response(JSON.stringify({
+      success: false,
       error: 'Failed to publish post',
       details: error.message
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
     });
   }
 }

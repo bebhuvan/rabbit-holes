@@ -408,6 +408,68 @@ export const prerender = false;
       to { transform: rotate(360deg); }
     }
 
+    /* Title Input Group */
+    .title-input-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+
+    .title-input-group .form-input {
+      flex: 1;
+    }
+
+    .btn-title-generate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 44px;
+    }
+
+    .btn-title-generate:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    .btn-title-generate:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Follow-on Section */
+    .follow-on-section {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+        max-height: 0;
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+        max-height: 200px;
+      }
+    }
+
+    .follow-on-section .form-textarea {
+      min-height: 100px;
+      font-size: 0.875rem;
+    }
+
     /* Tag Input */
     .tag-input-container {
       position: relative;
@@ -524,7 +586,14 @@ export const prerender = false;
         <!-- Title -->
         <div class="form-group">
           <label for="title" class="form-label">Title</label>
-          <input type="text" id="title" class="form-input" placeholder="Enter a compelling title...">
+          <div class="title-input-group">
+            <input type="text" id="title" class="form-input" placeholder="Enter a compelling title or let AI generate one...">
+            <button type="button" id="generate-title-btn" class="btn-title-generate" title="Generate title with AI">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- URL (for links/videos/music) -->
@@ -574,6 +643,28 @@ export const prerender = false;
               </svg>
               Refine
             </button>
+          </div>
+
+          <!-- Follow-on Prompting -->
+          <div class="follow-on-section hidden" id="follow-on-section">
+            <div class="form-group mb-0">
+              <label for="follow-on-prompt" class="form-label">Follow-on Instructions</label>
+              <textarea 
+                id="follow-on-prompt" 
+                class="form-textarea" 
+                rows="3"
+                placeholder="Not happy with the result? Tell AI how to improve it...&#10;&#10;Examples:&#10;• Make it more technical&#10;• Add more examples&#10;• Make it shorter and punchier&#10;• Focus on practical applications"></textarea>
+              <div class="btn-group mt-4">
+                <button id="apply-followon-btn" class="btn btn-primary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 12l4 4 4-4"/>
+                    <path d="M16 8l-4-4-4 4"/>
+                  </svg>
+                  Apply Changes
+                </button>
+                <button id="clear-followon-btn" class="btn btn-secondary">Clear</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -693,9 +784,14 @@ export const prerender = false;
       });
 
       // AI buttons
+      document.getElementById('generate-title-btn').addEventListener('click', generateTitle);
       document.getElementById('enhance-btn').addEventListener('click', enhanceContent);
       document.getElementById('refine-btn').addEventListener('click', showRefineModal);
       document.getElementById('publish-btn').addEventListener('click', publishContent);
+      
+      // Follow-on prompting
+      document.getElementById('apply-followon-btn').addEventListener('click', applyFollowOn);
+      document.getElementById('clear-followon-btn').addEventListener('click', clearFollowOn);
 
       // Modal buttons
       document.getElementById('apply-refinement').addEventListener('click', applyRefinement);
@@ -812,14 +908,62 @@ export const prerender = false;
 
     function setLoading(buttonId, isLoading) {
       const button = document.getElementById(buttonId);
-      const originalText = button.innerHTML;
+      
+      if (!button) return;
       
       if (isLoading) {
         button.disabled = true;
-        button.innerHTML = '<span class="spinner"></span> Processing...';
+        button.dataset.originalHtml = button.innerHTML;
+        
+        if (buttonId === 'generate-title-btn') {
+          button.innerHTML = '<span class="spinner"></span>';
+        } else {
+          button.innerHTML = '<span class="spinner"></span> Processing...';
+        }
       } else {
         button.disabled = false;
-        button.innerHTML = originalText;
+        button.innerHTML = button.dataset.originalHtml || button.innerHTML;
+      }
+    }
+
+    async function generateTitle() {
+      const content = document.getElementById('content').value.trim();
+      const url = document.getElementById('url').value.trim();
+      
+      if (!content && !url) {
+        showStatus('Please add some content or URL to generate a title', 'error');
+        return;
+      }
+      
+      setLoading('generate-title-btn', true);
+      
+      try {
+        const response = await fetch('/enhance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: '',
+            content: content || `Content about: ${url}`,
+            type: currentPostType,
+            url: url,
+            titleOnly: true // Special flag for title generation
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.title) {
+          document.getElementById('title').value = result.title;
+          updatePreview();
+          showStatus('Title generated successfully!', 'success');
+        } else {
+          throw new Error(result.error || 'Title generation failed');
+        }
+      } catch (error) {
+        console.error('Title generation error:', error);
+        showStatus('Failed to generate title. Please try again.', 'error');
+      } finally {
+        setLoading('generate-title-btn', false);
       }
     }
 
@@ -867,6 +1011,9 @@ export const prerender = false;
           // Enable other buttons
           document.getElementById('refine-btn').disabled = false;
           document.getElementById('publish-btn').disabled = false;
+          
+          // Show follow-on prompting section
+          document.getElementById('follow-on-section').classList.remove('hidden');
           
           showStatus('Content enhanced successfully!', 'success');
         } else {
@@ -929,6 +1076,70 @@ export const prerender = false;
       } finally {
         setLoading('apply-refinement', false);
       }
+    }
+
+    async function applyFollowOn() {
+      const followOnPrompt = document.getElementById('follow-on-prompt').value.trim();
+      
+      if (!followOnPrompt) {
+        showStatus('Please provide follow-on instructions', 'error');
+        return;
+      }
+
+      const currentContent = document.getElementById('content').value;
+      const currentTitle = document.getElementById('title').value;
+      
+      setLoading('apply-followon-btn', true);
+
+      try {
+        const response = await fetch('/refine', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: currentContent,
+            title: currentTitle,
+            instructions: followOnPrompt,
+            type: currentPostType,
+            followOn: true // Flag to indicate this is follow-on prompting
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Update content and title if provided
+          if (result.title && result.title !== currentTitle) {
+            document.getElementById('title').value = result.title;
+          }
+          
+          document.getElementById('content').value = result.content;
+          
+          // Update tags if provided
+          if (result.tags && result.tags.length > 0) {
+            currentTags = [...new Set([...currentTags, ...result.tags])];
+            renderTags();
+          }
+
+          updatePreview();
+          
+          // Clear the follow-on prompt
+          document.getElementById('follow-on-prompt').value = '';
+          
+          showStatus('Content updated with follow-on instructions!', 'success');
+        } else {
+          throw new Error(result.error || 'Follow-on refinement failed');
+        }
+      } catch (error) {
+        console.error('Follow-on error:', error);
+        showStatus('Failed to apply follow-on instructions. Please try again.', 'error');
+      } finally {
+        setLoading('apply-followon-btn', false);
+      }
+    }
+
+    function clearFollowOn() {
+      document.getElementById('follow-on-prompt').value = '';
+      showStatus('Follow-on prompt cleared', 'success');
     }
 
     async function publishContent() {

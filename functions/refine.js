@@ -9,10 +9,16 @@ export async function onRequest(context) {
   }
   
   try {
-    const { content, instructions } = await request.json();
+    const { content, instructions, title, type, followOn } = await request.json();
     
     if (!content || !instructions) {
-      return new Response('Missing required fields', { status: 400 });
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Missing required fields'
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
     
     // Claude API integration for content refinement
@@ -30,6 +36,7 @@ export async function onRequest(context) {
           role: 'user',
           content: `You are helping refine blog content for a "rabbit holes" blog about fascinating discoveries and deep dives into topics.
 
+${title ? `Current title: ${title}` : ''}
 Current content:
 ${content}
 
@@ -38,7 +45,9 @@ ${instructions}
 
 Please refine the content according to the user's instructions while maintaining the conversational, curiosity-driven tone. Keep the focus on exploration and making connections between ideas.
 
-Return only the refined content as markdown, nothing else.`
+${followOn ? 'This is follow-on prompting - the user wants to improve the content based on their feedback. You may also suggest a better title if appropriate.' : 'Return only the refined content as markdown, nothing else.'}
+
+${followOn ? 'Return a JSON object with: {"title": "improved title if needed", "content": "refined content", "tags": ["suggested", "tags"]}' : 'Return only the refined content as markdown, nothing else.'}`
         }]
       })
     });
@@ -48,10 +57,32 @@ Return only the refined content as markdown, nothing else.`
     }
     
     const claudeData = await claudeResponse.json();
-    const refinedContent = claudeData.content[0].text;
+    let refinedContent = claudeData.content[0].text;
+    let refinedTitle = title;
+    let suggestedTags = [];
+    
+    // For follow-on prompting, try to parse JSON response
+    if (followOn) {
+      try {
+        const parsed = JSON.parse(refinedContent);
+        refinedContent = parsed.content || refinedContent;
+        refinedTitle = parsed.title || title;
+        suggestedTags = parsed.tags || [];
+      } catch (e) {
+        // If not JSON, use as-is but try to extract title if it starts with one
+        const titleMatch = refinedContent.match(/^# (.+)$/m);
+        if (titleMatch) {
+          refinedTitle = titleMatch[1];
+          refinedContent = refinedContent.replace(/^# .+$/m, '').trim();
+        }
+      }
+    }
     
     return new Response(JSON.stringify({
+      success: true,
       content: refinedContent,
+      title: refinedTitle,
+      tags: suggestedTags,
       refined: true
     }), {
       headers: {
@@ -65,11 +96,17 @@ Return only the refined content as markdown, nothing else.`
   } catch (error) {
     console.error('Content refinement error:', error);
     return new Response(JSON.stringify({
+      success: false,
       error: 'Failed to refine content',
       details: error.message
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
     });
   }
 }

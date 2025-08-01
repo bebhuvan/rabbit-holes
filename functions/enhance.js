@@ -9,16 +9,72 @@ export async function onRequest(context) {
   }
   
   try {
-    const { title, content, tags, type, url } = await request.json();
+    const { title, content, tags, type, url, titleOnly } = await request.json();
     
-    if (!content) {
-      return new Response('Missing required fields', { status: 400 });
+    if (!content && !titleOnly) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Missing required fields'
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
     
     // Clean ALL inputs immediately to remove problematic characters
-    const cleanContent = content.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim();
+    const cleanContent = content ? content.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : '';
     const cleanTitle = title ? title.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
     const cleanUrl = url ? url.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
+    
+    // Handle title generation only
+    if (titleOnly) {
+      const titlePrompt = `Generate an engaging, curiosity-driven title for this content:
+
+${cleanContent || `Content about: ${cleanUrl}`}
+
+Type: ${type}
+
+Return only the title, nothing else. Make it intriguing and click-worthy while being accurate.`;
+      
+      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': env.CLAUDE_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 100,
+          messages: [{
+            role: 'user',
+            content: titlePrompt
+          }]
+        })
+      });
+      
+      if (!claudeResponse.ok) {
+        throw new Error(`Claude API error: ${claudeResponse.status}`);
+      }
+      
+      const claudeData = await claudeResponse.json();
+      const generatedTitle = claudeData.content[0].text.trim().replace(/^["']|["']$/g, '');
+      
+      return new Response(JSON.stringify({
+        success: true,
+        title: generatedTitle
+      }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
+    }
     
     // Enhance content with URL fetching if it's a link post
     let enhancedContent = cleanContent;
@@ -128,11 +184,31 @@ published: false
     // Generate HTML preview
     const preview = generatePreview(aiResponse, cleanTitle);
     
+    // Extract enhanced title if AI generated one
+    let finalTitle = generatedTitle;
+    let finalContent = aiResponse;
+    
+    // If AI response starts with a title, extract it
+    const titleMatch = aiResponse.match(/^# (.+)$/m);
+    if (titleMatch && !cleanTitle) {
+      finalTitle = titleMatch[1];
+      // Remove the title from content since it will be in the title field
+      finalContent = aiResponse.replace(/^# .+$/m, '').trim();
+    }
+    
+    // Generate suggested tags from content
+    const suggestedTags = ["discovery", "exploration"];
+    if (type === 'links') suggestedTags.push('links');
+    if (type === 'videos') suggestedTags.push('videos');
+    if (type === 'music') suggestedTags.push('music');
+    
     return new Response(JSON.stringify({
-      content: aiResponse,
-      frontmatter: frontmatter,
+      success: true,
+      title: finalTitle,
+      content: finalContent,
+      tags: suggestedTags,
       dive_deeper: ["Explore this topic further", "Find related concepts", "Discover connections"],
-      suggested_tags: ["discovery", "exploration"],
+      frontmatter: frontmatter,
       preview: preview,
       enhanced: true
     }), {
@@ -150,11 +226,17 @@ published: false
   } catch (error) {
     console.error('AI enhancement error:', error);
     return new Response(JSON.stringify({
+      success: false,
       error: 'Failed to enhance content',
       details: error.message
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
     });
   }
 }

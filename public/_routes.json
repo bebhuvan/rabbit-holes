@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "include": [
+    "/_server-islands/*",
+    "/_image",
+    "/enhance",
+    "/refine",
+    "/publish",
+    "/auth",
+    "/metadata",
+    "/test"
+  ],
+  "exclude": [
+    "/",
+    "/_astro/*",
+    "/apple-touch-icon.png",
+    "/browserconfig.xml",
+    "/favicon.png",
+    "/favicon.svg",
+    "/manifest.json",
+    "/robots.txt",
+    "/sw.js",
+    "/icons/*",
+    "/rss.xml",
+    "/sitemap.xml",
+    "/404",
+    "/about",
+    "/admin",
+    "/archive",
+    "/blogroll",
+    "/bookmarklet",
+    "/cms",
+    "/offline",
+    "/posts/*",
+    "/quick-share",
+    "/search",
+    "/tags/*"
+  ]
+}
