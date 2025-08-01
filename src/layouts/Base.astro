@@ -171,6 +171,16 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
       }
       
       /* Mobile Navigation */
+      .md-hidden { 
+        display: none; 
+      }
+      
+      @media (min-width: 769px) {
+        .md-hidden { 
+          display: flex; 
+        }
+      }
+      
       @media (max-width: 768px) {
         .mobile-menu-toggle {
           display: flex;
@@ -187,6 +197,8 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           gap: 0;
           padding: var(--space-lg) var(--space-lg);
           display: none;
+          z-index: 100;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .nav-links--open {
