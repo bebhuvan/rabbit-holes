@@ -8,13 +8,10 @@ tags:
   - Trade
   - Economy
 dive_deeper:
-  - "[Trade Policy, Exchange Rates, and the Globalization Surge of the
-    1990s](https://www.cambridge.org/core/journals/journal-of-economic-history/\
-    article/trade-policy-exchange-rates-and-the-globalization-surge-of-the-1990\
-    s/C84E92EE2205A55462A9E09CA9359CEA)  "
-  - "[Clashing Over Commerce: A History of US Trade
-    Policy](https://www.nber.org/books-and-chapters/clashing-over-commerce-hist\
-    ory-us-trade-policy)"
+  - text: Trade Policy, Exchange Rates, and the Globalization Surge of the 1990s
+    url: https://www.cambridge.org/core/journals/journal-of-economic-history/article/trade-policy-exchange-rates-and-the-globalization-surge-of-the-1990s/C84E92EE2205A55462A9E09CA9359CEA
+  - text: "Clashing over Commerce: A History of US Trade Policy"
+    url: https://www.nber.org/books-and-chapters/clashing-over-commerce-history-us-trade-policy
 published: true
 ---
 *An essay exploring the history, economics, and politics of tariffs, prompted by the re-imposition of sweeping new trade barriers. The request called for a detailed, nuanced, and fact-checked analysis covering the evolution of tariffs, their successes and failures, the spectrum of economic opinion, key research and researchers, and notable historical anecdotes.*
