@@ -161,13 +161,16 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
-          git commit -m "🖼️ Auto-optimize images
+          git commit -m "$(cat <<'EOF'
+🖼️ Auto-optimize images
 
 - Compressed and created WebP versions
 - Generated thumbnails for faster loading
 - Updated image references in posts
 
-Co-authored-by: Image Optimizer <action@github.com>" || echo "Nothing to commit"
+Co-authored-by: Image Optimizer <action@github.com>
+EOF
+)" || echo "Nothing to commit"
           
           # Push changes
           git push || echo "Nothing to push"
