@@ -48,7 +48,7 @@ export async function onRequest(context) {
           'Authorization': `Bearer ${env.OPENAI_API_KEY}`
         },
         body: JSON.stringify({
-          model: 'gpt-4o',
+          model: 'gpt-4o-mini-2024-07-18',
           messages: [{ role: 'user', content: prompt }],
           max_tokens: maxTokens,
           temperature: 0.7
