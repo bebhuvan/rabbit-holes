@@ -10,6 +10,9 @@ content:
     label: Blog Posts
     type: collection
     path: src/content/posts
+    view:
+      primary: title
+      fields: [title, type, date]
     fields:
       - name: title
         label: Title
@@ -58,3 +61,77 @@ content:
         label: Content
         type: markdown
         required: true
+
+  - name: settings
+    label: Site Settings
+    type: file
+    path: src/data/settings.json
+    fields:
+      - name: site
+        label: Site Information
+        type: object
+        fields:
+          - name: title
+            label: Site Title
+            type: string
+          
+          - name: description
+            label: Site Description
+            type: text
+          
+          - name: url
+            label: Site URL
+            type: string
+          
+          - name: author
+            label: Author
+            type: string
+      
+      - name: social
+        label: Social Links
+        type: object
+        fields:
+          - name: twitter
+            label: Twitter Username
+            type: string
+          
+          - name: github
+            label: GitHub Username
+            type: string
+          
+          - name: email
+            label: Email
+            type: string
+
+  - name: blogroll
+    label: Blogroll
+    type: collection
+    path: src/data/blogroll
+    view:
+      primary: title
+      fields: [title, url, featured]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      
+      - name: url
+        label: URL
+        type: string
+        required: true
+      
+      - name: description
+        label: Description
+        type: text
+        required: true
+      
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      
+      - name: featured
+        label: Featured
+        type: boolean
+        default: false
