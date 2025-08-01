@@ -1459,11 +1459,13 @@ Examples:
 
     async function applyFollowOn(tab) {
       const followOnPrompt = document.getElementById(`${tab}-follow-on-prompt`);
+      const contentTextarea = document.getElementById(`${tab}-content`);
+      const titleInput = document.getElementById(`${tab}-title`);
       const previewArea = document.getElementById(`${tab}-preview-area`);
       const applyBtn = document.getElementById(`${tab}-apply-followon-btn`);
       
       const followOnText = followOnPrompt?.value || '';
-      const currentContent = previewArea?.textContent || '';
+      const currentContent = contentTextarea?.value || '';
       
       if (!followOnText.trim()) {
         showStatus('Please enter follow-on instructions', 'error');
@@ -1485,6 +1487,7 @@ Examples:
           },
           body: JSON.stringify({
             content: currentContent,
+            title: titleInput?.value || '',
             instructions: followOnText,
             type: getTabType(tab),
             followOn: true,
@@ -1495,8 +1498,16 @@ Examples:
         const result = await response.json();
 
         if (result.success && result.content) {
-          // Update preview with refined content
-          previewArea.innerHTML = result.preview || `<div class="preview-content">${result.content.replace(/\n/g, '<br>')}</div>`;
+          // Update content textarea with refined content
+          contentTextarea.value = result.content;
+          
+          // Update title if provided
+          if (result.title && titleInput) {
+            titleInput.value = result.title;
+          }
+          
+          // Update preview
+          updatePreview(tab);
           
           // Clear follow-on prompt
           followOnPrompt.value = '';

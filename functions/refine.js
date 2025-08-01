@@ -114,30 +114,20 @@ ${instructions}
 
 Please refine the content according to the user's instructions while maintaining the conversational, curiosity-driven tone. Keep the focus on exploration and making connections between ideas.
 
-${followOn ? 'This is follow-on prompting - the user wants to improve the content based on their feedback. You may also suggest a better title if appropriate.' : 'Return only the refined content as markdown, nothing else.'}
+${followOn ? 'This is follow-on prompting - the user wants to improve the content based on their feedback.' : ''}
 
-${followOn ? 'Return a JSON object with: {"title": "improved title if needed", "content": "refined content", "tags": ["suggested", "tags"]}' : 'Return only the refined content as markdown, nothing else.'}`;
+IMPORTANT: Return ONLY the refined content as plain markdown text. Do NOT wrap in JSON. Do NOT return any JSON structure. Just return the markdown content directly.`;
 
     const maxTokens = model === 'chatgpt' ? 4000 : 1500; // ChatGPT can handle longer responses
     let refinedContent = await callAI(refinementPrompt, maxTokens);
     let refinedTitle = title;
     let suggestedTags = [];
     
-    // For follow-on prompting, try to parse JSON response
-    if (followOn) {
-      try {
-        const parsed = JSON.parse(refinedContent);
-        refinedContent = parsed.content || refinedContent;
-        refinedTitle = parsed.title || title;
-        suggestedTags = parsed.tags || [];
-      } catch (e) {
-        // If not JSON, use as-is but try to extract title if it starts with one
-        const titleMatch = refinedContent.match(/^# (.+)$/m);
-        if (titleMatch) {
-          refinedTitle = titleMatch[1];
-          refinedContent = refinedContent.replace(/^# .+$/m, '').trim();
-        }
-      }
+    // For any refinement, check if content starts with a title
+    const titleMatch = refinedContent.match(/^# (.+)$/m);
+    if (titleMatch && followOn) {
+      refinedTitle = titleMatch[1];
+      refinedContent = refinedContent.replace(/^# .+$/m, '').trim();
     }
     
     return new Response(JSON.stringify({
