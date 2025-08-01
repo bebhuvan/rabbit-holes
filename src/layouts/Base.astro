@@ -1,4 +1,8 @@
 ---
+import '../styles/globals.css';
+import '../styles/components.css';
+import '../styles/utilities.css';
+
 export interface Props {
   title: string;
   description?: string;
@@ -16,11 +20,6 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    
-    <!-- Styles - Astro will handle bundling -->
-    <link rel="stylesheet" href="/src/styles/globals.css" />
-    <link rel="stylesheet" href="/src/styles/components.css" />
-    <link rel="stylesheet" href="/src/styles/utilities.css" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
