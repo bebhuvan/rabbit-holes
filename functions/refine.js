@@ -120,6 +120,15 @@ IMPORTANT: Return ONLY the refined content as plain markdown text. Do NOT wrap i
 
     const maxTokens = model === 'chatgpt' ? 4000 : 1500; // ChatGPT can handle longer responses
     let refinedContent = await callAI(refinementPrompt, maxTokens);
+    
+    // Clean up OpenAI responses which might have different formatting
+    if (model === 'chatgpt') {
+      // Ensure proper paragraph breaks - OpenAI sometimes uses single line breaks
+      refinedContent = refinedContent
+        .replace(/\r\n/g, '\n') // Normalize line endings
+        .replace(/(?<!\n)\n(?!\n)/g, '  \n') // Convert single line breaks to markdown line breaks
+        .trim();
+    }
     let refinedTitle = title;
     let suggestedTags = [];
     

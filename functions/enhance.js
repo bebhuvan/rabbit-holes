@@ -300,7 +300,16 @@ Write like you're genuinely excited about sharing something cool you discovered.
     
     // AI API integration - use higher token limit for longer content
     const maxTokens = model === 'chatgpt' ? 4000 : 1500; // ChatGPT can handle longer responses
-    const aiResponse = await callAI(mainPrompt, maxTokens);
+    let aiResponse = await callAI(mainPrompt, maxTokens);
+    
+    // Clean up OpenAI responses which might have different formatting
+    if (model === 'chatgpt') {
+      // Ensure proper paragraph breaks - OpenAI sometimes uses single line breaks
+      aiResponse = aiResponse
+        .replace(/\r\n/g, '\n') // Normalize line endings
+        .replace(/(?<!\n)\n(?!\n)/g, '  \n') // Convert single line breaks to markdown line breaks
+        .trim();
+    }
     
     // Debug log the AI response
     console.log('AI Response preview:', aiResponse.substring(0, 200));
@@ -470,20 +479,41 @@ async function fetchUrlContent(url) {
 function generatePreview(markdown, title) {
   // Simple markdown to HTML conversion for preview
   let html = markdown
-    .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-    .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+    // Headers
     .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+    // Bold and italic
+    .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    // Code
     .replace(/`(.*?)`/g, '<code>$1</code>')
-    .replace(/\n\n/g, '</p><p>')
+    // Lists
+    .replace(/^\* (.+)$/gm, '<li>$1</li>')
+    .replace(/^\- (.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    // Wrap list items in ul/ol
+    .replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+      return '<ul>' + match + '</ul>';
+    })
+    // Paragraphs - handle different line break styles
+    .replace(/\n\n+/g, '</p><p>')
+    .replace(/  \n/g, '<br>')
     .replace(/\n/g, '<br>');
   
   // Wrap in paragraphs
   html = '<p>' + html + '</p>';
   
-  // Clean up empty paragraphs
-  html = html.replace(/<p><\/p>/g, '');
+  // Clean up empty paragraphs and fix nested p tags
+  html = html
+    .replace(/<p><\/p>/g, '')
+    .replace(/<p>(<h[1-6]>)/g, '$1')
+    .replace(/(<\/h[1-6]>)<\/p>/g, '$1')
+    .replace(/<p>(<ul>)/g, '$1')
+    .replace(/(<\/ul>)<\/p>/g, '$1');
   
   return html;
 }
