@@ -153,4 +153,32 @@ function detectEmbedType(url: string) {
     </div>
   )}
   
+  {/* Temporary post actions for full content posts - until layout actions are working */}
+  {!showExcerpt && (
+    <div class="post-actions-temp" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; text-align: center;">
+      <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+        <button 
+          class="action-btn" 
+          onclick={`copyPostLink('/posts/${post.slug}')`}
+          style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; color: #64748b; font-size: 0.875rem; cursor: pointer;"
+        >
+          📋 Copy Link
+        </button>
+        <button 
+          class="action-btn" 
+          onclick={`sharePost('${post.data.title.replace(/'/g, "\\'")}', '/posts/${post.slug}')`}
+          style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; color: #64748b; font-size: 0.875rem; cursor: pointer;"
+        >
+          📤 Share
+        </button>
+        <a 
+          href="/" 
+          style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; color: #64748b; font-size: 0.875rem; text-decoration: none;"
+        >
+          ← Home
+        </a>
+      </div>
+    </div>
+  )}
+  
 </article>
