@@ -17,12 +17,26 @@ dive_deeper:
     ory-us-trade-policy)"
 published: true
 ---
+*An essay exploring the history, economics, and politics of tariffs, prompted by the re-imposition of sweeping new trade barriers. The request called for a detailed, nuanced, and fact-checked analysis covering the evolution of tariffs, their successes and failures, the spectrum of economic opinion, key research and researchers, and notable historical anecdotes.*
 
-> An essay exploring the history, economics, and politics of tariffs, prompted by the re-imposition of sweeping new trade barriers. The request called for a detailed, nuanced, and fact-checked analysis covering the evolution of tariffs, their successes and failures, the spectrum of economic opinion, key research and researchers, and notable historical anecdotes.
+*In prompting Gemini to write this essay, I had a realization, one that many people have had and said before: using an LLM like this feels like having a ridiculously smart, PhD-level expert in your pocket. Someone who knows a lot about a lot.*
+
+*What excites me and terrifies me in equal measure is just how much you can learn if you ask the right questions. The potential is insane. Of course, there’s nuance in how you go about learning this way. There are valid concerns about the downsides of learning from an LLM — limitations, bias, lack of depth, and so on. But still, as that famous Thomas Sowell quote goes, "There are no solutions, only trade-offs." It fits perfectly here.*
+
+*And then I think about someone with a crappy internet connection in a rural part of India or sub-Saharan Africa. Someone who has no access to quality education, no resources, nothing. Yet with just a basic connection and access to a tool like this, the number of things they can learn or do on their own is staggering.*
+
+*Of course, this doesn’t mean we should ignore the tough questions around AI. Far from it. But still, these are exciting and terrifying times.*
+
 
 In the grand theater of economic policy, the tariff is a character actor that refuses to leave the stage. The curtain rose on its latest act on August 1, 2025, with an announcement from the White House that crystallized the new era of American protectionism.
 
 > [On that day, an executive order was signed imposing a sweeping new regime of "reciprocal" tariffs.](https://economictimes.indiatimes.com/news/economy/foreign-trade/while-house-announces-25-tariff-on-india-releases-list-of-levies-for-several-countries/articleshow/123032677.cms "null") The action was vast in its scope, targeting **nearly 70 countries and territories** in addition to the European Union. The tariff rates varied widely, based on justifications ranging from trade imbalances to national security concerns. Rates for some nations were set as high as **41% (Syria)** and **39% (Switzerland)**, while key trading partners like **Canada saw rates increased to 35%**, **India was set at 25%**, and the **United Kingdom at 10%**.
+
+> The rates on 68 countries and the 27-member European Union are set to go into effect in seven days, according to the order, and not the Friday deadline that the president initially set. The extension reflects the government’s need for more time to harmonize the tariff rates, according to a senior official who spoke to reporters on condition of anonymity.
+> 
+> Trump said the new tariffs were going “very well, very smooth.” In an interview with NBC News he added that it was “too late” for the countries named in Thursday’s order to avoid the tariff rates but that he was open to offers. — [The Guardian](https://www.theguardian.com/us-news/2025/jul/31/trump-extends-deadline-tariff-deal-mexico)
+
+Trump said the new tariffs were going “very well, very smooth.” In an interview with NBC News he added that it was “too late” for the countries named in Thursday’s order to avoid the tariff rates but that he was open to offers.
 
 The move was personified by the president's direct and pointed justification for the tariffs on India, a key strategic partner.
 
