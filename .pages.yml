@@ -1,277 +1,126 @@
-# PagesCMS Configuration for Bhuvan's Blog
+# PagesCMS Configuration
 # https://pagescms.org/docs/configuration/
 
-# Media handling configuration
+# Media handling
 media:
-  input: public/media
-  output: media
-  extensions: [png, jpg, jpeg, gif, webp, svg, mp4, mp3, pdf]
+  input: public/images
+  output: images
 
-# Content collections and types
+# Content collections
 content:
-  # Blog Posts Collection
+  # Blog Posts
   - name: posts
     label: Blog Posts
     type: collection
     path: src/content/posts
-    format: md
+    view:
+      primary: title
+      fields: [title, type, date]
     fields:
       - name: title
         label: Title
-        type: text
+        type: string
         required: true
-        description: "The main title of your post"
       
       - name: date
-        label: Publication Date
-        type: datetime
+        label: Date
+        type: date
         required: true
         default: now
-        description: "When this post was published"
       
       - name: type
         label: Post Type
         type: select
         required: true
         options:
-          - value: musings
-            label: 🤔 Musings (Personal thoughts)
-          - value: links
-            label: 🔗 Links (External links)
-          - value: videos
-            label: 📹 Videos (Video embeds)
-          - value: music
-            label: 🎵 Music (Music embeds)
-          - value: articles
-            label: 📝 Articles (Long-form content)
-          - value: photos
-            label: 📸 Photos (Image posts)
-          - value: quotes
-            label: 💭 Quotes (Quotes & excerpts)
-        description: "The type of content this post represents - determines visual styling"
+          - musing
+          - link
+          - video
+          - music
+        default: musing
       
       - name: url
         label: External URL
-        type: text
-        description: "URL for links, videos, or music (optional for musings)"
-        condition:
-          field: type
-          value: [link, video, music]
+        type: string
+        description: "For links, videos, and music"
       
       - name: tags
         label: Tags
-        type: list
-        field:
-          type: text
-        description: "Topics and categories for this post"
+        type: string[]
         default: []
       
       - name: description
         label: Description
         type: text
-        description: "Brief description for SEO and previews"
       
       - name: dive_deeper
         label: Dive Deeper
-        type: list
-        field:
-          type: text
-        description: "AI-generated suggestions for further exploration"
+        type: string[]
         default: []
       
       - name: related_posts
         label: Related Posts
-        type: list
-        field:
-          type: text
-        description: "Slugs of related posts"
+        type: string[]
         default: []
       
       - name: published
         label: Published
         type: boolean
         default: true
-        description: "Whether this post is live on the site"
       
       - name: body
         label: Content
         type: markdown
-        description: "The main content of your post"
+        required: true
 
-  # Site Configuration
-  - name: config
-    label: Site Configuration
+  # Site Settings
+  - name: settings
+    label: Site Settings
     type: file
-    path: src/config.yml
+    path: src/data/settings.json
     fields:
-      - name: site
-        label: Site Settings
-        type: object
-        fields:
-          - name: title
-            label: Site Title
-            type: text
-            default: "Bhuvan's Blog"
-          
-          - name: description
-            label: Site Description
-            type: text
-            default: "Curiosity-driven discovery and exploration"
-          
-          - name: url
-            label: Site URL
-            type: text
-            default: "https://blog.bhuvan.dev"
-          
-          - name: author
-            label: Author Name
-            type: text
-            default: "Bhuvan"
-          
-          - name: email
-            label: Contact Email
-            type: text
-            default: "hello@bhuvan.dev"
+      - name: title
+        label: Site Title
+        type: string
       
-      - name: navigation
-        label: Navigation
-        type: object
-        fields:
-          - name: main
-            label: Main Navigation
-            type: list
-            field:
-              type: object
-              fields:
-                - name: title
-                  label: Title
-                  type: text
-                - name: url
-                  label: URL
-                  type: text
+      - name: description
+        label: Site Description
+        type: text
       
-      - name: social
-        label: Social Links
-        type: object
-        fields:
-          - name: twitter
-            label: Twitter
-            type: text
-          - name: github
-            label: GitHub
-            type: text
-          - name: linkedin
-            label: LinkedIn
-            type: text
+      - name: author
+        label: Author
+        type: string
 
-  # Blogroll Collection
+  # Blogroll
   - name: blogroll
     label: Blogroll
     type: collection
     path: src/data/blogroll
-    format: yml
+    view:
+      primary: title
+      fields: [title, url, featured]
     fields:
       - name: title
-        label: Blog Title
-        type: text
+        label: Title
+        type: string
         required: true
       
       - name: url
-        label: Blog URL
-        type: text
+        label: URL
+        type: string
         required: true
       
       - name: description
         label: Description
-        type: textarea
+        type: text
         required: true
       
       - name: tags
         label: Tags
-        type: list
-        field:
-          type: text
+        type: string[]
         default: []
-      
-      - name: status
-        label: Status
-        type: select
-        options:
-          - value: active
-            label: Active
-          - value: inactive
-            label: Inactive
-        default: active
       
       - name: featured
         label: Featured
         type: boolean
         default: false
-        description: "Highlight this blog in the blogroll"
-
-# Reusable components
-components:
-  # Meta component for SEO fields
-  meta:
-    label: SEO & Meta
-    type: object
-    fields:
-      - name: title
-        label: SEO Title
-        type: text
-        description: "Title for search engines (defaults to post title)"
-      
-      - name: description
-        label: SEO Description
-        type: text
-        description: "Description for search engines and social media"
-      
-      - name: image
-        label: Social Image
-        type: image
-        description: "Image for social media sharing"
-      
-      - name: canonical_url
-        label: Canonical URL
-        type: text
-        description: "Canonical URL if this content exists elsewhere"
-
-  # Rich content component
-  rich_content:
-    label: Rich Content
-    type: object
-    fields:
-      - name: content
-        label: Content
-        type: markdown
-      
-      - name: callout
-        label: Callout Box
-        type: object
-        fields:
-          - name: text
-            label: Callout Text
-            type: text
-          - name: type
-            label: Callout Type
-            type: select
-            options:
-              - value: info
-                label: Info
-              - value: warning
-                label: Warning
-              - value: success
-                label: Success
-              - value: error
-                label: Error
-
-# Editor configuration
-editor:
-  preview: true
-  wysiwyg: true
-  
-# File naming pattern for new posts
-slug:
-  encoding: unicode
-  clean_accents: true
-  sanitize_replacement: "-"
