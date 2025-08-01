@@ -643,6 +643,13 @@
               </svg>
               Refine
             </button>
+            <button id="test-api-btn" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4"/>
+                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 9 4.03 9 9z"/>
+              </svg>
+              Test API
+            </button>
           </div>
 
           <!-- Follow-on Prompting -->
@@ -788,6 +795,7 @@
       document.getElementById('enhance-btn').addEventListener('click', enhanceContent);
       document.getElementById('refine-btn').addEventListener('click', showRefineModal);
       document.getElementById('publish-btn').addEventListener('click', publishContent);
+      document.getElementById('test-api-btn').addEventListener('click', testAPI);
       
       // Follow-on prompting
       document.getElementById('apply-followon-btn').addEventListener('click', applyFollowOn);
@@ -1217,6 +1225,30 @@
         showStatus('Failed to publish post. Please try again.', 'error');
       } finally {
         setLoading('publish-btn', false);
+      }
+    }
+
+    async function testAPI() {
+      setLoading('test-api-btn', true);
+      
+      try {
+        const response = await fetch('/test-simple', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showStatus(`API Test Success! Status: ${response.status}, Message: ${result.message}`, 'success');
+        } else {
+          showStatus(`API Test Failed: ${result.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        console.error('API Test error:', error);
+        showStatus(`API Test Failed: ${error.message}`, 'error');
+      } finally {
+        setLoading('test-api-btn', false);
       }
     }
 

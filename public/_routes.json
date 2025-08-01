@@ -8,7 +8,8 @@
     "/publish",
     "/auth",
     "/metadata",
-    "/test"
+    "/test",
+    "/test-simple"
   ],
   "exclude": [
     "/",
