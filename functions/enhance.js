@@ -171,34 +171,58 @@ Requirements:
 - Use ONLY these verified, reliable sources:
 
 **Wikipedia (primary choice):**
-• https://en.wikipedia.org/wiki/Behavioral_economics
-• https://en.wikipedia.org/wiki/Game_theory
-• https://en.wikipedia.org/wiki/Protectionism
-• https://en.wikipedia.org/wiki/Cognitive_bias
-• https://en.wikipedia.org/wiki/Complex_system
 • https://en.wikipedia.org/wiki/[exact-topic-name]
 
-**Educational institutions:**
-• https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics
-• https://www.coursera.org/learn/behavioral-economics
-• https://www.edx.org/course/introduction-to-psychology
+**Major Publications & News:**
+• https://www.nytimes.com/
+• https://www.washingtonpost.com/
+• https://www.theguardian.com/
+• https://www.bbc.com/
+• https://www.reuters.com/
+• https://www.economist.com/
+• https://www.theatlantic.com/
+• https://www.newyorker.com/
+• https://www.wired.com/
+
+**Science & Technology:**
+• https://www.scientificamerican.com/
+• https://www.nature.com/
+• https://www.nationalgeographic.com/
+• https://www.popsci.com/
+• https://www.techcrunch.com/
+• https://arstechnica.com/
+• https://www.mit.edu/
+• https://www.harvard.edu/
+
+**Educational & Academic:**
+• https://www.khanacademy.org/
+• https://www.coursera.org/
+• https://www.edx.org/
+• https://www.ted.com/talks/
+• https://www.britannica.com/
 
 **Museums & Cultural:**
 • https://www.smithsonianmag.com/
 • https://www.metmuseum.org/
 • https://www.moma.org/
+• https://www.louvre.fr/
+• https://www.britishmuseum.org/
 
-**Trusted science sources:**
-• https://www.scientificamerican.com/
-• https://www.nature.com/
-• https://www.nationalgeographic.com/
-
-**Government/Academic:**
+**Government & Research:**
 • https://www.nasa.gov/
 • https://www.nih.gov/
-• https://www.ted.com/talks
+• https://www.cdc.gov/
+• https://www.who.int/
+• https://www.un.org/
 
-- CRITICAL: Only use domains listed above, no made-up or unverified links
+**Business & Finance:**
+• https://www.bloomberg.com/
+• https://www.ft.com/
+• https://www.wsj.com/
+• https://www.forbes.com/
+• https://hbr.org/
+
+- CRITICAL: Only use domains listed above, prefer well-known articles and sections
 - Make connections feel like genuine discoveries` : ''}
 
 Add this disclaimer at the very end (separated by a single line break):
