@@ -323,6 +323,65 @@
       color: var(--text-tertiary);
     }
 
+    /* Model Selection */
+    .model-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .model-option {
+      display: flex !important;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: var(--bg-secondary, #f8f9fa);
+      border: 2px solid var(--border, #e2e8f0);
+      border-radius: var(--radius-lg, 8px);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      min-height: 80px;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .model-option:hover {
+      border-color: var(--accent-light);
+      background: var(--bg-tertiary);
+      transform: translateY(-1px);
+    }
+
+    .model-option.active {
+      border-color: var(--accent, #fb923c);
+      background: var(--accent-light, #fed7aa);
+      box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
+    }
+
+    .model-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .model-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
+    }
+
+    .model-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .model-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
     /* Tags */
     .tag-list {
       display: flex;
@@ -509,6 +568,27 @@ Examples:
             <div class="tag-input-container">
               <div class="tag-list" id="freeform-tag-list"></div>
               <input type="text" id="freeform-tag-input" class="form-input" placeholder="Add tags (press Enter)">
+            </div>
+          </div>
+
+          <!-- AI Model Selection -->
+          <div class="form-group">
+            <label class="form-label">AI Model</label>
+            <div class="model-selection">
+              <div class="model-option active" data-model="claude">
+                <span class="model-icon">🧠</span>
+                <div class="model-info">
+                  <span class="model-name">Claude 3.5 Sonnet</span>
+                  <span class="model-desc">Advanced reasoning & analysis</span>
+                </div>
+              </div>
+              <div class="model-option" data-model="chatgpt">
+                <span class="model-icon">⚡</span>
+                <div class="model-info">
+                  <span class="model-name">GPT-4o Mini</span>
+                  <span class="model-desc">Fast, cost-effective generation</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -898,6 +978,7 @@ Examples:
   <script>
     // Global state
     let currentTab = 'freeform';
+    let selectedModel = 'claude';
     let currentTags = {
       freeform: [],
       single: [],
@@ -916,6 +997,16 @@ Examples:
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           switchTab(this.dataset.tab);
+        });
+      });
+
+      // Model selection
+      document.querySelectorAll('.model-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          selectedModel = this.dataset.model;
+          console.log('Selected model:', selectedModel);
         });
       });
 
@@ -1181,7 +1272,8 @@ Examples:
           body: JSON.stringify({
             content: content,
             type: getTabType(tab),
-            titleOnly: true
+            titleOnly: true,
+            model: selectedModel
           })
         });
 
@@ -1266,6 +1358,9 @@ Examples:
         if (url) {
           requestData.url = url;
         }
+        
+        // Add model to request
+        requestData.model = selectedModel;
         
         const response = await fetch('/enhance', {
           method: 'POST',
@@ -1392,7 +1487,8 @@ Examples:
             content: currentContent,
             instructions: followOnText,
             type: getTabType(tab),
-            followOn: true
+            followOn: true,
+            model: selectedModel
           })
         });
 
