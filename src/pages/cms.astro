@@ -222,6 +222,62 @@
       margin-bottom: 1.5rem;
     }
 
+    /* Model Selection */
+    .model-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .model-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .model-option:hover {
+      border-color: var(--accent-light);
+      background: var(--bg-tertiary);
+      transform: translateY(-1px);
+    }
+
+    .model-option.active {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+      box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
+    }
+
+    .model-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .model-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
+    }
+
+    .model-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .model-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+
     .post-type-option {
       display: flex;
       align-items: center;
@@ -583,6 +639,27 @@
           </div>
         </div>
 
+        <!-- AI Model Selection -->
+        <div class="form-group">
+          <label class="form-label">AI Model</label>
+          <div class="model-selection">
+            <div class="model-option active" data-model="claude">
+              <span class="model-icon">🤖</span>
+              <div class="model-info">
+                <span class="model-name">Claude</span>
+                <span class="model-desc">Fast, concise responses</span>
+              </div>
+            </div>
+            <div class="model-option" data-model="chatgpt">
+              <span class="model-icon">💬</span>
+              <div class="model-info">
+                <span class="model-name">ChatGPT</span>
+                <span class="model-desc">Longer, detailed content</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Title -->
         <div class="form-group">
           <label for="title" class="form-label">Title</label>
@@ -758,6 +835,7 @@
     let currentPostType = 'musings';
     let currentTags = [];
     let isEnhanced = false;
+    let selectedModel = 'claude';
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -773,6 +851,16 @@
           this.classList.add('active');
           currentPostType = this.dataset.type;
           toggleUrlField();
+        });
+      });
+
+      // Model selection
+      document.querySelectorAll('.model-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          selectedModel = this.dataset.model;
+          console.log('Selected model:', selectedModel);
         });
       });
 
@@ -954,6 +1042,7 @@
             content: content || `Content about: ${url}`,
             type: currentPostType,
             url: url,
+            model: selectedModel,
             titleOnly: true // Special flag for title generation
           })
         });
@@ -994,7 +1083,8 @@
             title: title || 'Untitled',
             content,
             type: currentPostType,
-            url: document.getElementById('url').value
+            url: document.getElementById('url').value,
+            model: selectedModel
           })
         });
 
@@ -1080,7 +1170,8 @@
           body: JSON.stringify({
             content,
             instructions,
-            type: currentPostType
+            type: currentPostType,
+            model: selectedModel
           })
         });
 
@@ -1124,6 +1215,7 @@
             title: currentTitle,
             instructions: followOnPrompt,
             type: currentPostType,
+            model: selectedModel,
             followOn: true // Flag to indicate this is follow-on prompting
           })
         });

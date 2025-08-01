@@ -27,7 +27,7 @@ export async function onRequest(context) {
   }
   
   try {
-    const { title, content, tags, type, url, titleOnly } = await request.json();
+    const { title, content, tags, type, url, titleOnly, model = 'claude' } = await request.json();
     
     if (!content && !titleOnly) {
       return new Response(JSON.stringify({
@@ -44,6 +44,69 @@ export async function onRequest(context) {
     const cleanTitle = title ? title.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
     const cleanUrl = url ? url.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim() : null;
     
+    // Function to call ChatGPT API
+    async function callChatGPT(prompt, maxTokens = 1500) {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: maxTokens,
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenAI API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    }
+
+    // Function to call Claude API
+    async function callClaude(prompt, maxTokens = 1500) {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': env.CLAUDE_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: maxTokens,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Claude API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.content[0].text;
+    }
+
+    // Function to call the selected AI model
+    async function callAI(prompt, maxTokens = 1500) {
+      if (model === 'chatgpt') {
+        if (!env.OPENAI_API_KEY) {
+          throw new Error('OPENAI_API_KEY is not configured. Please add it in Cloudflare Pages dashboard under Settings > Environment variables.');
+        }
+        return callChatGPT(prompt, maxTokens);
+      } else {
+        if (!env.CLAUDE_API_KEY) {
+          throw new Error('CLAUDE_API_KEY is not configured. Please add it in Cloudflare Pages dashboard under Settings > Environment variables.');
+        }
+        return callClaude(prompt, maxTokens);
+      }
+    }
+
     // Handle title generation only
     if (titleOnly) {
       const titlePrompt = `Generate an engaging, curiosity-driven title for this content:
@@ -54,29 +117,8 @@ Type: ${type}
 
 Return only the title, nothing else. Make it intriguing and click-worthy while being accurate.`;
       
-      const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': env.CLAUDE_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-3-haiku-20240307',
-          max_tokens: 100,
-          messages: [{
-            role: 'user',
-            content: titlePrompt
-          }]
-        })
-      });
-      
-      if (!claudeResponse.ok) {
-        throw new Error(`Claude API error: ${claudeResponse.status}`);
-      }
-      
-      const claudeData = await claudeResponse.json();
-      const generatedTitle = claudeData.content[0].text.trim().replace(/^["']|["']$/g, '');
+      const aiResponse = await callAI(titlePrompt, 100);
+      const generatedTitle = aiResponse.trim().replace(/^["']|["']$/g, '');
       
       return new Response(JSON.stringify({
         success: true,
@@ -256,33 +298,9 @@ Write like you're genuinely excited about sharing something cool you discovered.
     // Debug the request body
     console.log('Request body length:', requestBody.length);
     
-    // Check if API key exists
-    if (!env.CLAUDE_API_KEY) {
-      throw new Error('CLAUDE_API_KEY is not configured. Please add it in Cloudflare Pages dashboard under Settings > Environment variables.');
-    }
-    
-    // Claude API integration
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': env.CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: requestBody
-    });
-    
-    if (!claudeResponse.ok) {
-      const errorText = await claudeResponse.text();
-      console.error('Claude API Error:', {
-        status: claudeResponse.status,
-        error: errorText
-      });
-      throw new Error(`Claude API error: ${claudeResponse.status} - ${errorText}`);
-    }
-    
-    const claudeData = await claudeResponse.json();
-    const aiResponse = claudeData.content[0].text;
+    // AI API integration - use higher token limit for longer content
+    const maxTokens = model === 'chatgpt' ? 4000 : 1500; // ChatGPT can handle longer responses
+    const aiResponse = await callAI(mainPrompt, maxTokens);
     
     // Debug log the AI response
     console.log('AI Response preview:', aiResponse.substring(0, 200));
