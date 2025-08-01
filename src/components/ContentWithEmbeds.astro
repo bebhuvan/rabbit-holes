@@ -12,7 +12,6 @@ export interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
 
 // Helper functions to extract IDs from URLs
 function getYouTubeId(url: string): string | undefined {
@@ -77,16 +76,27 @@ function shouldEmbed(url: string): { type: string; id?: string } | null {
   }
 }
 
-// Process post body to find standalone URLs
+// Process post body to find standalone URLs that weren't already processed by remark plugin
 const processedEmbeds: Array<{ url: string; embedInfo: any }> = [];
 
-// Check the raw markdown content for standalone URLs
+// First check if the rendered content already has auto-embed divs from remark plugin
+const { Content: PostContent } = await post.render();
+const renderedHTML = (await PostContent).toString();
+const existingEmbeds = new Set<string>();
+
+// Extract URLs that are already processed by remark plugin
+const embedDivMatches = renderedHTML.matchAll(/data-url="([^"]+)"/g);
+for (const match of embedDivMatches) {
+  existingEmbeds.add(match[1]);
+}
+
+// Check the raw markdown content for standalone URLs that aren't already processed
 const lines = post.body.split('\n');
 
 for (const line of lines) {
   const trimmedLine = line.trim();
-  // Check if line is just a URL (standalone URL)
-  if (trimmedLine.match(/^https?:\/\/[^\s]+$/)) {
+  // Check if line is just a URL (standalone URL) and not already processed
+  if (trimmedLine.match(/^https?:\/\/[^\s]+$/) && !existingEmbeds.has(trimmedLine)) {
     const embedInfo = shouldEmbed(trimmedLine);
     if (embedInfo) {
       processedEmbeds.push({ url: trimmedLine, embedInfo: { ...embedInfo, url: trimmedLine } });
@@ -97,7 +107,7 @@ for (const line of lines) {
 
 <div class="content-with-embeds">
   <!-- First render the normal content -->
-  <Content />
+  <PostContent />
   
   <!-- Then add embeds for standalone URLs found in the content -->
   <div class="detected-embeds">
@@ -131,24 +141,69 @@ for (const line of lines) {
 </div>
 
 <script>
-  // Client-side enhancement for link handling
+  // Client-side enhancement for showing embeds
   document.addEventListener('DOMContentLoaded', () => {
-    // Handle any links that should be converted to embeds
-    const links = document.querySelectorAll('a[href^="http"]');
+    // Find all auto-embed divs created by remark plugin
+    const embedDivs = document.querySelectorAll('.auto-embed[data-embed]');
     
-    links.forEach((link) => {
-      const href = link.getAttribute('href');
-      const text = link.textContent;
-      
-      // Check if the link text is the same as the href (indicating a standalone URL)
-      if (href === text && link.parentElement?.tagName === 'P') {
-        const p = link.parentElement;
-        // Check if this paragraph only contains this link
-        if (p.children.length === 1 && p.textContent?.trim() === text) {
-          // Mark for embed conversion
-          p.classList.add('standalone-url');
-          p.setAttribute('data-url', href);
+    embedDivs.forEach((div) => {
+      try {
+        const embedData = JSON.parse(div.getAttribute('data-embed') || '{}');
+        const url = embedData.url;
+        
+        // Create the appropriate embed element
+        let embedHTML = '';
+        
+        switch (embedData.type) {
+          case 'youtube':
+            if (embedData.id) {
+              embedHTML = `
+                <div class="youtube-embed" style="margin: 2rem 0;">
+                  <iframe 
+                    width="100%" 
+                    height="400" 
+                    src="https://www.youtube.com/embed/${embedData.id}" 
+                    frameborder="0" 
+                    allowfullscreen
+                    style="max-width: 100%; border-radius: 8px;"
+                  ></iframe>
+                </div>`;
+            }
+            break;
+            
+          case 'vimeo':
+            if (embedData.id) {
+              embedHTML = `
+                <div class="vimeo-embed" style="margin: 2rem 0;">
+                  <iframe 
+                    src="https://player.vimeo.com/video/${embedData.id}" 
+                    width="100%" 
+                    height="400" 
+                    frameborder="0" 
+                    allowfullscreen
+                    style="max-width: 100%; border-radius: 8px;"
+                  ></iframe>
+                </div>`;
+            }
+            break;
+            
+          default:
+            // For other types, show as link preview
+            embedHTML = `
+              <div class="link-preview" style="margin: 2rem 0; padding: 1rem; border: 1px solid var(--color-border, #e2e8f0); border-radius: 8px;">
+                <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: var(--color-text, #333);">
+                  <div style="font-weight: 600; margin-bottom: 0.5rem;">🔗 External Link</div>
+                  <div style="font-size: 0.9em; color: var(--color-text-secondary, #666);">${url}</div>
+                </a>
+              </div>`;
         }
+        
+        if (embedHTML) {
+          // Replace the hidden div with the embed
+          div.outerHTML = embedHTML;
+        }
+      } catch (e) {
+        console.warn('Failed to process embed:', e);
       }
     });
   });

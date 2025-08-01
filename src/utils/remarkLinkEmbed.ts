@@ -87,7 +87,8 @@ function createEmbedNode(embedInfo: EmbedInfo) {
 function generateEmbedHTML(embedInfo: EmbedInfo): string {
   // Store embed info as data attributes for post-processing
   const embedData = JSON.stringify(embedInfo).replace(/"/g, '&quot;');
-  return `<div class="auto-embed" data-embed='${embedData}'>${embedInfo.url}</div>`;
+  // Hide the URL text since we'll show the embed instead
+  return `<div class="auto-embed" data-embed='${embedData}' style="display: none;" data-url="${embedInfo.url}"></div>`;
 }
 
 function createLinkPreviewHTML(url: string): string {
