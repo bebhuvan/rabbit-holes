@@ -3,7 +3,10 @@ title: "The Protection Racket: A History of Tariffs and Who Really Pays"
 date: 2025-08-01
 type: musings
 tags:
-  - Tariffs, Trump, Economy
+  - "Tariffs "
+  - Trump
+  - Trade
+  - Economy
 published: true
 ---
 *I asked Gemini to write me a long-form essay on tariffs after President Trump imposed sweeping new trade barriers. I requested a detailed, nuanced, and fact-checked analysis covering their history and evolution, success and failure stories, the spectrum of economic opinion, key research, and some of the most entertaining stories about them.*
