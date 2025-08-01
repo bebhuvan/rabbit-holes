@@ -28,18 +28,10 @@ content:
       
       - name: type
         label: Post Type
-        type: select
+        type: string
         required: true
-        options:
-          - label: 🤔 Musings
-            value: musings
-          - label: 🔗 Links
-            value: links
-          - label: 📹 Videos
-            value: videos
-          - label: 🎵 Music
-            value: music
         default: musings
+        description: "Enter: musings, links, videos, or music"
       
       - name: url
         label: External URL
