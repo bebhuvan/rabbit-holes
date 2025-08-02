@@ -68,10 +68,10 @@ function detectEmbedType(url: string) {
 
 <article class="post-card">
   <div class="post-meta">
-    <div class="post-type-badge">
+    <a href={`/types/${post.data.type}`} class="post-type-badge">
       <span class={`post-type-indicator post-type-indicator--${post.data.type}`}></span>
       <span class="post-type-label">{post.data.type}</span>
-    </div>
+    </a>
     <time class="post-date">{formatDate(new Date(post.data.date))}</time>
     <span class="post-reading-time">{calculateReadingTime(post.body || '')} min read</span>
   </div>
@@ -214,6 +214,27 @@ function detectEmbedType(url: string) {
   /* Override the global post-card border to avoid double separators */
   article.post-card {
     border-bottom: none !important;
+  }
+  
+  /* Make post type badge clickable */
+  .post-type-badge {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs);
+    margin: calc(-1 * var(--space-xs));
+  }
+  
+  .post-type-badge:hover {
+    background: var(--color-surface);
+    transform: translateY(-1px);
+  }
+  
+  .post-type-badge:hover .post-type-label {
+    color: var(--color-accent);
   }
   
   .post-actions-integrated {

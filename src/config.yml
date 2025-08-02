@@ -9,6 +9,8 @@ navigation:
   main:
     - title: "Archive"
       url: "/archive"
+    - title: "Categories"
+      url: "/types"
     - title: "Tags"
       url: "/tags"
     - title: "Blogroll"

@@ -1,0 +1,239 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = await getCollection('posts', ({ data }) => {
+  return data.published !== false;
+});
+
+// Count posts by type
+const typeStats = posts.reduce((acc, post) => {
+  const type = post.data.type;
+  if (!acc[type]) {
+    acc[type] = 0;
+  }
+  acc[type]++;
+  return acc;
+}, {} as Record<string, number>);
+
+// Category metadata with emojis and descriptions
+const categoryMeta = {
+  'taught-by-machine': { emoji: '🤖', label: 'Taught by the machine', description: 'AI-assisted learning essays and explorations' },
+  'quick-thoughts': { emoji: '💭', label: 'Quick thoughts', description: 'Brief observations and spontaneous ideas' },
+  'link-dumps': { emoji: '🔍', label: 'Link dumps', description: 'Collections of interesting links and resources' },
+  'deep-dives': { emoji: '📚', label: 'Deep dives', description: 'Long-form analysis and thorough research' },
+  'thats-interesting': { emoji: '🌟', label: "That's interesting", description: 'Discoveries and "aha!" moments' },
+  'practical': { emoji: '🎯', label: 'Practical', description: 'How-tos and actionable content' },
+  'reflections': { emoji: '🧠', label: 'Reflections', description: 'Personal insights and experiences' },
+  'data-stories': { emoji: '📈', label: 'Data stories', description: 'Analysis with charts and data visualization' },
+  'news-commentary': { emoji: '🗞️', label: 'News & commentary', description: 'Current events with perspective' },
+  'videos': { emoji: '📹', label: 'Videos', description: 'Video content and discussions' },
+  'music': { emoji: '🎵', label: 'Music', description: 'Music discoveries and thoughts' },
+  'photos': { emoji: '📸', label: 'Photos', description: 'Visual content and photography' }
+};
+
+// Sort categories by post count
+const sortedTypes = Object.entries(typeStats)
+  .sort(([,a], [,b]) => b - a)
+  .filter(([type]) => categoryMeta[type]); // Only show defined categories
+---
+
+<Base title="Categories - Rabbit Holes" description="Browse blog posts by category. Explore different types of content from quick thoughts to deep dives.">
+  <div class="container">
+    <div class="categories-page">
+      
+      <!-- Header -->
+      <div class="categories-header">
+        <h1>Categories</h1>
+        <p class="categories-description">
+          Browse posts by type. Each category represents a different kind of content and perspective.
+        </p>
+        <div class="categories-stats">
+          <span class="stat-item">
+            <strong>{posts.length}</strong> total posts
+          </span>
+          <span class="stat-item">
+            <strong>{sortedTypes.length}</strong> categories
+          </span>
+        </div>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="categories-grid">
+        {sortedTypes.map(([type, count]) => {
+          const meta = categoryMeta[type];
+          return (
+            <a href={`/types/${type}`} class="category-card">
+              <div class="category-header">
+                <span class="category-emoji">{meta.emoji}</span>
+                <div class="category-info">
+                  <h3 class="category-name">{meta.label}</h3>
+                  <span class="category-count">{count} post{count !== 1 ? 's' : ''}</span>
+                </div>
+              </div>
+              <p class="category-description">{meta.description}</p>
+            </a>
+          );
+        })}
+      </div>
+
+      <!-- Navigation -->
+      <div class="categories-navigation">
+        <a href="/archive" class="nav-link">← View Archive</a>
+        <a href="/tags" class="nav-link">Browse Tags →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    .categories-page {
+      padding: var(--space-4xl) 0;
+    }
+
+    .categories-header {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .categories-header h1 {
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+      color: var(--color-text-primary);
+    }
+
+    .categories-description {
+      font-size: var(--text-lg);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-xl);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .categories-stats {
+      display: flex;
+      gap: var(--space-xl);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+
+    .stat-item strong {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-xl);
+      margin-bottom: var(--space-3xl);
+    }
+
+    .category-card {
+      display: block;
+      padding: var(--space-xl);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-accent);
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .category-emoji {
+      font-size: var(--text-3xl);
+      line-height: 1;
+    }
+
+    .category-info {
+      flex: 1;
+    }
+
+    .category-name {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .category-count {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+
+    .category-description {
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      margin: 0;
+    }
+
+    .categories-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--space-2xl);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .nav-link {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--color-text-primary);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .categories-page {
+        padding: var(--space-2xl) 0;
+      }
+
+      .categories-header h1 {
+        font-size: var(--text-3xl);
+      }
+
+      .categories-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+      }
+
+      .category-card {
+        padding: var(--space-lg);
+      }
+
+      .categories-navigation {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+      }
+
+      .categories-stats {
+        gap: var(--space-lg);
+      }
+    }
+  </style>
+</Base>

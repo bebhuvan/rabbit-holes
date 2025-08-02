@@ -74,10 +74,10 @@ const structuredData = {
       <!-- Post Header -->
       <header class="post-header text-center mb-xl">
         <div class="post-meta flex items-center justify-center gap-md mb-lg">
-          <div class="post-type-badge flex items-center gap-xs">
+          <a href={`/types/${post.data.type}`} class="post-type-badge flex items-center gap-xs">
             <span class={`post-type-indicator post-type-indicator--${post.data.type}`}></span>
             <span class="post-type-label text-sm font-semibold uppercase">{post.data.type}</span>
-          </div>
+          </a>
           <time class="post-date text-tertiary text-sm font-medium">{formatDate(new Date(post.data.date))}</time>
           <span class="post-reading-time text-tertiary text-sm">{calculateReadingTime(post.body || '')} min read</span>
         </div>
@@ -148,10 +148,24 @@ const structuredData = {
       background: var(--color-surface);
       border-radius: var(--radius-full);
       border: 1px solid var(--color-border);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .post-type-badge:hover {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .post-type-badge:hover .post-type-label {
+      color: white;
     }
     
     .post-type-label {
       color: var(--color-text-secondary);
+      transition: color 0.2s ease;
     }
     
     .post-actions-integrated {
