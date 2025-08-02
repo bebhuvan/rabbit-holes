@@ -42,7 +42,7 @@ const stats = {
 const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
-<Base title="Archive - Rabbit Holes" description="Browse all blog posts organized by date. Explore musings, links, videos, and music from this curiosity-driven journey.">
+<Base title="Archive - Rabbit Holes" description="Browse all blog posts organized by date. Explore thoughts, insights, link collections, and more from this curiosity-driven journey.">
   <div class="archive-container">
     <div class="archive-header">
       <h1>Archive</h1>
@@ -72,10 +72,18 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
     <!-- Filter buttons -->
     <div class="archive-filters">
       <button class="filter-btn active" onclick="filterArchive('all')">All</button>
-      <button class="filter-btn" onclick="filterArchive('musing')">Musings</button>
-      <button class="filter-btn" onclick="filterArchive('link')">Links</button>
-      <button class="filter-btn" onclick="filterArchive('video')">Videos</button>
-      <button class="filter-btn" onclick="filterArchive('music')">Music</button>
+      <button class="filter-btn" onclick="filterArchive('taught-by-machine')">🤖 Taught by machine</button>
+      <button class="filter-btn" onclick="filterArchive('quick-thoughts')">💭 Quick thoughts</button>
+      <button class="filter-btn" onclick="filterArchive('link-dumps')">🔍 Link dumps</button>
+      <button class="filter-btn" onclick="filterArchive('deep-dives')">📚 Deep dives</button>
+      <button class="filter-btn" onclick="filterArchive('thats-interesting')">🌟 That's interesting</button>
+      <button class="filter-btn" onclick="filterArchive('practical')">🎯 Practical</button>
+      <button class="filter-btn" onclick="filterArchive('reflections')">🧠 Reflections</button>
+      <button class="filter-btn" onclick="filterArchive('data-stories')">📈 Data stories</button>
+      <button class="filter-btn" onclick="filterArchive('news-commentary')">🗞️ News & commentary</button>
+      <button class="filter-btn" onclick="filterArchive('videos')">📹 Videos</button>
+      <button class="filter-btn" onclick="filterArchive('music')">🎵 Music</button>
+      <button class="filter-btn" onclick="filterArchive('photos')">📸 Photos</button>
     </div>
 
     <!-- Posts by year -->
@@ -252,10 +260,18 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
       flex-shrink: 0;
     }
 
-    .archive-post-type.musing { background: var(--color-type-musing); }
-    .archive-post-type.link { background: var(--color-type-link); }
-    .archive-post-type.video { background: var(--color-type-video); }
+    .archive-post-type.taught-by-machine { background: var(--color-type-taught-by-machine); }
+    .archive-post-type.quick-thoughts { background: var(--color-type-quick-thoughts); }
+    .archive-post-type.link-dumps { background: var(--color-type-link-dumps); }
+    .archive-post-type.deep-dives { background: var(--color-type-deep-dives); }
+    .archive-post-type.thats-interesting { background: var(--color-type-thats-interesting); }
+    .archive-post-type.practical { background: var(--color-type-practical); }
+    .archive-post-type.reflections { background: var(--color-type-reflections); }
+    .archive-post-type.data-stories { background: var(--color-type-data-stories); }
+    .archive-post-type.news-commentary { background: var(--color-type-news-commentary); }
+    .archive-post-type.videos { background: var(--color-type-videos); }
     .archive-post-type.music { background: var(--color-type-music); }
+    .archive-post-type.photos { background: var(--color-type-photos); }
 
     .archive-post-title {
       color: var(--color-text-primary);

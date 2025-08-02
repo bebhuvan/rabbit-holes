@@ -1,7 +1,7 @@
 ---
 title: "The Protection Racket: A History of Tariffs and Who Really Pays"
 date: 2025-08-01
-type: musings
+type: taught-by-machine
 tags:
   - "Tariffs "
   - Trump

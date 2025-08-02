@@ -5,7 +5,7 @@ const posts = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.date(),
-    type: z.enum(['musings', 'links', 'videos', 'music', 'articles', 'photos', 'quotes']),
+    type: z.enum(['taught-by-machine', 'quick-thoughts', 'link-dumps', 'deep-dives', 'thats-interesting', 'practical', 'reflections', 'data-stories', 'news-commentary', 'videos', 'music', 'photos']),
     url: z.string().url().optional(),
     tags: z.array(z.string()).default([]),
     description: z.string().optional(),

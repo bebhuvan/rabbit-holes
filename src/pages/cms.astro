@@ -622,21 +622,53 @@
         <div class="form-group">
           <label class="form-label">Content Type</label>
           <div class="post-type-grid">
-            <div class="post-type-option active" data-type="musings">
-              <span class="post-type-icon">🤔</span>
-              <span>Musing</span>
+            <div class="post-type-option active" data-type="quick-thoughts">
+              <span class="post-type-icon">💭</span>
+              <span>Quick thoughts</span>
             </div>
-            <div class="post-type-option" data-type="links">
-              <span class="post-type-icon">🔗</span>
-              <span>Link</span>
+            <div class="post-type-option" data-type="taught-by-machine">
+              <span class="post-type-icon">🤖</span>
+              <span>Taught by machine</span>
+            </div>
+            <div class="post-type-option" data-type="link-dumps">
+              <span class="post-type-icon">🔍</span>
+              <span>Link dumps</span>
+            </div>
+            <div class="post-type-option" data-type="deep-dives">
+              <span class="post-type-icon">📚</span>
+              <span>Deep dives</span>
+            </div>
+            <div class="post-type-option" data-type="thats-interesting">
+              <span class="post-type-icon">🌟</span>
+              <span>That's interesting</span>
+            </div>
+            <div class="post-type-option" data-type="practical">
+              <span class="post-type-icon">🎯</span>
+              <span>Practical</span>
+            </div>
+            <div class="post-type-option" data-type="reflections">
+              <span class="post-type-icon">🧠</span>
+              <span>Reflections</span>
+            </div>
+            <div class="post-type-option" data-type="data-stories">
+              <span class="post-type-icon">📈</span>
+              <span>Data stories</span>
+            </div>
+            <div class="post-type-option" data-type="news-commentary">
+              <span class="post-type-icon">🗞️</span>
+              <span>News & commentary</span>
             </div>
             <div class="post-type-option" data-type="videos">
               <span class="post-type-icon">📹</span>
-              <span>Video</span>
+              <span>Videos</span>
             </div>
             <div class="post-type-option" data-type="music">
               <span class="post-type-icon">🎵</span>
               <span>Music</span>
+            </div>
+            <div class="post-type-option" data-type="photos">
+              <span class="post-type-icon">📸</span>
+              <span>Photos</span>
             </div>
           </div>
         </div>
@@ -675,7 +707,7 @@
           </div>
         </div>
 
-        <!-- URL (for links/videos/music) -->
+        <!-- URL (for link-dumps/videos/music) -->
         <div class="form-group hidden" id="url-group">
           <label for="url" class="form-label">URL</label>
           <input type="url" id="url" class="form-input" placeholder="https://example.com">
@@ -834,7 +866,7 @@
 
   <script>
     // Global state
-    let currentPostType = 'musings';
+    let currentPostType = 'quick-thoughts';
     let currentTags = [];
     let isEnhanced = false;
     let selectedModel = 'claude';
@@ -903,7 +935,7 @@
 
     function toggleUrlField() {
       const urlGroup = document.getElementById('url-group');
-      const needsUrl = ['links', 'videos', 'music'].includes(currentPostType);
+      const needsUrl = ['link-dumps', 'videos', 'music'].includes(currentPostType);
       
       if (needsUrl) {
         urlGroup.classList.remove('hidden');
@@ -964,8 +996,8 @@
         previewHtml += `<h1>${escapeHtml(title)}</h1>`;
       }
       
-      if (url && ['links', 'videos', 'music'].includes(currentPostType)) {
-        const emoji = currentPostType === 'links' ? '🔗' : currentPostType === 'videos' ? '📹' : '🎵';
+      if (url && ['link-dumps', 'videos', 'music'].includes(currentPostType)) {
+        const emoji = currentPostType === 'link-dumps' ? '🔗' : currentPostType === 'videos' ? '📹' : '🎵';
         previewHtml += `<p><strong>${emoji} Source:</strong> <a href="${escapeHtml(url)}" target="_blank">${escapeHtml(url)}</a></p>`;
       }
       
@@ -1271,7 +1303,7 @@
 
       // Check URL requirement for certain post types
       const url = document.getElementById('url').value.trim();
-      if (['links', 'videos', 'music'].includes(currentPostType) && !url) {
+      if (['link-dumps', 'videos', 'music'].includes(currentPostType) && !url) {
         showStatus(`URL is required for ${currentPostType}`, 'error');
         return;
       }
