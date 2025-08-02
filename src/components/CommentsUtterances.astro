@@ -1,0 +1,125 @@
+---
+export interface Props {
+  repo: string; // format: "owner/repo"
+  theme?: string;
+}
+
+const { repo, theme = 'github-light' } = Astro.props;
+---
+
+<div class="comments-section">
+  <div class="comments-header">
+    <h2 class="comments-title">
+      <svg class="comments-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Join the Conversation
+    </h2>
+    <p class="comments-subtitle">Share your thoughts and go deeper down the rabbit hole</p>
+  </div>
+  <div class="utterances-container"></div>
+</div>
+
+<style>
+  .comments-section {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-2xl);
+    border-top: 2px solid #fed7aa;
+  }
+
+  .comments-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .comments-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+
+  .comments-icon {
+    color: #fb923c;
+  }
+
+  .comments-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* Utterances themes */
+  .utterances {
+    max-width: 100% !important;
+  }
+
+  .utterances-frame {
+    border: none !important;
+  }
+
+  @media (max-width: 768px) {
+    .comments-section {
+      margin-top: var(--space-2xl);
+      padding-top: var(--space-xl);
+    }
+
+    .comments-title {
+      font-size: 1.25rem;
+    }
+
+    .comments-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+</style>
+
+<script define:vars={{ repo, theme }}>
+  // Utterances script
+  const script = document.createElement('script');
+  script.src = 'https://utteranc.es/client.js';
+  script.setAttribute('repo', repo);
+  script.setAttribute('issue-term', 'pathname');
+  script.setAttribute('label', 'comments');
+  script.setAttribute('theme', theme);
+  script.setAttribute('crossorigin', 'anonymous');
+  script.async = true;
+  
+  const container = document.querySelector('.utterances-container');
+  if (container) {
+    container.appendChild(script);
+  }
+
+  // Theme switching
+  function updateUtterancesTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const utterancesFrame = document.querySelector('.utterances-frame');
+    
+    if (utterancesFrame) {
+      const message = {
+        type: 'set-theme',
+        theme: isDark ? 'github-dark' : 'github-light'
+      };
+      utterancesFrame.contentWindow.postMessage(message, 'https://utteranc.es');
+    }
+  }
+
+  // Watch for theme changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+        updateUtterancesTheme();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  });
+</script>

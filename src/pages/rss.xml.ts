@@ -13,15 +13,30 @@ export async function GET(context: any) {
   return rss({
     title: "Rabbit Holes",
     description: "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
-    site: context.site || 'https://blog.bhuvan.dev',
+    site: 'https://www.rabbitholes.garden',
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description || '',
+      content: post.body, // Full markdown content
       link: `/posts/${post.slug}/`,
       categories: post.data.tags || [],
-      customData: `<type>${post.data.type}</type>`,
+      customData: `
+        <type>${post.data.type}</type>
+        ${post.data.url ? `<sourceUrl>${post.data.url}</sourceUrl>` : ''}
+        <author>Bhuvan</author>
+      `,
     })),
-    customData: `<language>en-us</language>`,
+    customData: `
+      <language>en-us</language>
+      <webMaster>hello@rabbitholes.garden</webMaster>
+      <managingEditor>hello@rabbitholes.garden (Bhuvan)</managingEditor>
+      <generator>Astro RSS</generator>
+      <image>
+        <url>https://www.rabbitholes.garden/favicon.svg</url>
+        <title>Rabbit Holes</title>
+        <link>https://www.rabbitholes.garden</link>
+      </image>
+    `,
   });
 }

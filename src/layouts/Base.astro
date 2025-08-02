@@ -73,18 +73,18 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
         "@type": "Blog",
         "name": "Rabbit Holes",
         "description": "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
-        "url": "https://bhuvan.dev",
+        "url": "https://www.rabbitholes.garden",
         "author": {
           "@type": "Person",
           "name": "Bhuvan",
-          "url": "https://bhuvan.dev/about"
+          "url": "https://www.rabbitholes.garden/about"
         },
         "publisher": {
           "@type": "Organization",
           "name": "Rabbit Holes",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://bhuvan.dev/favicon.svg"
+            "url": "https://www.rabbitholes.garden/favicon.svg"
           }
         }
       }
@@ -111,7 +111,13 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           <a href="/tags" class="nav-link">Tags</a>
           <a href="/blogroll" class="nav-link">Blogroll</a>
           <a href="/search" class="nav-link" title="Search (Cmd+K)">Search</a>
-          <a href="/rss.xml" class="nav-link">RSS</a>
+          <a href="/rss.xml" class="nav-link" title="RSS Feed">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+          </a>
           <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
             <svg class="theme-icon theme-icon--light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="12" r="5"></circle>
@@ -311,7 +317,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     
     <script type="module">
       import { app } from '/src/scripts/utils.js';
-      app.init();
+      // App will auto-initialize from utils.js
     </script>
 
     <!-- PWA Service Worker Registration -->

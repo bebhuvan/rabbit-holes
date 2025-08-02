@@ -1,0 +1,247 @@
+---
+export interface Props {
+  pageId: string;
+  pageUrl: string;
+  pageTitle: string;
+}
+
+const { pageId, pageUrl, pageTitle } = Astro.props;
+---
+
+<div class="comments-section">
+  <div class="comments-header">
+    <h2 class="comments-title">
+      <svg class="comments-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Join the Conversation
+    </h2>
+    <p class="comments-subtitle">Share your thoughts and go deeper down the rabbit hole</p>
+  </div>
+  <div class="comments-wrapper">
+    <div id="cusdis_thread"
+      data-host="https://cusdis.com"
+      data-app-id="651085e9-add6-41b3-a6fc-93f5683bf067"
+      data-page-id={pageId}
+      data-page-url={pageUrl}
+      data-page-title={pageTitle}
+      data-theme="auto"
+    ></div>
+  </div>
+</div>
+
+<style>
+  .comments-section {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-2xl);
+    border-top: 2px solid #fed7aa;
+    position: relative;
+  }
+
+  .comments-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .comments-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+
+  .comments-icon {
+    color: #fb923c;
+    flex-shrink: 0;
+  }
+
+  .comments-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .comments-wrapper {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Cusdis iframe styling */
+  :global(#cusdis_thread) {
+    width: 100% !important;
+  }
+
+  :global(#cusdis_thread iframe) {
+    width: 100% !important;
+    border: none !important;
+    min-height: 450px !important;
+    max-height: none !important;
+  }
+
+  /* Custom theme overrides */
+  :global(.cusdis-iframe) {
+    --cusdis-color-primary: #fb923c !important;
+    --cusdis-color-primary-hover: #ea580c !important;
+    --cusdis-color-background: transparent !important;
+    --cusdis-color-text: var(--color-text-primary) !important;
+    --cusdis-color-text-secondary: var(--color-text-secondary) !important;
+    --cusdis-color-border: #e2e8f0 !important;
+    --cusdis-font-family: inherit !important;
+    --cusdis-border-radius: var(--radius-md) !important;
+  }
+
+  /* Style Cusdis form elements */
+  :global(.cusdis-iframe input),
+  :global(.cusdis-iframe textarea) {
+    background: #f8fafc !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 0.5rem !important;
+    padding: 0.75rem !important;
+    transition: all 0.2s ease !important;
+  }
+
+  :global(.cusdis-iframe input:focus),
+  :global(.cusdis-iframe textarea:focus) {
+    border-color: #fb923c !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1) !important;
+  }
+
+  :global(.cusdis-iframe button) {
+    background: #fb923c !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  :global(.cusdis-iframe button:hover) {
+    background: #ea580c !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  /* Dark mode support */
+  :global([data-theme="dark"]) .comments-wrapper {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  :global([data-theme="dark"]) .comments-section {
+    border-top-color: #fb923c;
+  }
+
+  :global([data-theme="dark"] .cusdis-iframe) {
+    --cusdis-color-background: transparent !important;
+    --cusdis-color-text: #f1f5f9 !important;
+    --cusdis-color-text-secondary: #94a3b8 !important;
+    --cusdis-color-border: #334155 !important;
+  }
+
+  :global([data-theme="dark"] .cusdis-iframe input),
+  :global([data-theme="dark"] .cusdis-iframe textarea) {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .comments-section {
+      margin-top: var(--space-2xl);
+      padding-top: var(--space-xl);
+    }
+
+    .comments-title {
+      font-size: 1.25rem;
+    }
+
+    .comments-wrapper {
+      padding: var(--space-lg);
+    }
+
+    .comments-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+</style>
+
+<script>
+  // Load Cusdis script
+  const script = document.createElement('script');
+  script.async = true;
+  script.defer = true;
+  script.src = 'https://cusdis.com/js/cusdis.es.js';
+  document.body.appendChild(script);
+
+  // Update theme based on site theme
+  function updateCusdisTheme() {
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    const cusdisThread = document.getElementById('cusdis_thread');
+    if (cusdisThread) {
+      cusdisThread.setAttribute('data-theme', theme);
+      // Reinitialize if Cusdis is already loaded
+      if (window.CUSDIS && window.CUSDIS.initial) {
+        window.CUSDIS.initial();
+      }
+    }
+  }
+
+  // Watch for theme changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+        updateCusdisTheme();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  });
+
+  // Initial theme setup
+  document.addEventListener('DOMContentLoaded', updateCusdisTheme);
+
+  // Handle iframe resize to prevent scrolling
+  function adjustIframeHeight() {
+    const iframe = document.querySelector('#cusdis_thread iframe');
+    if (iframe) {
+      // Listen for messages from iframe
+      window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'cusdis-resize') {
+          iframe.style.height = `${e.data.height + 50}px`;
+        }
+      });
+
+      // Also try to adjust height when iframe loads
+      iframe.addEventListener('load', () => {
+        try {
+          const height = iframe.contentWindow.document.body.scrollHeight;
+          iframe.style.height = `${height + 50}px`;
+        } catch (e) {
+          // Cross-origin, can't access - rely on postMessage
+        }
+      });
+    }
+  }
+
+  // Check for iframe periodically
+  const checkInterval = setInterval(() => {
+    const iframe = document.querySelector('#cusdis_thread iframe');
+    if (iframe) {
+      adjustIframeHeight();
+      clearInterval(checkInterval);
+    }
+  }, 500);
+</script>

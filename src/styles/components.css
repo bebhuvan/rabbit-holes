@@ -504,7 +504,7 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 var(--space-md);
+    padding: 0 var(--space-xl); /* Increase to 32px for better mobile spacing */
   }
   
   .nav-container {
@@ -513,6 +513,13 @@
   
   .nav-links {
     gap: var(--space-sm);
+  }
+  
+  /* Ensure content has proper spacing on mobile */
+  .post-content,
+  .prose {
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
   }
   
   .post-title {
@@ -532,7 +539,7 @@
 
 @media (max-width: 480px) {
   .container {
-    padding: 0 var(--space-sm);
+    padding: 0 var(--space-lg);
   }
   
   .post-meta {

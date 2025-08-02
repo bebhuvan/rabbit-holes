@@ -195,12 +195,40 @@ const searchIndex = posts.map(post => ({
   </style>
 
   <script type="module" define:vars={{ searchIndex }}>
-    import { search } from '/src/scripts/utils.js';
-    
-    // Initialize search with data
-    search.init(searchIndex);
+    // Debug: Check if searchIndex has data
+    console.log('Search index loaded:', searchIndex.length, 'posts');
     
     let currentFilter = 'all';
+    
+    // Search input event listeners
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        if (query.length >= 3) {
+          performSearch(query);
+        } else if (query.length === 0) {
+          clearResults();
+        }
+      });
+      
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performSearch(this.value.trim());
+        }
+      });
+    }
+    
+    if (searchButton) {
+      searchButton.addEventListener('click', function() {
+        if (searchInput) {
+          performSearch(searchInput.value.trim());
+        }
+      });
+    }
     
     // Filter functionality
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -236,10 +264,18 @@ const searchIndex = posts.map(post => ({
     });
     
     function performSearch(query) {
+      console.log('Performing search for:', query);
       if (!query.trim()) return;
       
       const results = searchPosts(query, currentFilter);
+      console.log('Search results:', results.length);
       displayResults(results, query);
+    }
+    
+    function clearResults() {
+      document.getElementById('search-results').classList.add('hidden');
+      document.getElementById('search-suggestions').style.display = 'block';
+      document.getElementById('search-status').textContent = 'Start typing to search...';
     }
     
     function searchPosts(query, filter) {
@@ -319,18 +355,6 @@ const searchIndex = posts.map(post => ({
       return content.length > maxLength ? 
         content.slice(0, maxLength) + '...' : 
         content;
-    }
-    
-    // Clear results when input is empty
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        if (!this.value.trim()) {
-          document.getElementById('search-results').classList.add('hidden');
-          document.getElementById('search-suggestions').style.display = 'block';
-          document.getElementById('search-status').textContent = 'Start typing to search...';
-        }
-      });
     }
   </script>
 </Base>

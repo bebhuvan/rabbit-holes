@@ -4,6 +4,7 @@ export const prerender = true;
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PostCard from '../../components/PostCard.astro';
+import Comments from '../../components/Comments.astro';
 import { getRelatedPosts, formatRelatedPostReasons } from '../../utils/relatedPosts';
 import { formatDate, calculateReadingTime } from '../../utils/shared';
 
@@ -38,7 +39,7 @@ const structuredData = {
   "author": {
     "@type": "Person",
     "name": "Bhuvan",
-    "url": "https://bhuvan.dev/about"
+    "url": "https://www.rabbitholes.garden/about"
   },
   "datePublished": post.data.date,
   "dateModified": post.data.date,
@@ -47,12 +48,12 @@ const structuredData = {
     "name": "Bhuvan's Blog",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://bhuvan.dev/favicon.svg"
+      "url": "https://www.rabbitholes.garden/favicon.svg"
     }
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": `https://bhuvan.dev/posts/${post.slug}`
+    "@id": `https://www.rabbitholes.garden/posts/${post.slug}`
   },
   "keywords": post.data.tags?.join(', ') || '',
   "articleSection": post.data.type,
@@ -93,43 +94,12 @@ const structuredData = {
         <PostCard post={post} showExcerpt={false} />
       </div>
 
-      <!-- Post Actions -->
-      <div class="post-actions-integrated">
-        <div class="post-actions-buttons">
-          <button 
-            class="action-btn action-btn--copy" 
-            onclick={`copyPostLink('/posts/${post.slug}')`}
-            title="Copy link to this post"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
-            Copy Link
-          </button>
-          <button 
-            class="action-btn action-btn--share" 
-            onclick={`sharePost('${post.data.title.replace(/'/g, "\\'")}', '/posts/${post.slug}')`}
-            title="Share this post"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="18" cy="5" r="3"/>
-              <circle cx="6" cy="12" r="3"/>
-              <circle cx="18" cy="19" r="3"/>
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-            </svg>
-            Share
-          </button>
-          <a href="/" class="action-btn action-btn--back" title="Back to home">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M19 12H5"/>
-              <path d="M12 19l-7-7 7-7"/>
-            </svg>
-            View Post
-          </a>
-        </div>
-      </div>
+      <!-- Comments Section -->
+      <Comments 
+        pageId={post.slug}
+        pageUrl={`https://www.rabbitholes.garden/posts/${post.slug}`}
+        pageTitle={post.data.title}
+      />
 
       <!-- Related Posts with Intelligence -->
       {relatedPostsWithScores.length > 0 && (
