@@ -509,7 +509,7 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 var(--space-xl); /* Increase to 32px for better mobile spacing */
+    padding: 0 var(--space-lg); /* 24px for better space utilization */
   }
   
   .nav-container {
@@ -544,7 +544,7 @@
 
 @media (max-width: 480px) {
   .container {
-    padding: 0 var(--space-lg);
+    padding: 0 var(--space-md); /* 16px on small screens for maximum content width */
   }
   
   .post-meta {

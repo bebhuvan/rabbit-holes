@@ -309,7 +309,7 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
       }
 
       .stat-card {
-        padding: 16px;
+        padding: var(--space-md);
       }
 
       .stat-number {
@@ -321,12 +321,12 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
       }
 
       .archive-post {
-        padding: 8px 0;
+        padding: var(--space-sm) 0;
       }
 
       .archive-post:hover {
         margin: 0 -12px;
-        padding: 8px 12px;
+        padding: var(--space-sm) var(--space-sm);
       }
     }
   </style>
