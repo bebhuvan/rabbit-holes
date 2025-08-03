@@ -24,6 +24,7 @@ And in between my highly productive doomscrolling, I came across a video of the 
   ></iframe>
 </div>
 
+
 So I read through the poem. And it's brilliant. The poem is basically a father's advice to his son on how to be a man. And I mean, as far as advice goes, it's pretty good. Of course, the thing about advice is that you can't generalize it. And sure, you can nitpick this or that. But I think you can do a lot worse than following the advice Rudyard Kipling gives.
 
 Here’s the full poem, in case you’ve never read it or need a refresher:
