@@ -14,7 +14,15 @@ I woke up and, like any good, sane, and sensible human being, I picked up my pho
 
 And in between my highly productive doomscrolling, I came across a video of the legendary [Michael Caine](https://en.wikipedia.org/wiki/Michael_Caine) reciting [Rudyard Kipling](https://en.wikipedia.org/wiki/Rudyard_Kipling)'s *If—*, one of his favorite poems.
 
-https://youtu.be/EEFMVIfl2UY?si=m-Z85Up8m4Vr07Mn
+<div style="position: relative; width: 100%; padding-bottom: 56.25%;">
+  <iframe
+    src="https://www.youtube.com/embed/EEFMVIfl2UY"
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>
 
 So I read through the poem. And it's brilliant. The poem is basically a father's advice to his son on how to be a man. And I mean, as far as advice goes, it's pretty good. Of course, the thing about advice is that you can't generalize it. And sure, you can nitpick this or that. But I think you can do a lot worse than following the advice Rudyard Kipling gives.
 
