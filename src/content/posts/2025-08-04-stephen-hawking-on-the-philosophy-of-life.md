@@ -39,8 +39,9 @@ One of my favorite parts of the movie comes toward the end, when Stephen Hawking
   </iframe>
 </div>
 
+Watching the movie reminded me of a bunch of things and I wanted to share them. 
 
-The second thing I wanted to share is this beautiful soundtrack. 
+The first thing is this beautiful soundtrack. I'm a yugee soundtrack buff, and I had heard this track countless times even before I watched the movie. 
 
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
   <iframe
@@ -54,7 +55,7 @@ The second thing I wanted to share is this beautiful soundtrack.
 </div>
 
 
-The third thing I wanted to share is this hilarious joke about Stephen Hawking by Bill Burr.
+The second thing I wanted to share is this hilarious joke about Stephen Hawking by Bill Burr.
 
 > ### Bill Burr – *Paper Tiger* (Netflix)  
 > *Sketch on robots and Stephen Hawking*
@@ -103,6 +104,23 @@ The third thing I wanted to share is this hilarious joke about Stephen Hawking b
 >     allowfullscreen>
 >   </iframe>
 > </div>
+
+
+The third thing is this brilliant talk by the British philosopher A. C. Grayling on philosophy and life. I had [written a post](https://bhuvan.substack.com/p/cut-my-life-into-pieces-this-is-my?utm_source=publication-search) on this video a while back. 
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+  <iframe
+    src="https://www.youtube.com/embed/Iz_cm2gSh10"
+    title="YouTube Video"
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+
+https://bhuvan.substack.com/p/cut-my-life-into-pieces-this-is-my?utm_source=publication-search
+
 
 ---
 
