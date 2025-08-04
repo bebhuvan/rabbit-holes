@@ -6,9 +6,18 @@ tags:
   - StephenHawking
   - Physics
   - Philosophy
+dive_deeper:
+  - text: Stephen Hawking
+    url: https://en.wikipedia.org/wiki/Stephen_Hawking
+  - text: "'Mind over matter': Stephen Hawking – obituary by Roger Penrose"
+    url: https://www.theguardian.com/science/2018/mar/14/stephen-hawking-obituary
+  - text: A brief history of Stephen Hawking
+    url: https://www.bbc.co.uk/teach/articles/z43k382
+  - text: "Stephen Hawking: My life in physics"
+    url: https://youtu.be/G1vtj-JxblE?si=eV524VugKGrMdEOy
 published: true
 ---
-I just finished watching The Theory of Everything, a biographical drama about the life of the famed theoretical physicist [Stephen Hawking](https://en.wikipedia.org/wiki/Stephen_Hawking). It follows how Hawking finds love and battles adversity as he slowly becomes paralysed after being diagnosed with motor neuron disease. He was given two years to live after his diagnosis, but he defied the odds and lived for another 50 years, passing away at the age of 76.
+I just finished watching [The Theory of Everything](https://www.imdb.com/title/tt2980516/), a biographical drama about the life of the famed theoretical physicist [Stephen Hawking](https://en.wikipedia.org/wiki/Stephen_Hawking). It follows how Hawking finds love and battles adversity as he slowly becomes paralysed after being diagnosed with motor neurone disease. He was given two years to live after his diagnosis, but he defied the odds and lived for another 50 years, passing away at the age of 76.
 
 The movie is light on science and heavy on the emotional toll that Hawking’s condition takes on his wife, Jane Wilde. It’s a beautiful, feel-good film. The highlight, of course, is Eddie Redmayne’s stunning performance. That’s not to say Felicity Jones, who plays Jane, is any less brilliant.
 
@@ -30,7 +39,8 @@ One of my favorite parts of the movie comes toward the end, when Stephen Hawking
   </iframe>
 </div>
 
-The second thing is this beautiful soundtrack. 
+
+The second thing I wanted to share is this beautiful soundtrack. 
 
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
   <iframe
@@ -43,7 +53,8 @@ The second thing is this beautiful soundtrack.
   </iframe>
 </div>
 
-The third thing is this hilarious joke about Stephen Hawking by Bill Burr.
+
+The third thing I wanted to share is this hilarious joke about Stephen Hawking by Bill Burr.
 
 > ### Bill Burr – *Paper Tiger* (Netflix)  
 > *Sketch on robots and Stephen Hawking*
