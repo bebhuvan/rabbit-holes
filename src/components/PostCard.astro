@@ -7,14 +7,17 @@ import TwitterEmbed from './TwitterEmbed.astro';
 import CodePenEmbed from './CodePenEmbed.astro';
 import GenericEmbed from './GenericEmbed.astro';
 import ContentWithEmbeds from './ContentWithEmbeds.astro';
+import TruncatedContent from './TruncatedContent.astro';
 import { formatDate, calculateReadingTime } from '../utils/shared';
 
 export interface Props {
   post: any;
   showExcerpt?: boolean;
+  maxWords?: number;
+  allowTruncation?: boolean;
 }
 
-const { post, showExcerpt = true } = Astro.props;
+const { post, showExcerpt = true, maxWords = 325, allowTruncation = true } = Astro.props;
 const { Content } = await post.render();
 
 // Helper functions to detect embed types
@@ -91,7 +94,11 @@ function detectEmbedType(url: string) {
       </div>
     ) : (
       <div class="post-full-content">
-        <ContentWithEmbeds post={post} />
+        {allowTruncation ? (
+          <TruncatedContent post={post} maxWords={maxWords} />
+        ) : (
+          <ContentWithEmbeds post={post} />
+        )}
       </div>
     )}
   </div>
@@ -277,6 +284,7 @@ function detectEmbedType(url: string) {
     height: 16px;
   }
   
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .post-actions-buttons {
