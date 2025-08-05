@@ -1,7 +1,7 @@
 ---
 title: War and Peace isn’t a novel, it’s a mirror
 date: 2025-08-05
-type: quick-thoughts
+type: reflections
 dive_deeper:
   - text: "War and Peace Wiki "
     url: https://en.m.wikipedia.org/wiki/War_and_Peace
@@ -23,6 +23,8 @@ Contrary to public perception, the novel is easy to read, enjoyable, and grippin
 Before I began, I came across a review—I forget where—that said the book is filled with philosophical digressions, and they were “annoying.” That stuck with me, probably because I had just started exploring philosophy myself. But after reading 500 pages, I can confidently say that these reflections—on love, faith, duty, honor, the meaning of life—are my favorite part. They’re dense, nuanced, and quietly brilliant.
 
 One of the most underappreciated aspects of the novel is how it forces you to interrogate your own philosophy of life.
+
+Here's on such philosophical reflection.
 
 ---
 
