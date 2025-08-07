@@ -95,7 +95,7 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn btn-primary z-50">Skip to main content</a>
     
     <nav class="nav" aria-label="Main navigation">
-      <div class="container nav-container">
+      <div class="container nav-container" style="position: relative;">
         <a href="/" class="nav-logo">🐰 Rabbit Holes</a>
         
         <!-- Mobile menu button -->
@@ -188,27 +188,27 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
       
       @media (max-width: 768px) {
         .mobile-menu-toggle {
-          display: flex; /* Show hamburger on mobile */
+          display: flex !important; /* Show hamburger on mobile */
         }
 
-        .nav-links {
+        .nav-container .nav-links {
           /* Mobile menu - hidden by default, shown when opened */
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: var(--color-bg);
-          border-bottom: 1px solid var(--color-border);
-          flex-direction: column;
-          gap: 0;
-          padding: var(--space-lg) var(--space-lg);
-          display: none; /* Hidden by default on mobile */
-          z-index: 100;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          position: absolute !important;
+          top: 100% !important;
+          left: 0 !important;
+          right: 0 !important;
+          background: var(--color-bg) !important;
+          border-bottom: 1px solid var(--color-border) !important;
+          flex-direction: column !important;
+          gap: 0 !important;
+          padding: var(--space-lg) var(--space-lg) !important;
+          display: none !important; /* Hidden by default on mobile */
+          z-index: 100 !important;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
         }
 
-        .nav-links--open {
-          display: flex; /* Show when toggled open */
+        .nav-container .nav-links--open {
+          display: flex !important; /* Show when toggled open */
         }
 
         .nav-link {
@@ -311,6 +311,56 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           themeToggle.setAttribute('aria-pressed', (currentTheme === 'dark').toString());
           
           // Theme toggle initialized
+        }
+      });
+    </script>
+    
+    <script>
+      // Mobile menu functionality - inline for immediate availability
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        
+        console.log('Mobile menu script loaded', { mobileMenuToggle, navLinks });
+        
+        if (mobileMenuToggle && navLinks) {
+          mobileMenuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isOpen = navLinks.classList.contains('nav-links--open');
+            console.log('Menu clicked, currently open:', isOpen);
+            
+            if (isOpen) {
+              navLinks.classList.remove('nav-links--open');
+              mobileMenuToggle.classList.remove('mobile-menu-toggle--active');
+              mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            } else {
+              navLinks.classList.add('nav-links--open');
+              mobileMenuToggle.classList.add('mobile-menu-toggle--active');
+              mobileMenuToggle.setAttribute('aria-expanded', 'true');
+            }
+          });
+          
+          // Close on escape key
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navLinks.classList.contains('nav-links--open')) {
+              navLinks.classList.remove('nav-links--open');
+              mobileMenuToggle.classList.remove('mobile-menu-toggle--active');
+              mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+          
+          // Close when clicking nav links
+          navLinks.addEventListener('click', function(e) {
+            if (e.target.classList.contains('nav-link')) {
+              navLinks.classList.remove('nav-links--open');
+              mobileMenuToggle.classList.remove('mobile-menu-toggle--active');
+              mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+        } else {
+          console.warn('Mobile menu elements not found');
         }
       });
     </script>

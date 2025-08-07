@@ -104,31 +104,8 @@ content:
       
       - name: body
         label: Content
-        type: markdown
+        type: rich-text
         required: true
-        widget: markdown
-        editor_components:
-          - bold
-          - italic
-          - heading
-          - link
-          - image
-          - code
-          - quote
-          - list
-          - ordered-list
-          - horizontal-rule
-        buttons:
-          - bold
-          - italic
-          - heading
-          - link
-          - quote
-          - bulleted-list
-          - numbered-list
-          - code
-        minimal: false
-        default_style: true
 
   # Site Settings
   - name: settings

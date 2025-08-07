@@ -132,8 +132,8 @@ function detectEmbedType(url: string) {
     }
   })()}
 
-  {/* Dive Deeper section */}
-  {post.data.dive_deeper && post.data.dive_deeper.length > 0 && (
+  {/* Dive Deeper section - only show when not truncating content */}
+  {!allowTruncation && post.data.dive_deeper && post.data.dive_deeper.length > 0 && (
     <div class="dive-deeper">
       <h3>🐰 Dive Deeper</h3>
       <ul>

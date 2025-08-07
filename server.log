@@ -1,26 +1,32 @@
+12:59:14 [types] Generated 1ms
+12:59:15 [content] Syncing content
+12:59:15 [content] Synced content
 
-> rabbit-holes@1.0.0 dev
-> astro dev
+ astro  v5.11.0 ready in 435 ms
 
-19:17:49 [WARN] [adapter] Cloudflare does not support sharp at runtime. However, you can configure `imageService: "compile"` to optimize images with sharp on prerendered pages during build time.
-[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProcessing wrangler.toml configuration:[0m
-
-    - Unexpected fields found in build field: "publish"
-    - Unexpected fields found in top-level field: "headers","redirects"
-
-
-19:17:49 [types] Generated 0ms
-19:17:50 [content] Syncing content
-19:17:50 [content] Synced content
-
- astro  v5.11.0 ready in 964 ms
-
-┃ Local    http://localhost:4321/
+┃ Local    http://localhost:7000/
 ┃ Network  use --host to expose
 
-19:17:50 watching for file changes...
-19:20:15 [glob-loader] Reloaded data from link-preview-test.md
-19:20:23 [200] /posts/link-preview-test 138ms
-19:20:31 [200] /posts/link-preview-test 9ms
-19:22:41 [200] /posts/link-preview-test 8ms
-19:22:49 [200] /posts/link-preview-test 5ms
+12:59:15 watching for file changes...
+Post: Good advice from Rudyard Kilpling
+Word count: 805, Max words: 450, Needs truncation: true
+Post: I gots Links for you: Issue #1
+Word count: 3240, Max words: 450, Needs truncation: true
+Post: The Protection Racket: A History of Tariffs and Who Really Pays
+Word count: 5703, Max words: 450, Needs truncation: true
+13:01:46 [200] / 47ms
+Post: Good advice from Rudyard Kilpling
+Word count: 805, Max words: 450, Needs truncation: true
+Post: I gots Links for you: Issue #1
+Word count: 3240, Max words: 450, Needs truncation: true
+Post: The Protection Racket: A History of Tariffs and Who Really Pays
+Word count: 5703, Max words: 450, Needs truncation: true
+13:01:48 [200] / 10ms
+13:03:20 [watch] /src/components/PostCard.astro?astro&type=style&index=0&lang.css
+Post: Good advice from Rudyard Kilpling
+Word count: 805, Max words: 325, Needs truncation: true
+Post: I gots Links for you: Issue #1
+Word count: 3240, Max words: 325, Needs truncation: true
+Post: The Protection Racket: A History of Tariffs and Who Really Pays
+Word count: 5703, Max words: 325, Needs truncation: true
+13:03:42 [200] / 14ms

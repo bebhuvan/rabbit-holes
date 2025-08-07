@@ -544,7 +544,7 @@ export const forms = {
 // Initialize everything
 export const app = {
   init() {
-    mobileMenu.init();
+    // mobileMenu.init(); // Handled inline in Base.astro
     shortcuts.init();
     postActions.init();
     
