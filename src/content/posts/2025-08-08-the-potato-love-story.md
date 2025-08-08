@@ -19,7 +19,7 @@ Apparently, on a bright sunny day 8-9 million years ago, the roots of a tomato p
 
 One thing led to another, and soon, the tomato plant and Etuberosum were engaging in furious underground sex. Fast forward some years, they had a baby that was unlike anything the world had seen before—they called their new child "potato." Fast forward more decades and centuries, and the potato family grew, and today there are 107 wild potato species.
 
-[_![](images/500px-Edwards'_botanical_register%2C_or%2C_Ornamental_flower-garden_and_shrubbery_.._(1829-1847)_(21180624271).jpg)_](https://en.wikipedia.org/wiki/Solanum_etuberosum)
+[_!\[\](images/500px-Edwards'botanical\_register%2C\_or%2C\_Ornamental\_flower-garden\_and\_shrubbery.._(1829-1847)_(21180624271).jpg)_](https://en.wikipedia.org/wiki/Solanum_etuberosum)
 
 [_Solanum etuberosum_](https://en.wikipedia.org/wiki/Solanum_etuberosum)
 
@@ -27,7 +27,7 @@ Why was this love story special?
 
 In most hybrid love stories, the offspring are biologically neutered—they can't have babies, but the potato was different. The tomato ancestors of potatoes made fruits above the ground, while the Etuberosum ancestors made underground stems. Potatoes inherited the right genes that allowed them to form tubers, or those underground organs that allow them to store nutrients.
 
-So the next time you dip fries in tomato ketchup, you are engaging in an act of cannibalism.  
+So the next time you dip fries in tomato ketchup, you are engaging in an act of cannibalism.
 
 From this fun article in [_The Atlantic_](https://www.theatlantic.com/science/archive/2025/07/potato-tomato-evolution-hybrid/683721/)_:_
 
@@ -40,3 +40,9 @@ From this [Wiki entry](https://en.wikipedia.org/wiki/Hybrid_\(biology\)):
 > Species are [reproductively isolated](https://en.wikipedia.org/wiki/Reproductive_isolation) by strong barriers to hybridization, which include genetic and morphological differences, differing times of fertility, mating behaviors and cues, and [physiological](https://en.wikipedia.org/wiki/Physiological) rejection of sperm cells or the developing [embryo](https://en.wikipedia.org/wiki/Embryo). Some act before [fertilization](https://en.wikipedia.org/wiki/Fertilization) and others after it. Similar barriers exist in plants, with differences in flowering times, [pollen](https://en.wikipedia.org/wiki/Pollen) vectors, inhibition of pollen tube growth, somatoplastic sterility, cytoplasmic-genic male sterility and the structure of the chromosomes. A few animal species and many plant species, however, are the result of [hybrid speciation](https://en.wikipedia.org/wiki/Hybrid_speciation), including important crop plants such as [wheat](https://en.wikipedia.org/wiki/Wheat), where the number of chromosomes has been doubled.
 
 Hat tip to [Jason Kottke](https://kottke.org/25/08/0047283-potatoes-are-tomatoes-ok-#comment-section) for the link.
+
+* * *
+
+By the way, I built this small aggregator that pulls articles from some of the best Substacks and blogs that I read regularly:
+
+[https://papertrails.rabbitholes.garden](https://papertrails.rabbitholes.garden)
