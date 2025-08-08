@@ -19,7 +19,7 @@ Apparently, on a bright sunny day 8-9 million years ago, the roots of a tomato p
 
 One thing led to another, and soon, the tomato plant and Etuberosum were engaging in furious underground sex. Fast forward some years, they had a baby that was unlike anything the world had seen before—they called their new child "potato." Fast forward more decades and centuries, and the potato family grew, and today there are 107 wild potato species.
 
-[_!\[\](images/500px-Edwards'botanical\_register%2C\_or%2C\_Ornamental\_flower-garden\_and\_shrubbery.._(1829-1847)_(21180624271).jpg)_](https://en.wikipedia.org/wiki/Solanum_etuberosum)
+![](images/500px-Edwards'_botanical_register%2C_or%2C_Ornamental_flower-garden_and_shrubbery_.._(1829-1847)_(21180624271).jpg)
 
 [_Solanum etuberosum_](https://en.wikipedia.org/wiki/Solanum_etuberosum)
 
