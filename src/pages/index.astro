@@ -23,10 +23,16 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
     <section class="bio text-center mb-3xl">
       <h1 class="text-4xl font-bold mb-lg">Hi, I'm Bhuvan</h1>
       <p class="text-lg text-secondary mb-2xl max-w-2xl mx-auto">Here are the things I find interesting. I hope you find your next rabbit hole to go tumbling down here.</p>
-      <button id="random-btn" class="btn flex items-center gap-xs mx-auto" title="Random post (Cmd+R)">
-        <span class="random-icon">🎲</span>
-        <span class="random-text">Surprise Me</span>
-      </button>
+      <div class="flex gap-md justify-center">
+        <button id="random-btn" class="btn flex items-center gap-xs" title="Random post (Cmd+R)">
+          <span class="random-icon">🎲</span>
+          <span class="random-text">Surprise Me</span>
+        </button>
+        <a href="https://papertrails.rabbitholes.garden" class="btn flex items-center gap-xs" title="Curated website feeds">
+          <span class="trails-icon">🗞️</span>
+          <span class="trails-text">Paper Trails</span>
+        </a>
+      </div>
     </section>
 
     <section class="posts mb-3xl">
