@@ -107,7 +107,7 @@ const structuredData = {
           <h2 class="text-2xl font-semibold mb-xl text-center">Related Posts</h2>
           <div class="related-posts-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
             {relatedPostsWithScores.map(({ post: relatedPost, score, reasons }) => (
-              <article class="related-post-card bg-surface border rounded-lg p-lg transition hover-lift">
+              <article class="related-post-card bg-surface border rounded-lg p-lg">
                 <div class="related-post-meta flex items-center gap-xs mb-sm">
                   <span class={`post-type-indicator post-type-indicator--${relatedPost.data.type}`}></span>
                   <span class="related-post-date text-tertiary text-xs">
@@ -118,15 +118,26 @@ const structuredData = {
                   </span>
                 </div>
                 <h3 class="related-post-title text-lg font-semibold mb-xs">
-                  <a href={`/posts/${relatedPost.slug}`} class="hover-accent">
+                  <a href={`/posts/${relatedPost.slug}`}>
                     {relatedPost.data.title}
                   </a>
                 </h3>
-                {relatedPost.data.description && (
-                  <p class="related-post-description text-secondary text-sm mb-xs">
-                    {relatedPost.data.description}
-                  </p>
-                )}
+{(() => {
+                  // Use description if available, otherwise generate from content
+                  const description = relatedPost.data.description || 
+                    relatedPost.body
+                      .replace(/#+\s*/g, '')
+                      .replace(/\[.*?\]\(.*?\)/g, '')
+                      .replace(/\n/g, ' ')
+                      .slice(0, 120)
+                      .trim() + '...';
+                  
+                  return description && (
+                    <p class="related-post-description text-secondary text-sm mb-xs">
+                      {description}
+                    </p>
+                  );
+                })()}
                 <div class="similarity-reasons text-tertiary text-xs italic">
                   {formatRelatedPostReasons(reasons)}
                 </div>
@@ -212,9 +223,6 @@ const structuredData = {
       margin-top: var(--space-3xl);
     }
     
-    .related-post-card:hover {
-      box-shadow: var(--shadow-md);
-    }
     
     .similarity-score {
       cursor: help;

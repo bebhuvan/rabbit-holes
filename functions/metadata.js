@@ -33,10 +33,21 @@ export async function onRequest(context) {
     const imageMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["'][^>]*>/i) ||
                        html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["'][^>]*>/i);
     
+    // Make image URL absolute if it's relative
+    let imageUrl = imageMatch ? imageMatch[1].trim() : null;
+    if (imageUrl && !imageUrl.startsWith('http')) {
+      try {
+        const baseUrl = new URL(url);
+        imageUrl = new URL(imageUrl, baseUrl).href;
+      } catch (e) {
+        // Keep as is if URL construction fails
+      }
+    }
+    
     const metadata = {
       title: titleMatch ? titleMatch[1].trim() : new URL(url).hostname,
-      description: descMatch ? descMatch[1].trim() : 'No description available',
-      image: imageMatch ? imageMatch[1].trim() : null,
+      description: descMatch ? descMatch[1].trim() : '',
+      image: imageUrl,
       url: url
     };
     

@@ -37,7 +37,7 @@ export function getRelatedPosts(
     // Content type similarity
     if (currentPost.data.type === post.data.type) {
       score += 5;
-      reasons.push(`Same content type: ${post.data.type}`);
+      reasons.push(`Same content type`);
     }
     
     // Title similarity (using simple word matching)
@@ -101,6 +101,35 @@ export function getRelatedPosts(
 export function formatRelatedPostReasons(reasons: string[]): string {
   if (reasons.length === 0) return '';
   if (reasons.length === 1) return reasons[0];
-  if (reasons.length === 2) return `${reasons[0]} and ${reasons[1]}`;
-  return `${reasons.slice(0, -1).join(', ')}, and ${reasons[reasons.length - 1]}`;
+  
+  // Priority order: shared tags > title similarity > same source > same content type > posted recently
+  const priorityOrder = [
+    r => r.includes('shared tag'),
+    r => r.includes('related word'),
+    r => r.includes('Same source'),
+    r => r.includes('Same content type'),
+    r => r.includes('Posted recently')
+  ];
+  
+  // Sort reasons by priority and pick the best ones
+  const sortedReasons = reasons.sort((a, b) => {
+    const aPriority = priorityOrder.findIndex(fn => fn(a));
+    const bPriority = priorityOrder.findIndex(fn => fn(b));
+    return (aPriority === -1 ? 999 : aPriority) - (bPriority === -1 ? 999 : bPriority);
+  });
+  
+  // Filter out generic reasons if we have more specific ones
+  const hasSpecificReasons = sortedReasons.some(r => 
+    r.includes('shared tag') || r.includes('related word') || r.includes('Same source')
+  );
+  
+  const filteredReasons = hasSpecificReasons 
+    ? sortedReasons.filter(r => 
+        !r.includes('Same content type') && !r.includes('Posted recently')
+      )
+    : sortedReasons.slice(0, 2);
+  
+  if (filteredReasons.length === 0) return sortedReasons[0];
+  if (filteredReasons.length === 1) return filteredReasons[0];
+  return filteredReasons.slice(0, 2).join(' • ');
 }

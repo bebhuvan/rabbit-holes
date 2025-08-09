@@ -85,10 +85,88 @@ function createEmbedNode(embedInfo: EmbedInfo) {
 }
 
 function generateEmbedHTML(embedInfo: EmbedInfo): string {
-  // Store embed info as data attributes for post-processing
-  const embedData = JSON.stringify(embedInfo).replace(/"/g, '&quot;');
-  // Hide the URL text since we'll show the embed instead
-  return `<div class="auto-embed" data-embed='${embedData}' style="display: none;" data-url="${embedInfo.url}"></div>`;
+  // Generate the actual embed HTML inline
+  switch (embedInfo.type) {
+    case 'youtube':
+      if (embedInfo.id) {
+        return `<div class="youtube-embed" style="margin: 2rem 0;">
+          <iframe 
+            width="100%" 
+            height="400" 
+            src="https://www.youtube.com/embed/${embedInfo.id}" 
+            frameborder="0" 
+            allowfullscreen
+            style="max-width: 100%; border-radius: 8px;"
+          ></iframe>
+        </div>`;
+      }
+      break;
+    case 'vimeo':
+      if (embedInfo.id) {
+        return `<div class="vimeo-embed" style="margin: 2rem 0;">
+          <iframe 
+            src="https://player.vimeo.com/video/${embedInfo.id}" 
+            width="100%" 
+            height="400" 
+            frameborder="0" 
+            allowfullscreen
+            style="max-width: 100%; border-radius: 8px;"
+          ></iframe>
+        </div>`;
+      }
+      break;
+    case 'twitter':
+      return `<div class="twitter-embed" style="margin: 2rem 0;">
+        <blockquote class="twitter-tweet">
+          <a href="${embedInfo.url}">${embedInfo.url}</a>
+        </blockquote>
+        <script async src="https://platform.twitter.com/widgets.js"></script>
+      </div>`;
+    case 'spotify':
+      const spotifyMatch = embedInfo.url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+      if (spotifyMatch) {
+        const [, type, id] = spotifyMatch;
+        return `<div class="spotify-embed" style="margin: 2rem 0;">
+          <iframe 
+            src="https://open.spotify.com/embed/${type}/${id}" 
+            width="100%" 
+            height="380" 
+            frameborder="0" 
+            allowtransparency="true" 
+            allow="encrypted-media"
+            style="border-radius: 8px;"
+          ></iframe>
+        </div>`;
+      }
+      break;
+    case 'codepen':
+      if (embedInfo.id) {
+        const userMatch = embedInfo.url.match(/codepen\.io\/([^\/]+)\/pen/);
+        const user = userMatch ? userMatch[1] : 'anon';
+        return `<div class="codepen-embed" style="margin: 2rem 0;">
+          <iframe 
+            height="400" 
+            style="width: 100%;" 
+            scrolling="no" 
+            title="CodePen Embed" 
+            src="https://codepen.io/${user}/embed/${embedInfo.id}?default-tab=result" 
+            frameborder="no" 
+            loading="lazy" 
+            allowtransparency="true" 
+            allowfullscreen="true"
+          ></iframe>
+        </div>`;
+      }
+      break;
+  }
+  
+  // For generic embeds, render as a link preview
+  return `<div class="link-preview-placeholder" data-url="${embedInfo.url}" style="margin: 2rem 0; padding: 1rem; border: 1px solid var(--color-border, #e2e8f0); border-radius: 8px;">
+    <a href="${embedInfo.url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem;">🔗 ${embedInfo.url}</div>
+      <div style="font-size: 0.9em; color: var(--color-text-secondary, #666);">Loading preview...</div>
+    </a>
+  </div>`;
 }
 
 function createLinkPreviewHTML(url: string): string {

@@ -138,30 +138,14 @@
 
 /* Surprise button specific styles */
 #random-btn {
-  transition: transform 0.2s ease, background-color 0.2s ease !important;
-  will-change: transform;
-}
-
-#random-btn:hover {
-  transform: translateY(-2px);
-}
-
-#random-btn:active {
-  transform: translateY(0);
+  cursor: pointer;
 }
 
 #random-btn .random-icon {
   display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-#random-btn:hover .random-icon {
-  transform: rotate(180deg);
 }
 
 /* Hover Utilities */
-.hover-accent:hover { color: var(--color-accent); }
-.hover-lift:hover { transform: translateY(-2px); }
 
 /* Interactive States */
 .cursor-pointer { cursor: pointer; }

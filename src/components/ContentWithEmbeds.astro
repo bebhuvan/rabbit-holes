@@ -76,136 +76,65 @@ function shouldEmbed(url: string): { type: string; id?: string } | null {
   }
 }
 
-// Process post body to find standalone URLs that weren't already processed by remark plugin
-const processedEmbeds: Array<{ url: string; embedInfo: any }> = [];
-
-// First check if the rendered content already has auto-embed divs from remark plugin
+// Simply render the content - embeds are now handled by the remark plugin
 const { Content: PostContent } = await post.render();
-const renderedHTML = (await PostContent).toString();
-const existingEmbeds = new Set<string>();
-
-// Extract URLs that are already processed by remark plugin
-const embedDivMatches = renderedHTML.matchAll(/data-url="([^"]+)"/g);
-for (const match of embedDivMatches) {
-  existingEmbeds.add(match[1]);
-}
-
-// Check the raw markdown content for standalone URLs that aren't already processed
-const lines = post.body.split('\n');
-
-for (const line of lines) {
-  const trimmedLine = line.trim();
-  // Check if line is just a URL (standalone URL) and not already processed
-  if (trimmedLine.match(/^https?:\/\/[^\s]+$/) && !existingEmbeds.has(trimmedLine)) {
-    const embedInfo = shouldEmbed(trimmedLine);
-    if (embedInfo) {
-      processedEmbeds.push({ url: trimmedLine, embedInfo: { ...embedInfo, url: trimmedLine } });
-    }
-  }
-}
 ---
 
 <div class="content-with-embeds">
-  <!-- First render the normal content -->
   <PostContent />
-  
-  <!-- Then add embeds for standalone URLs found in the content -->
-  <div class="detected-embeds">
-    {processedEmbeds.map((embed, index) => {
-      const { embedInfo } = embed;
-      
-      switch (embedInfo.type) {
-        case 'youtube':
-          if (embedInfo.id) {
-            return <YouTubeEmbed videoId={embedInfo.id} title="YouTube Video" />;
-          }
-          break;
-          
-        case 'vimeo':
-          return <VimeoEmbed url={embedInfo.url} title="Vimeo Video" />;
-          
-        case 'twitter':
-          return <TwitterEmbed url={embedInfo.url} />;
-          
-        case 'codepen':
-          return <CodePenEmbed url={embedInfo.url} />;
-          
-        case 'spotify':
-          return <SpotifyEmbed url={embedInfo.url} />;
-          
-        default:
-          return <LinkPreviewDynamic url={embedInfo.url} />;
-      }
-    })}
-  </div>
 </div>
 
 <script>
-  // Client-side enhancement for showing embeds
-  document.addEventListener('DOMContentLoaded', () => {
-    // Find all auto-embed divs created by remark plugin
-    const embedDivs = document.querySelectorAll('.auto-embed[data-embed]');
+  // Client-side enhancement for link previews
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Find all link preview placeholders
+    const linkPreviews = document.querySelectorAll('.link-preview-placeholder[data-url]');
     
-    embedDivs.forEach((div) => {
+    for (const placeholder of linkPreviews) {
+      const url = placeholder.getAttribute('data-url');
+      if (!url) continue;
+      
       try {
-        const embedData = JSON.parse(div.getAttribute('data-embed') || '{}');
-        const url = embedData.url;
+        // Fetch link preview data from the server
+        const response = await fetch('/functions/metadata', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
         
-        // Create the appropriate embed element
-        let embedHTML = '';
-        
-        switch (embedData.type) {
-          case 'youtube':
-            if (embedData.id) {
-              embedHTML = `
-                <div class="youtube-embed" style="margin: 2rem 0;">
-                  <iframe 
-                    width="100%" 
-                    height="400" 
-                    src="https://www.youtube.com/embed/${embedData.id}" 
-                    frameborder="0" 
-                    allowfullscreen
-                    style="max-width: 100%; border-radius: 8px;"
-                  ></iframe>
-                </div>`;
-            }
-            break;
-            
-          case 'vimeo':
-            if (embedData.id) {
-              embedHTML = `
-                <div class="vimeo-embed" style="margin: 2rem 0;">
-                  <iframe 
-                    src="https://player.vimeo.com/video/${embedData.id}" 
-                    width="100%" 
-                    height="400" 
-                    frameborder="0" 
-                    allowfullscreen
-                    style="max-width: 100%; border-radius: 8px;"
-                  ></iframe>
-                </div>`;
-            }
-            break;
-            
-          default:
-            // For other types, show as link preview
-            embedHTML = `
-              <div class="link-preview" style="margin: 2rem 0; padding: 1rem; border: 1px solid var(--color-border, #e2e8f0); border-radius: 8px;">
-                <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: var(--color-text, #333);">
-                  <div style="font-weight: 600; margin-bottom: 0.5rem;">🔗 External Link</div>
-                  <div style="font-size: 0.9em; color: var(--color-text-secondary, #666);">${url}</div>
-                </a>
-              </div>`;
-        }
-        
-        if (embedHTML) {
-          // Replace the hidden div with the embed
-          div.outerHTML = embedHTML;
+        if (response.ok) {
+          const data = await response.json();
+          if (data.title || data.description || data.image) {
+            // Create a proper link preview
+            placeholder.innerHTML = `
+              <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
+                <div style="display: flex; gap: 1rem; align-items: start;">
+                  ${data.image ? `
+                    <img src="${data.image}" alt="" style="width: 120px; height: 120px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                  ` : ''}
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 600; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      ${data.title || url}
+                    </div>
+                    ${data.description ? `
+                      <div style="font-size: 0.9em; color: var(--color-text-secondary, #666); margin-bottom: 0.25rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                        ${data.description}
+                      </div>
+                    ` : ''}
+                    <div style="font-size: 0.85em; color: var(--color-text-tertiary, #999); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      ${new URL(url).hostname}
+                    </div>
+                  </div>
+                </div>
+              </a>
+            `;
+          }
         }
       } catch (e) {
-        console.warn('Failed to process embed:', e);
+        console.warn('Failed to fetch link preview:', e);
+        // Keep the basic preview on error
       }
-    });
+    }
   });
 </script>
 
