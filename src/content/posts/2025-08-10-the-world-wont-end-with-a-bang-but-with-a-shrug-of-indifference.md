@@ -5,6 +5,9 @@ type: quick-thoughts
 tags:
   - Technology
   - Smartphones
+description: |-
+  The troubling decline in conscientiousness.
+  A critical life skill is fading out — and especially fast among young adults
 dive_deeper:
   - text: "Conscientiousness - Wiki "
     url: https://en.m.wikipedia.org/wiki/Conscientiousness
@@ -16,15 +19,15 @@ dive_deeper:
     url: https://plato.stanford.edu/entries/technology/
 published: true
 ---
-The always-excellent John Burn-Murdoch at the \*Financial Times\* has published a \[revealing piece\](https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43) with data showing that young people are becoming less conscientious, less outgoing, and less trustworthy — while also becoming more neurotic and more argumentative.  
-  
-In the article, Burn-Murdoch tentatively points to smartphones, digital technologies and the abundance of easy distractions as a likely culprits.  
-  
+The always-excellent John Burn-Murdoch at the \*Financial Times\* has published a \[revealing piece\]([https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43](https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43)) with data showing that young people are becoming less conscientious, less outgoing, and less trustworthy — while also becoming more neurotic and more argumentative.
+
+In the article, Burn-Murdoch tentatively points to smartphones, digital technologies and the abundance of easy distractions as a likely culprits.
+
 I’m a little hesitant to blame technology for everything, but these trends are morosely fascinating nonetheless.  
 Sharing it here as a topic to explore in the future.
 
-> Digging deeper into the data, which comes from the Understanding America Study, we can see that people in their twenties and thirties in particular report feeling increasingly easily distracted and careless, less tenacious and less likely to make and deliver on commitments.  
->   
+> Digging deeper into the data, which comes from the Understanding America Study, we can see that people in their twenties and thirties in particular report feeling increasingly easily distracted and careless, less tenacious and less likely to make and deliver on commitments.
+> 
 > While a full explanation of these shifts requires thorough investigation, and there will be many factors at work, smartphones and streaming services seem likely culprits. The advent of ubiquitous and hyper-engaging digital media has led to an explosion in distraction, as well as making it easier than ever to either not make plans in the first place or to abandon them. The sheer convenience of the online world makes real-life commitments feel messy and effortful. And the rise of time spent online and the attendant decline in face-to-face interactions enable behaviours such as “ghosting”.
 
 ![](images/Extroversion%20and%20trust%20are%20also%20in%20decline.jpg)
