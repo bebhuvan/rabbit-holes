@@ -30,11 +30,11 @@ Sharing it here as a topic to explore in the future.
 > 
 > While a full explanation of these shifts requires thorough investigation, and there will be many factors at work, smartphones and streaming services seem likely culprits. The advent of ubiquitous and hyper-engaging digital media has led to an explosion in distraction, as well as making it easier than ever to either not make plans in the first place or to abandon them. The sheer convenience of the online world makes real-life commitments feel messy and effortful. And the rise of time spent online and the attendant decline in face-to-face interactions enable behaviours such as “ghosting”.
 
-![](images/Extroversion%20and%20trust%20are%20also%20in%20decline.jpg)
+![](images/conscientiousness.jpg)
 
-![](images/Is%20the%20digital%20world%20outcompeting%20real-world%20commitment.jpg)
+![](images/Extroversion.jpg)
 
-![](images/Young%20adults%E2%80%99%20personalities%20are%20changing,%20with%20conscientiousness%20in%20freefall.jpg)
+![](images/tech-alienation.jpg)
 
 John's twitter 🧵:
 
