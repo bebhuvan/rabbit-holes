@@ -36,6 +36,24 @@ Sharing it here as a topic to explore in the future.
 
 ![](images/tech-alienation.jpg)
 
+https://x.com/DKThomp/status/1954527106005631359?t=P0CIupBUj-B\_GuDpTR6\_gQ&s=19
+
+https://open.substack.com/pub/gurwinder/p/how-social-media-shortens-your-life?utm\_source=share&utm\_medium=android&r=1eft5
+
+https://x.com/DKThomp/status/1783140190359298157?t=TYCpNBEmqdNn6JBre97Sag&s=19
+
+[https://x.com/DKThomp/status/1930320952211968128?t=jJhlj-0Ph\_km8JMTYL-PVw&s=19](https://x.com/DKThomp/status/1930320952211968128?t=jJhlj-0Ph_km8JMTYL-PVw&s=19)
+
+[https://x.com/DKThomp/status/1902330878530875477?t=-SMt6XB2jszPkldACGtG1Q&s=19](https://x.com/DKThomp/status/1902330878530875477?t=-SMt6XB2jszPkldACGtG1Q&s=19)
+
+[https://x.com/DKThomp/status/1790390982791270502?t=5A4GxBNroj6RBUMzXL9Yww&s=19](https://x.com/DKThomp/status/1790390982791270502?t=5A4GxBNroj6RBUMzXL9Yww&s=19)
+
+[https://x.com/DKThomp/status/1202235852501508098?t=AYPhm5VPFxUSY9Y-QlucFg&s=19](https://x.com/DKThomp/status/1202235852501508098?t=AYPhm5VPFxUSY9Y-QlucFg&s=19)
+
+[https://x.com/DKThomp/status/1631333140177330176?t=qeNJkf1F12TstorAj90D\_Q&s=19](https://x.com/DKThomp/status/1631333140177330176?t=qeNJkf1F12TstorAj90D_Q&s=19)
+
+https://x.com/nxthompson/status/1952476459555340311?t=mbr5HdK-k3ztIKkdnxW0wQ&s=19
+
 John's twitter 🧵:
 
 [https://x.com/jburnmurdoch/status/1953811277463122162?t=7CukVmOhnY3r1y7\_Ezn8Bg&s=19](https://x.com/jburnmurdoch/status/1953811277463122162?t=7CukVmOhnY3r1y7_Ezn8Bg&s=19)
