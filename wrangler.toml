@@ -19,13 +19,6 @@ command = "npm run build"
 # Development configuration  
 [dev]
 port = 8787
-
-# Define environments
-[env.staging]
-name = "rabbit-holes-staging"
-
-[env.production]
-name = "rabbit-holes"
 routes = [
   { pattern = "bhuvan.dev/*", zone_name = "bhuvan.dev" },
   { pattern = "www.bhuvan.dev/*", zone_name = "bhuvan.dev" }
