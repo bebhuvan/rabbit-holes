@@ -1,15 +1,11 @@
-// Simple API test endpoint
-export async function handleTestSimple(request, env, ctx) {
-  if (request.method !== 'GET') {
-    return new Response('Method not allowed', { status: 405 });
-  }
-  
+// Simple API test endpoint for Astro + Cloudflare
+export async function GET() {
   try {
     return new Response(JSON.stringify({
       success: true,
-      message: 'Workers API is working correctly!',
+      message: 'Astro + Cloudflare Workers API is working correctly!',
       timestamp: new Date().toISOString(),
-      environment: env.ENVIRONMENT || 'development'
+      adapter: 'astro-cloudflare'
     }), {
       headers: {
         'Content-Type': 'application/json',

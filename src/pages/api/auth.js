@@ -1,14 +1,10 @@
-// CMS Authentication Function - Workers format
-export async function handleAuth(request, env, ctx) {
-  if (request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
-  }
-  
+// CMS Authentication API route for Astro + Cloudflare
+export async function POST({ request }) {
   try {
     const { password } = await request.json();
     
     // Get password from environment variable with fallback
-    const correctPassword = env.CMS_PASSWORD || 'rabbit-holes-cms-2024';
+    const correctPassword = import.meta.env.CMS_PASSWORD || 'rabbit-holes-cms-2024';
     
     if (password === correctPassword) {
       // Create a simple session token (in production, use JWT or similar)
@@ -53,4 +49,16 @@ export async function handleAuth(request, env, ctx) {
       }
     });
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Max-Age': '86400',
+    }
+  });
 }

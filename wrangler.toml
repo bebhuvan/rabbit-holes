@@ -1,30 +1,22 @@
-#:schema node_modules/wrangler/config-schema.json
 name = "rabbit-holes"
-main = "src/index.js"
+main = "./dist/_worker.js"
 compatibility_date = "2024-07-12"
 compatibility_flags = ["nodejs_compat"]
 
-# Static assets configuration
+# Static assets configuration for Astro hybrid mode
 [assets]
-directory = "dist"
 binding = "ASSETS"
+directory = "./dist"
 
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
 
-# Secrets (set via wrangler secret put)
-# CLAUDE_API_KEY - Set via: wrangler secret put CLAUDE_API_KEY
-# CMS_PASSWORD - Set via: wrangler secret put CMS_PASSWORD
-# GITHUB_TOKEN - Set via: wrangler secret put GITHUB_TOKEN
-# GITHUB_REPO - Set via: wrangler secret put GITHUB_REPO
-# OPENAI_API_KEY - Set via: wrangler secret put OPENAI_API_KEY
-
 # Build configuration
 [build]
 command = "npm run build"
 
-# Development configuration
+# Development configuration  
 [dev]
 port = 8787
 
@@ -38,16 +30,3 @@ routes = [
   { pattern = "bhuvan.dev/*", zone_name = "bhuvan.dev" },
   { pattern = "www.bhuvan.dev/*", zone_name = "bhuvan.dev" }
 ]
-
-# Custom domains (configure these in Cloudflare dashboard)
-# You'll need to set up custom domains in the Cloudflare Workers dashboard
-
-# Rate limiting for API endpoints
-[[env.production.queues]]
-binding = "API_QUEUE"
-queue_name = "api-queue"
-
-# Analytics binding
-[[env.production.analytics_engine_datasets]]
-binding = "ANALYTICS"
-dataset = "rabbit_holes_analytics"

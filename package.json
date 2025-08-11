@@ -13,6 +13,7 @@
     "workers:deploy:staging": "wrangler deploy --env staging"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.3",
     "@astrojs/rss": "^4.0.12",
     "astro": "^5.11.0",
     "marked": "^16.1.2",

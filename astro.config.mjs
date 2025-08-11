@@ -1,11 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.ts';
+import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://bhuvan.dev', // Replace with your actual domain
-  output: 'static', // Static site with separate Cloudflare Functions
+  output: 'server', // Server mode for Cloudflare Workers
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true
+    }
+  }),
   build: {
     inlineStylesheets: 'auto',
   },
