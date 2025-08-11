@@ -19,13 +19,12 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Install latest Wrangler
-        run: npm install --save-dev wrangler@4
-      
       - name: Build
         run: npm run build
       
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy --env=""
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_NEW }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN_NEW }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env=""
