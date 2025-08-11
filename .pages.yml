@@ -3,7 +3,7 @@
 
 media:
   input: public/images
-  output: images
+  output: /images
 
 content:
   # Blog Posts Collection

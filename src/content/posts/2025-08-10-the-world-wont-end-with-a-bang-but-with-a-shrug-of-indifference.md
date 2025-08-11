@@ -30,11 +30,11 @@ Sharing it here as a topic to explore in the future.
 > 
 > While a full explanation of these shifts requires thorough investigation, and there will be many factors at work, smartphones and streaming services seem likely culprits. The advent of ubiquitous and hyper-engaging digital media has led to an explosion in distraction, as well as making it easier than ever to either not make plans in the first place or to abandon them. The sheer convenience of the online world makes real-life commitments feel messy and effortful. And the rise of time spent online and the attendant decline in face-to-face interactions enable behaviours such as “ghosting”.
 
-![](images/conscientiousness.jpg)
+![](/images/conscientiousness.jpg)
 
-![](images/Extroversion.jpg)
+![](/images/Extroversion.jpg)
 
-![](images/tech-alienation.jpg)
+![](/images/tech-alienation.jpg)
 
 https://x.com/DKThomp/status/1954527106005631359?t=P0CIupBUj-B\_GuDpTR6\_gQ&s=19
 
