@@ -20,7 +20,7 @@ pnpm-debug.log*
 .env.development
 
 # API keys and secrets
-wrangler.toml
+# wrangler.toml (configuration file - should be committed)
 *.key
 *.pem
 secrets.json
