@@ -212,6 +212,22 @@ li {
   margin-bottom: var(--space-xs);
 }
 
+/* Images in content - Prevent overflow */
+.prose img,
+.post-full-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin: var(--space-lg) 0;
+}
+
+/* Ensure images don't overflow their containers */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Buttons */
 button {
   font-family: inherit;
