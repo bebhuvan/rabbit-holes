@@ -20,9 +20,9 @@ dive_deeper:
     url: https://plato.stanford.edu/entries/technology/
 published: true
 ---
-The always-excellent John Burn-Murdoch at the \*Financial Times\* has published a \[revealing piece\]([https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43](https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43)) with data showing that young people are becoming less conscientious, less outgoing, and less trustworthy — while also becoming more neurotic and more argumentative.
+The always-excellent John Burn-Murdoch at the \*Financial Times\* has published a [revealing piece](https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43) with data showing that young people are becoming less conscientious, less outgoing, and less trustworthy—while also becoming more neurotic and more argumentative.
 
-In the article, Burn-Murdoch tentatively points to smartphones, digital technologies and the abundance of easy distractions as a likely culprits.
+In the article, Burn-Murdoch tentatively points to smartphones, digital technologies, and the abundance of easy distractions as a likely culprits.
 
 I’m a little hesitant to blame technology for everything, but these trends are morosely fascinating nonetheless.  
 Sharing it here as a topic to explore in the future.
