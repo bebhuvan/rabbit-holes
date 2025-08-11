@@ -5,6 +5,7 @@ type: quick-thoughts
 tags:
   - Technology
   - Smartphones
+  - Society
 description: |-
   The troubling decline in conscientiousness.
   A critical life skill is fading out — and especially fast among young adults
@@ -36,11 +37,11 @@ Sharing it here as a topic to explore in the future.
 
 ![](/images/tech-alienation.jpg)
 
-https://x.com/DKThomp/status/1954527106005631359?t=P0CIupBUj-B\_GuDpTR6\_gQ&s=19
+[https://x.com/DKThomp/status/1954527106005631359?t=P0CIupBUj-B\\\_GuDpTR6\\\_gQ&s=19](https://x.com/DKThomp/status/1954527106005631359?t=P0CIupBUj-B%5C_GuDpTR6%5C_gQ&s=19)
 
-https://open.substack.com/pub/gurwinder/p/how-social-media-shortens-your-life?utm\_source=share&utm\_medium=android&r=1eft5
+[https://open.substack.com/pub/gurwinder/p/how-social-media-shortens-your-life?utm\\\_source=share&utm\\\_medium=android&r=1eft5](https://open.substack.com/pub/gurwinder/p/how-social-media-shortens-your-life?utm%5C_source=share&utm%5C_medium=android&r=1eft5)
 
-https://x.com/DKThomp/status/1783140190359298157?t=TYCpNBEmqdNn6JBre97Sag&s=19
+[https://x.com/DKThomp/status/1783140190359298157?t=TYCpNBEmqdNn6JBre97Sag&s=19](https://x.com/DKThomp/status/1783140190359298157?t=TYCpNBEmqdNn6JBre97Sag&s=19)
 
 [https://x.com/DKThomp/status/1930320952211968128?t=jJhlj-0Ph\_km8JMTYL-PVw&s=19](https://x.com/DKThomp/status/1930320952211968128?t=jJhlj-0Ph_km8JMTYL-PVw&s=19)
 
@@ -52,7 +53,7 @@ https://x.com/DKThomp/status/1783140190359298157?t=TYCpNBEmqdNn6JBre97Sag&s=19
 
 [https://x.com/DKThomp/status/1631333140177330176?t=qeNJkf1F12TstorAj90D\_Q&s=19](https://x.com/DKThomp/status/1631333140177330176?t=qeNJkf1F12TstorAj90D_Q&s=19)
 
-https://x.com/nxthompson/status/1952476459555340311?t=mbr5HdK-k3ztIKkdnxW0wQ&s=19
+[https://x.com/nxthompson/status/1952476459555340311?t=mbr5HdK-k3ztIKkdnxW0wQ&s=19](https://x.com/nxthompson/status/1952476459555340311?t=mbr5HdK-k3ztIKkdnxW0wQ&s=19)
 
 John's twitter 🧵:
 
