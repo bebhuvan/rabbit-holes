@@ -1,64 +1,53 @@
-# Cloudflare Pages configuration
+#:schema node_modules/wrangler/config-schema.json
 name = "rabbit-holes"
+main = "src/index.js"
 compatibility_date = "2024-07-12"
+compatibility_flags = ["nodejs_compat"]
 
+# Static assets configuration
+[assets]
+directory = "dist"
+binding = "ASSETS"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets (set via wrangler secret put)
+# CLAUDE_API_KEY - Set via: wrangler secret put CLAUDE_API_KEY
+# CMS_PASSWORD - Set via: wrangler secret put CMS_PASSWORD
+# GITHUB_TOKEN - Set via: wrangler secret put GITHUB_TOKEN
+# GITHUB_REPO - Set via: wrangler secret put GITHUB_REPO
+# OPENAI_API_KEY - Set via: wrangler secret put OPENAI_API_KEY
+
+# Build configuration
 [build]
 command = "npm run build"
-publish = "dist"
 
-# Environment variables for the project
-# IMPORTANT: Set CLAUDE_API_KEY in Cloudflare Pages dashboard under Settings > Environment variables
-# IMPORTANT: Set CMS_PASSWORD in Cloudflare Pages dashboard for CMS access
-# Do not commit API keys to the repository
+# Development configuration
+[dev]
+port = 8787
+
+# Define multiple environments
+[env.staging]
+name = "rabbit-holes-staging"
+
 [env.production]
-# CLAUDE_API_KEY = "your-api-key-here" # Set this in Cloudflare dashboard
-# CMS_PASSWORD = "your-secure-password-here" # Set this in Cloudflare dashboard
+name = "rabbit-holes"
+routes = [
+  { pattern = "bhuvan.dev/*", zone_name = "bhuvan.dev" },
+  { pattern = "www.bhuvan.dev/*", zone_name = "bhuvan.dev" }
+]
 
-[env.preview]
-# CLAUDE_API_KEY = "your-api-key-here" # Set this in Cloudflare dashboard  
-# CMS_PASSWORD = "your-secure-password-here" # Set this in Cloudflare dashboard
+# Custom domains (configure these in Cloudflare dashboard)
+# You'll need to set up custom domains in the Cloudflare Workers dashboard
 
-# Custom headers for security and performance
-[[headers]]
-for = "/*"
-[headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"
-Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+# Rate limiting for API endpoints
+[[env.production.queues]]
+binding = "API_QUEUE"
+queue_name = "api-queue"
 
-[[headers]]
-for = "/assets/*"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "*.css"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "*.js"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-# Additional security for CMS page
-[[headers]]
-for = "/cms"
-[headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"
-X-XSS-Protection = "1; mode=block"
-Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.anthropic.com; frame-ancestors 'none'"
-
-# Redirects for clean URLs and legacy support
-[[redirects]]
-from = "/feed"
-to = "/rss.xml"
-status = 301
-
-[[redirects]]
-from = "/feed.xml"
-to = "/rss.xml"
-status = 301
+# Analytics binding
+[[env.production.analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "rabbit_holes_analytics"

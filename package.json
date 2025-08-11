@@ -4,10 +4,13 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && cp -r functions dist/",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "cms": "echo 'Visit https://app.pagescms.org to use PagesCMS'"
+    "cms": "echo 'Visit https://app.pagescms.org to use PagesCMS'",
+    "workers:dev": "wrangler dev",
+    "workers:deploy": "wrangler deploy",
+    "workers:deploy:staging": "wrangler deploy --env staging"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.12",
