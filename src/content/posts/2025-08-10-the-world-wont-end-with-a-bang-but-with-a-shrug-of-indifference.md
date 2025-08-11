@@ -20,7 +20,7 @@ dive_deeper:
     url: https://plato.stanford.edu/entries/technology/
 published: true
 ---
-The always-excellent John Burn-Murdoch at the \*Financial Times\* has published a [revealing piece](https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43) with data showing that young people are becoming less conscientious, less outgoing, and less trustworthy—while also becoming more neurotic and more argumentative.
+The always-excellent John Burn-Murdoch at the Financial Times has published a [revealing piece](https://www.ft.com/content/5cd77ef0-b546-4105-8946-36db3f84dc43) with data showing that young people are becoming less conscientious, less outgoing, and less trustworthy—while also becoming more neurotic and more argumentative.
 
 In the article, Burn-Murdoch tentatively points to smartphones, digital technologies, and the abundance of easy distractions as likely culprits.
 
@@ -52,13 +52,9 @@ The awesome Derek Thompson has been [writing and speaking](https://www.google.co
 
 [What Experts Really Think About Smartphones and Mental Health.](https://www.theringer.com/podcasts/plain-english-with-derek-thompson/2025/06/04/what-experts-really-think-about-smartphones-and-mental-health)
 
-<iframe style="border-radius:12px" src="[https://open.spotify.com/embed/episode/5cSQMq3k1y2Z9TleJf9n5h?utm\_source=generator](https://open.spotify.com/embed/episode/5cSQMq3k1y2Z9TleJf9n5h?utm_source=generator)" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
 [GLP1s and brain inflammation + are smartphones eating our collective IQ?](https://x.com/DKThomp/status/1902330878530875477?t=-SMt6XB2jszPkldACGtG1Q&s=19)
 
 [Are Smartphones Really Driving the Rise in Teenage Depression?](https://www.theringer.com/2024/05/14/national-affairs/are-smartphones-really-driving-the-rise-in-teenage-depression)
-
-<iframe data-testid="embed-iframe" style="border-radius:12px" src="[https://open.spotify.com/embed/episode/0qzgEXipacK09Y98uqbS0g?utm\_source=generator](https://open.spotify.com/embed/episode/0qzgEXipacK09Y98uqbS0g?utm_source=generator)" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
 [Why White-Collar Workers Spend All Day at the Office:](https://www.theatlantic.com/ideas/archive/2019/12/how-internet-enables-workaholism/602917/)
 
@@ -89,5 +85,3 @@ Also reminds me of something I heard on [Derek Thompson's Plain English podcast]
 > You're putting not only your attention into very different fields, you're also delaying the year at which you begin to maybe start a family.And there's so much evidence showing that, you know, coupling rates have been delayed and, you know, age of first fertility has been delayed and overall fertility is going down.You know, it's funny.I've been thinking about this take maybe for the Substack that's like every social phenomenon is a housing phenomenon and a smartphone phenomenon.Like I think I want to call it like the home screen hypothesis.It's like every single thing you want, are you interested in why Americans are having less sex? Are you interested in why Americans are socializing less?Why they're partying less? Why they're dating less? Why there's higher anxiety?
 > 
 > You can tell a housing and or smartphone story about all of this.
-
-<iframe style="border-radius:12px" src="[https://open.spotify.com/embed/episode/1WSlkdvd2FVZo5RSGCHcSp?utm\_source=generator](https://open.spotify.com/embed/episode/1WSlkdvd2FVZo5RSGCHcSp?utm_source=generator)" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
