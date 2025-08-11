@@ -1,6 +1,6 @@
 name = "rabbit-holes"
 main = "./dist/_worker.js"
-compatibility_date = "2024-07-12"
+compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
 # Static assets configuration for Astro hybrid mode
@@ -11,6 +11,12 @@ directory = "./dist"
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
+
+# KV bindings for sessions (required by Astro)
+[[kv_namespaces]]
+binding = "SESSION"
+preview_id = "304199e526484a1cba1cec53965a0868"
+id = "3d8150ca8a8f47bbb4abd3a6330457fd"
 
 # Build configuration
 [build]
