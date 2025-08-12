@@ -85,7 +85,7 @@ const { Content: PostContent } = await post.render();
 </div>
 
 <script>
-  // Client-side enhancement for link previews
+  // Client-side enhancement for link previews and embeds
   document.addEventListener('DOMContentLoaded', async () => {
     // Find all link preview placeholders
     const linkPreviews = document.querySelectorAll('.link-preview-placeholder[data-url]');
@@ -133,6 +133,62 @@ const { Content: PostContent } = await post.render();
       } catch (e) {
         console.warn('Failed to fetch link preview:', e);
         // Keep the basic preview on error
+      }
+    }
+
+    // Convert Twitter/X URLs to embeds
+    const content = document.querySelector('.post-full-content, .content-with-embeds');
+    if (content) {
+      // Find all <a> tags that contain Twitter/X URLs as both href and text
+      const links = content.querySelectorAll('a[href*="x.com/"], a[href*="twitter.com/"]');
+      
+      for (const link of links) {
+        const href = link.getAttribute('href');
+        const text = link.textContent.trim();
+        
+        // Check if the link text is the same as the href (standalone URL)
+        if (href === text && href.match(/(twitter\.com|x\.com)\/[^\/]+\/status\/\d+/)) {
+          // Create Twitter embed
+          const embed = document.createElement('div');
+          embed.className = 'twitter-embed';
+          embed.style.cssText = 'margin: 2rem 0; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface);';
+          
+          const blockquote = document.createElement('blockquote');
+          blockquote.className = 'twitter-tweet';
+          blockquote.setAttribute('data-theme', 'light');
+          blockquote.innerHTML = `<a href="${href}">Loading tweet...</a>`;
+          
+          const caption = document.createElement('div');
+          caption.style.cssText = 'padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);';
+          caption.innerHTML = '<span style="font-size: 16px;">🐦</span><span style="color: var(--color-text-secondary); font-size: 14px; font-weight: 500;">Twitter/X Post</span>';
+          
+          embed.appendChild(blockquote);
+          embed.appendChild(caption);
+          
+          // Replace the paragraph containing the link
+          const paragraph = link.closest('p');
+          if (paragraph && paragraph.children.length === 1) {
+            paragraph.replaceWith(embed);
+          }
+        }
+      }
+      
+      // Load Twitter widgets script
+      if (!window.twttr && document.querySelector('.twitter-tweet')) {
+        window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+          t._e = [];
+          t.ready = function(f) {
+            t._e.push(f);
+          };
+          return t;
+        }(document, "script", "twitter-wjs"));
       }
     }
   });

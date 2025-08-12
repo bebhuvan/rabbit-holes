@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.ts';
+import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
 import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
