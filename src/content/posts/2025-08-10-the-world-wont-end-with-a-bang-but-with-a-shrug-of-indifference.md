@@ -72,11 +72,11 @@ The awesome Derek Thompson has been [writing and speaking](https://www.google.co
 
 John's twitter 🧵:
 
-[https://x.com/jburnmurdoch/status/1953811277463122162?t=7CukVmOhnY3r1y7\_Ezn8Bg&s=19](https://x.com/jburnmurdoch/status/1953811277463122162?t=7CukVmOhnY3r1y7_Ezn8Bg&s=19)
+https://x.com/jburnmurdoch/status/1953811277463122162?t=7CukVmOhnY3r1y7_Ezn8Bg&s=19
 
 Interesting comments from the ever awesome Kyla Scanlon:
 
-[https://x.com/kylascan/status/1954304468356645025?t=cqtkKrt-BriXTYlseIPo5g&s=19](https://x.com/kylascan/status/1954304468356645025?t=cqtkKrt-BriXTYlseIPo5g&s=19)
+https://x.com/kylascan/status/1954304468356645025?t=cqtkKrt-BriXTYlseIPo5g&s=19
 
 Also reminds me of something I heard on [Derek Thompson's Plain English podcast](https://www.theringer.com/podcasts/plain-english-with-derek-thompson/2025/07/30/the-new-geography-of-housing-in-america):
 
