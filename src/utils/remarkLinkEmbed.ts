@@ -89,54 +89,81 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
   switch (embedInfo.type) {
     case 'youtube':
       if (embedInfo.id) {
-        return `<div class="youtube-embed" style="margin: 2rem 0;">
+        return `<div class="youtube-embed" style="margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
           <iframe 
-            width="100%" 
-            height="400" 
-            src="https://www.youtube.com/embed/${embedInfo.id}" 
+            src="https://www.youtube.com/embed/${embedInfo.id}?rel=0" 
             frameborder="0" 
             allowfullscreen
-            style="max-width: 100%; border-radius: 8px;"
+            loading="lazy"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px;"
           ></iframe>
         </div>`;
       }
       break;
     case 'vimeo':
       if (embedInfo.id) {
-        return `<div class="vimeo-embed" style="margin: 2rem 0;">
+        return `<div class="vimeo-embed" style="margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
           <iframe 
             src="https://player.vimeo.com/video/${embedInfo.id}" 
-            width="100%" 
-            height="400" 
             frameborder="0" 
             allowfullscreen
-            style="max-width: 100%; border-radius: 8px;"
+            loading="lazy"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px;"
           ></iframe>
         </div>`;
       }
       break;
     case 'twitter':
       return `<div class="twitter-embed" style="margin: 2rem 0;">
-        <blockquote class="twitter-tweet">
-          <a href="${embedInfo.url}">${embedInfo.url}</a>
+        <blockquote class="twitter-tweet" data-theme="light">
+          <a href="${embedInfo.url}">Loading tweet...</a>
         </blockquote>
-        <script async src="https://platform.twitter.com/widgets.js"></script>
-      </div>`;
+      </div>
+      <script>
+        if (typeof window !== 'undefined' && !window.twttr) {
+          window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+              t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+            t._e = [];
+            t.ready = function(f) {
+              t._e.push(f);
+            };
+            return t;
+          }(document, "script", "twitter-wjs"));
+        } else if (window.twttr && window.twttr.widgets) {
+          window.twttr.widgets.load();
+        }
+      </script>`;
     case 'spotify':
-      const spotifyMatch = embedInfo.url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
-      if (spotifyMatch) {
-        const [, type, id] = spotifyMatch;
-        return `<div class="spotify-embed" style="margin: 2rem 0;">
-          <iframe 
-            src="https://open.spotify.com/embed/${type}/${id}" 
-            width="100%" 
-            height="380" 
-            frameborder="0" 
-            allowtransparency="true" 
-            allow="encrypted-media"
-            style="border-radius: 8px;"
-          ></iframe>
-        </div>`;
+      // Handle various Spotify URL formats
+      const spotifyPatterns = [
+        /(?:open\.)?spotify\.com\/(track|album|playlist|episode|show)\/([a-zA-Z0-9]+)/,
+        /spotify:(track|album|playlist|episode|show):([a-zA-Z0-9]+)/
+      ];
+      
+      for (const pattern of spotifyPatterns) {
+        const spotifyMatch = embedInfo.url.match(pattern);
+        if (spotifyMatch) {
+          const [, type, id] = spotifyMatch;
+          const height = type === 'track' || type === 'episode' ? '152' : '380';
+          return `<div class="spotify-embed" style="margin: 2rem 0;">
+            <iframe 
+              src="https://open.spotify.com/embed/${type}/${id}?utm_source=generator" 
+              width="100%" 
+              height="${height}" 
+              frameborder="0" 
+              allowfullscreen=""
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              style="border-radius: 12px;"
+            ></iframe>
+          </div>`;
+        }
       }
       break;
     case 'codepen':

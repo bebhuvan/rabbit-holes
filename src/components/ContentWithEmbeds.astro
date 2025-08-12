@@ -96,7 +96,7 @@ const { Content: PostContent } = await post.render();
       
       try {
         // Fetch link preview data from the server
-        const response = await fetch('/functions/metadata', {
+        const response = await fetch('/api/metadata', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url })

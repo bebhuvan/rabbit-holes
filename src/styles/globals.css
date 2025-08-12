@@ -158,7 +158,7 @@ p {
 }
 
 .prose p + p {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-md);
 }
 
 .prose h1,
@@ -219,7 +219,13 @@ li {
   height: auto;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  margin: var(--space-lg) 0;
+  margin: var(--space-md) 0;
+}
+
+/* Adjacent images should have minimal spacing */
+.prose img + img,
+.post-full-content img + img {
+  margin-top: var(--space-sm);
 }
 
 /* Ensure images don't overflow their containers */
