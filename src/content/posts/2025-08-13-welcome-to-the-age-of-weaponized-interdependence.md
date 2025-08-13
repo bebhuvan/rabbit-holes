@@ -3,6 +3,11 @@ title: "Welcome to the age of weaponized interdependence "
 date: 2025-08-13
 type: quick-thoughts
 url: https://www.economist.com/china/2025/08/12/how-scared-should-you-be-of-the-china-squeeze
+tags:
+  - Weaponized interdependence
+  - Globalization
+  - Trade
+  - Chokepoints
 dive_deeper:
   - text: The Uses and Abuses of Weaponized Interdependence
     url: https://www.brookings.edu/wp-content/uploads/2020/05/9780815738374_ch1.pdf
@@ -36,7 +41,7 @@ The second is that, as Trump’s shambolic presidency dragged on, the United Sta
 
 As the old Chinese curse goes, may we live in interesting times. We certainly are.
 
-From the article:
+From [the article](https://www.economist.com/china/2025/08/12/how-scared-should-you-be-of-the-china-squeeze):
 
 > Chinese victories have piled up in recent months. First came Mr Xi’s masterstroke in April: retaliating against American tariffs by choking off supplies of [Chinese-refined rare-earth minerals](https://archive.ph/o/qubuh/https://www.economist.com/finance-and-economics/2025/04/10/china-has-a-weapon-that-could-hurt-america-rare-earth-exports) and magnets critical to American industry. Within weeks, America’s $1.5trn carmaking industry, among others, panicked and Mr Trump sought peace. In July the European Union squealed in the lead-up to an eu-Chinese summit after flows of rare-earth minerals and battery technology to Europe slowed without explanation. Speeding them up then became a subject of negotiation.
 > 
@@ -44,20 +49,4 @@ From the article:
 
 [Watch this](https://youtu.be/6mOzr6s12qI?si=r6VGFuxKwdPGsF0B):
 
-<div style="position:relative;width:100%;aspect-ratio:16/9;">
-
-<iframe
-
-src="[https://www.youtube-nocookie.com/embed/6mOzr6s12qI?rel=0&modestbranding=1&playsinline=1](https://www.youtube-nocookie.com/embed/6mOzr6s12qI?rel=0&modestbranding=1&playsinline=1)"
-
-title="YouTube video"
-
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-
-allowfullscreen
-
-style="position:absolute;inset:0;border:0;width:100%;height:100%;"
-
-\></iframe>
-
-</div>
+[https://youtu.be/6mOzr6s12qI?si=r6VGFuxKwdPGsF0B](https://youtu.be/6mOzr6s12qI?si=r6VGFuxKwdPGsF0B)
