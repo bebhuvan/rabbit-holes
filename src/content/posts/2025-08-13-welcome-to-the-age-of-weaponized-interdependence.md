@@ -13,6 +13,10 @@ dive_deeper:
     url: https://www.brookings.edu/wp-content/uploads/2020/05/9780815738374_ch1.pdf
   - text: The 6 narratives of globalization
     url: https://aeon.co/essays/there-are-six-main-narratives-of-globalisation-all-flawed
+  - text: Henry Farrell - Wiki
+    url: https://en.m.wikipedia.org/wiki/Henry_Farrell_(political_scientist)
+  - text: Abraham Newman - Wiki
+    url: https://en.m.wikipedia.org/wiki/Abraham_L._Newman
 published: true
 ---
 In 2019, two political scientists, Henry Farrell and Abraham Newman, published one of the most well-timed papers in recent memory. Titled [Weaponized Interdependence: How Global Economic Networks Shape State Coercion](https://direct.mit.edu/isec/article/44/1/42/12237/Weaponized-Interdependence-How-Global-Economic), it argued that globalization today runs on networks, both physical and digital, that underpin everything from trade to finance.
