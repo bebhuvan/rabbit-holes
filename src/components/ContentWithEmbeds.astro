@@ -100,8 +100,11 @@ const { Content: PostContent } = await post.render();
     return null;
   }
 
-  // Client-side enhancement for link previews and embeds
-  document.addEventListener('DOMContentLoaded', async () => {
+  // Client-side enhancement for link previews and embeds  
+  console.log('ContentWithEmbeds script loaded');
+  
+  function processEmbeds() {
+    console.log('Processing embeds...');
     // Find all link preview placeholders
     const linkPreviews = document.querySelectorAll('.link-preview-placeholder[data-url]');
     
@@ -161,8 +164,11 @@ const { Content: PostContent } = await post.render();
         const href = link.getAttribute('href');
         const text = link.textContent.trim();
         
+        console.log('Processing link:', href, 'Text:', text);
+        
         // Check if the link text is the same as the href (standalone URL)
         if (href === text) {
+          console.log('Found standalone URL:', href);
           // YouTube embed
           if (href.match(/(youtube\.com\/watch\?v=|youtu\.be\/)/)) {
             const videoId = getYouTubeId(href);
@@ -198,66 +204,62 @@ const { Content: PostContent } = await post.render();
           
           // Twitter embed
           if (href.match(/(twitter\.com|x\.com)\/[^\/]+\/status\/\d+/)) {
+            console.log('Creating Twitter embed for:', href);
             const embed = document.createElement('div');
             embed.className = 'twitter-embed';
-            embed.style.cssText = 'margin: 2rem 0; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface);';
+            embed.style.cssText = 'margin: 2rem 0;';
             
             const blockquote = document.createElement('blockquote');
             blockquote.className = 'twitter-tweet';
             blockquote.setAttribute('data-theme', 'light');
             blockquote.setAttribute('data-dnt', 'true');
-            blockquote.innerHTML = `<a href="${href}">View Tweet</a>`;
-            
-            const caption = document.createElement('div');
-            caption.style.cssText = 'padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);';
-            caption.innerHTML = '<span style="font-size: 16px;">🐦</span><span style="color: var(--color-text-secondary); font-size: 14px; font-weight: 500;">Twitter/X Post</span>';
+            blockquote.setAttribute('data-width', '550');
+            blockquote.innerHTML = `<p lang="en" dir="ltr"><a href="${href}">View Tweet</a></p>&mdash; <a href="${href.split('/status/')[0]}">${href.split('/')[3]}</a>`;
             
             embed.appendChild(blockquote);
-            embed.appendChild(caption);
             
             // Replace the paragraph containing the link
             const paragraph = link.closest('p');
             if (paragraph && paragraph.children.length === 1) {
               paragraph.replaceWith(embed);
-              
-              // Load Twitter widgets immediately after adding the element
-              if (window.twttr && window.twttr.widgets) {
-                window.twttr.widgets.load(embed);
-              }
             }
           }
         }
       }
       
-      // Load Twitter widgets script
+      // Load Twitter widgets script - simplified approach
       if (document.querySelector('.twitter-tweet')) {
-        if (!window.twttr) {
-          window.twttr = (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0],
-              t = window.twttr || {};
-            if (d.getElementById(id)) return t;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "https://platform.twitter.com/widgets.js";
-            fjs.parentNode.insertBefore(js, fjs);
-            t._e = [];
-            t.ready = function(f) {
-              t._e.push(f);
-            };
-            return t;
-          }(document, "script", "twitter-wjs"));
-          
-          // When script loads, process all tweets
-          window.twttr.ready(function() {
-            window.twttr.widgets.load();
-          });
-        } else if (window.twttr.widgets) {
-          // Script already loaded, just process tweets
+        console.log('Found twitter-tweet elements, loading script...');
+        
+        if (!document.getElementById('twitter-wjs')) {
+          const script = document.createElement('script');
+          script.id = 'twitter-wjs';
+          script.src = 'https://platform.twitter.com/widgets.js';
+          script.async = true;
+          script.onload = function() {
+            console.log('Twitter script loaded successfully');
+            if (window.twttr && window.twttr.widgets) {
+              window.twttr.widgets.load();
+            }
+          };
+          script.onerror = function() {
+            console.error('Failed to load Twitter script');
+          };
+          document.head.appendChild(script);
+        } else if (window.twttr && window.twttr.widgets) {
+          console.log('Twitter script already loaded, calling widgets.load()');
           window.twttr.widgets.load();
         }
       }
     }
-  });
+  }
+  
+  // Run immediately and also on DOM ready
+  processEmbeds();
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', processEmbeds);
+  }
 </script>
 
 <style>

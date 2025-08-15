@@ -216,7 +216,7 @@
   margin-bottom: var(--space-xs);
 }
 
-.post-full-content blockquote {
+.post-full-content blockquote:not(.twitter-tweet) {
   margin: var(--space-lg) 0;
   padding: var(--space-lg);
   border-left: 3px solid var(--color-accent);
@@ -226,7 +226,7 @@
   position: relative;
 }
 
-.post-full-content blockquote::before {
+.post-full-content blockquote:not(.twitter-tweet)::before {
   content: '"';
   font-size: 3.5rem;
   color: var(--color-accent);
@@ -239,26 +239,26 @@
   z-index: 1;
 }
 
-.post-full-content blockquote::after {
+.post-full-content blockquote:not(.twitter-tweet)::after {
   content: '"';
   font-size: 2.5rem;
   color: var(--color-accent);
   font-family: Georgia, serif;
   position: absolute;
-  bottom: -24px;
-  right: -8px;
+  bottom: -10px;
+  right: 8px;
   line-height: 1;
   opacity: 0.8;
   z-index: 1;
 }
 
-.post-full-content blockquote p {
+.post-full-content blockquote:not(.twitter-tweet) p {
   position: relative;
   z-index: 2;
   margin: 0 0 var(--space-md) 0;
 }
 
-.post-full-content blockquote p:last-child {
+.post-full-content blockquote:not(.twitter-tweet) p:last-child {
   margin-bottom: 0;
 }
 
