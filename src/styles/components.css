@@ -222,7 +222,6 @@
   border-left: 3px solid var(--color-accent);
   font-style: italic;
   color: var(--color-text-tertiary);
-  background: rgba(251, 146, 60, 0.05);
   border-radius: 0 8px 8px 0;
   position: relative;
 }
@@ -256,7 +255,11 @@
 .post-full-content blockquote p {
   position: relative;
   z-index: 2;
-  margin: 0;
+  margin: 0 0 var(--space-md) 0;
+}
+
+.post-full-content blockquote p:last-child {
+  margin-bottom: 0;
 }
 
 .post-full-content a {
