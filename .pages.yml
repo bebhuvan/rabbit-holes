@@ -162,7 +162,7 @@ content:
         label: Content
         type: rich-text
         required: true
-        description: "Use markdown shortcuts: **bold**, *italic*, # headings, - lists, > quotes"
+        description: "Use the rich editor with formatting toolbar"
         options:
           media: true
           path: public/images
@@ -179,6 +179,12 @@ content:
             - image
             - table
             - hr
+      
+      - name: markdown_content
+        label: Markdown Content (Alternative)
+        type: text
+        rows: 25
+        description: "Alternative: Write directly in markdown. Use this instead of the rich editor above if you prefer markdown syntax. **bold**, *italic*, # headings, - lists, > quotes"
 
   # Site Settings
   - name: settings
