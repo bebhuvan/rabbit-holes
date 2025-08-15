@@ -85,6 +85,21 @@ const { Content: PostContent } = await post.render();
 </div>
 
 <script>
+  // Helper function for YouTube ID extraction (client-side)
+  function getYouTubeId(url) {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    
+    return null;
+  }
+
   // Client-side enhancement for link previews and embeds
   document.addEventListener('DOMContentLoaded', async () => {
     // Find all link preview placeholders
@@ -136,39 +151,74 @@ const { Content: PostContent } = await post.render();
       }
     }
 
-    // Convert Twitter/X URLs to embeds
+    // Convert standalone URLs to embeds (YouTube, Twitter, etc.)
     const content = document.querySelector('.post-full-content, .content-with-embeds');
     if (content) {
-      // Find all <a> tags that contain Twitter/X URLs as both href and text
-      const links = content.querySelectorAll('a[href*="x.com/"], a[href*="twitter.com/"]');
+      // Find all <a> tags that contain standalone URLs
+      const links = content.querySelectorAll('a[href^="http"]');
       
       for (const link of links) {
         const href = link.getAttribute('href');
         const text = link.textContent.trim();
         
         // Check if the link text is the same as the href (standalone URL)
-        if (href === text && href.match(/(twitter\.com|x\.com)\/[^\/]+\/status\/\d+/)) {
-          // Create Twitter embed
-          const embed = document.createElement('div');
-          embed.className = 'twitter-embed';
-          embed.style.cssText = 'margin: 2rem 0; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface);';
+        if (href === text) {
+          // YouTube embed
+          if (href.match(/(youtube\.com\/watch\?v=|youtu\.be\/)/)) {
+            const videoId = getYouTubeId(href);
+            if (videoId) {
+              const embed = document.createElement('div');
+              embed.className = 'youtube-embed';
+              embed.style.cssText = 'margin: 2rem 0; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface);';
+              embed.innerHTML = `
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                  <iframe 
+                    src="https://www.youtube.com/embed/${videoId}"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy">
+                  </iframe>
+                </div>
+                <div style="padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);">
+                  <span style="font-size: 16px;">📺</span>
+                  <span style="color: var(--color-text-secondary); font-size: 14px; font-weight: 500;">YouTube Video</span>
+                </div>
+              `;
+              
+              // Replace the paragraph containing the link
+              const paragraph = link.closest('p');
+              if (paragraph && paragraph.children.length === 1) {
+                paragraph.replaceWith(embed);
+              }
+              continue;
+            }
+          }
           
-          const blockquote = document.createElement('blockquote');
-          blockquote.className = 'twitter-tweet';
-          blockquote.setAttribute('data-theme', 'light');
-          blockquote.innerHTML = `<a href="${href}">Loading tweet...</a>`;
-          
-          const caption = document.createElement('div');
-          caption.style.cssText = 'padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);';
-          caption.innerHTML = '<span style="font-size: 16px;">🐦</span><span style="color: var(--color-text-secondary); font-size: 14px; font-weight: 500;">Twitter/X Post</span>';
-          
-          embed.appendChild(blockquote);
-          embed.appendChild(caption);
-          
-          // Replace the paragraph containing the link
-          const paragraph = link.closest('p');
-          if (paragraph && paragraph.children.length === 1) {
-            paragraph.replaceWith(embed);
+          // Twitter embed
+          if (href.match(/(twitter\.com|x\.com)\/[^\/]+\/status\/\d+/)) {
+            const embed = document.createElement('div');
+            embed.className = 'twitter-embed';
+            embed.style.cssText = 'margin: 2rem 0; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface);';
+            
+            const blockquote = document.createElement('blockquote');
+            blockquote.className = 'twitter-tweet';
+            blockquote.setAttribute('data-theme', 'light');
+            blockquote.innerHTML = `<a href="${href}">Loading tweet...</a>`;
+            
+            const caption = document.createElement('div');
+            caption.style.cssText = 'padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);';
+            caption.innerHTML = '<span style="font-size: 16px;">🐦</span><span style="color: var(--color-text-secondary); font-size: 14px; font-weight: 500;">Twitter/X Post</span>';
+            
+            embed.appendChild(blockquote);
+            embed.appendChild(caption);
+            
+            // Replace the paragraph containing the link
+            const paragraph = link.closest('p');
+            if (paragraph && paragraph.children.length === 1) {
+              paragraph.replaceWith(embed);
+            }
           }
         }
       }
