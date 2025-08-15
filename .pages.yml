@@ -161,7 +161,7 @@ content:
       - name: body
         label: Content
         type: rich-text
-        required: true
+        required: false
         description: "Use the rich editor with formatting toolbar"
         options:
           media: true
