@@ -2,8 +2,23 @@
 # https://pagescms.org/docs/configuration/
 
 media:
-  input: public/images
-  output: /images
+  - name: images
+    label: Images
+    input: public/images
+    output: /images
+    extensions: [jpg, jpeg, png, gif, webp, svg]
+  
+  - name: documents
+    label: Documents
+    input: public/documents
+    output: /documents
+    extensions: [pdf, doc, docx, txt]
+  
+  - name: videos
+    label: Videos
+    input: public/videos
+    output: /videos
+    extensions: [mp4, webm, mov]
 
 content:
   # Blog Posts Collection
@@ -13,8 +28,16 @@ content:
     path: src/content/posts
     view:
       primary: title
-      fields: [title, type, date]
+      fields: [title, type, date, draft, published]
       sort: [date, title]
+      search: true
+      filters:
+        - field: type
+          label: Filter by Type
+        - field: draft
+          label: Show Drafts
+        - field: published
+          label: Published Status
     fields:
       - name: title
         label: Title
@@ -71,6 +94,27 @@ content:
       - name: description
         label: Description
         type: text
+        description: "Brief summary for previews and SEO (150-160 characters)"
+      
+      - name: seo
+        label: SEO Settings
+        type: object
+        collapsed: true
+        fields:
+          - name: meta_title
+            label: Meta Title
+            type: string
+            description: "Leave empty to use post title"
+          
+          - name: meta_description
+            label: Meta Description
+            type: text
+            description: "Override the default description for search engines"
+          
+          - name: og_image
+            label: Social Media Image
+            type: image
+            description: "Custom image for social media shares (1200x630px recommended)"
       
       - name: dive_deeper
         label: Dive Deeper
@@ -102,6 +146,18 @@ content:
         type: boolean
         default: true
       
+      - name: draft
+        label: Save as Draft
+        type: boolean
+        default: false
+        description: "Keep this post private until ready to publish"
+      
+      - name: featured
+        label: Featured Post
+        type: boolean
+        default: false
+        description: "Highlight this post on the homepage"
+      
       - name: body
         label: Content
         type: rich-text
@@ -110,7 +166,20 @@ content:
         options:
           media: true
           path: public/images
-          extensions: [jpg, jpeg, png, gif, webp]
+          extensions: [jpg, jpeg, png, gif, webp, svg]
+          toolbar:
+            - bold
+            - italic
+            - heading
+            - link
+            - code
+            - quote
+            - ul
+            - ol
+            - image
+            - table
+            - hr
+          height: 400
 
   # Site Settings
   - name: settings
