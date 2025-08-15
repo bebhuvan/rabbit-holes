@@ -103,7 +103,7 @@ const { Content: PostContent } = await post.render();
   // Client-side enhancement for link previews and embeds  
   console.log('ContentWithEmbeds script loaded');
   
-  function processEmbeds() {
+  async function processEmbeds() {
     console.log('Processing embeds...');
     // Find all link preview placeholders
     const linkPreviews = document.querySelectorAll('.link-preview-placeholder[data-url]');
