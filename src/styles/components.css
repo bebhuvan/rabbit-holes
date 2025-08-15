@@ -218,10 +218,45 @@
 
 .post-full-content blockquote {
   margin: var(--space-lg) 0;
-  padding-left: var(--space-lg);
+  padding: var(--space-lg);
   border-left: 3px solid var(--color-accent);
   font-style: italic;
   color: var(--color-text-tertiary);
+  background: rgba(251, 146, 60, 0.05);
+  border-radius: 0 8px 8px 0;
+  position: relative;
+}
+
+.post-full-content blockquote::before {
+  content: '"';
+  font-size: 4rem;
+  color: var(--color-accent-light);
+  font-family: Georgia, serif;
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  line-height: 1;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.post-full-content blockquote::after {
+  content: '"';
+  font-size: 3rem;
+  color: var(--color-accent-light);
+  font-family: Georgia, serif;
+  position: absolute;
+  bottom: -20px;
+  right: 16px;
+  line-height: 1;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.post-full-content blockquote p {
+  position: relative;
+  z-index: 2;
+  margin: 0;
 }
 
 .post-full-content a {
