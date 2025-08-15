@@ -58,23 +58,7 @@ Discovered this [easy way](https://github.com/a-ghorbani/pocketpal-ai?tab=readme
 > 
 > But intelligence is only one part of what makes a being. We also need to ensure they have empathy toward us. The problem is, we don’t yet know how to do that — but evolution figured it out.
 
-<div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; max-width:100%;">
-
-<iframe
-
-src="[https://www.youtube.com/embed/IidpM2DsrBE](https://www.youtube.com/embed/IidpM2DsrBE)"
-
-frameborder="0"
-
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-
-allowfullscreen
-
-style="position:absolute; top:0; left:0; width:100%; height:100%;"
-
-\></iframe>
-
-</div>
+[https://www.youtube.com/watch?v=IidpM2DsrBE](https://www.youtube.com/watch?v=IidpM2DsrBE)
 
 François Chollet on LLMs:
 
