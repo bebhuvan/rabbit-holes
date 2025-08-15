@@ -160,27 +160,10 @@ content:
       
       - name: body
         label: Content
-        type: rich-text
+        type: text
         required: true
-        description: "Use markdown shortcuts: **bold**, *italic*, # headings, - lists, > quotes"
-        rows: 25
-        options:
-          media: true
-          path: public/images
-          extensions: [jpg, jpeg, png, gif, webp, svg]
-          toolbar:
-            - bold
-            - italic
-            - heading
-            - link
-            - code
-            - quote
-            - ul
-            - ol
-            - image
-            - table
-            - hr
-          minHeight: 600
+        rows: 20
+        description: "Use markdown shortcuts: **bold**, *italic*, # headings, - lists, > quotes. Larger text area for better writing experience."
 
   # Site Settings
   - name: settings
