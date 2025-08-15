@@ -163,6 +163,7 @@ content:
         type: rich-text
         required: true
         description: "Use markdown shortcuts: **bold**, *italic*, # headings, - lists, > quotes"
+        rows: 25
         options:
           media: true
           path: public/images
@@ -179,7 +180,7 @@ content:
             - image
             - table
             - hr
-          height: 400
+          minHeight: 600
 
   # Site Settings
   - name: settings
