@@ -205,7 +205,8 @@ const { Content: PostContent } = await post.render();
             const blockquote = document.createElement('blockquote');
             blockquote.className = 'twitter-tweet';
             blockquote.setAttribute('data-theme', 'light');
-            blockquote.innerHTML = `<a href="${href}">Loading tweet...</a>`;
+            blockquote.setAttribute('data-dnt', 'true');
+            blockquote.innerHTML = `<a href="${href}">View Tweet</a>`;
             
             const caption = document.createElement('div');
             caption.style.cssText = 'padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);';
@@ -218,27 +219,42 @@ const { Content: PostContent } = await post.render();
             const paragraph = link.closest('p');
             if (paragraph && paragraph.children.length === 1) {
               paragraph.replaceWith(embed);
+              
+              // Load Twitter widgets immediately after adding the element
+              if (window.twttr && window.twttr.widgets) {
+                window.twttr.widgets.load(embed);
+              }
             }
           }
         }
       }
       
       // Load Twitter widgets script
-      if (!window.twttr && document.querySelector('.twitter-tweet')) {
-        window.twttr = (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0],
-            t = window.twttr || {};
-          if (d.getElementById(id)) return t;
-          js = d.createElement(s);
-          js.id = id;
-          js.src = "https://platform.twitter.com/widgets.js";
-          fjs.parentNode.insertBefore(js, fjs);
-          t._e = [];
-          t.ready = function(f) {
-            t._e.push(f);
-          };
-          return t;
-        }(document, "script", "twitter-wjs"));
+      if (document.querySelector('.twitter-tweet')) {
+        if (!window.twttr) {
+          window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+              t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+            t._e = [];
+            t.ready = function(f) {
+              t._e.push(f);
+            };
+            return t;
+          }(document, "script", "twitter-wjs"));
+          
+          // When script loads, process all tweets
+          window.twttr.ready(function() {
+            window.twttr.widgets.load();
+          });
+        } else if (window.twttr.widgets) {
+          // Script already loaded, just process tweets
+          window.twttr.widgets.load();
+        }
       }
     }
   });
