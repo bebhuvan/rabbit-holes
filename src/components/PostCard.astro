@@ -87,9 +87,9 @@ function detectEmbedType(url: string) {
     {showExcerpt ? (
       <div class="post-excerpt">
         {post.data.description ? (
-          <p>{post.data.description.replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 180).trim()}…</p>
+          <p>{(post.data.description || '').replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 180).trim()}…</p>
         ) : (
-          <p>{post.body.replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 160).trim()}…</p>
+          <p>{(post.body || '').replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 160).trim()}…</p>
         )}
       </div>
     ) : (

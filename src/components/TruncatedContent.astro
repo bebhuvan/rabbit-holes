@@ -10,7 +10,7 @@ export interface Props {
 const { post, maxWords } = Astro.props;
 
 // Remove frontmatter if any
-const bodyWithoutFrontmatter = post.body.replace(/^---[\s\S]*?---\n*/g, '');
+const bodyWithoutFrontmatter = (post.body || '').replace(/^---[\s\S]*?---\n*/g, '');
 
 // Count words in the raw markdown (excluding frontmatter)
 const plainTextForCounting = bodyWithoutFrontmatter
