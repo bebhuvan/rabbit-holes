@@ -28,7 +28,7 @@ From [another edition](https://www.bloodinthemachine.com/p/the-ai-jobs-apocalyps
 
 > But of course there is no AI jobs \_apocalypse—\_an apocalypse is catastrophic, terminal, predetermined—but there _are_ bosses with great new incentives/justifications for firing people, for cutting costs, for speeding up work. There is, to split hairs for a minute, [a real AI jobs _crisis_](https://www.bloodinthemachine.com/p/the-ai-jobs-crisis-is-here-now), but that crisis is born of executives like Peng, CEOs like Duolingo’s Louis von Ahn and Klarna’s Sebastian Siemiatkowski all buying what Amodei (and Sam Altman, and the rest of the new AI enthusetariat) is selling. Amodei and the rest are pushing not just automation tools, but an entire new permission structure for enacting that job automation—and a framework that presents the whole phenomenon as outside their control.
 
-This is an interesting frame. We’re not yet sure whether AI is taking jobs are not, but what it is doing is give managers and companies an oppurtunity to use the threat to fire people and push wages lower.
+This is an interesting frame. We’re not yet sure whether AI is taking jobs are not, but what it is doing is give managers and companies an opportunity to use the threat to fire people and push wages lower.
 
 [From Lawrence Lundy-Brian](https://stateofthefuture.substack.com/p/unbundling-the-job?utm_medium=ios):
 
