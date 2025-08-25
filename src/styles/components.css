@@ -220,8 +220,7 @@
   margin: var(--space-lg) 0;
   padding: var(--space-lg);
   border-left: 3px solid var(--color-accent);
-  font-style: italic;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
   border-radius: 0 8px 8px 0;
   position: relative;
 }
@@ -277,6 +276,10 @@
 .post-full-content strong {
   font-weight: 600;
   color: var(--color-text-primary);
+}
+
+.post-full-content blockquote strong {
+  color: var(--color-text-secondary);
 }
 
 .post-full-content em {

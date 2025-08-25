@@ -159,8 +159,11 @@ if (needsTruncation) {
     border-left: 4px solid var(--color-accent, #ea580c);
     padding-left: var(--space-lg, 24px);
     margin: var(--space-lg, 24px) 0;
-    font-style: italic;
     color: var(--color-text-secondary, #666666);
+  }
+
+  .truncated-content :global(blockquote strong) {
+    color: var(--color-text-secondary);
   }
 
   .read-more-container {
