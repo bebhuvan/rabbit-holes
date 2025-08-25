@@ -13,7 +13,7 @@ import Base from '../layouts/Base.astro';
     <div class="about-content">
       <div class="intro-section">
         <div class="profile-area">
-          <div class="profile-placeholder">🧠</div>
+          <div class="profile-placeholder">🎪</div>
           <div class="profile-text">
             <h2>Hi, I'm Bhuvan</h2>
             <p class="tagline">Curiosity-driven explorer of ideas</p>
@@ -21,44 +21,39 @@ import Base from '../layouts/Base.astro';
         </div>
         
         <div class="bio-text">
-          <p>I'm fascinated by the connections between seemingly unrelated ideas. This blog is my attempt to share the rabbit holes I discover – from technology and science to philosophy and culture.</p>
+          <p>Hi, I'm Bhuvan and I like tumbling down weird and wonderful rabbit holes. I like knowing random things and I think there's a certain joy in being a dilettante.</p>
+          
+          <p>It's not just me—everyone likes discovering new things, but for whatever reason, most people lose that ability to experience awe and wonder. It's tempting to blame social media apps and smartphones for this pathology, but that's too simplistic—they're not the only reason people seem to have become incurious and, perhaps more tragically, okay with being so.</p>
+          
+          <p>This blog is an attempt for me to continue slipping into weird rabbit holes and share them. The hope here is that whatever I share might trip fellow travelers on the internet and send them sliding down a rabbit hole.</p>
           
           <p>The goal isn't to be an expert on everything, but to maintain a sense of wonder about the world. Sometimes the most interesting insights come from wandering without a destination in mind.</p>
-          
-          <p>I believe in serendipitous discovery, the power of diverse perspectives, and the joy of learning something completely unexpected.</p>
+        </div>
+        
+        <div class="bacon-quote">
+          <blockquote>
+            "Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province."
+            <cite>– <a href="https://paperlanterns.ink/letter/bacon-burghley-1592/" target="_blank" rel="noopener">Francis Bacon</a></cite>
+          </blockquote>
         </div>
       </div>
 
       <div class="details-grid">
-        <div class="detail-card">
-          <h3>🎯 What I write about</h3>
-          <ul>
-            <li><strong>Musings</strong> – Random thoughts and observations</li>
-            <li><strong>Links</strong> – Interesting things I've found online</li>
-            <li><strong>Videos</strong> – Educational content worth watching</li>
-            <li><strong>Music</strong> – Tracks that inspire or intrigue</li>
-          </ul>
-        </div>
-
-        <div class="detail-card">
-          <h3>🌱 How this works</h3>
-          <p>Each post includes AI-generated "Dive Deeper" suggestions – related topics, questions, and learning paths to extend your exploration.</p>
-          <p>Think of them as breadcrumbs leading to new rabbit holes.</p>
-        </div>
 
         <div class="detail-card">
           <h3>🔗 Connect</h3>
           <div class="social-links">
-            <a href="mailto:hello@bhuvan.dev" class="social-link">📧 Email</a>
+            <a href="mailto:bhuvan@bebhuvan.com" class="social-link">📧 Email</a>
             <a href="https://twitter.com/bhuvan" class="social-link">🐦 Twitter</a>
-            <a href="https://github.com/bhuvan" class="social-link">🐙 GitHub</a>
+            <a href="https://bhuvan.substack.com" class="social-link">📰 Substack</a>
+            <a href="https://www.linkedin.com/in/bebhuvan/" class="social-link">💼 LinkedIn</a>
           </div>
         </div>
 
         <div class="detail-card">
           <h3>💡 Philosophy</h3>
           <blockquote>
-            "The important thing is not to stop questioning. Curiosity has its own reason for existing."
+            "The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day."
             <cite>– Albert Einstein</cite>
           </blockquote>
         </div>
@@ -142,6 +137,34 @@ import Base from '../layouts/Base.astro';
       margin-bottom: var(--space-lg);
     }
 
+    .bacon-quote {
+      margin: var(--space-2xl) 0;
+      text-align: center;
+    }
+
+    .bacon-quote blockquote {
+      margin: 0 auto;
+      max-width: 600px;
+      font-size: var(--text-lg);
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: var(--space-lg);
+      font-style: italic;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .bacon-quote cite a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .bacon-quote cite a:hover {
+      text-decoration: underline;
+    }
+
     .details-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -204,8 +227,6 @@ import Base from '../layouts/Base.astro';
     }
 
     .social-link:hover {
-      background: var(--accent);
-      color: white;
       transform: translateX(4px);
     }
 
