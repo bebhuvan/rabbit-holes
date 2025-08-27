@@ -10,7 +10,13 @@
     "cms": "echo 'Visit https://app.pagescms.org to use PagesCMS'",
     "workers:dev": "wrangler dev",
     "workers:deploy": "wrangler deploy",
-    "workers:deploy:staging": "wrangler deploy --env staging"
+    "workers:deploy:staging": "wrangler deploy --env staging",
+    "validate": "node scripts/validate-post.js",
+    "validate:all": "node scripts/validate-post.js",
+    "emergency:deploy": "./scripts/emergency-deploy.sh",
+    "fix:deps": "npm cache clean --force && rm -rf node_modules package-lock.json && npm install",
+    "prebuild": "node scripts/validate-post.js || echo 'Validation warnings detected'",
+    "health:check": "curl -f -s -o /dev/null -w '%{http_code}' https://bhuvan.dev || echo 'Site might be down'"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.3",

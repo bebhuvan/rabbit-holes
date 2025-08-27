@@ -1,0 +1,98 @@
+name: Monitor Site Health
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check site availability
+        id: health
+        run: |
+          SITE_URL="https://bhuvan.dev"
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+          
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i of $MAX_RETRIES"
+            
+            # Check if site responds
+            if curl -f -s -o /dev/null -w "%{http_code}" "$SITE_URL" | grep -q "200\|301\|302"; then
+              echo "✅ Site is accessible"
+              echo "status=healthy" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            
+            if [ $i -lt $MAX_RETRIES ]; then
+              echo "Site not responding, waiting $RETRY_DELAY seconds..."
+              sleep $RETRY_DELAY
+            fi
+          done
+          
+          echo "❌ Site is not accessible after $MAX_RETRIES attempts"
+          echo "status=unhealthy" >> $GITHUB_OUTPUT
+          exit 1
+      
+      - name: Check RSS feed
+        if: steps.health.outputs.status == 'healthy'
+        run: |
+          RSS_URL="https://bhuvan.dev/rss.xml"
+          
+          if curl -f -s "$RSS_URL" | grep -q "<rss"; then
+            echo "✅ RSS feed is valid"
+          else
+            echo "⚠️ RSS feed might have issues"
+          fi
+      
+      - name: Check latest post
+        if: steps.health.outputs.status == 'healthy'
+        run: |
+          SITE_URL="https://bhuvan.dev"
+          
+          # Check if homepage loads and contains expected content
+          if curl -f -s "$SITE_URL" | grep -q "article\|post\|blog"; then
+            echo "✅ Content is being served"
+          else
+            echo "⚠️ Content might not be loading properly"
+          fi
+      
+      - name: Create issue if site is down
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const date = new Date().toISOString();
+            const title = `🚨 Site Health Check Failed - ${date}`;
+            
+            // Check if similar issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'site-down'
+            });
+            
+            if (issues.data.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: `The automated health check failed at ${date}.\n\n` +
+                      `**What to check:**\n` +
+                      `- [ ] GitHub Actions deployment status\n` +
+                      `- [ ] Cloudflare Workers status\n` +
+                      `- [ ] DNS configuration\n` +
+                      `- [ ] Recent commits for breaking changes\n\n` +
+                      `**Quick fixes:**\n` +
+                      `1. Run manual deployment: \`npm run workers:deploy\`\n` +
+                      `2. Check Cloudflare dashboard for errors\n` +
+                      `3. Revert last commit if needed\n\n` +
+                      `This issue was automatically created by the monitoring workflow.`,
+                labels: ['site-down', 'automated']
+              });
+            }
