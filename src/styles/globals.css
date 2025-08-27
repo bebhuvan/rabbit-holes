@@ -219,7 +219,7 @@ li {
   height: auto;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  margin: var(--space-xl) 0; /* Increased from 14px to 32px */
+  margin: 14px 0;
 }
 
 /* Adjacent images should have minimal spacing */
