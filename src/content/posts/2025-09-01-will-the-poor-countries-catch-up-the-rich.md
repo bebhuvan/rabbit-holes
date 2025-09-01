@@ -13,7 +13,7 @@ Came across [this fascinating paper](https://www.aeaweb.org/articles?id=10.1257/
 
 ![](/images/2025-09-01_17-46.png)
 
-> ### What Remains of Cross-Country Convergence? A Critical Review of 50 Years of Economic Growth Research
+> ### What Remains of Cross-Country Convergence? A Critical Review of 50 Years of Economic Growth Research. Summary by Claude.
 > 
 > This comprehensive 2020 review by Paul Johnson and Chris Papageorgiou examines one of economics' most enduring questions: Do poor countries eventually catch up to rich ones? After analyzing five decades of research and data, their conclusions challenge popular narratives about global economic convergence.
 > 
