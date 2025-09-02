@@ -14,7 +14,7 @@ As I finished listening to the conversation, I remembered this saying: "Any suff
 
 After listening to Jack Clark, I've come up with a law of my own, which I henceforth dub "Bhuvan's law," about AI discourse based on Arthur Clarke's third law:
 
-"Any discourse about artificial intelligence is indistinguishable from talking out of your ass."
+> "Any discourse about artificial intelligence is indistinguishable from talking out of your ass."
 
 Now, I don't mean this in a bad way. I'd go so far as to say even some of our most scientific theories, until proven, were indistinguishable from words pulled out in a specific sequence out of one's ass. When Democritus proposed that everything in the universe is made up of tiny, indivisible, and indestructible units called atomoi (atoms) around 400 BCE, I'm 100% sure Socrates, Anaxagoras, Plato, and other contemporaries bent over, showed Democritus their asses, and made muffling sounds to say that Democritus was talking out of his ass.
 
