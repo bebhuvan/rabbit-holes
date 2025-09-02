@@ -8,7 +8,7 @@ published: true
 draft: false
 featured: false
 ---
-I was listening to a conversation between Jack Clarke, co-founder of Anthropic, and Tyler Cowen. It was an interesting conversation with some interesting things that made me go, "Ooh, that's interesting," and a lot of vague, hand-wavy, speculative predictions that are unknowable, unprovable, and hard to mentally digest. In Jack's defense, these excitable conversations about the world AI portends are characteristic of most AI-related discussions because the future version of AI is not here yet and the present version of AI is a stochastic bullshitter.
+I was [listening to a conversation](https://conversationswithtyler.com/episodes/jack-clark/) between Jack Clarke, co-founder of Anthropic, and Tyler Cowen. It was an interesting conversation with some interesting things that made me go, "Ooh, that's interesting," and a lot of vague, hand-wavy, speculative predictions that are unknowable, unprovable, and hard to mentally digest. In Jack's defense, these excitable conversations about the world AI portends are characteristic of most AI-related discussions because the future version of AI is not here yet and the present version of AI is a stochastic bullshitter.
 
 As I finished listening to the conversation, I remembered this saying: "Any sufficiently advanced technology is indistinguishable from magic." This is the third law formulated by the famous science fiction writer [Arthur C. Clarke](https://en.wikipedia.org/wiki/Clarke%27s_three_laws). I learned about this very recently.
 
