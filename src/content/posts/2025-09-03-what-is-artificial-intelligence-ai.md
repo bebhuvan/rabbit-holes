@@ -11,7 +11,7 @@ featured: false
 ---
 Benedict Evans is one of the most thoughtful writers on technology. Whenever I listen to him, I end up feeling embarrassed, because I keep thinking: why can’t I think like that? 😬
 
-Unlike many other commentators, Ben has a very practical and sanguine view of AI. One thing I love is how he goes about defining what AI actually is in the first place:
+Unlike many other commentators, Ben has a very practical and measured view of AI. One thing I love is how he goes about defining what AI actually is in the first place:
 
 > So, I was asked to come and explain AI again at SuperAI. I always think a good place to start if we want to understand this is to ask, "Well, what is it that we mean when we say AI?"
 > 
@@ -39,4 +39,4 @@ Unlike many other commentators, Ben has a very practical and sanguine view of AI
 > 
 > It might be that this is just more software, that there will be thousands of models, just as there are thousands of databases or millions of spreadsheets. And then at the other extreme, it might be that we'll have one giant world computer that runs everything. You can go to it and say, "How do I move to Singapore?" or "How do I buy a house in Hong Kong?" or "How do I do my taxes in five different jurisdictions?" and it'll just do it for you. The thing is, we don't really know what's going to happen. We have a range of possibilities and opinions.
 > 
-> https://youtu.be/niJpDnNtNp4?si=9Y4kKOIbYJTebdrD
+> [https://youtu.be/niJpDnNtNp4?si=9Y4kKOIbYJTebdrD](https://youtu.be/niJpDnNtNp4?si=9Y4kKOIbYJTebdrD)
