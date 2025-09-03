@@ -23,7 +23,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
     <section class="bio text-center mb-3xl">
       <h1 class="text-4xl font-bold mb-lg">Hi, I'm Bhuvan</h1>
       <p class="text-lg text-secondary mb-2xl max-w-2xl mx-auto">Here are the things I find interesting. I hope you find your next rabbit hole to go tumbling down here.</p>
-      <div class="flex gap-md justify-center">
+      <div class="button-group flex flex-wrap gap-sm justify-center">
         <button id="random-btn" class="btn flex items-center gap-xs" title="Random post (Cmd+R)" style="width: 140px; justify-content: center;">
           <span class="random-icon">🎲</span>
           <span class="random-text">Surprise Me</span>
@@ -31,6 +31,10 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
         <button onclick="window.open('https://papertrails.rabbitholes.garden', '_blank')" class="btn flex items-center gap-xs" title="Curated website feeds" style="width: 140px; justify-content: center;">
           <span class="trails-icon">🗞️</span>
           <span class="trails-text">Paper Trails</span>
+        </button>
+        <button onclick="window.open('https://booktrails.rabbitholes.garden/', '_blank')" class="btn flex items-center gap-xs" title="Book recommendations and trails" style="width: 140px; justify-content: center;">
+          <span class="book-trails-icon">📚</span>
+          <span class="book-trails-text">BookTrails</span>
         </button>
       </div>
     </section>
@@ -104,6 +108,39 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
     
     .bio button {
       margin-top: var(--space-md);
+    }
+    
+    .button-group {
+      max-width: 320px;
+      margin: 0 auto;
+    }
+    
+    /* Responsive button layout */
+    @media (max-width: 500px) {
+      .button-group {
+        max-width: 300px;
+        gap: var(--space-xs);
+        justify-content: center;
+      }
+      
+      .button-group .btn {
+        width: 130px !important;
+        font-size: var(--text-sm);
+        text-align: center;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+        max-width: 140px;
+        gap: var(--space-sm);
+      }
+      
+      .button-group .btn {
+        width: 140px !important;
+      }
     }
     
     .post-type-indicator {
