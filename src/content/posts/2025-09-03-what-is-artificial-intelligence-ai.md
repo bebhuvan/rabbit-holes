@@ -40,3 +40,5 @@ Unlike many other commentators, Ben has a very practical and measured view of AI
 > It might be that this is just more software, that there will be thousands of models, just as there are thousands of databases or millions of spreadsheets. And then at the other extreme, it might be that we'll have one giant world computer that runs everything. You can go to it and say, "How do I move to Singapore?" or "How do I buy a house in Hong Kong?" or "How do I do my taxes in five different jurisdictions?" and it'll just do it for you. The thing is, we don't really know what's going to happen. We have a range of possibilities and opinions.
 > 
 > [https://youtu.be/niJpDnNtNp4?si=9Y4kKOIbYJTebdrD](https://youtu.be/niJpDnNtNp4?si=9Y4kKOIbYJTebdrD)
+
+https://www.ben-evans.com/presentations
