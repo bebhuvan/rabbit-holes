@@ -5,27 +5,9 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-# JavaScript and CSS files - Cache for 1 week
-*.js
-  Cache-Control: public, max-age=604800, s-maxage=31536000
-
-*.css
-  Cache-Control: public, max-age=604800, s-maxage=31536000
-
-# HTML pages - Cache for 1 hour
-/*.html
-  Cache-Control: public, max-age=3600, s-maxage=86400
-
 # Root HTML (homepage)
 /
   Cache-Control: public, max-age=3600, s-maxage=86400
-
-# Font files
-/*.woff2
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.woff
-  Cache-Control: public, max-age=31536000, immutable
 
 # Manifest and service worker
 /sw.js
