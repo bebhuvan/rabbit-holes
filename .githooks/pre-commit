@@ -1,0 +1,41 @@
+#!/bin/bash
+# Git pre-commit hook to automatically optimize images
+# This script runs before each commit to ensure images are optimized
+
+echo "🔍 Checking for new or modified images..."
+
+# Get list of staged image files
+STAGED_IMAGES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(png|jpg|jpeg|webp)$' | grep '^public/images/')
+
+if [ -n "$STAGED_IMAGES" ]; then
+    echo "🖼️  Found staged image files:"
+    echo "$STAGED_IMAGES"
+    echo ""
+    
+    # Run image optimization
+    echo "⚡ Running automatic image optimization..."
+    npm run optimize-images
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ Image optimization complete"
+        
+        # Add optimized files back to staging
+        for img in $STAGED_IMAGES; do
+            if [ -f "$img" ]; then
+                git add "$img"
+                echo "📁 Re-staged: $img"
+            fi
+        done
+        
+        echo ""
+        echo "💡 Tip: Images have been automatically optimized and re-staged"
+    else
+        echo "❌ Image optimization failed"
+        echo "💡 Tip: You can skip optimization with: git commit --no-verify"
+        exit 1
+    fi
+else
+    echo "✅ No image files to optimize"
+fi
+
+echo "🚀 Proceeding with commit..."

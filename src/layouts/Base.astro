@@ -365,9 +365,21 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
       });
     </script>
     
-    <script type="module">
-      import { app } from '/src/scripts/utils.js';
-      // App will auto-initialize from utils.js
+    <script>
+      // Load utils.js dynamically to avoid blocking render
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadUtils);
+      } else {
+        requestIdleCallback(loadUtils, { timeout: 1000 });
+      }
+      
+      function loadUtils() {
+        import('/src/scripts/utils.js').then(({ app }) => {
+          // Utils loaded and app auto-initialized
+        }).catch(err => {
+          console.warn('Failed to load utils:', err);
+        });
+      }
     </script>
 
     <!-- PWA Service Worker Registration -->

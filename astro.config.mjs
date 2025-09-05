@@ -14,6 +14,7 @@ export default defineConfig({
   }),
   build: {
     inlineStylesheets: 'always',
+    assetsInlineLimit: 8192,
   },
   compressHTML: true,
   prefetch: {
@@ -30,10 +31,18 @@ export default defineConfig({
   vite: {
     build: {
       cssMinify: true,
+      assetsInlineLimit: 8192,
       rollupOptions: {
         output: {
           manualChunks: {
             vendor: ['astro']
+          },
+          assetFileNames: (assetInfo) => {
+            // Inline small CSS files
+            if (assetInfo.name?.endsWith('.css') && assetInfo.source?.length < 8192) {
+              return 'assets/inline-[hash][extname]';
+            }
+            return 'assets/[name]-[hash][extname]';
           }
         }
       }

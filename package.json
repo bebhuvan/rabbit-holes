@@ -16,7 +16,11 @@
     "emergency:deploy": "./scripts/emergency-deploy.sh",
     "fix:deps": "npm cache clean --force && rm -rf node_modules package-lock.json && npm install",
     "prebuild": "node scripts/validate-post.js || echo 'Validation warnings detected'",
-    "health:check": "curl -f -s -o /dev/null -w '%{http_code}' https://bhuvan.dev || echo 'Site might be down'"
+    "health:check": "curl -f -s -o /dev/null -w '%{http_code}' https://bhuvan.dev || echo 'Site might be down'",
+    "optimize-images": "node scripts/optimize-images.js",
+    "optimize-images:dry": "node scripts/optimize-images.js --dry",
+    "optimize-images:force": "node scripts/optimize-images.js --force",
+    "optimize-images:verbose": "node scripts/optimize-images.js --verbose"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.3",
