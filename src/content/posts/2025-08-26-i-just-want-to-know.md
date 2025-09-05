@@ -31,4 +31,4 @@ Wonderful explanation by [Betül Kaçar](https://en.m.wikipedia.org/wiki/Bet%C3%
 > 
 > [https://youtu.be/T3AS\_-2GnDI?si=\_UJwRYtK-NaYh-pM](https://youtu.be/T3AS_-2GnDI?si=_UJwRYtK-NaYh-pM)
 
-Pairt this video with [one of my favorite articles ever](https://aeon.co/essays/if-you-ask-why-youre-a-philosopher-and-youre-awesome).
+Pair this video with [one of my favorite articles ever](https://aeon.co/essays/if-you-ask-why-youre-a-philosopher-and-youre-awesome).
