@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - 'public/images/**'
-      - 'src/content/posts/**'
   workflow_dispatch:
 
 jobs:
@@ -25,150 +24,47 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      run: |
-        npm install -g sharp-cli imagemin-cli imagemin-webp imagemin-mozjpeg imagemin-pngquant
+      run: npm ci
 
-    - name: Optimize new/changed images
+    - name: Install FFmpeg
       run: |
-        # Create optimized directory if it doesn't exist
-        mkdir -p public/images/optimized
-        
+        sudo apt update
+        sudo apt install -y ffmpeg
+
+    - name: Run image optimization
+      run: |
         # Get list of changed image files
-        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(jpg|jpeg|png|gif|webp)$' | grep '^public/images/' || true)
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(jpg|jpeg|png|webp)$' | grep '^public/images/' || true)
         
         if [ -z "$CHANGED_FILES" ]; then
           echo "No image files to optimize"
           exit 0
         fi
         
-        echo "Optimizing images: $CHANGED_FILES"
+        echo "Changed images detected: $CHANGED_FILES"
         
-        # Process each changed image
-        for file in $CHANGED_FILES; do
-          if [ -f "$file" ]; then
-            filename=$(basename "$file")
-            name="${filename%.*}"
-            ext="${filename##*.}"
-            dir=$(dirname "$file")
-            
-            echo "Processing: $file"
-            
-            # Skip if already in optimized folder
-            if [[ "$file" == *"/optimized/"* ]]; then
-              continue
-            fi
-            
-            # Create optimized versions
-            case "${ext,,}" in
-              jpg|jpeg)
-                # Optimize JPEG (quality 80)
-                imagemin "$file" --plugin=mozjpeg --plugin.mozjpeg.quality=80 > "public/images/optimized/${name}.jpg"
-                # Create WebP version
-                imagemin "$file" --plugin=webp --plugin.webp.quality=80 > "public/images/optimized/${name}.webp"
-                # Create thumbnail (300px wide)
-                npx sharp-cli resize 300 -i "$file" -o "public/images/optimized/${name}-thumb.jpg" -f jpeg -q 75
-                ;;
-              png)
-                # Optimize PNG
-                imagemin "$file" --plugin=pngquant --plugin.pngquant.quality=[0.6,0.8] > "public/images/optimized/${name}.png"
-                # Create WebP version
-                imagemin "$file" --plugin=webp --plugin.webp.quality=80 > "public/images/optimized/${name}.webp"
-                # Create thumbnail (300px wide)
-                npx sharp-cli resize 300 -i "$file" -o "public/images/optimized/${name}-thumb.png" -f png
-                ;;
-              gif)
-                # For GIFs, just copy (or could use gifsicle)
-                cp "$file" "public/images/optimized/${name}.gif"
-                ;;
-              webp)
-                # Re-optimize WebP
-                imagemin "$file" --plugin=webp --plugin.webp.quality=80 > "public/images/optimized/${name}.webp"
-                # Create thumbnail
-                npx sharp-cli resize 300 -i "$file" -o "public/images/optimized/${name}-thumb.webp" -f webp -q 75
-                ;;
-            esac
-            
-            echo "✅ Optimized: $filename"
-          fi
-        done
-
-    - name: Update image references in markdown files
-      run: |
-        # Find markdown files that might reference the optimized images
-        find src/content/posts -name "*.md" -type f | while read -r mdfile; do
-          # Get list of newly optimized images
-          if [ -d "public/images/optimized" ]; then
-            for optimized in public/images/optimized/*; do
-              if [ -f "$optimized" ] && [[ ! "$optimized" == *"-thumb."* ]]; then
-                filename=$(basename "$optimized")
-                name="${filename%.*}"
-                original_path="/images/${name}"
-                optimized_path="/images/optimized/${filename}"
-                
-                # Update references if they exist
-                if grep -q "$original_path" "$mdfile"; then
-                  echo "Updating image references in $mdfile"
-                  # This is a simple replacement - you might want more sophisticated logic
-                  sed -i "s|$original_path|$optimized_path|g" "$mdfile"
-                fi
-              fi
-            done
-          fi
-        done
-
-    - name: Create image optimization report
-      run: |
-        if [ -d "public/images/optimized" ] && [ "$(ls -A public/images/optimized)" ]; then
-          echo "# Image Optimization Report" > optimization-report.md
-          echo "" >> optimization-report.md
-          echo "**Optimization completed at:** $(date)" >> optimization-report.md
-          echo "" >> optimization-report.md
-          echo "## Optimized Images:" >> optimization-report.md
-          echo "" >> optimization-report.md
-          
-          for file in public/images/optimized/*; do
-            if [ -f "$file" ] && [[ ! "$file" == *"-thumb."* ]]; then
-              filename=$(basename "$file")
-              filesize=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo "Unknown")
-              echo "- \`$filename\` (${filesize} bytes)" >> optimization-report.md
-            fi
-          done
-          
-          echo "" >> optimization-report.md
-          echo "## Usage:" >> optimization-report.md
-          echo "" >> optimization-report.md
-          echo "Use optimized images in your posts with:" >> optimization-report.md
-          echo '```markdown' >> optimization-report.md
-          echo '![Alt text](/images/optimized/image-name.webp)' >> optimization-report.md
-          echo '```' >> optimization-report.md
-          
-          echo "📊 Optimization report created"
-        else
-          echo "ℹ️  No images were optimized in this run"
-        fi
+        # Run our optimization script
+        npm run optimize-images -- --verbose
+        
+        echo "✅ Image optimization completed"
 
     - name: Commit optimized images
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         
-        # Add optimized images and any updated markdown files
-        git add public/images/optimized/ || true
-        git add src/content/posts/ || true
-        git add optimization-report.md || true
-        
         # Check if there are changes to commit
-        if git diff --staged --quiet; then
+        if git diff --quiet; then
           echo "No changes to commit"
         else
-          git commit -m "🖼️ Auto-optimize images" -m "- Compressed and created WebP versions" -m "- Generated thumbnails for faster loading" -m "- Updated image references in posts" -m "" -m "Co-authored-by: Image Optimizer <action@github.com>" || echo "Nothing to commit"
+          # Add all changes
+          git add .
+          
+          git commit -m "🖼️ Auto-optimize images with FFmpeg" \
+                     -m "Automatically optimized images using the FFmpeg-based optimization system" \
+                     -m "" \
+                     -m "Co-authored-by: Image Optimizer <action@github.com>"
           
           # Push changes
-          git push || echo "Nothing to push"
+          git push
         fi
-
-    - name: Clean up
-      run: |
-        # Remove any temporary files
-        rm -f optimization-report.md
-        echo "🧹 Cleanup completed"
