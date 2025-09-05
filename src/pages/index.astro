@@ -111,35 +111,39 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
     }
     
     .button-group {
-      max-width: 320px;
+      max-width: 480px;
       margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-md);
     }
     
-    /* Responsive button layout */
-    @media (max-width: 500px) {
+    /* Responsive button layout for 3 buttons */
+    @media (max-width: 600px) {
       .button-group {
         max-width: 300px;
-        gap: var(--space-xs);
-        justify-content: center;
-      }
-      
-      .button-group .btn {
-        width: 130px !important;
-        font-size: var(--text-sm);
-        text-align: center;
-      }
-    }
-    
-    @media (max-width: 360px) {
-      .button-group {
-        flex-direction: column;
-        align-items: center;
-        max-width: 140px;
         gap: var(--space-sm);
       }
       
       .button-group .btn {
         width: 140px !important;
+        font-size: var(--text-sm);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+        max-width: 160px;
+        gap: var(--space-md);
+      }
+      
+      .button-group .btn {
+        width: 160px !important;
+        padding: var(--space-md) var(--space-lg);
       }
     }
     
