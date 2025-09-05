@@ -13,7 +13,7 @@ export default defineConfig({
     }
   }),
   build: {
-    inlineStylesheets: 'auto',
+    inlineStylesheets: 'always',
   },
   compressHTML: true,
   prefetch: {
@@ -40,6 +40,13 @@ export default defineConfig({
     },
     define: {
       __BUILD_TIME__: JSON.stringify(new Date().toISOString())
+    },
+    css: {
+      preprocessorOptions: {
+        css: {
+          charset: false
+        }
+      }
     }
   }
 });
