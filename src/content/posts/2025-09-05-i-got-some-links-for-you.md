@@ -1,6 +1,6 @@
 ---
 title: I got some links for you
-date: 2025-09-12
+date: 2025-09-05
 type: link-dumps
 tags:
   - AI
