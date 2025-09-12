@@ -1,0 +1,28 @@
+---
+title: The economics of tyranny
+date: 2025-09-12
+type: link-dumps
+tags:
+  - Democracy
+  - Autocracy
+published: true
+draft: false
+featured: false
+---
+From this article in the [_Foreign Affairs_](https://www.foreignaffairs.com/salvador/does-bukele-model-have-future)_:_
+
+> Bukele has forced Salvadorans to trade civil liberties for a sense of security, a bargain that has only grown starker over his five years as president. But whether this arrangement lasts depends on whether it can evolve into a sustainable model of governance, which, given current economic stagnation and mounting social pressures, appears increasingly unlikely without escalating repression. El Salvador could proceed down a few different paths as Bukele seeks to cement his rule.
+> 
+> Bukele could continue to be a dictator loved by his citizens, maintaining high levels of popularity that help him rule for decades without much difficulty, much like the populist strongmen he admires. Autocrats can survive when repression is combined with the legitimacy won by effective performance. In Singapore, for example, Prime Minister Lee Kuan Yew built a durable authoritarian model after the city state’s independence by delivering economic growth, efficient public services, and low corruption. In Vietnam, the Communist Party has maintained one-party rule since 1975, but it secured greater legitimacy after 1986 in large part by implementing market reforms that raised living standards and reduced poverty. Kuwait’s monarchy buys social peace with oil rents that it distributes through subsidies, welfare, and public sector jobs. In each of these cases, citizens tolerate restricted freedoms because they see many other tangible improvements in their daily lives.
+> 
+> In El Salvador, such a path is improbable in the long run. Now largely safe from gang violence, Salvadorans want more—especially because the costs of safety are affecting more and more people. Salvadorans want functioning health clinics, adequate access to medicines, quality public services, and decent jobs. Today, public hospitals have few supplies, but doctors and nurses remain silent about the dire conditions in their clinics for fear of losing their positions. After El Salvador reduced poverty levels significantly in the first 20 years of this century, that rate of reduction has stalled. Economic opportunities remain scarce.
+
+It's funny in a tragic way how simple and naked the playbook of authoritarians is.
+
+What’s also fascinating is how people develop a kind of willful blindness to red flags—specifically threats to their civil liberties—when they believe, whether rightly or wrongly, that the status quo isn’t working for them. We often take what we have for granted, only realizing its true value once it’s gone. This pattern is playing out across the world—from the US to Europe, Latin America, and many parts of Asia. People are recklessly undermining the very things that make their lives better, driven by imagined, misplaced, and in many cases, petty grievances. For beings that pride themselves on being the most intelligent in the known universe, we sure have a remarkable capacity for sheer stupidity.
+
+that in rejecting status quo, people develop a willing blindness towards the red flag—threats to their civil liberties
+
+> And yet, dispiritingly, this model has rapidly gained prestige—and imitators—across Latin America. In Honduras, in November 2022, President Xiomara Castro declared a state of emergency under the National Emergency Strategy, deploying security forces, allowing detentions without warrants, and suspending constitutional rights in the country’s two largest cities, Tegucigalpa and San Pedro Sula. The measures remain in place today, and have been extended to cover over three quarters of the country’s municipalities. In Ecuador, President Daniel Noboa has declared repeated states of emergency, the first in January 2024 (though limited to certain provinces), and has deployed the military against gangs, citing El Salvador as inspiration. Since Bukele’s visit to Argentina in October 2024, both political outsiders and insiders in President Javier Milei’s cabinet have invoked Bukele’s name to justify bypassing judicial safeguards. Peru’s descent into lawlessness—marked by soaring extortion, gang violence, and a surge in drug cartels and illegal mining Mafias—has fueled calls for a strongman solution such as that in El Salvador. Across Lima, graffiti demanding a “Peruvian Bukele” reflects growing support for iron-fisted measures. In Chile, a poll conducted in November 2024 found that 42 percent of Chileans would like their next president—whom they will vote for this November—to govern in a style similar to Bukele’s. Even in Costa Rica, long one of the region’s most stable democracies, public debate increasingly entertains the possibility of a Salvadoran-style crackdown. In 2023, the country experienced its highest homicide rate on record, and in August 2025, its Congress approved funding to begin construction of a new maximum-security prison, called the Center for High Containment of Organized Crime, which was inspired, according to President Rodrigo Chaves Robles, by El Salvador’s infamous CECOT.
+
+Speaking of autocracy, if you are as aspiring dictator, here's a playbook for you. [I wrote this with Claude](https://bhuvan.substack.com/p/slouching-toward-idiocracy).
