@@ -26,3 +26,7 @@ Pew [published a report](https://www.pewresearch.org/science/2025/09/17/how-amer
 ![](/images/pew-survey_AI-and-its-impact_00-02.webp)
 
 ![](/images/AI-awareness_AI-and-its-impact_1-01.webp)
+
+> The share of younger Americans who say they have heard a lot about AI has grown rapidly in recent years. In 2022, one-third of adults under 30 said they had heard or read a lot about AI. In the new survey, 62% of these young adults say this, an increase of 29 points.
+> 
+> About six-in-ten U.S. adults under 30 (62%) have heard a lot about AI, compared with 32% of those 65 and older.
