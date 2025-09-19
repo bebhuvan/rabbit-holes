@@ -24,3 +24,5 @@ Pew [published a report](https://www.pewresearch.org/science/2025/09/17/how-amer
 ![](/images/pew-survey_AI-and-its-impact_00-01.webp)
 
 ![](/images/pew-survey_AI-and-its-impact_00-02.webp)
+
+![](/images/AI-awareness_AI-and-its-impact_1-01.webp)
