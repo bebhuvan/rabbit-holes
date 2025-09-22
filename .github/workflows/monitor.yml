@@ -14,7 +14,7 @@ jobs:
       - name: Check site availability
         id: health
         run: |
-          SITE_URL="https://bhuvan.dev"
+          SITE_URL="https://www.rabbitholes.garden"
           MAX_RETRIES=3
           RETRY_DELAY=10
           
@@ -41,7 +41,7 @@ jobs:
       - name: Check RSS feed
         if: steps.health.outputs.status == 'healthy'
         run: |
-          RSS_URL="https://bhuvan.dev/rss.xml"
+          RSS_URL="https://www.rabbitholes.garden/rss.xml"
           
           if curl -f -s "$RSS_URL" | grep -q "<rss"; then
             echo "✅ RSS feed is valid"
@@ -52,7 +52,7 @@ jobs:
       - name: Check latest post
         if: steps.health.outputs.status == 'healthy'
         run: |
-          SITE_URL="https://bhuvan.dev"
+          SITE_URL="https://www.rabbitholes.garden"
           
           # Check if homepage loads and contains expected content
           if curl -f -s "$SITE_URL" | grep -q "article\|post\|blog"; then
