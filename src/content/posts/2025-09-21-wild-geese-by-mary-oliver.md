@@ -5,7 +5,7 @@ type: quick-thoughts
 tags:
   - Poetry
 dive_deeper:
-  - text: "All Poetry "
+  - text: "Link to the original source "
     url: https://allpoetry.com/poem/15374223-Wild-geese-by-Mary-J-Oliver
 published: true
 draft: false
@@ -31,5 +31,3 @@ Beautiful.
 > calls to you like the wild geese, harsh and exciting --  
 > over and over announcing your place  
 > in the family of things.
-
-Beautiful
