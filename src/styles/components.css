@@ -1,11 +1,16 @@
 /* Component Styles - Clean & Focused */
 
 /* Layout Components */
-.container {
+.container,
+.container-wide,
+.container-full {
   width: 100%;
-  max-width: var(--width-content);
   margin: 0 auto;
   padding: 0 var(--space-lg);
+}
+
+.container {
+  max-width: var(--width-content);
 }
 
 .container-wide {

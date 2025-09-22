@@ -54,8 +54,8 @@
   --leading-relaxed: 1.75;
   
   /* Layout Widths */
-  --width-content: 672px;
-  --width-wide: 800px;
+  --width-content: 768px;
+  --width-wide: 960px;
   --width-nav: 800px;
   --width-full: 1200px;
   
