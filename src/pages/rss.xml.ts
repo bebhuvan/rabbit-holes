@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { marked } from 'marked';
 
 export async function GET(context: any) {
   const posts = await getCollection('posts', ({ data }) => {
@@ -18,7 +19,7 @@ export async function GET(context: any) {
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description || '',
-      content: post.body, // Full markdown content
+      content: marked.parse(post.body), // Convert markdown to HTML
       link: `/posts/${post.slug}/`,
       categories: post.data.tags || [],
       customData: `
