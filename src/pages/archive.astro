@@ -42,76 +42,41 @@ const stats = {
 const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
-<Base title="Archive - Rabbit Holes" description="Browse all blog posts organized by date. Explore thoughts, insights, link collections, and more from this curiosity-driven journey.">
+<Base title="Archive — Rabbit Holes" description="Browse all blog posts organized by date.">
   <div class="archive-container">
-    <div class="archive-header">
-      <h1>Archive</h1>
-      <p>All {stats.total} posts organized by year and month</p>
+    <div class="page-header">
+      <div class="page-label">Archive</div>
+      <h1>All Rabbit Holes</h1>
+      <p class="page-description">Every essay, link, and observation collected here. Search or browse by year.</p>
     </div>
 
-    <!-- Archive Statistics -->
-    <div class="archive-stats">
-      <div class="stat-card">
-        <span class="stat-number">{stats.total}</span>
-        <span class="stat-label">Total Posts</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">{stats.thisYear}</span>
-        <span class="stat-label">This Year</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">{stats.byType.musing || 0}</span>
-        <span class="stat-label">Musings</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-number">{stats.byType.link || 0}</span>
-        <span class="stat-label">Links</span>
+    <div class="search-box">
+      <div class="search-input-wrapper">
+        <input type="text" class="search-input" placeholder="Search archives..." id="archive-search" />
+        <span class="search-icon">⌘</span>
       </div>
     </div>
 
-    <!-- Filter buttons -->
-    <div class="archive-filters">
-      <button class="filter-btn active" onclick="filterArchive('all')">All</button>
-      <button class="filter-btn" onclick="filterArchive('taught-by-machine')">🤖 Taught by machine</button>
-      <button class="filter-btn" onclick="filterArchive('quick-thoughts')">💭 Quick thoughts</button>
-      <button class="filter-btn" onclick="filterArchive('link-dumps')">🔍 Link dumps</button>
-      <button class="filter-btn" onclick="filterArchive('deep-dives')">📚 Deep dives</button>
-      <button class="filter-btn" onclick="filterArchive('thats-interesting')">🌟 That's interesting</button>
-      <button class="filter-btn" onclick="filterArchive('practical')">🎯 Practical</button>
-      <button class="filter-btn" onclick="filterArchive('reflections')">🧠 Reflections</button>
-      <button class="filter-btn" onclick="filterArchive('data-stories')">📈 Data stories</button>
-      <button class="filter-btn" onclick="filterArchive('news-commentary')">🗞️ News & commentary</button>
-      <button class="filter-btn" onclick="filterArchive('videos')">📹 Videos</button>
-      <button class="filter-btn" onclick="filterArchive('music')">🎵 Music</button>
-      <button class="filter-btn" onclick="filterArchive('photos')">📸 Photos</button>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterArchive('all')">All</button>
+      <button class="filter-tab" onclick="filterArchive('taught-by-machine')">Essays</button>
+      <button class="filter-tab" onclick="filterArchive('link-dumps')">Links</button>
+      <button class="filter-tab" onclick="filterArchive('quick-thoughts')">Notes</button>
     </div>
 
-    <!-- Posts by year -->
     <div class="archive-content">
       {years.map(year => (
-        <div class="year-section">
-          <h2 class="year-header">{year}</h2>
-          
-          {Object.entries(postsByYear[year]).map(([month, monthPosts]) => (
-            <div class="month-group">
-              <h3 class="month-header">{month}</h3>
-              
-              <div class="archive-posts">
-                {(monthPosts as any[]).map(post => (
-                  <div class="archive-post" data-type={post.data.type} data-date={post.data.date}>
-                    <div class="archive-post-date">
-                      {formatDateShort(new Date(post.data.date))}
-                    </div>
-                    <div class={`archive-post-type ${post.data.type}`}></div>
-                    <a href={`/posts/${post.slug}`} class="archive-post-title">
-                      {post.data.title}
-                    </a>
-                    <span class="archive-post-reading-time">{calculateReadingTime(post.body || '')} min</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div class="archive-section">
+          <div class="year-header">{year}</div>
+          <div class="archive-list">
+            {sortedPosts.filter((post: any) => new Date(post.data.date).getFullYear().toString() === year).map((post: any) => (
+              <a href={`/posts/${post.slug}`} class="archive-item" data-type={post.data.type}>
+                <div class="archive-date">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</div>
+                <h2 class="archive-title">{post.data.title}</h2>
+                <p class="archive-excerpt">{post.data.description || (post.body || '').replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').slice(0, 120).trim()}…</p>
+              </a>
+            ))}
+          </div>
         </div>
       ))}
     </div>
@@ -121,246 +86,269 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
     .archive-container {
       max-width: var(--width-content);
       margin: 0 auto;
-      padding: var(--space-4xl) var(--space-lg);
+      padding: 80px 40px 120px;
     }
 
-    .archive-header {
-      text-align: center;
-      margin-bottom: var(--space-4xl);
+    .page-header {
+      margin-bottom: 60px;
     }
 
-    .archive-header h1 {
-      font-size: var(--text-4xl);
+    .page-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 52px;
       font-weight: 700;
-      margin-bottom: var(--space-lg);
-      color: var(--color-text-primary);
+      line-height: 1.1;
       letter-spacing: -0.025em;
-      line-height: var(--leading-tight);
+      margin-bottom: 24px;
+      color: var(--color-text-primary);
     }
 
-    .archive-header p {
+    .page-description {
+      font-size: 21px;
+      line-height: 1.6;
+      color: var(--color-text-tertiary);
+      max-width: 540px;
+    }
+
+    .search-box {
+      margin-bottom: 60px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 18px;
+      padding: 16px 48px 16px 20px;
+      border: 1px solid #d0d0d0;
+      background: var(--color-bg);
       color: var(--color-text-secondary);
-      font-size: var(--text-xl);
-      line-height: var(--leading-relaxed);
+      outline: none;
     }
 
-    .archive-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--space-lg);
-      margin-bottom: var(--space-3xl);
+    .search-input:focus {
+      border-color: var(--color-accent);
     }
 
-    .stat-card {
-      padding: var(--space-lg) 0;
-      text-align: center;
-      transition: all 0.2s ease;
+    .search-input::placeholder {
+      color: var(--color-text-light);
     }
 
-    .stat-number {
-      font-size: var(--text-3xl);
-      font-weight: 700;
-      color: var(--accent);
-      display: block;
-      letter-spacing: -0.02em;
+    .search-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-light);
+      font-size: 18px;
     }
 
-    .stat-label {
-      color: var(--color-text-secondary);
-      font-size: var(--text-sm);
-      margin-top: var(--space-xs);
-      font-weight: 500;
-    }
-
-    .archive-filters {
+    .filter-tabs {
       display: flex;
-      justify-content: center;
-      gap: var(--space-md);
-      margin-bottom: var(--space-3xl);
+      gap: 12px;
+      margin-bottom: 60px;
       flex-wrap: wrap;
     }
 
-    .filter-btn {
-      padding: var(--space-sm) var(--space-lg);
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--color-text-tertiary);
-      border-radius: 0;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: var(--text-sm);
-      font-family: inherit;
+    .filter-tab {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
       font-weight: 500;
-      text-transform: uppercase;
       letter-spacing: 0.05em;
+      padding: 10px 20px;
+      border: 1px solid #d0d0d0;
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
     }
 
-    .filter-btn.active, .filter-btn:hover {
-      color: var(--accent);
-      border-color: var(--accent);
+    .filter-tab.active {
+      background: var(--color-text-secondary);
+      color: var(--color-bg);
+      border-color: var(--color-text-secondary);
     }
 
-    .year-section {
-      margin-bottom: var(--space-4xl);
+    .filter-tab:hover {
+      background: var(--color-accent);
+      color: var(--color-bg);
+      border-color: var(--color-accent);
+    }
+
+    .archive-section {
+      margin-bottom: 80px;
     }
 
     .year-header {
-      font-size: var(--text-2xl);
-      font-weight: 600;
-      margin-bottom: var(--space-xl);
-      color: var(--color-text-primary);
-      border-bottom: 2px solid var(--border);
-      padding-bottom: var(--space-sm);
-      letter-spacing: -0.015em;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--color-accent);
     }
 
-    .month-group {
-      margin-bottom: var(--space-2xl);
-    }
-
-    .month-header {
-      font-size: var(--text-lg);
-      font-weight: 600;
-      margin-bottom: var(--space-lg);
-      color: var(--color-text-secondary);
-      letter-spacing: -0.01em;
-    }
-
-    .archive-posts {
+    .archive-list {
       display: flex;
       flex-direction: column;
-      gap: var(--space-sm);
+      gap: 36px;
     }
 
-    .archive-post {
-      display: flex;
-      align-items: center;
-      gap: var(--space-lg);
-      padding: var(--space-md) 0;
-      border-bottom: 1px solid var(--border);
+    .archive-item {
+      text-decoration: none;
+      display: block;
+      padding-bottom: 36px;
+      border-bottom: 1px solid #f0f0f0;
       transition: all 0.2s ease;
     }
 
-    .archive-post:hover {
-      padding-left: var(--space-md);
-      border-left: 3px solid var(--accent);
+    .archive-item:last-child {
+      border-bottom: none;
     }
 
-    .archive-post-date {
-      color: var(--color-text-tertiary);
-      font-size: var(--text-sm);
-      min-width: 85px;
+    .archive-item:hover {
+      transform: translateX(4px);
+    }
+
+    .archive-date {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      color: var(--color-text-light);
+      margin-bottom: 12px;
       font-weight: 500;
     }
 
-    .archive-post-type {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    .archive-post-type.taught-by-machine { background: var(--color-type-taught-by-machine); }
-    .archive-post-type.quick-thoughts { background: var(--color-type-quick-thoughts); }
-    .archive-post-type.link-dumps { background: var(--color-type-link-dumps); }
-    .archive-post-type.deep-dives { background: var(--color-type-deep-dives); }
-    .archive-post-type.thats-interesting { background: var(--color-type-thats-interesting); }
-    .archive-post-type.practical { background: var(--color-type-practical); }
-    .archive-post-type.reflections { background: var(--color-type-reflections); }
-    .archive-post-type.data-stories { background: var(--color-type-data-stories); }
-    .archive-post-type.news-commentary { background: var(--color-type-news-commentary); }
-    .archive-post-type.videos { background: var(--color-type-videos); }
-    .archive-post-type.music { background: var(--color-type-music); }
-    .archive-post-type.photos { background: var(--color-type-photos); }
-
-    .archive-post-title {
+    .archive-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.3;
       color: var(--color-text-primary);
-      text-decoration: none;
-      font-weight: 500;
-      flex: 1;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
       transition: color 0.2s ease;
-      font-size: var(--text-base);
-      line-height: var(--leading-normal);
     }
 
-    .archive-post-title:hover {
-      color: var(--accent);
+    .archive-item:hover .archive-title {
+      color: var(--color-accent);
     }
 
-    /* Mobile responsive */
+    .archive-excerpt {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--color-text-tertiary);
+    }
+
     @media (max-width: 768px) {
       .archive-container {
-        padding: var(--space-3xl) var(--space-md);
-      }
-      
-      @media (max-width: 480px) {
-        .archive-container {
-          padding: var(--space-2xl) var(--space-sm);
-        }
+        padding: 60px 24px 80px;
       }
 
-      .archive-header h1 {
-        font-size: 28px;
+      h1 {
+        font-size: 36px;
       }
 
-      .archive-stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+      .page-header {
+        margin-bottom: 48px;
       }
 
-      .stat-card {
-        padding: var(--space-md);
+      .search-box {
+        margin-bottom: 48px;
+        padding-bottom: 48px;
       }
 
-      .stat-number {
-        font-size: 24px;
+      .filter-tabs {
+        margin-bottom: 48px;
       }
 
-      .archive-filters {
-        gap: 12px;
+      .archive-section {
+        margin-bottom: 60px;
       }
 
-      .archive-post {
-        padding: var(--space-sm) 0;
-      }
-
-      .archive-post:hover {
-        margin: 0 -12px;
-        padding: var(--space-sm) var(--space-sm);
+      .archive-title {
+        font-size: 22px;
       }
     }
   </style>
 
   <script>
-    // Archive filtering
+    // Archive filtering and search
     function filterArchive(type: string) {
-      const posts = document.querySelectorAll('.archive-post');
-      const buttons = document.querySelectorAll('.filter-btn');
-      
+      const items = document.querySelectorAll('.archive-item');
+      const buttons = document.querySelectorAll('.filter-tab');
+
       // Update active filter button
       buttons.forEach(btn => btn.classList.remove('active'));
-      event?.target?.classList.add('active');
-      
-      // Filter posts
-      posts.forEach(post => {
-        const postElement = post as HTMLElement;
-        if (type === 'all' || postElement.dataset.type === type) {
-          postElement.style.display = 'flex';
+      (event?.target as HTMLElement)?.classList.add('active');
+
+      // Filter items
+      items.forEach(item => {
+        const itemElement = item as HTMLElement;
+        if (type === 'all' || itemElement.dataset.type === type) {
+          itemElement.style.display = 'block';
         } else {
-          postElement.style.display = 'none';
+          itemElement.style.display = 'none';
         }
       });
-      
-      // Hide empty month groups
-      const monthGroups = document.querySelectorAll('.month-group');
-      monthGroups.forEach(group => {
-        const groupElement = group as HTMLElement;
-        const visiblePosts = groupElement.querySelectorAll('.archive-post[style*="flex"], .archive-post:not([style])');
-        groupElement.style.display = visiblePosts.length > 0 ? 'block' : 'none';
+
+      // Hide empty year sections
+      const sections = document.querySelectorAll('.archive-section');
+      sections.forEach(section => {
+        const sectionElement = section as HTMLElement;
+        const visibleItems = sectionElement.querySelectorAll('.archive-item[style="display: block"], .archive-item:not([style])');
+        sectionElement.style.display = visibleItems.length > 0 ? 'block' : 'none';
       });
     }
-    
+
+    // Search functionality
+    const searchInput = document.getElementById('archive-search') as HTMLInputElement;
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value.toLowerCase();
+        const items = document.querySelectorAll('.archive-item');
+
+        items.forEach(item => {
+          const itemElement = item as HTMLElement;
+          const title = itemElement.querySelector('.archive-title')?.textContent?.toLowerCase() || '';
+          const excerpt = itemElement.querySelector('.archive-excerpt')?.textContent?.toLowerCase() || '';
+
+          if (title.includes(query) || excerpt.includes(query)) {
+            itemElement.style.display = 'block';
+          } else {
+            itemElement.style.display = 'none';
+          }
+        });
+
+        // Hide empty sections
+        const sections = document.querySelectorAll('.archive-section');
+        sections.forEach(section => {
+          const sectionElement = section as HTMLElement;
+          const visibleItems = sectionElement.querySelectorAll('.archive-item[style="display: block"], .archive-item:not([style])');
+          sectionElement.style.display = visibleItems.length > 0 ? 'block' : 'none';
+        });
+      });
+    }
+
     // Make filterArchive available globally
-    window.filterArchive = filterArchive;
+    (window as any).filterArchive = filterArchive;
   </script>
 </Base>

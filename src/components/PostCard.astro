@@ -15,9 +15,10 @@ export interface Props {
   showExcerpt?: boolean;
   maxWords?: number;
   allowTruncation?: boolean;
+  isFirst?: boolean;
 }
 
-const { post, showExcerpt = true, maxWords = 325, allowTruncation = true } = Astro.props;
+const { post, showExcerpt = true, maxWords = 325, allowTruncation = true, isFirst = false } = Astro.props;
 const { Content } = await post.render();
 
 // Helper functions to detect embed types
@@ -70,36 +71,57 @@ function detectEmbedType(url: string) {
 ---
 
 <article class="post-card">
-  <div class="post-meta">
-    <a href={`/types/${post.data.type}`} class="post-type-badge">
-      <span class={`post-type-indicator post-type-indicator--${post.data.type}`}></span>
-      <span class="post-type-label">{post.data.type}</span>
-    </a>
-    <time class="post-date">{formatDate(new Date(post.data.date))}</time>
-    <span class="post-reading-time">{calculateReadingTime(post.body || '')} min read</span>
+  <div class="post-meta-line">
+    <div class="date">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+    {post.data.type && (
+      <div class="post-type-label">{post.data.type.replace(/-/g, ' ')}</div>
+    )}
   </div>
 
   <h2 class="post-title">
     <a href={`/posts/${post.slug}`}>{post.data.title}</a>
   </h2>
 
-  <div class="post-content prose">
-    {showExcerpt ? (
-      <div class="post-excerpt">
-        {post.data.description ? (
-          <p>{(post.data.description || '').replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 180).trim()}…</p>
-        ) : (
-          <p>{(post.body || '').replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').replace(/\n/g, ' ').slice(0, 160).trim()}…</p>
-        )}
-      </div>
+  <div class={`excerpt ${isFirst ? 'drop-cap' : ''}`}>
+    {post.data.description ? (
+      <p>{post.data.description}</p>
     ) : (
-      <div class="post-full-content">
-        {allowTruncation ? (
-          <TruncatedContent post={post} maxWords={maxWords} />
-        ) : (
-          <ContentWithEmbeds post={post} />
-        )}
-      </div>
+      <p set:html={(() => {
+        const cleaned = (post.body || '')
+          .replace(/#+\s*/g, '')                      // Remove headings
+          .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text, remove URL
+          .replace(/^>\s*/gm, '')                     // Remove blockquote markers
+          .replace(/:\s*$/gm, '')                     // Remove trailing colons from lines
+          .replace(/^\s*[:•\-]\s*/gm, '')             // Remove standalone punctuation at line starts
+          .replace(/\*\*([^\*]+?)\*\*/g, '<strong>$1</strong>') // Convert bold markdown
+          .replace(/\*([^\*]+?)\*/g, '<em>$1</em>')   // Convert italic markdown
+          .replace(/\n/g, ' ')                        // Newlines become spaces
+          .replace(/\s+/g, ' ')                       // Normalize multiple spaces
+          .trim();
+
+        // Smart truncation: try to end at sentence boundary
+        let truncated = cleaned.slice(0, isFirst ? 450 : 280);
+
+        // Try to find last sentence ending
+        const lastPeriod = truncated.lastIndexOf('. ');
+        const lastQuestion = truncated.lastIndexOf('? ');
+        const lastExclaim = truncated.lastIndexOf('! ');
+        const lastSentence = Math.max(lastPeriod, lastQuestion, lastExclaim);
+
+        // If we found a sentence boundary and it's not too short, use it
+        if (lastSentence > truncated.length * 0.6) {
+          truncated = truncated.slice(0, lastSentence + 1);
+        } else {
+          // Otherwise, cut at last space to avoid mid-word
+          const lastSpace = truncated.lastIndexOf(' ');
+          if (lastSpace > 0) {
+            truncated = truncated.slice(0, lastSpace);
+          }
+          truncated += '…';
+        }
+
+        return truncated;
+      })()} />
     )}
   </div>
 
@@ -132,185 +154,5 @@ function detectEmbedType(url: string) {
     }
   })()}
 
-  {/* Dive Deeper section - only show when not truncating content */}
-  {!allowTruncation && post.data.dive_deeper && post.data.dive_deeper.length > 0 && (
-    <div class="dive-deeper">
-      <h3>🐰 Dive Deeper</h3>
-      <ul>
-        {post.data.dive_deeper.map((item: any) => (
-          <li>
-            {typeof item === 'string' ? (
-              // Support legacy string format
-              item
-            ) : (
-              // New object format with text and URL
-              <>
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  {item.text}
-                </a>
-                {item.description && (
-                  <span class="dive-deeper-desc"> - {item.description}</span>
-                )}
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
-
-  {/* Tags */}
-  {post.data.tags && post.data.tags.length > 0 && (
-    <div class="post-tags">
-      {post.data.tags.map((tag: string) => (
-        <a href={`/tags/${tag}`} class="tag">{tag}</a>
-      ))}
-    </div>
-  )}
-
-  {/* Post actions - show for both excerpt and full content */}
-  <div class="post-actions-integrated">
-    <div class="post-actions-buttons">
-      <button 
-        class="action-btn action-btn--copy" 
-        onclick={`copyPostLink('/posts/${post.slug}')`}
-        title="Copy link to this post"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-        Copy Link
-      </button>
-      <button 
-        class="action-btn action-btn--share" 
-        onclick={`sharePost('${post.data.title.replace(/'/g, "\\'")}', '/posts/${post.slug}')`}
-        title="Share this post"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="18" cy="5" r="3"/>
-          <circle cx="6" cy="12" r="3"/>
-          <circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-        </svg>
-        Share
-      </button>
-      <a href={`/posts/${post.slug}#cusdis_thread`} class="action-btn action-btn--comment" title="View comments">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        Comments
-      </a>
-      {showExcerpt && (
-        <a href={`/posts/${post.slug}`} class="action-btn action-btn--read" title="Read full post">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          Read More
-        </a>
-      )}
-    </div>
-  </div>
-  
-  
 </article>
 
-<style>
-  /* Override the global post-card border to avoid double separators */
-  article.post-card {
-    border-bottom: none !important;
-  }
-  
-  /* Make post type badge clickable */
-  .post-type-badge {
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    transition: all 0.2s ease;
-    border-radius: var(--radius-sm);
-    padding: var(--space-xs);
-    margin: calc(-1 * var(--space-xs));
-  }
-  
-  .post-type-badge:hover {
-    background: var(--color-surface);
-  }
-  
-  .post-type-badge:hover .post-type-label {
-    color: var(--color-accent);
-  }
-  
-  .post-actions-integrated {
-    margin-top: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  
-  .post-actions-buttons {
-    display: flex !important;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-  
-  .action-btn {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: #f8fafc !important;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    color: #64748b;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .action-btn:hover {
-    background: #fed7aa;
-    border-color: #fb923c;
-    color: #ea580c;
-  }
-  
-  .action-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-  
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .post-actions-buttons {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .action-btn {
-      justify-content: center;
-      width: 100%;
-    }
-  }
-</style>
-
-<script type="module">
-  import { share } from '/src/scripts/utils.js';
-  
-  // Make share functions available globally if not already defined
-  if (typeof window !== 'undefined') {
-    window.sharePost = window.sharePost || async function(title, url) {
-      const result = await share.sharePost(title, url);
-      // Share completed
-    };
-    
-    window.copyPostLink = window.copyPostLink || async function(url) {
-      const fullUrl = window.location.origin + url;
-      const result = await share.copyToClipboard(fullUrl);
-      // Copy completed
-    };
-  }
-</script>

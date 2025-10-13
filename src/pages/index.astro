@@ -18,30 +18,24 @@ const sortedPosts = posts.sort((a, b) =>
 const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
 ---
 
-<Base title="Rabbit Holes - Curiosity-Driven Discovery">
+<Base title="Rabbit Holes — Curating the best and weirdest">
   <div class="container">
-    <section class="bio text-center mb-3xl">
-      <h1 class="text-4xl font-bold mb-lg">Hi, I'm Bhuvan</h1>
-      <p class="text-lg text-secondary mb-2xl max-w-2xl mx-auto">Here are the things I find interesting. I hope you find your next rabbit hole to go tumbling down here.</p>
-      <div class="button-group flex flex-wrap gap-sm justify-center">
-        <button id="random-btn" class="btn flex items-center gap-xs" title="Random post (Cmd+R)" style="width: 140px; justify-content: center;">
-          <span class="random-icon">🎲</span>
-          <span class="random-text">Surprise Me</span>
-        </button>
-        <button onclick="window.open('https://papertrails.rabbitholes.garden', '_blank')" class="btn flex items-center gap-xs" title="Curated website feeds" style="width: 140px; justify-content: center;">
-          <span class="trails-icon">🗞️</span>
-          <span class="trails-text">Paper Trails</span>
-        </button>
-        <button onclick="window.open('https://booktrails.rabbitholes.garden/', '_blank')" class="btn flex items-center gap-xs" title="Book recommendations and trails" style="width: 140px; justify-content: center;">
-          <span class="book-trails-icon">📚</span>
-          <span class="book-trails-text">BookTrails</span>
-        </button>
+    <section class="hero">
+      <div class="hero-label">Welcome to Rabbit Holes</div>
+      <h1>Hi 👋 I'm Bhuvan.</h1>
+      <p>These are the rabbit holes I've found worth falling into. Pick one and see how deep it goes.</p>
+
+      <div class="hero-subtitle">More Rabbit Holes</div>
+      <div class="hero-buttons">
+        <button id="random-btn" title="Random post (Cmd+R)">Surprise Me</button>
+        <a href="https://booktrails.rabbitholes.garden">Book Trails</a>
+        <a href="https://papertrails.rabbitholes.garden">Paper Trails</a>
       </div>
     </section>
 
-    <section class="posts mb-3xl">
-      {sortedPosts.slice(0, 8).map((post) => (
-        <PostCard post={post} showExcerpt={false} />
+    <section class="feed">
+      {sortedPosts.slice(0, 6).map((post, index) => (
+        <PostCard post={post} showExcerpt={true} isFirst={index === 0} />
       ))}
     </section>
 

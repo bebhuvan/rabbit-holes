@@ -4,65 +4,62 @@ export const prerender = true;
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="About - Rabbit Holes" description="Learn about Rabbit Holes, a curiosity-driven blog exploring technology, ideas, and discoveries. Find your next intellectual adventure to explore.">
+<Base title="About — Rabbit Holes" description="Learn about Rabbit Holes, a curiosity-driven blog exploring ideas worth tumbling down into.">
   <div class="about-container">
-    <div class="about-header">
-      <h1>About</h1>
+    <div class="page-header">
+      <div class="page-label">About</div>
+      <h1>Curating curiosity, one rabbit hole at a time</h1>
+      <p class="page-intro">This is a place for ideas worth tumbling down into. Essays, links, and observations about the things that make us think differently.</p>
     </div>
 
     <div class="about-content">
-      <div class="intro-section">
-        <div class="profile-area">
-          <div class="profile-placeholder">🎪</div>
-          <div class="profile-text">
-            <h2>Hi, I'm Bhuvan</h2>
-            <p class="tagline">seeking rabbit holes</p>
-          </div>
-        </div>
-        
-        <div class="bio-text">
-          <p>Hi, I'm Bhuvan and I like tumbling down weird and wonderful rabbit holes. I like knowing random things and I think there's a certain joy in being a dilettante.</p>
-          
-          <p>It's not just me—everyone likes discovering new things, but for whatever reason, most people lose that ability to experience awe and wonder. It's tempting to blame social media apps and smartphones for this pathology, but that's too simplistic—they're not the only reason people seem to have become incurious and, perhaps more tragically, okay with being so.</p>
-          
-          <p>This blog is an attempt for me to continue slipping into weird rabbit holes and share them. The hope here is that whatever I share might trip fellow travelers on the internet and send them sliding down a rabbit hole.</p>
-          
-          <p>The goal isn't to be an expert on everything, but to maintain a sense of wonder about the world. Sometimes the most interesting insights come from wandering without a destination in mind.</p>
-        </div>
-        
-        <div class="bacon-quote">
-          <blockquote>
-            "Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province."
-            <cite>– <a href="https://paperlanterns.ink/letter/bacon-burghley-1592/" target="_blank" rel="noopener">Francis Bacon</a></cite>
-          </blockquote>
-        </div>
+      <p>Rabbit Holes started as a simple question: What if we had a space dedicated not to quick takes and hot opinions, but to ideas that deserve time and attention?</p>
+
+      <p>The internet is full of shallow browsing. Click, scan, move on. But the best ideas don't work that way. They require patience. They reveal themselves slowly. They connect to other ideas in unexpected ways.</p>
+
+      <div class="quote-block">
+        <blockquote>The cure for boredom is curiosity. There is no cure for curiosity.</blockquote>
+        <cite>Dorothy Parker</cite>
       </div>
 
-      <div class="details-grid">
+      <h2>What You'll Find Here</h2>
 
-        <div class="detail-card">
-          <h3>🔗 Connect</h3>
-          <div class="social-links">
-            <a href="mailto:bhuvan@bebhuvan.com" class="social-link">📧 Email</a>
-            <a href="https://twitter.com/bebhuvan" class="social-link">🐦 Twitter</a>
-            <a href="https://bhuvan.substack.com" class="social-link">📰 Substack</a>
-            <a href="https://www.linkedin.com/in/bebhuvan/" class="social-link">💼 LinkedIn</a>
-          </div>
-        </div>
+      <p>Essays exploring how we think, learn, and create. Links to ideas that deserve deeper attention. Observations about technology, culture, and the spaces between. Everything curated with one question: Is this worth your time?</p>
 
-        <div class="detail-card">
-          <h3>💡 Philosophy</h3>
-          <blockquote>
-            "The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day."
-            <cite>– Albert Einstein</cite>
-          </blockquote>
-        </div>
+      <p>Not everything published here will resonate with everyone. That's by design. This isn't about mass appeal—it's about finding the ideas that matter to you, the ones that spark something, that make you see things differently.</p>
+
+      <h2>On Curation</h2>
+
+      <p>Curation is an act of care. It's saying: "I found this, thought about it, and believe it's worth sharing." In an age of algorithmic recommendations, human curation matters more than ever.</p>
+
+      <p>The algorithms optimize for engagement. I optimize for meaning. Sometimes those align. Often they don't.</p>
+
+      <h2>Why "Rabbit Holes"?</h2>
+
+      <p>Because the best learning happens when you follow curiosity wherever it leads. When you click one link that leads to another, when you pick up a book referenced in an essay, when you discover connections nobody planned.</p>
+
+      <p>This site is designed for that kind of exploration. Take your time. Follow the links. See where they lead.</p>
+    </div>
+
+    <div class="links-section">
+      <h2>More Rabbit Holes</h2>
+      <div class="links-grid">
+        <a href="https://booktrails.rabbitholes.garden" class="link-card">
+          <h3>Book Trails</h3>
+          <p>Curated reading paths through ideas and genres</p>
+        </a>
+        <a href="https://papertrails.rabbitholes.garden" class="link-card">
+          <h3>Paper Trails</h3>
+          <p>Academic papers and research worth exploring</p>
+        </a>
       </div>
+    </div>
 
-      <div class="colophon">
-        <h3>Colophon</h3>
-        <p>Built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>, enhanced with Claude Code, and hosted on Cloudflare Pages. The design emphasizes clean typography and readability, using system fonts for optimal performance across devices.</p>
-      </div>
+    <div class="contact-section">
+      <h2>Get in Touch</h2>
+      <p>Have a link worth sharing? An idea to explore? Found something broken?</p>
+      <p>Email: <a href="mailto:bhuvan@bebhuvan.com">bhuvan@bebhuvan.com</a></p>
+      <p>Or find me on <a href="https://twitter.com/bebhuvan" target="_blank" rel="noopener">Twitter</a> where I share works-in-progress and interesting finds.</p>
     </div>
   </div>
 
@@ -70,241 +67,234 @@ import Base from '../layouts/Base.astro';
     .about-container {
       max-width: var(--width-content);
       margin: 0 auto;
-      padding: var(--space-4xl) var(--space-lg);
+      padding: 80px 40px 120px;
     }
 
-    .about-header {
-      text-align: center;
-      margin-bottom: var(--space-3xl);
+    .page-header {
+      margin-bottom: 80px;
+      padding-bottom: 80px;
+      border-bottom: 3px solid var(--color-text-primary);
     }
 
-    .about-header h1 {
-      font-size: var(--text-4xl);
+    .page-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 52px;
       font-weight: 700;
-      color: var(--color-text-primary);
+      line-height: 1.1;
       letter-spacing: -0.025em;
-      margin-bottom: var(--space-sm);
-    }
-
-    .intro-section {
-      margin-bottom: var(--space-3xl);
-    }
-
-    .profile-area {
-      display: flex;
-      align-items: center;
-      gap: var(--space-lg);
-      margin-bottom: var(--space-xl);
-      padding-bottom: var(--space-lg);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .profile-placeholder {
-      font-size: 48px;
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--accent);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .profile-text h2 {
-      font-size: var(--text-2xl);
-      font-weight: 700;
-      margin-bottom: var(--space-xs);
+      margin-bottom: 32px;
       color: var(--color-text-primary);
-      letter-spacing: -0.01em;
     }
 
-    .tagline {
+    .page-intro {
+      font-size: 24px;
+      line-height: 1.65;
       color: var(--color-text-secondary);
-      font-size: var(--text-lg);
-      margin: 0;
-      font-style: italic;
-    }
-
-    .bio-text {
-      font-size: var(--text-lg);
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-    }
-
-    .bio-text p {
-      margin-bottom: var(--space-lg);
-    }
-
-    .bacon-quote {
-      margin: var(--space-2xl) 0;
-      text-align: center;
-    }
-
-    .bacon-quote blockquote {
-      margin: 0 auto;
-      max-width: 600px;
-      font-size: var(--text-lg);
-      background: var(--bg);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: var(--space-lg);
-      font-style: italic;
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-    }
-
-    .bacon-quote cite a {
-      color: var(--accent);
-      text-decoration: none;
       font-weight: 500;
     }
 
-    .bacon-quote cite a:hover {
-      text-decoration: underline;
-    }
-
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--space-lg);
-      margin-bottom: var(--space-3xl);
-    }
-
-    .detail-card {
-      padding: var(--space-lg) 0;
-      transition: all 0.2s ease;
-    }
-
-    .detail-card h3 {
-      font-size: var(--text-xl);
-      font-weight: 600;
-      margin-bottom: var(--space-md);
-      color: var(--color-text-primary);
-    }
-
-    .detail-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .detail-card li {
-      margin-bottom: var(--space-sm);
+    .about-content {
+      font-size: 22px;
+      line-height: 1.8;
       color: var(--color-text-secondary);
-      line-height: 1.6;
     }
 
-    .detail-card li strong {
-      color: var(--accent);
-      font-weight: 600;
+    .about-content p {
+      margin-bottom: 28px;
     }
 
-    .detail-card p {
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-      margin-bottom: var(--space-md);
-    }
-
-    .detail-card p:last-child {
+    .about-content p:last-child {
       margin-bottom: 0;
     }
 
-    .social-links {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    .social-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      padding: var(--space-sm);
-      border-radius: 6px;
-    }
-
-    .social-link:hover {
+    .about-content h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 80px;
+      margin-bottom: 24px;
+      letter-spacing: -0.018em;
       color: var(--color-text-primary);
     }
 
-    blockquote {
-      margin: 0;
-      padding: var(--space-lg);
-      background: var(--bg);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
+    .about-content h2:first-child {
+      margin-top: 0;
+    }
+
+    .quote-block {
+      margin: 80px 0;
+      padding: 48px 0 48px 56px;
+      border-left: 3px solid var(--color-accent);
+      background: linear-gradient(90deg, rgba(232, 118, 83, 0.02) 0%, transparent 100%);
+    }
+
+    .quote-block blockquote {
+      font-family: 'Crimson Pro', serif;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.5;
       font-style: italic;
       color: var(--color-text-secondary);
-      line-height: 1.6;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
     }
 
-    cite {
-      display: block;
-      margin-top: var(--space-sm);
-      font-size: var(--text-sm);
-      color: var(--color-text-tertiary);
+    .quote-block cite {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
       font-style: normal;
+      color: var(--color-text-light);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .colophon {
-      border-top: 1px solid var(--border);
-      padding-top: var(--space-2xl);
-      margin-top: var(--space-2xl);
+    .quote-block cite::before {
+      content: '— ';
+      color: var(--color-accent);
     }
 
-    .colophon h3 {
-      font-size: var(--text-xl);
+    .links-section {
+      margin-top: 80px;
+      padding-top: 60px;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    .links-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: var(--space-md);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 32px;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .link-card {
+      padding: 24px;
+      border: 1px solid #e0e0e0;
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
+    .link-card:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    .link-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
       color: var(--color-text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
     }
 
-    .colophon p {
-      color: var(--color-text-secondary);
-      line-height: 1.7;
-      margin-bottom: var(--space-md);
+    .link-card p {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--color-text-tertiary);
+      margin: 0;
     }
 
-    .colophon a {
-      color: var(--accent);
+    .contact-section {
+      margin-top: 80px;
+      padding: 48px;
+      background: var(--color-off-white);
+      border-left: 3px solid var(--color-accent);
+    }
+
+    .contact-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .contact-section p {
+      font-size: 19px;
+      line-height: 1.6;
+      color: var(--color-text-tertiary);
+      margin-bottom: 24px;
+    }
+
+    .contact-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-section a {
+      color: var(--color-accent);
       text-decoration: none;
       font-weight: 500;
     }
 
-    .colophon a:hover {
+    .contact-section a:hover {
       text-decoration: underline;
     }
 
-    /* Mobile responsive */
     @media (max-width: 768px) {
       .about-container {
-        padding: var(--space-2xl) var(--space-md);
-      }
-      
-      @media (max-width: 480px) {
-        .about-container {
-          padding: var(--space-xl) var(--space-sm);
-        }
+        padding: 60px 24px 80px;
       }
 
-      .about-header h1 {
-        font-size: var(--text-3xl);
+      h1 {
+        font-size: 36px;
       }
 
-      .profile-area {
-        flex-direction: column;
-        text-align: center;
-        gap: var(--space-md);
+      .page-header {
+        margin-bottom: 60px;
+        padding-bottom: 60px;
       }
 
-      .details-grid {
+      .page-intro {
+        font-size: 20px;
+      }
+
+      .about-content {
+        font-size: 20px;
+      }
+
+      .about-content h2 {
+        font-size: 28px;
+        margin-top: 60px;
+      }
+
+      .quote-block {
+        margin: 60px 0;
+        padding: 36px 0 36px 40px;
+      }
+
+      .quote-block blockquote {
+        font-size: 24px;
+      }
+
+      .links-grid {
         grid-template-columns: 1fr;
       }
 
-      .bio-text {
-        font-size: var(--text-base);
+      .contact-section {
+        padding: 32px 24px;
       }
     }
   </style>

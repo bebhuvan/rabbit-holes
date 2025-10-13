@@ -6,7 +6,7 @@
 .container-full {
   width: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-lg);
+  padding: 0 40px;
 }
 
 .container {
@@ -21,13 +21,14 @@
   max-width: var(--width-full);
 }
 
-/* Navigation */
+/* Navigation - Editorial minimal style */
 .nav {
+  border-bottom: 1px solid var(--color-border);
+  padding: 36px 0;
+  background: rgba(255, 254, 249, 0.95);
+  backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px) saturate(180%);
-  border-bottom: 1px solid var(--color-border);
   z-index: 100;
 }
 
@@ -36,51 +37,55 @@
 }
 
 .nav-container {
+  max-width: var(--width-content);
+  margin: 0 auto;
+  padding: 0 40px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: var(--space-lg) 0;
-  min-height: 64px;
+  align-items: baseline;
 }
 
 .nav-logo {
-  font-size: var(--text-xl);
-  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--color-text-primary);
   text-decoration: none;
-  letter-spacing: -0.015em;
-  white-space: nowrap; /* Prevent wrapping */
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-/* Responsive logo text */
-@media (max-width: 480px) {
-  .nav-logo {
-    font-size: var(--text-lg);
-  }
+.nav-logo span {
+  color: var(--color-accent);
 }
 
 .nav-links {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
   display: flex;
-  gap: var(--space-lg);
-  align-items: center;
-  flex-wrap: wrap;
+  gap: 28px;
 }
 
 .nav-link {
   color: var(--color-text-tertiary);
   text-decoration: none;
-  font-size: var(--text-sm);
   font-weight: 500;
-  transition: color 0.2s ease;
-  text-transform: uppercase;
   letter-spacing: 0.02em;
+  transition: color 0.2s ease;
 }
 
 .nav-link:hover {
   color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 24px;
+  }
+
+  .nav-links {
+    display: none;
+  }
 }
 
 /* Buttons */
@@ -111,16 +116,261 @@
 }
 
 
-/* Post Components */
+/* Hero Section - Editorial */
+.hero {
+  padding: 100px 0 120px;
+  border-bottom: 1px solid #e8e8e8;
+  max-width: 540px;
+}
+
+.hero-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin-bottom: 32px;
+}
+
+.hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 68px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 32px;
+  color: var(--color-text-primary);
+}
+
+.hero h1 span {
+  color: var(--color-accent);
+}
+
+.hero p {
+  font-size: 23px;
+  line-height: 1.65;
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+  max-width: 540px;
+}
+
+.hero-subtitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-top: 48px;
+  margin-bottom: 16px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.hero-buttons a,
+.hero-buttons button {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 14px 28px;
+  border: 1px solid #d0d0d0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero-buttons a:first-child,
+.hero-buttons button:first-child {
+  background: var(--color-text-secondary);
+  color: var(--color-bg);
+  border-color: var(--color-text-secondary);
+}
+
+.hero-buttons a:hover,
+.hero-buttons button:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 0 70px;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .hero p {
+    font-size: 20px;
+  }
+
+  .hero-subtitle {
+    margin-top: 36px;
+  }
+
+  .hero-buttons a,
+  .hero-buttons button {
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+}
+
+/* Feed Section */
+.feed {
+  padding-top: 80px;
+  position: relative;
+}
+
+.feed::before {
+  content: '◆';
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-accent);
+  font-size: 10px;
+  opacity: 0.4;
+}
+
+/* Post Card Components - Editorial */
 .post-card {
-  margin-bottom: var(--space-xl);
-  padding-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 80px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .post-card:last-child {
-  margin-bottom: 0;
   border-bottom: none;
+}
+
+/* First article - HUGE treatment */
+.post-card:first-child {
+  padding-bottom: 100px;
+  margin-bottom: 100px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.post-card:first-child .date {
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+
+.post-card:first-child h2 {
+  font-size: 52px;
+  line-height: 1.1;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+
+.post-card:first-child .excerpt {
+  font-size: 22px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  font-weight: 400;
+  max-width: 600px;
+}
+
+.post-card:first-child .excerpt p {
+  margin: 0;
+}
+
+/* Drop cap for first article only */
+.post-card:first-child .excerpt p:first-child::first-letter {
+  font-family: 'Outfit', sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 0.85;
+  float: left;
+  margin: 8px 12px 0 0;
+  color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .post-card {
+    margin-bottom: 50px;
+    padding-bottom: 50px;
+  }
+
+  .post-card:first-child {
+    padding-bottom: 60px;
+    margin-bottom: 60px;
+  }
+
+  .post-card:first-child h2 {
+    font-size: 36px;
+  }
+
+  .post-card:first-child .excerpt {
+    font-size: 21px;
+  }
+
+  .post-card:first-child .excerpt p:first-child::first-letter {
+    font-size: 56px;
+    margin: 4px 10px 0 0;
+  }
+}
+
+/* Excerpt styling for all posts */
+.excerpt {
+  font-size: 20px;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.excerpt p {
+  margin: 0;
+}
+
+/* Post meta line - date and category */
+.post-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Date - coral, uppercase, bold */
+.date {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  color: var(--color-accent);
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Category label */
+.post-type-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  color: var(--color-text-light);
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  text-transform: uppercase;
+  position: relative;
+  padding-left: 12px;
+}
+
+.post-type-label::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--color-text-light);
+  font-weight: 400;
 }
 
 .post-meta {
@@ -128,10 +378,10 @@
   align-items: center;
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
-  color: var(--color-text-tertiary);
-  font-size: var(--text-xs);
+  color: var(--color-accent);
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   font-weight: 600;
 }
 
@@ -161,10 +411,13 @@
 .post-type-indicator--photos { background: var(--color-type-photos); }
 
 .post-title {
-  font-size: var(--text-2xl);
+  font-family: 'Outfit', sans-serif;
+  font-size: 36px;
   font-weight: 600;
-  margin-bottom: var(--space-lg);
-  line-height: var(--leading-tight);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+  color: var(--color-text-primary);
 }
 
 .post-title a {
@@ -178,10 +431,24 @@
 }
 
 .post-content {
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  margin-bottom: var(--space-xl);
+  font-size: 20px;
+  line-height: 1.75;
   color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.post-content p {
+  margin-bottom: 20px;
+}
+
+.post-content p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 28px;
+  }
 }
 
 /* Microblog-style full content display */
@@ -221,49 +488,91 @@
   margin-bottom: var(--space-xs);
 }
 
+/* Quote Block - Editorial elegant style */
+.quote-block,
 .post-full-content blockquote:not(.twitter-tweet) {
-  margin: var(--space-lg) 0;
-  padding: var(--space-lg);
+  margin: 120px 0;
+  padding: 48px 0 48px 56px;
   border-left: 3px solid var(--color-accent);
-  color: var(--color-text-secondary);
-  border-radius: 0 8px 8px 0;
+  background: linear-gradient(90deg, rgba(232, 118, 83, 0.02) 0%, transparent 100%);
   position: relative;
 }
 
+.quote-block blockquote,
+.post-full-content blockquote:not(.twitter-tweet) {
+  font-family: 'Crimson Pro', serif;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--color-text-secondary);
+  margin: 0 0 24px 0;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+/* Ensure bold and italic text inside blockquotes don't override the base style */
+.quote-block blockquote strong,
+.post-full-content blockquote:not(.twitter-tweet) strong {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.quote-block blockquote em,
+.post-full-content blockquote:not(.twitter-tweet) em {
+  font-style: italic;
+}
+
+.quote-block blockquote::before,
 .post-full-content blockquote:not(.twitter-tweet)::before {
   content: '"';
-  font-size: 3.5rem;
-  color: var(--color-accent);
-  font-family: Georgia, serif;
+  font-family: 'Crimson Pro', serif;
+  font-size: 90px;
+  font-weight: 400;
+  font-style: normal;
   position: absolute;
-  top: -13px;
-  left: 8px;
-  line-height: 1;
-  opacity: 0.8;
-  z-index: 1;
-}
-
-.post-full-content blockquote:not(.twitter-tweet)::after {
-  content: '"';
-  font-size: 2.5rem;
+  top: -16px;
+  left: -32px;
   color: var(--color-accent);
-  font-family: Georgia, serif;
-  position: absolute;
-  bottom: -10px;
-  right: 8px;
+  opacity: 0.25;
   line-height: 1;
-  opacity: 0.8;
-  z-index: 1;
 }
 
-.post-full-content blockquote:not(.twitter-tweet) p {
-  position: relative;
-  z-index: 2;
-  margin: 0 0 var(--space-md) 0;
+.quote-block cite,
+.post-full-content blockquote:not(.twitter-tweet) cite {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--color-text-light);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.post-full-content blockquote:not(.twitter-tweet) p:last-child {
-  margin-bottom: 0;
+.quote-block cite::before,
+.post-full-content blockquote:not(.twitter-tweet) cite::before {
+  content: '— ';
+  color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .quote-block,
+  .post-full-content blockquote:not(.twitter-tweet) {
+    margin: 90px 0;
+    padding: 36px 0 36px 40px;
+  }
+
+  .quote-block blockquote,
+  .post-full-content blockquote:not(.twitter-tweet) {
+    font-size: 26px;
+  }
+
+  .quote-block blockquote::before,
+  .post-full-content blockquote:not(.twitter-tweet)::before {
+    font-size: 70px;
+    top: -12px;
+    left: -24px;
+  }
 }
 
 .post-full-content a {
@@ -281,10 +590,6 @@
 .post-full-content strong {
   font-weight: 600;
   color: var(--color-text-primary);
-}
-
-.post-full-content blockquote strong {
-  color: var(--color-text-secondary);
 }
 
 .post-full-content em {
@@ -549,8 +854,10 @@
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding: 0 var(--space-lg); /* 24px for better space utilization */
+  .container,
+  .container-wide,
+  .container-full {
+    padding: 0 24px; /* 24px for mobile */
   }
   
   .nav-container {
