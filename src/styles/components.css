@@ -42,7 +42,13 @@
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .nav-logo {
@@ -64,6 +70,7 @@
   font-size: 13px;
   display: flex;
   gap: 28px;
+  align-items: center;
 }
 
 .nav-link {
@@ -72,10 +79,21 @@
   font-weight: 500;
   letter-spacing: 0.02em;
   transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
 .nav-link:hover {
   color: var(--color-accent);
+}
+
+.nav-link svg {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover svg {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -84,7 +102,15 @@
   }
 
   .nav-links {
+    gap: 16px;
+  }
+
+  .nav-link:not(:last-child) {
     display: none;
+  }
+
+  .nav-right {
+    gap: 12px;
   }
 }
 
