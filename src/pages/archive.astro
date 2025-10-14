@@ -89,12 +89,15 @@ const searchIndex = posts.map(post => ({
                   const cleaned = (post.body || '')
                     .replace(/#+\s*/g, '')                      // Remove headings
                     .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text
+                    .replace(/\\\[(\d+)\\\]/g, '')              // Remove escaped footnote refs like \[1\]
+                    .replace(/\[(\d+)\]/g, '')                  // Remove regular footnote refs like [1]
                     .replace(/^>\s*/gm, '')                     // Remove blockquote markers
                     .replace(/:\s*$/gm, '')                     // Remove trailing colons
                     .replace(/^\s*\d+\\?\.\s*/gm, '')           // Remove numbered lists
                     .replace(/^\s*[:•\-]\s*/gm, '')             // Remove bullet points
                     .replace(/\*\*([^\*]+?)\*\*/g, '$1')        // Remove bold markdown
                     .replace(/\*([^\*]+?)\*/g, '$1')            // Remove italic markdown
+                    .replace(/\\/g, '')                         // Remove any remaining backslashes
                     .replace(/\n/g, ' ')                        // Newlines to spaces
                     .replace(/\s+/g, ' ')                       // Normalize spaces
                     .trim();
