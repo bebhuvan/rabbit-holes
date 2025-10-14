@@ -54,8 +54,9 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
       <div class="discovery-content max-w-4xl mx-auto">
         <div class="discovery-header text-center mb-3xl">
           <h2 class="text-xl font-medium text-secondary mb-md">Continue Exploring</h2>
+          <a href="/archive" class="view-all-link">View all posts →</a>
         </div>
-        
+
         <div class="discovery-sections">
           <div class="tags-section mb-3xl">
             <h3 class="section-label text-sm font-medium text-tertiary uppercase mb-lg">Topics</h3>
@@ -71,7 +72,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
           <div class="recent-section">
             <h3 class="section-label text-sm font-medium text-tertiary uppercase mb-lg">Recent</h3>
             <div class="recent-posts">
-              {sortedPosts.slice(0, 4).map((post) => (
+              {sortedPosts.slice(6, 10).map((post) => (
                 <a href={`/posts/${post.slug}`} class="recent-item group">
                   <div class="recent-meta">
                     <span class={`type-dot type-dot--${post.data.type}`}></span>
@@ -80,6 +81,9 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
                   <h4 class="recent-title text-sm text-secondary group-hover:text-accent transition-colors">{post.data.title}</h4>
                 </a>
               ))}
+            </div>
+            <div class="text-center mt-lg">
+              <a href="/archive" class="archive-link">See all {posts.length} posts</a>
             </div>
           </div>
         </div>
@@ -240,13 +244,47 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
       line-height: var(--leading-normal);
       font-weight: 400;
     }
-    
+
+    /* Archive links */
+    .view-all-link {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-accent);
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 8px;
+      transition: opacity 0.2s ease;
+    }
+
+    .view-all-link:hover {
+      opacity: 0.8;
+    }
+
+    .archive-link {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-tertiary);
+      text-decoration: none;
+      display: inline-block;
+      padding: 10px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .archive-link:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
     /* Mobile responsive */
     @media (max-width: 768px) {
       .discovery-content {
         padding: 0 var(--space-md);
       }
-      
+
       .tags-section {
         margin-bottom: var(--space-2xl) !important;
       }

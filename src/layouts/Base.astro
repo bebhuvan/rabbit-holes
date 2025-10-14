@@ -101,7 +101,8 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           <div class="nav-links">
             <a href="/about" class="nav-link">About</a>
             <a href="/archive" class="nav-link">Archive</a>
-            <a href="/rss.xml" class="nav-link" title="RSS Feed" aria-label="RSS Feed">
+            <a href="/search" class="nav-link">Search</a>
+            <a href="/rss.xml" class="nav-link nav-link--rss" title="RSS Feed" aria-label="RSS Feed">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 11a9 9 0 0 1 9 9"></path>
                 <path d="M4 4a16 16 0 0 1 16 16"></path>
@@ -125,6 +126,27 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </button>
+          <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <svg class="mobile-menu-icon mobile-menu-icon--hamburger" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg class="mobile-menu-icon mobile-menu-icon--close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Overlay -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-content">
+          <a href="/about" class="mobile-menu-link">About</a>
+          <a href="/archive" class="mobile-menu-link">Archive</a>
+          <a href="/search" class="mobile-menu-link">Search</a>
+          <a href="/rss.xml" class="mobile-menu-link">RSS Feed</a>
         </div>
       </div>
     </nav>
@@ -154,6 +176,32 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           document.documentElement.setAttribute('data-theme', newTheme);
           localStorage.setItem('theme', newTheme);
         });
+
+        // Mobile menu toggle functionality
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuToggle?.addEventListener('click', () => {
+          const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
+          mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+          mobileMenu?.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside or on a link
+        mobileMenu?.addEventListener('click', (e) => {
+          if (e.target === mobileMenu || e.target.classList.contains('mobile-menu-link')) {
+            mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+            mobileMenu?.classList.remove('active');
+          }
+        });
+
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && mobileMenu?.classList.contains('active')) {
+            mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+            mobileMenu?.classList.remove('active');
+          }
+        });
       });
 
       // Load utils.js dynamically to avoid blocking render
@@ -175,7 +223,24 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <!-- PWA Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+        // In development, unregister any existing service workers
+        if (location.hostname === 'localhost') {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => {
+              console.log('🔧 Dev mode: Unregistering service worker');
+              registration.unregister();
+            });
+          });
+          // Also clear caches
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              console.log('🔧 Dev mode: Deleting cache:', name);
+              caches.delete(name);
+            });
+          });
+        } else {
+          // Production: register service worker
+          window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
               // Service worker registered successfully
@@ -196,14 +261,15 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
             .catch((registrationError) => {
               // Service worker registration failed
             });
-        });
+          });
 
-        // Listen for messages from service worker
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
-            showUpdateNotification();
-          }
-        });
+          // Listen for messages from service worker
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
+              showUpdateNotification();
+            }
+          });
+        }
       }
 
       function showUpdateNotification() {

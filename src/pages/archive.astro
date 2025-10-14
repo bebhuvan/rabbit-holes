@@ -40,6 +40,18 @@ const stats = {
 };
 
 const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
+
+// Prepare search data for client-side
+const searchIndex = posts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  content: post.body,
+  type: post.data.type,
+  tags: post.data.tags || [],
+  date: post.data.date.toISOString(),
+  url: `/posts/${post.slug}`,
+  description: post.data.description || ''
+}));
 ---
 
 <Base title="Archive — Rabbit Holes" description="Browse all blog posts organized by date.">
@@ -73,7 +85,21 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
               <a href={`/posts/${post.slug}`} class="archive-item" data-type={post.data.type}>
                 <div class="archive-date">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</div>
                 <h2 class="archive-title">{post.data.title}</h2>
-                <p class="archive-excerpt">{post.data.description || (post.body || '').replace(/#+\s*/g, '').replace(/\[.*?\]\(.*?\)/g, '').slice(0, 120).trim()}…</p>
+                <p class="archive-excerpt">{post.data.description || (() => {
+                  const cleaned = (post.body || '')
+                    .replace(/#+\s*/g, '')                      // Remove headings
+                    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text
+                    .replace(/^>\s*/gm, '')                     // Remove blockquote markers
+                    .replace(/:\s*$/gm, '')                     // Remove trailing colons
+                    .replace(/^\s*\d+\\?\.\s*/gm, '')           // Remove numbered lists
+                    .replace(/^\s*[:•\-]\s*/gm, '')             // Remove bullet points
+                    .replace(/\*\*([^\*]+?)\*\*/g, '$1')        // Remove bold markdown
+                    .replace(/\*([^\*]+?)\*/g, '$1')            // Remove italic markdown
+                    .replace(/\n/g, ' ')                        // Newlines to spaces
+                    .replace(/\s+/g, ' ')                       // Normalize spaces
+                    .trim();
+                  return cleaned.slice(0, 150);
+                })()}…</p>
               </a>
             ))}
           </div>
@@ -290,65 +316,108 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
     }
   </style>
 
-  <script>
-    // Archive filtering and search
-    function filterArchive(type: string) {
+  <script type="module" define:vars={{ searchIndex }}>
+    // searchIndex is now directly available from define:vars
+    console.log('Archive search index loaded:', searchIndex.length, 'posts');
+
+    let currentFilter = 'all';
+    let matchingSlugs = new Set();
+
+    // Archive filtering
+    function filterArchive(type) {
+      currentFilter = type;
       const items = document.querySelectorAll('.archive-item');
       const buttons = document.querySelectorAll('.filter-tab');
 
       // Update active filter button
       buttons.forEach(btn => btn.classList.remove('active'));
-      (event?.target as HTMLElement)?.classList.add('active');
+      if (event?.target) {
+        event.target.classList.add('active');
+      }
 
       // Filter items
       items.forEach(item => {
-        const itemElement = item as HTMLElement;
-        if (type === 'all' || itemElement.dataset.type === type) {
-          itemElement.style.display = 'block';
+        const slug = item.getAttribute('href')?.replace('/posts/', '').replace('/', '') || '';
+        const matchesType = type === 'all' || item.dataset.type === type;
+        const matchesSearch = matchingSlugs.size === 0 || matchingSlugs.has(slug);
+
+        if (matchesType && matchesSearch) {
+          item.style.display = 'block';
         } else {
-          itemElement.style.display = 'none';
+          item.style.display = 'none';
         }
       });
 
       // Hide empty year sections
-      const sections = document.querySelectorAll('.archive-section');
-      sections.forEach(section => {
-        const sectionElement = section as HTMLElement;
-        const visibleItems = sectionElement.querySelectorAll('.archive-item[style="display: block"], .archive-item:not([style])');
-        sectionElement.style.display = visibleItems.length > 0 ? 'block' : 'none';
+      updateSectionVisibility();
+    }
+
+    // Full content search functionality
+    const searchInput = document.getElementById('archive-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+
+        if (query.length === 0) {
+          // Clear search - show all items based on current filter
+          matchingSlugs.clear();
+          filterItems();
+          return;
+        }
+
+        if (query.length < 2) {
+          return; // Wait for at least 2 characters
+        }
+
+        // Search through full content
+        const results = searchIndex.filter(post => {
+          const searchText = [
+            post.title,
+            post.content,
+            post.description,
+            ...post.tags
+          ].join(' ').toLowerCase();
+
+          return searchText.includes(query);
+        });
+
+        console.log('Found', results.length, 'results for:', query);
+
+        // Store matching slugs
+        matchingSlugs = new Set(results.map(r => r.slug));
+
+        // Update visible items
+        filterItems();
       });
     }
 
-    // Search functionality
-    const searchInput = document.getElementById('archive-search') as HTMLInputElement;
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        const query = (e.target as HTMLInputElement).value.toLowerCase();
-        const items = document.querySelectorAll('.archive-item');
+    function filterItems() {
+      const items = document.querySelectorAll('.archive-item');
 
-        items.forEach(item => {
-          const itemElement = item as HTMLElement;
-          const title = itemElement.querySelector('.archive-title')?.textContent?.toLowerCase() || '';
-          const excerpt = itemElement.querySelector('.archive-excerpt')?.textContent?.toLowerCase() || '';
+      items.forEach(item => {
+        const slug = item.getAttribute('href')?.replace('/posts/', '').replace('/', '') || '';
+        const matchesType = currentFilter === 'all' || item.dataset.type === currentFilter;
+        const matchesSearch = matchingSlugs.size === 0 || matchingSlugs.has(slug);
 
-          if (title.includes(query) || excerpt.includes(query)) {
-            itemElement.style.display = 'block';
-          } else {
-            itemElement.style.display = 'none';
-          }
-        });
+        if (matchesType && matchesSearch) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
 
-        // Hide empty sections
-        const sections = document.querySelectorAll('.archive-section');
-        sections.forEach(section => {
-          const sectionElement = section as HTMLElement;
-          const visibleItems = sectionElement.querySelectorAll('.archive-item[style="display: block"], .archive-item:not([style])');
-          sectionElement.style.display = visibleItems.length > 0 ? 'block' : 'none';
-        });
+      updateSectionVisibility();
+    }
+
+    function updateSectionVisibility() {
+      const sections = document.querySelectorAll('.archive-section');
+      sections.forEach(section => {
+        const visibleItems = section.querySelectorAll('.archive-item[style="display: block"], .archive-item:not([style*="none"])');
+        section.style.display = visibleItems.length > 0 ? 'block' : 'none';
       });
     }
 
     // Make filterArchive available globally
-    (window as any).filterArchive = filterArchive;
+    window.filterArchive = filterArchive;
   </script>
 </Base>

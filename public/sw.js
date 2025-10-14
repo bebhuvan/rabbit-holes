@@ -1,5 +1,5 @@
 // Service Worker for Rabbit Holes PWA
-const CACHE_NAME = 'rabbit-holes-v1';
+const CACHE_NAME = 'rabbit-holes-v2';
 const OFFLINE_URL = '/offline';
 
 // Files to cache immediately
