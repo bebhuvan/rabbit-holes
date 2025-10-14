@@ -92,7 +92,8 @@ function detectEmbedType(url: string) {
           .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text, remove URL
           .replace(/\\\[(\d+)\\\]/g, '')              // Remove escaped footnote refs like \[1\]
           .replace(/\[(\d+)\]/g, '')                  // Remove regular footnote refs like [1]
-          .replace(/^>\s*/gm, '')                     // Remove blockquote markers
+          .replace(/^>+\s*/gm, '')                    // Remove all blockquote markers (including nested)
+          .replace(/>\s*/g, '')                       // Remove any remaining > characters with spaces
           .replace(/:\s*$/gm, '')                     // Remove trailing colons from lines
           .replace(/^\s*\d+\\?\.\s*/gm, '')           // Remove numbered list markers (1. or 1\.)
           .replace(/^\s*[:•\-]\s*/gm, '')             // Remove standalone punctuation at line starts

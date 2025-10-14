@@ -84,13 +84,14 @@
   text-decoration: none;
   font-weight: 500;
   letter-spacing: 0.02em;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
 }
 
 .nav-link:hover {
   color: var(--color-accent);
+  transform: translateY(-1px);
 }
 
 .nav-link svg {
@@ -165,7 +166,7 @@
 .mobile-menu-content {
   position: absolute;
   top: 70px;
-  right: 32px;
+  right: 24px;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -179,7 +180,7 @@
 
 @media (max-width: 480px) {
   .mobile-menu-content {
-    right: 24px; /* Match container padding */
+    right: var(--space-md); /* 16px - Match container padding */
     top: 65px; /* Adjust for smaller nav height */
   }
 }
@@ -206,7 +207,7 @@
 
 @media (max-width: 768px) {
   .nav-container {
-    padding: 0 32px; /* More breathing room from edges */
+    padding: 0 24px; /* Match content container padding */
   }
 
   .nav-links {
@@ -224,7 +225,7 @@
 
 @media (max-width: 480px) {
   .nav-container {
-    padding: 0 24px; /* Maintain good spacing on small screens */
+    padding: 0 var(--space-md); /* 16px - Match content container padding */
   }
 
   .nav-logo {
@@ -299,6 +300,19 @@
 
 .hero h1 span {
   color: var(--color-accent);
+  animation: subtle-breathe 8s ease-in-out infinite;
+}
+
+@keyframes subtle-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 span {
+    animation: none;
+  }
 }
 
 .hero p {
@@ -340,7 +354,7 @@
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease, letter-spacing 0.3s ease;
 }
 
 .hero-buttons a:first-child,
@@ -355,6 +369,7 @@
   background: var(--color-accent);
   color: var(--color-bg);
   border-color: var(--color-accent);
+  letter-spacing: 0.08em;
 }
 
 @media (max-width: 768px) {
@@ -403,6 +418,11 @@
   margin-bottom: 80px;
   padding-bottom: 80px;
   border-bottom: 1px solid #eeeeee;
+  transition: border-color 0.3s ease;
+}
+
+.post-card:hover {
+  border-bottom-color: var(--color-border);
 }
 
 .post-card:last-child {
@@ -577,11 +597,15 @@
 .post-title a {
   color: var(--color-text-primary);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
 .post-title a:hover {
   color: var(--color-accent);
+}
+
+.post-card:hover .post-title a {
+  color: var(--color-text-secondary);
 }
 
 .post-content {
@@ -665,11 +689,12 @@
   position: relative;
 }
 
-/* Ensure bold and italic text inside blockquotes don't override the base style */
+/* Roman bold within italic quotes - classic editorial technique */
 .quote-block blockquote strong,
 .post-full-content blockquote:not(.twitter-tweet) strong {
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-style: normal;
+  color: var(--color-text-primary);
 }
 
 .quote-block blockquote em,
@@ -681,14 +706,14 @@
 .post-full-content blockquote:not(.twitter-tweet)::before {
   content: '"';
   font-family: 'Crimson Pro', serif;
-  font-size: 90px;
+  font-size: 72px;
   font-weight: 400;
   font-style: normal;
   position: absolute;
-  top: -16px;
-  left: -32px;
+  top: 0;
+  left: -56px;
   color: var(--color-accent);
-  opacity: 0.25;
+  opacity: 0.35;
   line-height: 1;
 }
 
@@ -723,9 +748,9 @@
 
   .quote-block blockquote::before,
   .post-full-content blockquote:not(.twitter-tweet)::before {
-    font-size: 70px;
-    top: -12px;
-    left: -24px;
+    font-size: 56px;
+    top: 0;
+    left: -44px;
   }
 }
 

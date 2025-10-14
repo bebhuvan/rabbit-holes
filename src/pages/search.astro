@@ -31,7 +31,8 @@ const searchIndex = posts.map(post => ({
 
 <Base title="Search — Rabbit Holes" description="Search through all blog posts and discover content">
   <div class="search-container">
-    <div class="page-header">
+    <div class="search-wrapper">
+      <div class="page-header">
       <div class="page-label">Search</div>
       <h1>Find Your Rabbit Hole</h1>
       <p class="page-description">Search through {posts.length} posts by title, content, or tags.</p>
@@ -69,13 +70,19 @@ const searchIndex = posts.map(post => ({
         ))}
       </div>
     </div>
+    </div>
   </div>
 
   <style>
     .search-container {
+      width: 100%;
       max-width: var(--width-content);
       margin: 0 auto;
-      padding: 80px 40px 120px;
+      padding: 0 40px;
+    }
+
+    .search-wrapper {
+      padding: 80px 0 120px;
     }
 
     .page-header {
@@ -314,7 +321,11 @@ const searchIndex = posts.map(post => ({
     /* Mobile responsive */
     @media (max-width: 768px) {
       .search-container {
-        padding: 60px 24px 80px;
+        padding: 0 24px;
+      }
+
+      .search-wrapper {
+        padding: 60px 0 80px;
       }
 
       h1 {
@@ -345,6 +356,12 @@ const searchIndex = posts.map(post => ({
 
       :global(.search-result-snippet) {
         font-size: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .search-container {
+        padding: 0 var(--space-md); /* 16px - matches global .container */
       }
     }
   </style>
@@ -482,10 +499,24 @@ const searchIndex = posts.map(post => ({
     }
 
     function generateSnippet(post, query) {
-      const content = post.content || post.description || '';
+      let content = post.content || post.description || '';
+
+      // Clean markdown formatting
+      content = content
+        .replace(/#+\s*/g, '')                      // Remove headings
+        .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text
+        .replace(/\\\[(\d+)\\\]/g, '')              // Remove escaped footnotes
+        .replace(/\[(\d+)\]/g, '')                  // Remove footnotes
+        .replace(/^>+\s*/gm, '')                    // Remove blockquote markers
+        .replace(/>\s*/g, '')                       // Remove remaining >
+        .replace(/\*\*([^\*]+?)\*\*/g, '$1')        // Remove bold formatting
+        .replace(/\*([^\*]+?)\*/g, '$1')            // Remove italic formatting
+        .replace(/\\/g, '')                         // Remove backslashes
+        .replace(/\s+/g, ' ')                       // Normalize spaces
+        .trim();
+
       const maxLength = 150;
       const lowerQuery = query.toLowerCase();
-
       const queryIndex = content.toLowerCase().indexOf(lowerQuery);
 
       if (queryIndex !== -1) {
