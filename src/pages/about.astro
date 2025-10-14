@@ -23,14 +23,14 @@ import Base from '../layouts/Base.astro';
 
       <div class="quote-block">
         <blockquote>
-          "Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province."
+          Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province.
           <cite><a href="https://paperlanterns.ink/letter/bacon-burghley-1592/" target="_blank" rel="noopener">Francis Bacon</a></cite>
         </blockquote>
       </div>
 
       <h2>Philosophy</h2>
       <blockquote class="einstein-quote">
-        "The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day."
+        The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day.
         <cite>Albert Einstein</cite>
       </blockquote>
 
@@ -77,8 +77,19 @@ import Base from '../layouts/Base.astro';
       font-weight: 700;
       line-height: 1.05;
       letter-spacing: -0.025em;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       color: var(--color-text-primary);
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--color-accent);
+      margin-top: 24px;
+      border-radius: 2px;
     }
 
     .tagline {
@@ -87,6 +98,8 @@ import Base from '../layouts/Base.astro';
       color: var(--color-text-tertiary);
       font-style: italic;
       font-weight: 400;
+      margin-top: 32px;
+      opacity: 0.9;
     }
 
     .about-content {
@@ -109,7 +122,7 @@ import Base from '../layouts/Base.astro';
       font-size: 32px;
       font-weight: 600;
       line-height: 1.3;
-      margin-top: 80px;
+      margin-top: 56px;
       margin-bottom: 24px;
       letter-spacing: -0.018em;
       color: var(--color-text-primary);
@@ -121,11 +134,25 @@ import Base from '../layouts/Base.astro';
 
     /* Francis Bacon quote - Editorial treatment */
     .quote-block {
-      margin: 80px 0;
+      margin: 64px 0 48px 0;
       padding: 48px 0 48px 56px;
       border-left: 3px solid var(--color-accent);
       background: linear-gradient(90deg, rgba(232, 118, 83, 0.02) 0%, transparent 100%);
       position: relative;
+    }
+
+    .quote-block::before {
+      content: '"';
+      font-family: 'Crimson Pro', serif;
+      font-size: 64px;
+      font-weight: 400;
+      font-style: normal;
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      color: var(--color-accent);
+      opacity: 0.35;
+      line-height: 1;
     }
 
     .quote-block blockquote {
@@ -137,6 +164,11 @@ import Base from '../layouts/Base.astro';
       color: var(--color-text-secondary);
       margin: 0;
       letter-spacing: -0.01em;
+    }
+
+    /* Disable the global blockquote::before to avoid duplicate */
+    .quote-block blockquote::before {
+      content: none !important;
     }
 
     .quote-block blockquote cite {
@@ -167,7 +199,7 @@ import Base from '../layouts/Base.astro';
 
     /* Einstein quote - Same as Bacon quote */
     .einstein-quote {
-      margin: 80px 0;
+      margin: 32px 0 48px 0;
       padding: 48px 0 48px 56px;
       border-left: 3px solid var(--color-accent);
       background: linear-gradient(90deg, rgba(232, 118, 83, 0.02) 0%, transparent 100%);
@@ -179,6 +211,20 @@ import Base from '../layouts/Base.astro';
       font-style: italic;
       color: var(--color-text-secondary);
       letter-spacing: -0.01em;
+    }
+
+    .einstein-quote::before {
+      content: '"';
+      font-family: 'Crimson Pro', serif;
+      font-size: 64px;
+      font-weight: 400;
+      font-style: normal;
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      color: var(--color-accent);
+      opacity: 0.35;
+      line-height: 1;
     }
 
     .einstein-quote cite {
@@ -203,6 +249,7 @@ import Base from '../layouts/Base.astro';
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
       margin-top: 24px;
+      margin-bottom: 32px;
     }
 
     .social-link {
@@ -239,8 +286,15 @@ import Base from '../layouts/Base.astro';
         font-size: 40px;
       }
 
+      h1::after {
+        width: 40px;
+        height: 2px;
+        margin-top: 18px;
+      }
+
       .tagline {
         font-size: 20px;
+        margin-top: 24px;
       }
 
       .about-content {
@@ -250,12 +304,18 @@ import Base from '../layouts/Base.astro';
 
       .about-content h2 {
         font-size: 28px;
-        margin-top: 60px;
+        margin-top: 48px;
       }
 
       .quote-block {
-        margin: 60px 0;
+        margin: 48px 0 36px 0;
         padding: 36px 0 36px 40px;
+      }
+
+      .quote-block::before {
+        font-size: 48px;
+        top: 4px;
+        left: 4px;
       }
 
       .quote-block blockquote {
@@ -263,9 +323,15 @@ import Base from '../layouts/Base.astro';
       }
 
       .einstein-quote {
-        margin: 60px 0;
+        margin: 24px 0 36px 0;
         padding: 36px 0 36px 40px;
         font-size: 24px;
+      }
+
+      .einstein-quote::before {
+        font-size: 48px;
+        top: 4px;
+        left: 4px;
       }
 
       .social-links {
