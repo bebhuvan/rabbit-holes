@@ -17,3 +17,5 @@ What a poem.
 > To atone for it;  
 > Death ends the rhyme  
 > As the price for it.
+
+[About Countee Cullen](https://poets.org/poet/countee-cullen).
