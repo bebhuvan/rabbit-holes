@@ -4,6 +4,7 @@ date: 2025-10-25
 type: quick-thoughts
 tags:
   - Money
+  - Philosophy
 published: true
 draft: false
 featured: false
