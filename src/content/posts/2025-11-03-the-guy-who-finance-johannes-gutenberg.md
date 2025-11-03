@@ -1,5 +1,5 @@
 ---
-title: The guy who finance Johannes Gutenberg
+title: The guy who financed Johannes Gutenberg
 date: 2025-11-03
 type: thats-interesting
 tags:
