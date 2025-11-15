@@ -1,0 +1,11 @@
+---
+title: Ah, but is not this a glorious time for your deep inward fires?
+date: 2025-11-15
+type: quick-thoughts
+published: true
+draft: false
+featured: false
+---
+From [**_Autumn: From the Journal of Henry D. Thoreau:_**](https://en.wikisource.org/wiki/Autumn_\(1892\)_Thoreau)
+
+> _Nov_. 13, 1851. To Fair Haven Hill. A cold and dark afternoon, the sun being behind clouds in the west. The landscape is barren of objects, the trees being leafless, and so little light in the sky for variety; such a day as will almost oblige a man to eat his own heart, a day in which you must hold on to life by your teeth. Now is the time to cut timber for yokes and ox-bows, leaving the tough bark on, yokes for your own neck, finding yourself yoked to matter and to time. Truly hard times, these! Not a mosquito left, not an insect to hum. Crickets gone into winter quarters. Friends long since gone there, and you left to walk on frozen ground with your hands in your pockets. **Ah, but is not this a glorious time for your deep inward fires?** Will not your green hickory and white oak burn clear in this frosty air? Now is not your manhood taxed by the great Assessor? taxed for having a soul, a rateable soul? A day when you cannot pluck a flower, cannot dig a parsnip, nor pull a turnip, for the frozen ground. What do the thoughts find to live on? What avails you now the fire you stole from heaven? Does not each thought become a vulture to gnaw your vitals? No Indian summer have we had this November. I see but few traces of the perennial spring. We have not even the cold beauty of ice crystals and snowy architecture. Nothing but the echo of your steps on the frozen ground, which, it is true, is being prepared for immeasurable snows. Still there are brave thoughts within you that shall remain to rustle the winter through, like white-oak leaves upon your boughs, or like shrub oaks that remind the traveler of a fire upon the hillsides, or evergreen thoughts, cold even in midsummer, by their nature. These shall contrast the more fairly with the snow. Some warm springs shall still tinkle and fume, and send their column of vapor to the skies.
