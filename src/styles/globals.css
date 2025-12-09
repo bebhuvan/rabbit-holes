@@ -1,38 +1,47 @@
-/* Global Styles - Editorial Magazine Design */
+/* Global Styles - Playful & Colorful Design */
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 /* Design Tokens */
 :root {
-  /* Colors - Editorial warm palette */
-  --color-bg: #fffef9;
-  --color-text-primary: #000000;
+  /* Colors - Playful palette */
+  --color-bg: #ffffff;
+  --color-text-primary: #1a1a1a;
   --color-text-secondary: #1a1a1a;
-  --color-text-tertiary: #555555;
-  --color-text-light: #888888;
-  --color-accent: #e87653;
-  --color-accent-light: #f3a584;
-  --color-border: #e0e0e0;
+  --color-text-tertiary: #666666;
+  --color-text-light: #999999;
+  --color-accent: #ef4444;
+  --color-accent-light: #f87171;
+  --color-border: #e8e8e8;
   --color-border-light: #eeeeee;
   --color-surface: #f8f8f8;
   --color-off-white: #fafaf7;
   --color-error: #ef4444;
   --color-success: #10b981;
-  
+
+  /* Fun color palette - softened */
+  --red: #e57373;
+  --orange: #ffab74;
+  --yellow: #ffd54f;
+  --green: #66bb9a;
+  --blue: #64a8e8;
+  --purple: #9d8cd9;
+  --pink: #e891b9;
+
   /* Color semantic tokens for post types */
-  --color-type-taught-by-machine: #f3e8a6;
-  --color-type-quick-thoughts: #bfdbfe;
-  --color-type-link-dumps: #fbb6ce;
-  --color-type-deep-dives: #bbf7d0;
-  --color-type-thats-interesting: #ddd6fe;
-  --color-type-practical: #fed7d7;
-  --color-type-reflections: #d1fae5;
-  --color-type-data-stories: #fde047;
-  --color-type-news-commentary: #c084fc;
-  --color-type-videos: #fbb6ce;
-  --color-type-music: #bbf7d0;
-  --color-type-photos: #fed7d7;
+  --color-type-taught-by-machine: var(--yellow);
+  --color-type-quick-thoughts: var(--blue);
+  --color-type-link-dumps: var(--pink);
+  --color-type-deep-dives: var(--green);
+  --color-type-thats-interesting: var(--purple);
+  --color-type-practical: var(--red);
+  --color-type-reflections: var(--green);
+  --color-type-data-stories: var(--orange);
+  --color-type-news-commentary: var(--purple);
+  --color-type-videos: var(--blue);
+  --color-type-music: var(--pink);
+  --color-type-photos: var(--orange);
   
   /* Spacing Scale - Logical 8px base */
   --space-xs: 4px;
@@ -80,28 +89,40 @@
 /* Dark Theme */
 [data-theme="dark"] {
   --color-bg: #0a0a0a;
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-tertiary: #64748b;
-  --color-accent: #fb923c;
-  --color-accent-light: #ea580c;
-  --color-border: #1e293b;
-  --color-surface: #0f172a;
-  --color-error: #ef4444;
-  --color-success: #10b981;
-  
-  --color-type-taught-by-machine: #92743f;
-  --color-type-quick-thoughts: #1e3a8a;
-  --color-type-link-dumps: #7c2d5a;
-  --color-type-deep-dives: #276749;
-  --color-type-thats-interesting: #4c1d95;
-  --color-type-practical: #991b1b;
-  --color-type-reflections: #047857;
-  --color-type-data-stories: #a16207;
-  --color-type-news-commentary: #7c3aed;
-  --color-type-videos: #7c2d5a;
-  --color-type-music: #276749;
-  --color-type-photos: #991b1b;
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #e5e5e5;
+  --color-text-tertiary: #a3a3a3;
+  --color-text-light: #737373;
+  --color-accent: #f87171;
+  --color-accent-light: #fca5a5;
+  --color-border: #262626;
+  --color-border-light: #1a1a1a;
+  --color-surface: #171717;
+  --color-error: #f87171;
+  --color-success: #34d399;
+
+  /* Dark mode colorful palette - soft and muted */
+  --red: #e08080;
+  --orange: #f0a878;
+  --yellow: #f0d070;
+  --green: #70c4a0;
+  --blue: #78b4e8;
+  --purple: #a898d8;
+  --pink: #e098b8;
+
+  /* Post type colors for dark mode */
+  --color-type-taught-by-machine: var(--yellow);
+  --color-type-quick-thoughts: var(--blue);
+  --color-type-link-dumps: var(--pink);
+  --color-type-deep-dives: var(--green);
+  --color-type-thats-interesting: var(--purple);
+  --color-type-practical: var(--red);
+  --color-type-reflections: var(--green);
+  --color-type-data-stories: var(--orange);
+  --color-type-news-commentary: var(--purple);
+  --color-type-videos: var(--blue);
+  --color-type-music: var(--pink);
+  --color-type-photos: var(--orange);
 }
 
 /* Reset & Base Styles */
@@ -125,34 +146,34 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Crimson Pro', Georgia, serif;
+  font-family: 'Newsreader', Georgia, serif;
   background: var(--color-bg);
   color: var(--color-text-secondary);
   line-height: 1.7;
-  font-size: 21px;
+  font-size: 19px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* Typography - Editorial style */
+/* Typography - Playful style */
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   line-height: 1.1;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   color: var(--color-text-primary);
-  scroll-margin-top: 120px; /* Account for sticky nav */
-  text-wrap: balance; /* Better line breaks for multi-line headings */
+  scroll-margin-top: 120px;
+  text-wrap: balance;
 }
 
-h1 { font-size: 52px; }
-h2 { font-size: 36px; font-weight: 600; }
-h3 { font-size: 26px; font-weight: 600; }
-h4 { font-size: 21px; font-weight: 600; }
-h5 { font-size: 18px; font-weight: 600; }
-h6 { font-size: 16px; font-weight: 600; }
+h1 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 1.5rem; }
+h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; }
+h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 600; margin-bottom: 0.75rem; }
+h4 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+h5 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+h6 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
 
 p {
   margin: 0;
@@ -302,30 +323,37 @@ button {
   border: 0;
 }
 
-/* Editorial Drop Cap - used on first article and article pages */
+/* Drop Cap - Playful style */
 .drop-cap::first-letter {
-  font-family: 'Outfit', sans-serif;
-  font-size: 86px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 4.5rem;
   font-weight: 700;
   line-height: 0.85;
   float: left;
-  margin: 8px 16px 0 0;
-  color: var(--color-accent);
+  margin: 0.25rem 0.75rem 0 0;
+  color: var(--red);
 }
 
-/* Editorial selection color */
+/* Yellow selection color for playful feel */
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: var(--yellow);
+  color: var(--color-text-primary);
 }
 
+/* Responsive typography */
 @media (max-width: 768px) {
   .drop-cap::first-letter {
-    font-size: 64px;
-    margin: 6px 12px 0 0;
+    font-size: 3.5rem;
+    margin: 0.15rem 0.5rem 0 0;
   }
 
   body {
-    font-size: 19px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 17px;
   }
 }

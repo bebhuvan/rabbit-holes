@@ -43,74 +43,66 @@ import Base from '../layouts/Base.astro';
       </div>
 
       <h2>Colophon</h2>
-      <p>This site is built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>, enhanced with AI assistance from Claude, and hosted on Cloudflare Pages. The design is inspired by the clean, content-first ethos of early web blogging.</p>
-      <p>Typography is set in Crimson Pro and Outfit for optimal reading. The color palette centers around a warm coral (#e87653) to create an inviting, accessible experience.</p>
+      <p>This site is built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>, enhanced with AI assistance from Claude, and hosted on Cloudflare Pages. The design embraces a playful, colorful aesthetic while keeping content front and center.</p>
+      <p>Typography features Space Grotesk for headlines, Newsreader for body text, and Space Mono for UI elements. The color palette rotates through a rainbow of accent colors to keep things lively.</p>
     </div>
   </div>
 
   <style>
     .about-container {
-      max-width: var(--width-content);
+      max-width: 740px;
       margin: 0 auto;
-      padding: 0 40px;
+      padding: 0 2rem;
     }
 
     .page-header {
-      padding: 100px 0 80px;
-      border-bottom: 1px solid #e8e8e8;
-      margin-bottom: 80px;
+      padding: 4rem 0 3rem;
+      border-bottom: 3px solid var(--color-text-primary);
+      margin-bottom: 3rem;
+      text-align: center;
     }
 
     .page-label {
-      font-family: 'Outfit', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--color-text-light);
-      margin-bottom: 24px;
+      margin-bottom: 1rem;
     }
 
     h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 68px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
       font-weight: 700;
       line-height: 1.05;
-      letter-spacing: -0.025em;
-      margin-bottom: 20px;
-      color: var(--color-text-primary);
-      position: relative;
-    }
-
-    h1::after {
-      content: '';
-      display: block;
-      width: 60px;
-      height: 3px;
-      background: var(--color-accent);
-      margin-top: 24px;
-      border-radius: 2px;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, var(--orange), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .tagline {
-      font-size: 24px;
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.25rem;
       line-height: 1.65;
       color: var(--color-text-tertiary);
       font-style: italic;
       font-weight: 400;
-      margin-top: 32px;
-      opacity: 0.9;
     }
 
     .about-content {
-      font-size: 22px;
+      font-size: 1.1rem;
       line-height: 1.8;
       color: var(--color-text-secondary);
-      padding-bottom: 120px;
+      padding-bottom: 5rem;
     }
 
     .about-content p {
-      margin-bottom: 28px;
+      margin-bottom: 1.5rem;
     }
 
     .about-content p:last-child {
@@ -118,13 +110,13 @@ import Base from '../layouts/Base.astro';
     }
 
     .about-content h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 32px;
-      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
       line-height: 1.3;
-      margin-top: 56px;
-      margin-bottom: 24px;
-      letter-spacing: -0.018em;
+      margin-top: 3rem;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
       color: var(--color-text-primary);
     }
 
@@ -132,55 +124,30 @@ import Base from '../layouts/Base.astro';
       margin-top: 0;
     }
 
-    /* Francis Bacon quote - Editorial treatment */
+    /* Quote blocks - Readable with color accents */
     .quote-block {
-      margin: 64px 0 48px 0;
-      padding: 48px 0 48px 56px;
-      border-left: 3px solid var(--color-accent);
-      background: linear-gradient(90deg, rgba(232, 118, 83, 0.02) 0%, transparent 100%);
-      position: relative;
-    }
-
-    .quote-block::before {
-      content: '"';
-      font-family: 'Crimson Pro', serif;
-      font-size: 64px;
-      font-weight: 400;
-      font-style: normal;
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      color: var(--color-accent);
-      opacity: 0.35;
-      line-height: 1;
+      margin: 2.5rem 0;
+      padding: 0 0 0 1.5rem;
+      border-left: 3px solid rgba(249, 115, 22, 0.4);
     }
 
     .quote-block blockquote {
-      font-family: 'Crimson Pro', serif;
-      font-size: 28px;
-      font-weight: 500;
-      line-height: 1.5;
-      font-style: italic;
-      color: var(--color-text-secondary);
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      line-height: 1.75;
+      font-style: normal;
+      color: var(--color-text-primary);
       margin: 0;
-      letter-spacing: -0.01em;
-    }
-
-    /* Disable the global blockquote::before to avoid duplicate */
-    .quote-block blockquote::before {
-      content: none !important;
     }
 
     .quote-block blockquote cite {
-      font-family: 'Outfit', sans-serif;
-      font-size: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
       font-style: normal;
-      color: var(--color-accent);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color: var(--orange);
       display: block;
-      margin-top: 20px;
+      margin-top: 1.25rem;
     }
 
     .quote-block blockquote cite::before {
@@ -188,55 +155,35 @@ import Base from '../layouts/Base.astro';
     }
 
     .quote-block blockquote cite a {
-      color: var(--color-accent);
-      text-decoration: none;
-      font-weight: 600;
+      color: var(--orange);
+      text-decoration: underline;
+      text-decoration-color: var(--orange);
+      text-underline-offset: 2px;
     }
 
     .quote-block blockquote cite a:hover {
-      text-decoration: underline;
+      opacity: 0.8;
     }
 
-    /* Einstein quote - Same as Bacon quote */
     .einstein-quote {
-      margin: 32px 0 48px 0;
-      padding: 48px 0 48px 56px;
-      border-left: 3px solid var(--color-accent);
-      background: linear-gradient(90deg, rgba(232, 118, 83, 0.02) 0%, transparent 100%);
-      position: relative;
-      font-family: 'Crimson Pro', serif;
-      font-size: 28px;
-      font-weight: 500;
-      line-height: 1.5;
-      font-style: italic;
-      color: var(--color-text-secondary);
-      letter-spacing: -0.01em;
-    }
-
-    .einstein-quote::before {
-      content: '"';
-      font-family: 'Crimson Pro', serif;
-      font-size: 64px;
+      margin: 2.5rem 0;
+      padding: 0 0 0 1.5rem;
+      border-left: 3px solid rgba(100, 168, 232, 0.5);
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.15rem;
       font-weight: 400;
+      line-height: 1.75;
       font-style: normal;
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      color: var(--color-accent);
-      opacity: 0.35;
-      line-height: 1;
+      color: var(--color-text-primary);
     }
 
     .einstein-quote cite {
-      font-family: 'Outfit', sans-serif;
-      font-size: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
       font-style: normal;
-      color: var(--color-accent);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color: var(--color-text-tertiary);
       display: block;
-      margin-top: 20px;
+      margin-top: 1.25rem;
     }
 
     .einstein-quote cite::before {
@@ -245,108 +192,91 @@ import Base from '../layouts/Base.astro';
 
     /* Social links */
     .social-links {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 24px;
-      margin-bottom: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .social-link {
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--color-accent);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--color-text-tertiary);
       text-decoration: none;
-      padding: 12px 20px;
-      border: 1px solid var(--color-border);
+      padding: 0.75rem 1.25rem;
+      border: 2px solid var(--color-border);
       transition: all 0.2s ease;
-      text-align: center;
-      display: block;
+      border-radius: 2px;
     }
 
-    .social-link:hover {
-      background: var(--color-accent);
-      color: var(--color-bg);
-      border-color: var(--color-accent);
-    }
+    .social-link:nth-child(1):hover { background: var(--red); border-color: var(--red); color: white; transform: translateY(-2px); }
+    .social-link:nth-child(2):hover { background: var(--blue); border-color: var(--blue); color: white; transform: translateY(-2px); }
+    .social-link:nth-child(3):hover { background: var(--orange); border-color: var(--orange); color: white; transform: translateY(-2px); }
+    .social-link:nth-child(4):hover { background: var(--purple); border-color: var(--purple); color: white; transform: translateY(-2px); }
 
-    /* Mobile responsive */
     @media (max-width: 768px) {
       .about-container {
-        padding: 0 24px;
+        padding: 0 1.5rem;
       }
 
       .page-header {
-        padding: 60px 0 60px;
-        margin-bottom: 60px;
-      }
-
-      h1 {
-        font-size: 40px;
-      }
-
-      h1::after {
-        width: 40px;
-        height: 2px;
-        margin-top: 18px;
+        padding: 3rem 0 2.5rem;
+        margin-bottom: 2.5rem;
       }
 
       .tagline {
-        font-size: 20px;
-        margin-top: 24px;
+        font-size: 1.1rem;
       }
 
       .about-content {
-        font-size: 20px;
-        padding-bottom: 80px;
+        font-size: 1rem;
+        padding-bottom: 4rem;
       }
 
       .about-content h2 {
-        font-size: 28px;
-        margin-top: 48px;
+        margin-top: 2.5rem;
       }
 
-      .quote-block {
-        margin: 48px 0 36px 0;
-        padding: 36px 0 36px 40px;
-      }
-
-      .quote-block::before {
-        font-size: 48px;
-        top: 4px;
-        left: 4px;
-      }
-
-      .quote-block blockquote {
-        font-size: 24px;
-      }
-
+      .quote-block,
       .einstein-quote {
-        margin: 24px 0 36px 0;
-        padding: 36px 0 36px 40px;
-        font-size: 24px;
+        margin: 2rem 0;
+        padding: 1.5rem 1.5rem 1.5rem 1.75rem;
       }
 
+      .quote-block::before,
       .einstein-quote::before {
-        font-size: 48px;
-        top: 4px;
-        left: 4px;
+        font-size: 3rem;
+        top: -0.35rem;
+        left: 0.5rem;
+        opacity: 0.1;
+      }
+
+      .quote-block blockquote cite,
+      .einstein-quote cite {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
       }
 
       .social-links {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        justify-content: center;
       }
     }
 
     @media (max-width: 480px) {
       .about-container {
-        padding: 0 var(--space-md);
+        padding: 0 1rem;
       }
 
       .social-links {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .social-link {
+        text-align: center;
       }
     }
   </style>

@@ -16,24 +16,60 @@ const sortedPosts = posts.sort((a, b) =>
 
 // Get all unique tags for the tag cloud
 const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
+// Pick 5 random post titles for the teaser
+const teaserPosts = [...sortedPosts]
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 5)
+  .map(p => ({ title: p.data.title, slug: p.slug }));
 ---
 
-<Base title="Rabbit Holes — Curating the best and weirdest">
+<Base title="Rabbit Holes — Fascinating things from the internet">
   <div class="container">
-    <section class="hero">
-      <div class="hero-label">Welcome to Rabbit Holes</div>
-      <h1>Hi 👋 I'm Bhuvan.</h1>
-      <p>These are the rabbit holes I've found worth falling into. Pick one and see how deep it goes.</p>
+    <section class="landing">
+      <p class="landing-intro">I'm Bhuvan. I collect</p>
+      <h1 class="landing-title-big">
+        <span class="teaser-text" id="teaser-text">{teaserPosts[0].title}</span>
+      </h1>
+      <p class="landing-intro landing-intro-bottom">and other rabbit holes worth falling into.</p>
 
-      <div class="hero-subtitle">More Rabbit Holes</div>
-      <div class="hero-buttons">
-        <button id="random-btn" title="Random post (Cmd+R)">Surprise Me</button>
-        <a href="https://booktrails.rabbitholes.garden">Book Trails</a>
-        <a href="https://papertrails.rabbitholes.garden">Paper Trails</a>
+      <div class="landing-actions">
+        <button class="surprise-btn" id="surprise-me">
+          Take me somewhere interesting
+        </button>
+        <span class="landing-or">or</span>
+        <a href="#feed" class="scroll-link">browse below ↓</a>
       </div>
+
+      <div class="post-count">{posts.length} rabbit holes and counting</div>
     </section>
 
-    <section class="feed">
+    <script define:vars={{ allSlugs: sortedPosts.map(p => p.slug), teaserPosts }}>
+      // Surprise me button
+      document.getElementById('surprise-me')?.addEventListener('click', () => {
+        const randomSlug = allSlugs[Math.floor(Math.random() * allSlugs.length)];
+        window.location.href = `/posts/${randomSlug}`;
+      });
+
+      // Rotating teaser titles
+      const teaserEl = document.getElementById('teaser-text');
+      if (teaserEl && teaserPosts.length > 1) {
+        let currentIndex = 0;
+
+        setInterval(() => {
+          teaserEl.style.opacity = '0';
+          teaserEl.style.transform = 'translateY(10px)';
+
+          setTimeout(() => {
+            currentIndex = (currentIndex + 1) % teaserPosts.length;
+            teaserEl.textContent = teaserPosts[currentIndex].title;
+            teaserEl.style.opacity = '1';
+            teaserEl.style.transform = 'translateY(0)';
+          }, 300);
+        }, 3000);
+      }
+    </script>
+
+    <section class="feed" id="feed">
       {sortedPosts.slice(0, 6).map((post, index) => (
         <PostCard post={post} showExcerpt={true} isFirst={index === 0} />
       ))}
@@ -51,18 +87,18 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
     </div>
 
     <section class="discovery">
-      <div class="discovery-content max-w-4xl mx-auto">
-        <div class="discovery-header text-center mb-3xl">
-          <h2 class="text-xl font-medium text-secondary mb-md">Continue Exploring</h2>
+      <div class="discovery-content">
+        <div class="discovery-header">
+          <h2>Keep exploring</h2>
           <a href="/archive" class="view-all-link">View all posts →</a>
         </div>
 
         <div class="discovery-sections">
-          <div class="tags-section mb-3xl">
-            <h3 class="section-label text-sm font-medium text-tertiary uppercase mb-lg">Topics</h3>
+          <div class="tags-section">
+            <h3 class="section-label">Topics</h3>
             <div class="tag-cloud">
-              {allTags.slice(0, 12).map((tag) => (
-                <a href={`/tags/${tag}`} class="tag-link">
+              {allTags.slice(0, 12).map((tag, i) => (
+                <a href={`/tags/${tag}`} class="tag-link" style={`--tag-color: var(--${['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'][i % 7]})`}>
                   {tag}
                 </a>
               ))}
@@ -70,19 +106,19 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
           </div>
 
           <div class="recent-section">
-            <h3 class="section-label text-sm font-medium text-tertiary uppercase mb-lg">Recent</h3>
+            <h3 class="section-label">Recent</h3>
             <div class="recent-posts">
-              {sortedPosts.slice(6, 10).map((post) => (
-                <a href={`/posts/${post.slug}`} class="recent-item group">
-                  <div class="recent-meta">
-                    <span class={`type-dot type-dot--${post.data.type}`}></span>
-                    <time class="recent-date text-xs text-tertiary">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</time>
+              {sortedPosts.slice(6, 10).map((post, i) => (
+                <a href={`/posts/${post.slug}`} class="recent-item" style={`--item-color: var(--${['red', 'orange', 'blue', 'green', 'purple', 'pink'][i % 6]})`}>
+                  <span class="recent-marker"></span>
+                  <div class="recent-content">
+                    <time class="recent-date">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</time>
+                    <h4 class="recent-title">{post.data.title}</h4>
                   </div>
-                  <h4 class="recent-title text-sm text-secondary group-hover:text-accent transition-colors">{post.data.title}</h4>
                 </a>
               ))}
             </div>
-            <div class="text-center mt-lg">
+            <div class="discovery-footer">
               <a href="/archive" class="archive-link">See all {posts.length} posts</a>
             </div>
           </div>
@@ -92,202 +128,184 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
   </div>
 
   <style>
-    .bio {
-      padding: var(--space-2xl) 0 var(--space-3xl) 0;
-    }
-    
-    .bio h1 {
-      margin-bottom: var(--space-lg) !important;
-    }
-    
-    .bio p {
-      margin-bottom: var(--space-2xl) !important;
-    }
-    
-    .bio button {
-      margin-top: var(--space-md);
-    }
-    
-    .button-group {
-      max-width: 480px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: var(--space-md);
-    }
-    
-    /* Responsive button layout for 3 buttons */
-    @media (max-width: 600px) {
-      .button-group {
-        max-width: 300px;
-        gap: var(--space-sm);
-      }
-      
-      .button-group .btn {
-        width: 140px !important;
-        font-size: var(--text-sm);
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .button-group {
-        flex-direction: column;
-        align-items: center;
-        max-width: 160px;
-        gap: var(--space-md);
-      }
-      
-      .button-group .btn {
-        width: 160px !important;
-        padding: var(--space-md) var(--space-lg);
-      }
-    }
-    
-    .post-type-indicator {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    
-    /* Ensure proper spacing between posts and other sections */
-    .posts {
-      margin-bottom: var(--space-3xl);
-    }
-    
+    /* Discovery section - Colorful */
     .discovery {
-      margin-top: var(--space-4xl);
-      padding-top: var(--space-3xl);
-      padding-bottom: var(--space-4xl);
-      border-top: 1px solid var(--color-border);
-      opacity: 0.8;
+      margin-top: 5rem;
+      padding: 4rem 0;
+      border-top: 3px solid var(--color-text-primary);
     }
-    
+
     .discovery-content {
-      padding: 0 var(--space-lg);
+      max-width: 740px;
+      margin: 0 auto;
     }
-    
+
+    .discovery-header {
+      margin-bottom: 3rem;
+    }
+
+    .discovery-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
     .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
       letter-spacing: 0.1em;
-      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 1rem;
     }
-    
+
+    .tags-section {
+      margin-bottom: 3rem;
+    }
+
     .tag-cloud {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--space-xs) var(--space-md);
-      line-height: 1.6;
+      gap: 0.5rem;
     }
-    
+
     .tag-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       color: var(--color-text-tertiary);
       text-decoration: none;
-      font-size: var(--text-sm);
-      padding: var(--space-xs) 0;
-      border-bottom: 1px solid transparent;
+      padding: 0.4rem 0.75rem;
+      border: 2px solid var(--color-border);
+      border-radius: 2px;
       transition: all 0.2s ease;
-      display: inline-block;
     }
-    
+
     .tag-link:hover {
-      color: var(--color-accent);
-      border-bottom-color: var(--color-accent);
+      color: white;
+      background: var(--tag-color, var(--red));
+      border-color: var(--tag-color, var(--red));
+      transform: translateY(-2px);
     }
-    
+
     .recent-posts {
       display: flex;
       flex-direction: column;
-      gap: var(--space-lg);
-    }
-    
-    .recent-item {
-      text-decoration: none;
-      display: block;
-      padding: var(--space-sm) 0;
-      border-bottom: 1px solid transparent;
-      transition: all 0.2s ease;
-    }
-    
-    .recent-item:hover {
-      border-bottom-color: var(--color-border);
-    }
-    
-    .recent-meta {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-xs);
-    }
-    
-    .type-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      display: block;
-    }
-    
-    .type-dot--taught-by-machine { background: var(--color-type-taught-by-machine); }
-    .type-dot--quick-thoughts { background: var(--color-type-quick-thoughts); }
-    .type-dot--link-dumps { background: var(--color-type-link-dumps); }
-    .type-dot--deep-dives { background: var(--color-type-deep-dives); }
-    .type-dot--thats-interesting { background: var(--color-type-thats-interesting); }
-    .type-dot--practical { background: var(--color-type-practical); }
-    .type-dot--reflections { background: var(--color-type-reflections); }
-    .type-dot--data-stories { background: var(--color-type-data-stories); }
-    .type-dot--news-commentary { background: var(--color-type-news-commentary); }
-    .type-dot--videos { background: var(--color-type-videos); }
-    .type-dot--music { background: var(--color-type-music); }
-    .type-dot--photos { background: var(--color-type-photos); }
-    
-    .recent-title {
-      line-height: var(--leading-normal);
-      font-weight: 400;
+      gap: 0;
     }
 
-    /* Archive links */
-    .view-all-link {
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-accent);
+    .recent-item {
       text-decoration: none;
-      display: inline-block;
-      margin-top: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-border);
+      transition: all 0.2s ease;
+    }
+
+    .recent-item:last-child {
+      border-bottom: none;
+    }
+
+    .recent-item:hover {
+      padding-left: 0.5rem;
+    }
+
+    .recent-marker {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--item-color, var(--red));
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .recent-content {
+      flex: 1;
+    }
+
+    .recent-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--item-color, var(--color-text-light));
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .recent-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--color-text-primary);
+      transition: color 0.2s ease;
+    }
+
+    .recent-item:hover .recent-title {
+      color: var(--item-color, var(--red));
+    }
+
+    .discovery-footer {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    /* Links */
+    .view-all-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--red);
+      text-decoration: none;
       transition: opacity 0.2s ease;
     }
 
     .view-all-link:hover {
-      opacity: 0.8;
+      opacity: 0.7;
     }
 
     .archive-link {
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       color: var(--color-text-tertiary);
       text-decoration: none;
       display: inline-block;
-      padding: 10px 20px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--color-border);
+      border-radius: 2px;
       transition: all 0.2s ease;
     }
 
     .archive-link:hover {
-      color: var(--color-accent);
-      border-color: var(--color-accent);
+      color: white;
+      background: var(--blue);
+      border-color: var(--blue);
+      transform: translateY(-2px);
     }
 
     /* Mobile responsive */
     @media (max-width: 768px) {
-      .discovery-content {
-        padding: 0 var(--space-md);
+      .discovery {
+        margin-top: 3rem;
+        padding: 3rem 0;
+      }
+
+      .discovery-header h2 {
+        font-size: 1.5rem;
       }
 
       .tags-section {
-        margin-bottom: var(--space-2xl) !important;
+        margin-bottom: 2rem;
       }
     }
   </style>
