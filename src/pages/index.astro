@@ -3,411 +3,756 @@ export const prerender = true;
 
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import PostCard from '../components/PostCard.astro';
+import { calculateReadingTime } from '../utils/shared';
 
 const posts = await getCollection('posts', ({ data }) => {
   return data.published !== false;
 });
 
-// Sort posts by date (newest first)
-const sortedPosts = posts.sort((a, b) => 
+const sortedPosts = posts.sort((a, b) =>
   new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
-// Get all unique tags for the tag cloud
-const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
-// Pick 5 random post titles for the teaser
-const teaserPosts = [...sortedPosts]
-  .sort(() => Math.random() - 0.5)
-  .slice(0, 5)
-  .map(p => ({ title: p.data.title, slug: p.slug }));
+const feedPosts = sortedPosts.slice(0, 5);
+
+// Favorites
+const favoritesSlugs = ['why-read', 'the-weight-of-telling-stories', 'we-are-borrowed-stardust', 'zero-sum-thinking-is-ruining-the-world'];
+const favorites = favoritesSlugs.map(slug => sortedPosts.find(p => p.slug.includes(slug))).filter(Boolean).slice(0, 4);
+while (favorites.length < 4 && sortedPosts.length > favorites.length) {
+  const post = sortedPosts.find(p => !favorites.includes(p));
+  if (post) favorites.push(post);
+}
+
+const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
+const topTags = allTags.slice(0, 8);
+
+function getReadingDots(body: string) {
+  const minutes = calculateReadingTime(body || '');
+  return { filled: Math.min(Math.ceil(minutes / 2), 5), minutes };
+}
+
+function formatDate(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
 ---
 
-<Base title="Rabbit Holes — Fascinating things from the internet">
-  <div class="container">
-    <section class="landing">
-      <p class="landing-intro">I'm Bhuvan. I collect</p>
-      <h1 class="landing-title-big">
-        <span class="teaser-text" id="teaser-text">{teaserPosts[0].title}</span>
+<Base title="Rabbit Holes — A garden of connected ideas">
+  <div class="homepage">
+
+    <!-- Hero - Minimal & Bold -->
+    <section class="hero">
+      <div class="hero-top">
+        <span class="hero-label">Digital Garden</span>
+        <span class="hero-label">{sortedPosts.length} entries</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-word">Rabbit</span>
+        <span class="title-word title-word--accent">Holes</span>
       </h1>
-      <p class="landing-intro landing-intro-bottom">and other rabbit holes worth falling into.</p>
 
-      <div class="landing-actions">
-        <button class="surprise-btn" id="surprise-me">
-          Take me somewhere interesting
-        </button>
-        <span class="landing-or">or</span>
-        <a href="#feed" class="scroll-link">browse below ↓</a>
+      <p class="hero-tagline">
+        Quotes, links, and ideas that made me stop and think.
+        <br/>Collected daily. Connected over time.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#feed" class="btn btn--primary">Start reading</a>
+        <a href="#" class="btn btn--ghost" id="randomBtn">Random hole ↯</a>
       </div>
-
-      <div class="post-count">{posts.length} rabbit holes and counting</div>
     </section>
 
-    <script define:vars={{ allSlugs: sortedPosts.map(p => p.slug), teaserPosts }}>
-      // Surprise me button
-      document.getElementById('surprise-me')?.addEventListener('click', () => {
-        const randomSlug = allSlugs[Math.floor(Math.random() * allSlugs.length)];
-        window.location.href = `/posts/${randomSlug}`;
-      });
+    <!-- Main Content -->
+    <div class="main">
 
-      // Rotating teaser titles
-      const teaserEl = document.getElementById('teaser-text');
-      if (teaserEl && teaserPosts.length > 1) {
-        let currentIndex = 0;
+      <section class="feed" id="feed">
+        <header class="section-header">
+          <h2>Latest</h2>
+          <a href="/archive" class="see-all">All {sortedPosts.length} →</a>
+        </header>
 
-        setInterval(() => {
-          teaserEl.style.opacity = '0';
-          teaserEl.style.transform = 'translateY(10px)';
-
-          setTimeout(() => {
-            currentIndex = (currentIndex + 1) % teaserPosts.length;
-            teaserEl.textContent = teaserPosts[currentIndex].title;
-            teaserEl.style.opacity = '1';
-            teaserEl.style.transform = 'translateY(0)';
-          }, 300);
-        }, 3000);
-      }
-    </script>
-
-    <section class="feed" id="feed">
-      {sortedPosts.slice(0, 6).map((post, index) => (
-        <PostCard post={post} showExcerpt={true} isFirst={index === 0} />
-      ))}
-    </section>
-
-    <div class="load-more text-center mb-xl hidden" id="load-more-container">
-      <button class="btn" id="load-more-btn">
-        Load more posts
-      </button>
-    </div>
-    
-    <div class="loading-indicator flex items-center justify-center gap-md hidden" id="loading-indicator" aria-live="polite" aria-label="Loading status">
-      <div class="spinner"></div>
-      <span class="text-tertiary text-sm uppercase">Loading more posts...</span>
-    </div>
-
-    <section class="discovery">
-      <div class="discovery-content">
-        <div class="discovery-header">
-          <h2>Keep exploring</h2>
-          <a href="/archive" class="view-all-link">View all posts →</a>
-        </div>
-
-        <div class="discovery-sections">
-          <div class="tags-section">
-            <h3 class="section-label">Topics</h3>
-            <div class="tag-cloud">
-              {allTags.slice(0, 12).map((tag, i) => (
-                <a href={`/tags/${tag}`} class="tag-link" style={`--tag-color: var(--${['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'][i % 7]})`}>
-                  {tag}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div class="recent-section">
-            <h3 class="section-label">Recent</h3>
-            <div class="recent-posts">
-              {sortedPosts.slice(6, 10).map((post, i) => (
-                <a href={`/posts/${post.slug}`} class="recent-item" style={`--item-color: var(--${['red', 'orange', 'blue', 'green', 'purple', 'pink'][i % 6]})`}>
-                  <span class="recent-marker"></span>
-                  <div class="recent-content">
-                    <time class="recent-date">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</time>
-                    <h4 class="recent-title">{post.data.title}</h4>
+        <div class="posts">
+          {feedPosts.map((post, index) => {
+            const dots = getReadingDots(post.body);
+            return (
+              <article class="post">
+                <a href={`/posts/${post.slug}`} class="post-link">
+                  <span class="post-num">{String(index + 1).padStart(2, '0')}</span>
+                  <div class="post-body">
+                    <h3 class="post-title">{post.data.title}</h3>
+                    <div class="post-meta">
+                      <time>{formatDate(post.data.date)}</time>
+                      <span class="sep">·</span>
+                      <span>{dots.minutes} min</span>
+                      {post.data.tags?.[0] && (
+                        <>
+                          <span class="sep">·</span>
+                          <span class="post-tag">{post.data.tags[0]}</span>
+                        </>
+                      )}
+                    </div>
                   </div>
+                  <span class="post-arrow">→</span>
                 </a>
-              ))}
-            </div>
-            <div class="discovery-footer">
-              <a href="/archive" class="archive-link">See all {posts.length} posts</a>
-            </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Explore</h3>
+          <div class="quick-links">
+            <a href="/archive" class="quick-link">
+              <span class="ql-icon">📚</span>
+              <span>Archive</span>
+            </a>
+            <a href="/tags" class="quick-link">
+              <span class="ql-icon">🏷️</span>
+              <span>Topics</span>
+            </a>
+            <a href="/about" class="quick-link">
+              <span class="ql-icon">👤</span>
+              <span>About</span>
+            </a>
           </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Topics</h3>
+          <div class="topics">
+            {topTags.slice(0, 8).map((tag) => (
+              <a href={`/tags/${tag}`} class="topic">{tag}</a>
+            ))}
+          </div>
+        </div>
+
+        <!-- TODO: Enable when email collection is set up (e.g., Buttondown, ConvertKit)
+        <div class="sidebar-section subscribe-section">
+          <h3 class="sidebar-title">Subscribe</h3>
+          <p>Weekly rabbit holes. No spam.</p>
+          <form class="subscribe-form" action="https://buttondown.email/api/emails/embed-subscribe/rabbitholes" method="post" target="_blank">
+            <input type="email" name="email" placeholder="you@email.com" required />
+            <button type="submit">→</button>
+          </form>
+        </div>
+        -->
+      </aside>
+
+    </div>
+
+    <!-- Featured Picks -->
+    <section class="featured">
+      <header class="section-header">
+        <h2>Worth revisiting</h2>
+      </header>
+      <div class="featured-grid">
+        {favorites.map((post, i) => {
+          const dots = getReadingDots(post.body);
+          const accents = ['orange', 'purple', 'blue', 'green'];
+          return (
+            <a href={`/posts/${post.slug}`} class="featured-card" data-accent={accents[i]}>
+              <h3>{post.data.title}</h3>
+              <span class="featured-meta">{dots.minutes} min</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Footer Intro -->
+    <section class="footer-intro">
+      <div class="intro-box">
+        <p class="intro-text">
+          <strong>Rabbit Holes</strong> is a digital garden by <a href="/about">Bhuvan</a>.
+          A place for quotes, links, and ideas that made me pause. Updated daily.
+        </p>
+        <div class="intro-actions">
+          <a href="/about" class="intro-btn">Learn more</a>
+          <a href="/rss.xml" class="intro-btn intro-btn--ghost">RSS Feed</a>
         </div>
       </div>
     </section>
+
   </div>
+</Base>
 
-  <style>
-    /* Discovery section - Colorful */
-    .discovery {
-      margin-top: 5rem;
-      padding: 4rem 0;
-      border-top: 3px solid var(--color-text-primary);
+<style>
+  .homepage {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ═══════════════════════════════════════
+     HERO - Minimal & Bold
+     ═══════════════════════════════════════ */
+  .hero {
+    padding: 5rem 0 4rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-light);
+  }
+
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3.5rem, 15vw, 7rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+  }
+
+  .title-word {
+    display: block;
+  }
+
+  .title-word--accent {
+    color: var(--orange);
+  }
+
+  .hero-tagline {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 400px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.85rem 1.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn--primary {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+  }
+
+  .btn--primary:hover {
+    background: var(--orange);
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-border);
+  }
+
+  .btn--ghost:hover {
+    border-color: var(--color-text-primary);
+  }
+
+  /* ═══════════════════════════════════════
+     MAIN LAYOUT
+     ═══════════════════════════════════════ */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 4rem;
+    padding: 3rem 0;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION HEADERS
+     ═══════════════════════════════════════ */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .section-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+  }
+
+  .see-all {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .see-all:hover {
+    color: var(--orange);
+  }
+
+  /* ═══════════════════════════════════════
+     POSTS / FEED
+     ═══════════════════════════════════════ */
+  .posts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-link {
+    display: grid;
+    grid-template-columns: 40px 1fr 28px;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.5rem 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: all 0.15s ease;
+  }
+
+  .post:last-child .post-link {
+    border-bottom: none;
+  }
+
+  .post-link:hover {
+    padding-left: 1rem;
+    margin-left: -1rem;
+    padding-right: 1rem;
+    margin-right: -1rem;
+    background: var(--color-surface);
+  }
+
+  .post-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    transition: color 0.15s;
+  }
+
+  .post-link:hover .post-num {
+    color: var(--orange);
+  }
+
+  .post-body {
+    min-width: 0;
+  }
+
+  .post-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+    margin-bottom: 0.4rem;
+    transition: color 0.15s;
+  }
+
+  .post-link:hover .post-title {
+    color: var(--orange);
+  }
+
+  .post-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--color-text-light);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sep {
+    opacity: 0.4;
+  }
+
+  .post-tag {
+    color: var(--color-text-tertiary);
+  }
+
+  .post-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--color-text-light);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all 0.15s;
+  }
+
+  .post-link:hover .post-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--orange);
+  }
+
+  /* ═══════════════════════════════════════
+     SIDEBAR
+     ═══════════════════════════════════════ */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .sidebar-section {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sidebar-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .sidebar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-section p {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Quick Links */
+  .quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .quick-link:hover {
+    color: var(--orange);
+    transform: translateX(4px);
+  }
+
+  .ql-icon {
+    font-size: 1rem;
+    width: 24px;
+    text-align: center;
+  }
+
+  /* Topics */
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .topic {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.4rem 0.65rem;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .topic:hover {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+  }
+
+  /* Subscribe Form */
+  .subscribe-form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .subscribe-form input {
+    flex: 1;
+    padding: 0.65rem 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .subscribe-form input::placeholder {
+    color: var(--color-text-light);
+  }
+
+  .subscribe-form input:focus {
+    border-color: var(--color-text-primary);
+  }
+
+  .subscribe-form button {
+    padding: 0.65rem 0.85rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .subscribe-form button:hover {
+    background: var(--orange);
+  }
+
+  /* ═══════════════════════════════════════
+     FEATURED PICKS
+     ═══════════════════════════════════════ */
+  .featured {
+    padding: 3rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .featured .section-header {
+    border-bottom: none;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .featured-card {
+    --accent: var(--orange);
+    padding: 1.25rem;
+    background: var(--color-surface);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+    border-left: 3px solid var(--accent);
+    transition: all 0.2s ease;
+  }
+
+  .featured-card[data-accent="orange"] { --accent: var(--orange); }
+  .featured-card[data-accent="purple"] { --accent: var(--purple); }
+  .featured-card[data-accent="blue"] { --accent: var(--blue); }
+  .featured-card[data-accent="green"] { --accent: var(--green); }
+
+  .featured-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .featured-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+    transition: color 0.15s;
+  }
+
+  .featured-card:hover h3 {
+    color: var(--accent);
+  }
+
+  .featured-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--color-text-light);
+  }
+
+  /* ═══════════════════════════════════════
+     FOOTER INTRO
+     ═══════════════════════════════════════ */
+  .footer-intro {
+    padding: 3rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .intro-box {
+    max-width: 500px;
+  }
+
+  .intro-text {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-text strong {
+    color: var(--color-text-primary);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+  }
+
+  .intro-text a {
+    color: var(--orange);
+    text-decoration: none;
+  }
+
+  .intro-text a:hover {
+    text-decoration: underline;
+  }
+
+  .intro-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .intro-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.6rem 1rem;
+    text-decoration: none;
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+    transition: background 0.15s;
+  }
+
+  .intro-btn:hover {
+    background: var(--orange);
+  }
+
+  .intro-btn--ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .intro-btn--ghost:hover {
+    border-color: var(--color-text-primary);
+    color: var(--color-text-primary);
+    background: transparent;
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .main {
+      grid-template-columns: 1fr;
+      gap: 3rem;
     }
 
-    .discovery-content {
-      max-width: 740px;
-      margin: 0 auto;
+    .sidebar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
     }
 
-    .discovery-header {
-      margin-bottom: 3rem;
-    }
-
-    .discovery-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .section-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--color-text-light);
-      margin-bottom: 1rem;
-    }
-
-    .tags-section {
-      margin-bottom: 3rem;
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tag-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--color-text-tertiary);
-      text-decoration: none;
-      padding: 0.4rem 0.75rem;
-      border: 2px solid var(--color-border);
-      border-radius: 2px;
-      transition: all 0.2s ease;
-    }
-
-    .tag-link:hover {
-      color: white;
-      background: var(--tag-color, var(--red));
-      border-color: var(--tag-color, var(--red));
-      transform: translateY(-2px);
-    }
-
-    .recent-posts {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .recent-item {
-      text-decoration: none;
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--color-border);
-      transition: all 0.2s ease;
-    }
-
-    .recent-item:last-child {
+    .sidebar-section {
       border-bottom: none;
+      padding-bottom: 0;
     }
 
-    .recent-item:hover {
-      padding-left: 0.5rem;
+    .featured-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .homepage {
+      padding: 0 1.5rem;
     }
 
-    .recent-marker {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--item-color, var(--red));
-      margin-top: 0.5rem;
-      flex-shrink: 0;
+    .hero {
+      padding: 3rem 0;
     }
 
-    .recent-content {
-      flex: 1;
+    .hero-top {
+      margin-bottom: 2rem;
     }
 
-    .recent-date {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--item-color, var(--color-text-light));
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 0.25rem;
+    .hero-tagline br {
+      display: none;
     }
 
-    .recent-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.3;
-      color: var(--color-text-primary);
-      transition: color 0.2s ease;
+    .hero-actions {
+      flex-direction: column;
     }
 
-    .recent-item:hover .recent-title {
-      color: var(--item-color, var(--red));
-    }
-
-    .discovery-footer {
-      margin-top: 2rem;
+    .btn {
       text-align: center;
     }
 
-    /* Links */
-    .view-all-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--red);
-      text-decoration: none;
-      transition: opacity 0.2s ease;
+    .sidebar {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
-    .view-all-link:hover {
-      opacity: 0.7;
+    .sidebar-section {
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 1.5rem;
     }
 
-    .archive-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--color-text-tertiary);
-      text-decoration: none;
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border: 2px solid var(--color-border);
-      border-radius: 2px;
-      transition: all 0.2s ease;
+    .featured-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .featured-grid {
+      grid-template-columns: 1fr;
     }
 
-    .archive-link:hover {
-      color: white;
-      background: var(--blue);
-      border-color: var(--blue);
-      transform: translateY(-2px);
+    .featured-card {
+      min-height: auto;
     }
 
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-      .discovery {
-        margin-top: 3rem;
-        padding: 3rem 0;
-      }
+    .post-link {
+      grid-template-columns: 24px 1fr 20px;
+    }
+  }
+</style>
 
-      .discovery-header h2 {
-        font-size: 1.5rem;
-      }
-
-      .tags-section {
-        margin-bottom: 2rem;
-      }
-    }
-  </style>
-
-  <script>
-    // Enhanced load more functionality with infinite scroll
-    const loadMoreBtn = document.getElementById('load-more-btn');
-    const loadMoreContainer = document.getElementById('load-more-container');
-    const loadingIndicator = document.getElementById('loading-indicator');
-    const postsContainer = document.querySelector('.posts');
-    
-    let currentPage = 1;
-    const postsPerPage = 10;
-    let isLoading = false;
-    let hasMorePosts = true;
-    
-    // Show load more button if there are more posts
-    if (postsContainer && postsContainer.children.length >= postsPerPage) {
-      loadMoreContainer.style.display = 'block';
-    }
-    
-    // Intersection Observer for infinite scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && hasMorePosts && !isLoading) {
-          loadMorePosts();
-        }
-      });
-    }, {
-      rootMargin: '100px'
-    });
-    
-    // Observe the load more button
-    if (loadMoreBtn) {
-      observer.observe(loadMoreBtn);
-    }
-    
-    async function loadMorePosts() {
-      if (isLoading || !hasMorePosts) return;
-      
-      isLoading = true;
-      loadingIndicator.style.display = 'flex';
-      loadMoreBtn.style.display = 'none';
-      
-      try {
-        // Simulate loading more posts
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        currentPage++;
-        
-        // Simulate reaching end of posts
-        if (currentPage >= 3) {
-          hasMorePosts = false;
-          loadMoreContainer.style.display = 'none';
-          loadingIndicator.innerHTML = '<span>✨ You\'ve reached the end! Time to explore the archives.</span>';
-          loadingIndicator.setAttribute('aria-label', 'All posts loaded');
-          setTimeout(() => {
-            loadingIndicator.style.display = 'none';
-          }, 3000);
-        } else {
-          loadMoreBtn.style.display = 'block';
-        }
-        
-      } catch (error) {
-        console.error('Error loading more posts:', error);
-        loadingIndicator.innerHTML = '<span>Failed to load more posts. Please try again.</span>';
-        loadingIndicator.setAttribute('aria-label', 'Error loading posts');
-        setTimeout(() => {
-          loadingIndicator.style.display = 'none';
-          loadMoreBtn.style.display = 'block';
-        }, 3000);
-      } finally {
-        isLoading = false;
-        loadingIndicator.style.display = 'none';
-      }
-    }
-    
-    // Manual load more button click
-    loadMoreBtn?.addEventListener('click', loadMorePosts);
-    
-    // Random post functionality
-    const randomBtn = document.getElementById('random-btn');
-    const allPosts = [
-      '/posts/2025-08-01-the-protection-racket-a-history-of-tariffs-and-who-really-pays',
-      '/posts/2025-08-02-i-gots-links-for-you-issue-1',
-      '/posts/2025-08-03-good-advice-from-rudyard-kilpling'
-    ];
-    
-    function goToRandomPost() {
-      const randomIndex = Math.floor(Math.random() * allPosts.length);
-      const randomPost = allPosts[randomIndex];
-      window.location.href = randomPost;
-    }
-    
-    randomBtn?.addEventListener('click', goToRandomPost);
-    
-    // Keyboard shortcut for random post (Cmd+R or Ctrl+R)
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'r' && !e.shiftKey) {
-        e.preventDefault();
-        goToRandomPost();
-      }
-    });
-  </script>
+<script define:vars={{ posts: sortedPosts.map(p => ({ slug: p.slug })) }}>
+  // Random post functionality
+  document.getElementById('randomBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const randomIndex = Math.floor(Math.random() * posts.length);
+    window.location.href = `/posts/${posts[randomIndex].slug}`;
+  });
+</script>
 </Base>
