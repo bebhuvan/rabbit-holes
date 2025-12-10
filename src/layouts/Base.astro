@@ -94,25 +94,25 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <!-- Skip link for keyboard navigation -->
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn btn-primary z-50">Skip to main content</a>
     
-    <!-- Rainbow progress bar -->
-    <div class="progress-bar" id="progressBar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="/" class="logo">
+          <span class="logo-mark">🐇</span>
+          <span class="logo-text">Rabbit Holes</span>
+        </a>
 
-    <nav class="nav" aria-label="Main navigation">
-      <div class="nav-container">
-        <a href="/" class="nav-logo"><span class="nav-rabbit">🐇</span> Rabbit Holes</a>
-        <div class="nav-links">
+        <nav class="nav-links" aria-label="Main navigation">
           <a href="/archive" class="nav-link">Archive</a>
+          <a href="/tags" class="nav-link">Topics</a>
           <a href="/about" class="nav-link">About</a>
-          <a href="/search" class="nav-link nav-link--search" title="Search" aria-label="Search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          <a href="#" class="nav-random" id="random-post-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.66 3.31l3.03 3.03-3.03 3.03-1.41-1.41 1.62-1.62-1.54-.01c-3.31-.01-6.39 1.77-8.04 4.64-.79 1.36-1.2 2.9-1.2 4.47v.59H5.09v-.59c0-1.97.52-3.91 1.5-5.62 2.08-3.61 6-5.83 10.09-5.84h.1l-1.53-1.54 1.41-1.41v-.01zM2.31 17.66l3.03-3.03 1.41 1.41-1.62 1.62h1.87c3.31 0 6.39-1.78 8.04-4.65.79-1.36 1.2-2.9 1.2-4.47v-.58h1.99v.58c0 1.97-.52 3.92-1.5 5.63-2.08 3.61-5.99 5.83-10.09 5.84H4.77l1.53 1.53-1.41 1.41-3.03-3.03.45-.29z"/>
             </svg>
+            Random
           </a>
           <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-            <svg class="theme-icon theme-icon--light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="theme-icon theme-icon--light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
               <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -123,11 +123,12 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
               <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
-            <svg class="theme-icon theme-icon--dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="theme-icon theme-icon--dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </button>
-        </div>
+        </nav>
+
         <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
           <svg class="mobile-menu-icon mobile-menu-icon--hamburger" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -145,12 +146,12 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
       <div class="mobile-menu" id="mobile-menu">
         <div class="mobile-menu-content">
           <a href="/archive" class="mobile-menu-link">Archive</a>
+          <a href="/tags" class="mobile-menu-link">Topics</a>
           <a href="/about" class="mobile-menu-link">About</a>
-          <a href="/search" class="mobile-menu-link">Search</a>
           <a href="/rss.xml" class="mobile-menu-link">RSS</a>
         </div>
       </div>
-    </nav>
+    </header>
 
     <main id="main-content">
       <slot />
@@ -158,13 +159,19 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
 
     <!-- Footer -->
     <footer class="site-footer">
-      <div class="footer-rainbow"></div>
-      <div class="footer-content">
-        <p class="footer-note">Daily since 2024</p>
+      <div class="footer-container">
+        <div class="footer-left">
+          <span class="footer-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+              <path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/>
+            </svg>
+          </span>
+          <span class="footer-tagline">Fascinating things from the internet</span>
+        </div>
         <nav class="footer-links">
-          <a href="/about">About</a>
-          <a href="/archive">Archive</a>
           <a href="/rss.xml">RSS</a>
+          <a href="/about">About</a>
+          <a href="https://twitter.com/baboravishankar" target="_blank" rel="noopener">Twitter</a>
         </nav>
       </div>
     </footer>
@@ -191,12 +198,38 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
           localStorage.setItem('theme', newTheme);
         });
 
-        // Rainbow progress bar on scroll
-        const progressFill = document.getElementById('progressFill');
-        if (progressFill) {
+        // Header scroll effect
+        const header = document.querySelector('.site-header');
+        if (header) {
           window.addEventListener('scroll', () => {
-            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            progressFill.style.width = scrolled + '%';
+            if (window.scrollY > 10) {
+              header.classList.add('scrolled');
+            } else {
+              header.classList.remove('scrolled');
+            }
+          });
+        }
+
+        // Random post button
+        const randomBtn = document.getElementById('random-post-btn');
+        if (randomBtn) {
+          randomBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+              const response = await fetch('/sitemap.xml');
+              const text = await response.text();
+              const parser = new DOMParser();
+              const xml = parser.parseFromString(text, 'text/xml');
+              const urls = Array.from(xml.querySelectorAll('loc'))
+                .map(loc => loc.textContent)
+                .filter(url => url.includes('/posts/'));
+              if (urls.length > 0) {
+                const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+                window.location.href = randomUrl;
+              }
+            } catch (err) {
+              console.warn('Failed to load random post:', err);
+            }
           });
         }
 
