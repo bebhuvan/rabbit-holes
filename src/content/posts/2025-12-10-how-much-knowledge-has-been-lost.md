@@ -8,7 +8,7 @@ published: true
 draft: false
 featured: false
 ---
-I was rewatching the tv show Vikings and [this part](https://www.imdb.com/title/tt3358060/characters/nm0730070/) about lost knowledge stuck a chord:
+I was rewatching the tv show Vikings, and [this part](https://www.imdb.com/title/tt3358060/characters/nm0730070/) about lost knowledge stuck a chord:
 
 > King Ecbert: Tell me honestly: What do you think of these works?  
 > 
