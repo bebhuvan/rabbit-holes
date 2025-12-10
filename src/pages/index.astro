@@ -24,12 +24,50 @@ while (favorites.length < 4 && sortedPosts.length > favorites.length) {
 }
 
 const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
-const topTags = allTags.slice(0, 8);
+
+// Count posts per tag for "Most Explored"
+const tagCounts = sortedPosts.reduce((acc, post) => {
+  (post.data.tags || []).forEach(tag => {
+    acc[tag] = (acc[tag] || 0) + 1;
+  });
+  return acc;
+}, {} as Record<string, number>);
+
+const topTags = Object.entries(tagCounts)
+  .sort(([,a], [,b]) => b - a)
+  .slice(0, 8)
+  .map(([tag]) => tag);
+
+const mostExplored = Object.entries(tagCounts)
+  .sort(([,a], [,b]) => b - a)
+  .slice(0, 5);
 
 function getReadingDots(body: string) {
   const minutes = calculateReadingTime(body || '');
   return { filled: Math.min(Math.ceil(minutes / 2), 5), minutes };
 }
+
+// Count external links in post body to find "deep holes"
+function countLinks(body: string): number {
+  const linkRegex = /\[([^\]]+)\]\(https?:\/\/[^)]+\)/g;
+  const matches = body?.match(linkRegex) || [];
+  return matches.length;
+}
+
+// Categorize posts: deep holes (many links/long) vs quick reads
+const deepHoles = sortedPosts
+  .map(post => ({
+    post,
+    links: countLinks(post.body || ''),
+    minutes: calculateReadingTime(post.body || '')
+  }))
+  .filter(p => p.links >= 3 || p.minutes >= 5)
+  .sort((a, b) => (b.links + b.minutes) - (a.links + a.minutes))
+  .slice(0, 3);
+
+const quickReads = sortedPosts
+  .filter(post => calculateReadingTime(post.body || '') <= 2)
+  .slice(0, 3);
 
 function formatDate(date: Date) {
   return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -102,42 +140,44 @@ function formatDate(date: Date) {
 
       <aside class="sidebar">
         <div class="sidebar-section">
-          <h3 class="sidebar-title">Explore</h3>
-          <div class="quick-links">
-            <a href="/archive" class="quick-link">
-              <span class="ql-icon">📚</span>
-              <span>Archive</span>
-            </a>
-            <a href="/tags" class="quick-link">
-              <span class="ql-icon">🏷️</span>
-              <span>Topics</span>
-            </a>
-            <a href="/about" class="quick-link">
-              <span class="ql-icon">👤</span>
-              <span>About</span>
-            </a>
+          <h3 class="sidebar-title">Most Explored</h3>
+          <div class="explored-list">
+            {mostExplored.map(([tag, count], i) => (
+              <a href={`/tags/${tag}`} class="explored-item">
+                <span class="explored-rank">{String(i + 1).padStart(2, '0')}</span>
+                <span class="explored-tag">{tag}</span>
+                <span class="explored-count">{count}</span>
+              </a>
+            ))}
           </div>
         </div>
 
         <div class="sidebar-section">
-          <h3 class="sidebar-title">Topics</h3>
+          <h3 class="sidebar-title">Browse</h3>
           <div class="topics">
-            {topTags.slice(0, 8).map((tag) => (
+            {topTags.map((tag) => (
               <a href={`/tags/${tag}`} class="topic">{tag}</a>
             ))}
           </div>
         </div>
 
-        <!-- TODO: Enable when email collection is set up (e.g., Buttondown, ConvertKit)
-        <div class="sidebar-section subscribe-section">
-          <h3 class="sidebar-title">Subscribe</h3>
-          <p>Weekly rabbit holes. No spam.</p>
-          <form class="subscribe-form" action="https://buttondown.email/api/emails/embed-subscribe/rabbitholes" method="post" target="_blank">
-            <input type="email" name="email" placeholder="you@email.com" required />
-            <button type="submit">→</button>
-          </form>
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Random Hole</h3>
+          <div class="random-options">
+            <button class="random-btn" data-type="any">
+              <span class="random-icon">🎲</span>
+              <span>Any hole</span>
+            </button>
+            <button class="random-btn" data-type="deep">
+              <span class="random-icon">🕳️</span>
+              <span>Deep dive</span>
+            </button>
+            <button class="random-btn" data-type="quick">
+              <span class="random-icon">⚡</span>
+              <span>Quick read</span>
+            </button>
+          </div>
         </div>
-        -->
       </aside>
 
     </div>
@@ -158,6 +198,44 @@ function formatDate(date: Date) {
             </a>
           );
         })}
+      </div>
+    </section>
+
+    <!-- Entry Points: Deep Holes vs Quick Reads -->
+    <section class="entry-points">
+      <div class="entry-column">
+        <h3 class="entry-header">
+          <span class="entry-icon">🕳️</span>
+          Deep Holes
+          <span class="entry-desc">Take your time</span>
+        </h3>
+        <div class="entry-list">
+          {deepHoles.map(({ post, links, minutes }) => (
+            <a href={`/posts/${post.slug}`} class="entry-item entry-item--deep">
+              <span class="entry-title">{post.data.title}</span>
+              <span class="entry-stats">{minutes} min · {links} links</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div class="entry-column">
+        <h3 class="entry-header">
+          <span class="entry-icon">⚡</span>
+          Quick Reads
+          <span class="entry-desc">Under 2 min</span>
+        </h3>
+        <div class="entry-list">
+          {quickReads.map((post) => {
+            const mins = calculateReadingTime(post.body || '');
+            return (
+              <a href={`/posts/${post.slug}`} class="entry-item entry-item--quick">
+                <span class="entry-title">{post.data.title}</span>
+                <span class="entry-stats">{mins} min</span>
+              </a>
+            );
+          })}
+        </div>
       </div>
     </section>
 
@@ -496,6 +574,102 @@ function formatDate(date: Date) {
     color: var(--color-bg);
   }
 
+  /* Most Explored */
+  .explored-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .explored-item {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.5rem 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: all 0.15s;
+  }
+
+  .explored-item:last-child {
+    border-bottom: none;
+  }
+
+  .explored-item:hover {
+    padding-left: 0.5rem;
+  }
+
+  .explored-rank {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--color-text-light);
+    transition: color 0.15s;
+  }
+
+  .explored-item:hover .explored-rank {
+    color: var(--orange);
+  }
+
+  .explored-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    transition: color 0.15s;
+  }
+
+  .explored-item:hover .explored-tag {
+    color: var(--orange);
+  }
+
+  .explored-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--color-text-light);
+    background: var(--color-surface);
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Random Hole Options */
+  .random-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .random-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--color-surface);
+    border: none;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+    text-align: left;
+    transition: all 0.15s;
+  }
+
+  .random-btn:hover {
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+  }
+
+  .random-btn[data-type="deep"]:hover {
+    background: var(--purple);
+  }
+
+  .random-btn[data-type="quick"]:hover {
+    background: var(--blue);
+  }
+
+  .random-icon {
+    font-size: 1rem;
+  }
+
   /* Subscribe Form */
   .subscribe-form {
     display: flex;
@@ -601,6 +775,92 @@ function formatDate(date: Date) {
   }
 
   /* ═══════════════════════════════════════
+     ENTRY POINTS - Deep Holes vs Quick Reads
+     ═══════════════════════════════════════ */
+  .entry-points {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding: 3rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .entry-column {
+    /* Flex container for header + list */
+  }
+
+  .entry-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-text-primary);
+  }
+
+  .entry-icon {
+    font-size: 1.1rem;
+  }
+
+  .entry-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 400;
+    color: var(--color-text-light);
+    margin-left: auto;
+  }
+
+  .entry-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .entry-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: all 0.15s;
+  }
+
+  .entry-item:last-child {
+    border-bottom: none;
+  }
+
+  .entry-item:hover {
+    padding-left: 0.75rem;
+  }
+
+  .entry-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    transition: color 0.15s;
+  }
+
+  .entry-item--deep:hover .entry-title {
+    color: var(--purple);
+  }
+
+  .entry-item--quick:hover .entry-title {
+    color: var(--blue);
+  }
+
+  .entry-stats {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--color-text-light);
+  }
+
+  /* ═══════════════════════════════════════
      FOOTER INTRO
      ═══════════════════════════════════════ */
   .footer-intro {
@@ -690,6 +950,10 @@ function formatDate(date: Date) {
     .featured-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    .entry-points {
+      gap: 2rem;
+    }
   }
 
   @media (max-width: 700px) {
@@ -711,10 +975,14 @@ function formatDate(date: Date) {
 
     .hero-actions {
       flex-direction: column;
+      gap: 0.75rem;
     }
 
     .btn {
       text-align: center;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      font-size: 0.8rem;
     }
 
     .sidebar {
@@ -729,6 +997,11 @@ function formatDate(date: Date) {
 
     .featured-grid {
       grid-template-columns: 1fr 1fr;
+    }
+
+    .entry-points {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
   }
 
@@ -747,12 +1020,32 @@ function formatDate(date: Date) {
   }
 </style>
 
-<script define:vars={{ posts: sortedPosts.map(p => ({ slug: p.slug })) }}>
+<script define:vars={{
+  allPosts: sortedPosts.map(p => ({ slug: p.slug })),
+  deepPosts: deepHoles.map(d => ({ slug: d.post.slug })),
+  quickPosts: quickReads.map(p => ({ slug: p.slug }))
+}}>
   // Random post functionality
-  document.getElementById('randomBtn')?.addEventListener('click', (e) => {
-    e.preventDefault();
+  function goToRandom(posts) {
+    if (posts.length === 0) return;
     const randomIndex = Math.floor(Math.random() * posts.length);
     window.location.href = `/posts/${posts[randomIndex].slug}`;
+  }
+
+  // Hero random button
+  document.getElementById('randomBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    goToRandom(allPosts);
+  });
+
+  // Sidebar random buttons
+  document.querySelectorAll('.random-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.getAttribute('data-type');
+      if (type === 'deep') goToRandom(deepPosts);
+      else if (type === 'quick') goToRandom(quickPosts);
+      else goToRandom(allPosts);
+    });
   });
 </script>
 </Base>
