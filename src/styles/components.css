@@ -100,32 +100,6 @@
   background: var(--color-surface);
 }
 
-/* Random Button */
-.nav-random {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  background: var(--color-text-primary);
-  color: var(--color-bg);
-  text-decoration: none;
-  padding: 0.5rem 0.85rem;
-  transition: all 0.15s ease;
-}
-
-.nav-random:hover {
-  background: var(--orange);
-}
-
-.nav-random svg {
-  fill: currentColor;
-  width: 12px;
-  height: 12px;
-}
-
 /* Theme Toggle */
 .theme-toggle {
   background: none;
