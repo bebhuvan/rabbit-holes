@@ -1,5 +1,5 @@
 ---
-title: Virtue cannot be known without vice
+title: Virtue cannot be known without knowing vice
 date: 2025-12-10
 type: quick-thoughts
 tags:
