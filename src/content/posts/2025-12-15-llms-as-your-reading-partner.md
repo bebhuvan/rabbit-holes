@@ -30,5 +30,3 @@ This is a textbook example of how to botch a feature release, especially a usefu
 Given the already strong anti-AI sentiment within the publishing industry and among authors, this "ask forgiveness later" approach feels dumb. Still, knowing Amazon, this was probably seen as a better strategy than asking permission first and being blocked outright. It's highly likely that many publishers and authors would have opted out if Amazon had asked upfront.
 
 And yet, despite all of this, I genuinely hope some version of this feature survives and becomes mainstream. Large language models are good at being a reading companion. Not replacing the text, but helping you interrogate it, clarify ideas, track themes, and deepen understanding as you read.
-
-t.
