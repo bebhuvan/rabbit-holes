@@ -9,12 +9,12 @@ published: true
 draft: false
 featured: false
 ---
-[Amen. I couldn't agree more](https://simonwillison.net/2022/Nov/6/what-to-blog-about/).
+[Amen. I couldn't agree more](https://simonwillison.net/2022/Nov/6/what-to-blog-about/) with Simon Willison:
 
-> You should start a blog. Having your own little corner of the internet is good for the soul!  
->   
-> But what should you write about?  
->   
+> You should start a blog. Having your own little corner of the internet is good for the soul!
+> 
+> But what should you write about?
+> 
 > It’s easy to get hung up on this. I’ve definitely felt the self-imposed pressure to only write something if it’s new, and unique, and feels like it’s never been said before. This is a mental trap that does nothing but hold you back.
 
 Having a blog online and writing regular has led to more good things than anything else in my life. It's not only a good way to force yourself to learn things and to write better but it's the best way to discover new, weird and wonderful rabbit holes to go tumbling down.
