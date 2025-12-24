@@ -18,7 +18,7 @@ As awesome and helpful the web LLM interfaces are, you'll only realize their cap
 > 
 > The challenge here isn’t solely solved with interface designs, though there is a rich space to be explored here beyond the standard chat interfaces. The challenge here is deeper and it relates to how much curiosity an individual person has, how easily (and affordably) they can access powerful AI systems, how well they’re able to convert their curiosity into questions or tasks that can be given to an AI system, and how much time they have available to experiment with working in this way. This is the end of quite a deep funnel, and one which narrows a lot.
 
-Look, AI tools can either be useful or useless to you. But having dumb opinions without using them in different contexts and understanding their capabilities is stupid. You may very well find them to be useless, but pay $20 to use the coding tools at least. I'm a neither an AI boomer or doomer. What I can say today is that I find these phenomenally useful and valuable. I can't thank the VCs enough for subsidizing these tools.
+Look, AI tools can either be useful or useless to you. But having dumb opinions without using them in different contexts and understanding their capabilities is stupid. You may very well find them to be useless, but pay $20 to use the coding tools at least. I'm a neither an AI boomer or doomer. What I can say today is that I find these [phenomenally useful and valuable](https://bebhuvan.com/now/). I can't thank the VCs enough for subsidizing these tools.
 
 A [good example](https://x.com/i/status/2003483787305583050) of what I am trying to say.
 
