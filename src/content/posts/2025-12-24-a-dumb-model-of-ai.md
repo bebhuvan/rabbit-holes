@@ -23,3 +23,5 @@ Look, AI tools can either be useful or useless to you. But having dumb opinions 
 A [good example](https://x.com/i/status/2003483787305583050) of what I am trying to say.
 
 [This is the way.](https://simonwillison.net/2025/Dec/23/cooking-with-claude/)
+
+[Also see](https://rabbitholes.garden/posts/2025-12-24-claude-code-is-awesome-but-terribly-named).
