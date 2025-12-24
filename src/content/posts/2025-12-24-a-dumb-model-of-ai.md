@@ -20,6 +20,6 @@ As awesome and helpful the web LLM interfaces are, you'll only realize their cap
 
 Look, AI tools can either be useful or useless to you. But having dumb opinions without using them in different contexts and understanding their capabilities is stupid. You may very well find them to be useless, but pay $20 to use the coding tools at least. I'm a neither an AI boomer or doomer. What I can say today is that I find these phenomenally useful and valuable. I can't thank the VCs enough for subsidizing these tools.
 
-A [good example](https://x.com/i/status/2003483787305583050) of what kmy trying to say.
+A [good example](https://x.com/i/status/2003483787305583050) of what I am trying to say.
 
 [This is the way.](https://simonwillison.net/2025/Dec/23/cooking-with-claude/)
