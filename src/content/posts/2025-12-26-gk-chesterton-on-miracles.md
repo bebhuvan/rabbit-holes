@@ -4,6 +4,7 @@ date: 2025-12-26
 type: link-dumps
 tags:
   - "Quotes "
+  - Religion
 published: true
 draft: false
 featured: false
