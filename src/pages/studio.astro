@@ -15,17 +15,17 @@ export const prerender = false;
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- CodeMirror -->
+  <!-- CodeMirror - bundled to avoid multiple instances -->
   <script type="importmap">
   {
     "imports": {
-      "codemirror": "https://esm.sh/codemirror@6.0.1",
-      "@codemirror/lang-markdown": "https://esm.sh/@codemirror/lang-markdown@6.2.5",
-      "@codemirror/state": "https://esm.sh/@codemirror/state@6.4.1",
-      "@codemirror/view": "https://esm.sh/@codemirror/view@6.26.3",
-      "@codemirror/commands": "https://esm.sh/@codemirror/commands@6.5.0",
-      "@codemirror/language": "https://esm.sh/@codemirror/language@6.10.1",
-      "@codemirror/theme-one-dark": "https://esm.sh/@codemirror/theme-one-dark@6.1.2",
+      "codemirror": "https://esm.sh/codemirror@6.0.1?bundle",
+      "@codemirror/lang-markdown": "https://esm.sh/@codemirror/lang-markdown@6.2.5?bundle",
+      "@codemirror/state": "https://esm.sh/@codemirror/state@6.4.1?bundle",
+      "@codemirror/view": "https://esm.sh/@codemirror/view@6.26.3?bundle",
+      "@codemirror/commands": "https://esm.sh/@codemirror/commands@6.5.0?bundle",
+      "@codemirror/language": "https://esm.sh/@codemirror/language@6.10.1?bundle",
+      "@codemirror/theme-one-dark": "https://esm.sh/@codemirror/theme-one-dark@6.1.2?bundle",
       "marked": "https://esm.sh/marked@12.0.0"
     }
   }
@@ -3004,9 +3004,14 @@ export const prerender = false;
         return;
       }
 
-      const btn = $(`ai${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`);
-      btn.classList.add('loading');
-      btn.disabled = true;
+      // Map endpoint to button ID (metadata -> Title button)
+      const btnIdMap = { enhance: 'aiEnhance', refine: 'aiRefine', metadata: 'aiTitle' };
+      const btn = $(btnIdMap[endpoint] || `ai${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)}`);
+
+      if (btn) {
+        btn.classList.add('loading');
+        btn.disabled = true;
+      }
 
       try {
         const res = await fetch(`/api/${endpoint}`, {
@@ -3041,8 +3046,10 @@ export const prerender = false;
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
-        btn.classList.remove('loading');
-        btn.disabled = false;
+        if (btn) {
+          btn.classList.remove('loading');
+          btn.disabled = false;
+        }
       }
     }
 
