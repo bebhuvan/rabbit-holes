@@ -10,6 +10,27 @@ export async function GET({ request, locals }) {
       GITHUB_TOKEN: runtime.GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN
     };
 
+    // Debug: Check if env vars are set
+    if (!env.GITHUB_REPO || !env.GITHUB_TOKEN) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Environment variables not configured',
+        debug: {
+          hasRuntime: !!locals?.runtime,
+          hasRuntimeEnv: !!locals?.runtime?.env,
+          repoSet: !!env.GITHUB_REPO,
+          tokenSet: !!env.GITHUB_TOKEN,
+          tokenLength: env.GITHUB_TOKEN?.length || 0
+        }
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    }
+
     // Fetch the posts directory from GitHub
     const response = await fetch(
       `https://api.github.com/repos/${env.GITHUB_REPO}/contents/src/content/posts`,
