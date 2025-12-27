@@ -2383,7 +2383,7 @@ export const prerender = false;
       elements.loginBtn.textContent = 'Signing in...';
 
       try {
-        const res = await fetch('/auth', {
+        const res = await fetch('/api/auth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password })
@@ -2468,7 +2468,7 @@ export const prerender = false;
       `;
 
       try {
-        const res = await fetch('/posts?limit=100');
+        const res = await fetch('/api/posts?limit=100');
         const data = await res.json();
 
         if (data.success && data.posts) {
@@ -2567,7 +2567,7 @@ export const prerender = false;
       showToast('Loading post...');
 
       try {
-        const res = await fetch(`/posts/${slug}`);
+        const res = await fetch(`/api/posts/${slug}`);
         const data = await res.json();
 
         if (data.success && data.post) {
@@ -2928,7 +2928,7 @@ export const prerender = false;
 
         if (isUpdate) {
           // Update existing post via PUT
-          res = await fetch(`/posts/${state.editor.slug}`, {
+          res = await fetch(`/api/posts/${state.editor.slug}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -2948,7 +2948,7 @@ export const prerender = false;
           const today = new Date().toISOString().split('T')[0];
           const slug = slugify(state.editor.title);
 
-          res = await fetch('/publish', {
+          res = await fetch('/api/publish', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -3004,7 +3004,7 @@ export const prerender = false;
       btn.disabled = true;
 
       try {
-        const res = await fetch(`/${endpoint}`, {
+        const res = await fetch(`/api/${endpoint}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -3072,7 +3072,7 @@ export const prerender = false;
 
         elements.uploadProgressFill.style.width = '30%';
 
-        const res = await fetch('/upload', {
+        const res = await fetch('/api/upload', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${state.sessionToken}`
