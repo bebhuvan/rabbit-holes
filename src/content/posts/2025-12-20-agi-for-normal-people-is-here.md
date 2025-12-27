@@ -1,7 +1,7 @@
 ---
 title: AGI for normal people is here
 date: 2025-12-20
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

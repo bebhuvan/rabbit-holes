@@ -1,7 +1,7 @@
 ---
 title: An unified theory of vibes
 date: 2025-12-12
-type: link-dumps
+type: links
 tags:
   - Vibecession
   - Vibes

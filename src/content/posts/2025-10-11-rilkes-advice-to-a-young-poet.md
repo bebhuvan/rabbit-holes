@@ -1,7 +1,7 @@
 ---
 title: "Rilke's advice to a young poet "
 date: 2025-10-11
-type: thats-interesting
+type: verse
 tags:
   - "Poetry "
   - Rilke

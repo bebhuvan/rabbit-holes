@@ -1,7 +1,7 @@
 ---
 title: Monkeys are really good at predicting electoral winners
 date: 2025-12-11
-type: quick-thoughts
+type: musings
 tags:
   - Evolutionary psychology
 published: true

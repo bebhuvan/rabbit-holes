@@ -1,7 +1,7 @@
 ---
 title: "The digital world is the only escape "
 date: 2025-12-20
-type: link-dumps
+type: links
 tags:
   - "Childhood "
   - Development

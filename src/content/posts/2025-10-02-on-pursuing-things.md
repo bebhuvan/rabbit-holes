@@ -1,7 +1,7 @@
 ---
 title: On pursuing things
 date: 2025-10-02
-type: thats-interesting
+type: musings
 tags:
   - Goals
 published: true

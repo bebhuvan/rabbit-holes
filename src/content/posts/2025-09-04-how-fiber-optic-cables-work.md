@@ -1,7 +1,7 @@
 ---
 title: How fiber optic cables work
 date: 2025-09-04
-type: thats-interesting
+type: musings
 tags:
   - Information
 description: Think of a fiber optic cable as a super-thin strand of glass (about

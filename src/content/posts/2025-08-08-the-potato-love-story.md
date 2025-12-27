@@ -1,7 +1,7 @@
 ---
 title: "The potato love story  "
 date: 2025-08-08
-type: link-dumps
+type: links
 tags:
   - Biology
   - Botany

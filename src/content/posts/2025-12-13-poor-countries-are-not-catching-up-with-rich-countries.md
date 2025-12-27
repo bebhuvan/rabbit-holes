@@ -1,7 +1,7 @@
 ---
 title: "Poor countries are not catching up with rich countries "
 date: 2025-12-13
-type: quick-thoughts
+type: musings
 tags:
   - Economic development
 published: true

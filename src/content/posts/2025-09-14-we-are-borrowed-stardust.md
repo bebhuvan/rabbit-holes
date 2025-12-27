@@ -1,7 +1,7 @@
 ---
 title: "We are borrowed stardust "
 date: 2025-09-14
-type: quick-thoughts
+type: musings
 tags:
   - Philosophy
 published: true

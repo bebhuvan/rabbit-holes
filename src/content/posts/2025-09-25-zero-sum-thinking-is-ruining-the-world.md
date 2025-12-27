@@ -1,7 +1,7 @@
 ---
 title: "Zero Sum thinking is ruining the world "
 date: 2025-09-25
-type: quick-thoughts
+type: musings
 tags:
   - Psychology
   - "Society "

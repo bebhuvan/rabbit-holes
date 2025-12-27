@@ -1,7 +1,7 @@
 ---
 title: The guy who financed Johannes Gutenberg
 date: 2025-11-03
-type: thats-interesting
+type: musings
 tags:
   - Gutenberg
 published: true

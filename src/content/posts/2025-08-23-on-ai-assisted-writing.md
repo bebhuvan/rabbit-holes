@@ -1,7 +1,7 @@
 ---
 title: On AI-assisted writing
 date: 2025-08-23
-type: quick-thoughts
+type: musings
 tags:
   - AI
   - Writing

@@ -1,7 +1,7 @@
 ---
 title: Poetry is a salve for the soul
 date: 2025-09-07
-type: reflections
+type: verse
 tags:
   - Poetry
 dive_deeper:

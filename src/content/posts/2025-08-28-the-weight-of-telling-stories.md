@@ -1,7 +1,7 @@
 ---
 title: The weight of telling stories
 date: 2025-08-28
-type: quick-thoughts
+type: musings
 tags:
   - Art
   - Comedy

@@ -1,7 +1,7 @@
 ---
 title: How to read more
 date: 2025-12-11
-type: quick-thoughts
+type: musings
 tags:
   - "Reading "
   - Books

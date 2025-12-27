@@ -1,7 +1,7 @@
 ---
 title: I got some links for you
 date: 2025-09-24
-type: link-dumps
+type: links
 published: true
 draft: false
 featured: false

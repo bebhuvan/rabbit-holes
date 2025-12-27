@@ -1,7 +1,7 @@
 ---
 title: Everything everywhere all at once
 date: 2025-09-29
-type: link-dumps
+type: links
 published: true
 draft: false
 featured: false

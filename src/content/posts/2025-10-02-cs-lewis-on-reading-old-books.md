@@ -1,7 +1,7 @@
 ---
 title: C.S. Lewis on reading old books
 date: 2025-10-02
-type: quick-thoughts
+type: musings
 tags:
   - "Reading "
   - Books

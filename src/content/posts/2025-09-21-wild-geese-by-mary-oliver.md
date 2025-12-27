@@ -1,7 +1,7 @@
 ---
 title: Wild Geese by Mary Oliver
 date: 2025-09-21
-type: quick-thoughts
+type: verse
 tags:
   - Poetry
 dive_deeper:

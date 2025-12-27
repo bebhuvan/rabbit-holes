@@ -1,7 +1,7 @@
 ---
 title: "G.K. Chesterton on miracles "
 date: 2025-12-26
-type: link-dumps
+type: links
 tags:
   - "Quotes "
   - Religion

@@ -1,7 +1,7 @@
 ---
 title: "A beautiful line from Camus "
 date: 2025-10-10
-type: quick-thoughts
+type: musings
 tags:
   - "Albert Camus "
 published: true

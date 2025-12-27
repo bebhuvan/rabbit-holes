@@ -1,7 +1,7 @@
 ---
 title: Philosophy understood as a way of life
 date: 2025-09-13
-type: link-dumps
+type: links
 tags:
   - Philosophy
 published: true

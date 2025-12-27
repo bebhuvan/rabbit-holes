@@ -1,7 +1,7 @@
 ---
 title: "AI blind spot "
 date: 2025-11-02
-type: quick-thoughts
+type: musings
 tags:
   - AI
 published: true

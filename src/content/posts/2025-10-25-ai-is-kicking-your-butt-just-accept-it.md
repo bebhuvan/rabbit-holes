@@ -1,7 +1,7 @@
 ---
 title: "AI is kicking your butt; just accept it "
 date: 2025-10-25
-type: thats-interesting
+type: musings
 tags:
   - AI
   - "Creativity "

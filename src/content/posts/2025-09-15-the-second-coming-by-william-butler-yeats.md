@@ -1,7 +1,7 @@
 ---
 title: The Second Coming by William Butler Yeats
 date: 2025-09-15
-type: reflections
+type: verse
 tags:
   - Poetry
 dive_deeper:

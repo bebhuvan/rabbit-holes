@@ -1,7 +1,7 @@
 ---
 title: Fun is a skill
 date: 2025-10-23
-type: quick-thoughts
+type: musings
 tags:
   - "Fun "
   - Connection

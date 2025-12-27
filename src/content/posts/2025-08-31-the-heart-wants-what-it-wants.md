@@ -1,7 +1,7 @@
 ---
 title: The heart wants what it wants
 date: 2025-08-31
-type: thats-interesting
+type: verse
 tags:
   - Letters
   - Poetry

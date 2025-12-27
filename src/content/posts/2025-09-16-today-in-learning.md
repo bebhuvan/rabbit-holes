@@ -1,7 +1,7 @@
 ---
 title: Today in learning
 date: 2025-09-16
-type: link-dumps
+type: links
 published: true
 draft: false
 featured: false

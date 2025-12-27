@@ -1,7 +1,7 @@
 ---
 title: My little heart
 date: 2025-12-19
-type: link-dumps
+type: links
 tags:
   - Love
   - Life

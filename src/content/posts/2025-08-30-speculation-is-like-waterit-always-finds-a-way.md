@@ -1,7 +1,7 @@
 ---
 title: Speculation Is like water—it always finds a way
 date: 2025-08-30
-type: deep-dives
+type: reflections
 tags:
   - Speculation
   - Gambling

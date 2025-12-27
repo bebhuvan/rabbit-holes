@@ -1,7 +1,7 @@
 ---
 title: A few good rabbit holes
 date: 2025-10-11
-type: link-dumps
+type: links
 tags:
   - AI
   - China

@@ -1,7 +1,7 @@
 ---
 title: Universities in the age of AI
 date: 2025-08-07
-type: quick-thoughts
+type: musings
 tags:
   - "Artificial Intelligence "
   - "Education "

@@ -1,7 +1,7 @@
 ---
 title: The economics of tyranny
 date: 2025-09-12
-type: link-dumps
+type: links
 tags:
   - Democracy
   - Autocracy

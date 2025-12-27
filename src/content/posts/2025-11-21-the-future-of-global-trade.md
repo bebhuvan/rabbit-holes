@@ -1,7 +1,7 @@
 ---
 title: The future of global trade
 date: 2025-11-21
-type: quick-thoughts
+type: musings
 tags:
   - Trade
   - Economic development

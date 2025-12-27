@@ -1,7 +1,7 @@
 ---
 title: Brian Eno on being pretentious
 date: 2025-10-26
-type: quick-thoughts
+type: musings
 tags:
   - Pretentious
 published: true

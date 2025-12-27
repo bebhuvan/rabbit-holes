@@ -1,7 +1,7 @@
 ---
 title: Ah, but is not this a glorious time for your deep inward fires?
 date: 2025-11-15
-type: quick-thoughts
+type: musings
 published: true
 draft: false
 featured: false

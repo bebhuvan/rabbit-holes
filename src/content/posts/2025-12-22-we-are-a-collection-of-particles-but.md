@@ -1,7 +1,7 @@
 ---
 title: We are a collection of particles but...
 date: 2025-12-22
-type: quick-thoughts
+type: musings
 tags:
   - "Physics "
   - Life

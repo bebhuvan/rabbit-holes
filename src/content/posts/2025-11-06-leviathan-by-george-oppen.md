@@ -1,7 +1,7 @@
 ---
 title: Leviathan by George Oppen
 date: 2025-11-06
-type: reflections
+type: verse
 tags:
   - "Poetry "
 published: true

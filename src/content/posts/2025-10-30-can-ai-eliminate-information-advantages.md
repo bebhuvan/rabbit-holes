@@ -1,7 +1,7 @@
 ---
 title: Can AI eliminate information advantages
 date: 2025-10-30
-type: quick-thoughts
+type: musings
 tags:
   - AI
 published: true

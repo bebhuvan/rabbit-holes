@@ -1,7 +1,7 @@
 ---
 title: "Invention of modernity "
 date: 2025-10-31
-type: thats-interesting
+type: musings
 tags:
   - "History "
 published: true

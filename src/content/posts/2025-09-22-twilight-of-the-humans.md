@@ -1,7 +1,7 @@
 ---
 title: Twilight of the humans?
 date: 2025-09-22
-type: link-dumps
+type: links
 tags:
   - Fertility rate
   - Global population

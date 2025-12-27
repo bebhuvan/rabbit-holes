@@ -1,7 +1,7 @@
 ---
 title: Vibe Physics? Not Yet
 date: 2025-08-29
-type: thats-interesting
+type: musings
 tags:
   - Vibe Coding
   - AI

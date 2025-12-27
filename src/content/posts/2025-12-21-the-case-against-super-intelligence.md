@@ -1,7 +1,7 @@
 ---
 title: "The case against superintelligence "
 date: 2025-12-21
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

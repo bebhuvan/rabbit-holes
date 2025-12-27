@@ -1,7 +1,7 @@
 ---
 title: The cost of extreme weather
 date: 2025-10-02
-type: data-stories
+type: reflections
 tags:
   - Climate change
   - Insurance

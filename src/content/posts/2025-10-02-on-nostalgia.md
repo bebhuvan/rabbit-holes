@@ -1,7 +1,7 @@
 ---
 title: "On nostalgia "
 date: 2025-10-02
-type: quick-thoughts
+type: musings
 tags:
   - "Nostalgia "
 published: true

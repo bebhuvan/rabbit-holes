@@ -1,7 +1,7 @@
 ---
 title: The cost of collective apathy
 date: 2025-08-20
-type: quick-thoughts
+type: musings
 tags:
   - Responsibility
 description: That simple matter of fact is that we don't bother about so many

@@ -1,7 +1,7 @@
 ---
 title: "On China and chips "
 date: 2025-12-15
-type: link-dumps
+type: links
 tags:
   - China
   - AI

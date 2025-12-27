@@ -1,7 +1,7 @@
 ---
 title: The day is gone by John Keats
 date: 2025-09-28
-type: thats-interesting
+type: verse
 tags:
   - Poetry
 published: true

@@ -1,7 +1,7 @@
 ---
 title: AGI will be business as usual?
 date: 2025-11-12
-type: thats-interesting
+type: musings
 tags:
   - AI
 published: true

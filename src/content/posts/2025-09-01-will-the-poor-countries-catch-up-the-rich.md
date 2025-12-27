@@ -1,7 +1,7 @@
 ---
 title: Will the poor countries catch up the rich?
 date: 2025-09-01
-type: link-dumps
+type: links
 tags:
   - Development
   - Economics

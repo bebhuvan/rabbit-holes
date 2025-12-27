@@ -1,7 +1,7 @@
 ---
 title: How many jobs can AI kill
 date: 2025-11-14
-type: quick-thoughts
+type: musings
 tags:
   - AI
 published: true

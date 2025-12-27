@@ -1,7 +1,7 @@
 ---
 title: "Don't want to die? Drink coffee "
 date: 2025-10-28
-type: quick-thoughts
+type: musings
 tags:
   - Coffee
 published: true

@@ -1,7 +1,7 @@
 ---
 title: "Ads everywhere "
 date: 2025-12-13
-type: quick-thoughts
+type: musings
 tags:
   - "Advertising "
   - AI

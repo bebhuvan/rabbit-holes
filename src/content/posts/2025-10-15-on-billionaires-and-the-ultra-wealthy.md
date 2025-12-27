@@ -1,7 +1,7 @@
 ---
 title: On billionaires and the ultra-wealthy
 date: 2025-10-15
-type: thats-interesting
+type: musings
 tags:
   - Wealth inequality
 published: true

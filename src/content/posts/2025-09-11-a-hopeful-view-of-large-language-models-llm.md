@@ -1,7 +1,7 @@
 ---
 title: A hopeful view of large language models (LLM)
 date: 2025-09-11
-type: quick-thoughts
+type: musings
 tags:
   - AI
   - Large language models

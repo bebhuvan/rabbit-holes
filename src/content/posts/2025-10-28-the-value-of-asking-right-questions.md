@@ -1,7 +1,7 @@
 ---
 title: The value of asking right questions
 date: 2025-10-28
-type: quick-thoughts
+type: musings
 tags:
   - "Questions "
 published: true

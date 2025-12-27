@@ -1,7 +1,7 @@
 ---
 title: The solar revolution
 date: 2025-09-09
-type: thats-interesting
+type: musings
 tags:
   - Solar
   - Clean Energy

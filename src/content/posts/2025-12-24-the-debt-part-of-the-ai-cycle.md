@@ -1,7 +1,7 @@
 ---
 title: The debt part of the AI cycle
 date: 2025-12-24
-type: link-dumps
+type: links
 tags:
   - "AI "
 published: true

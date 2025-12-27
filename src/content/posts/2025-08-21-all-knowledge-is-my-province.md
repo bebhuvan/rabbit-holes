@@ -1,7 +1,7 @@
 ---
 title: All knowledge is my province
 date: 2025-08-21
-type: quick-thoughts
+type: musings
 tags:
   - Knowledge
   - Francis Bacon

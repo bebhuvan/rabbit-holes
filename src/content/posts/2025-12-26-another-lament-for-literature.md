@@ -1,7 +1,7 @@
 ---
 title: "Another lament for literature "
 date: 2025-12-26
-type: quick-thoughts
+type: musings
 tags:
   - "Literature "
 published: true

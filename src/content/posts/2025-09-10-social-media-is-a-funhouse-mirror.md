@@ -1,7 +1,7 @@
 ---
 title: Social media is a funhouse mirror
 date: 2025-09-10
-type: quick-thoughts
+type: musings
 published: true
 draft: false
 featured: false

@@ -1,7 +1,7 @@
 ---
 title: On AI taking jobs
 date: 2025-08-22
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

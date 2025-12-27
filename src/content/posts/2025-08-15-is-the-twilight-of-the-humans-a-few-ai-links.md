@@ -1,7 +1,7 @@
 ---
 title: "Is the twilight of the humans? A few AI links "
 date: 2025-08-15
-type: link-dumps
+type: links
 tags:
   - Artificial Intelligence
 description: LLMs show promise but can’t yet build software. AI's rise is slow,

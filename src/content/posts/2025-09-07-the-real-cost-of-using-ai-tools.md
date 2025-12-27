@@ -1,7 +1,7 @@
 ---
 title: The real cost of using AI tools
 date: 2025-09-08
-type: quick-thoughts
+type: musings
 published: false
 draft: true
 featured: false

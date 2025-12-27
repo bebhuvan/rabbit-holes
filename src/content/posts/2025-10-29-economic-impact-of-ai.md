@@ -1,7 +1,7 @@
 ---
 title: "Economic impact of AI "
 date: 2025-10-29
-type: quick-thoughts
+type: musings
 tags:
   - AI
 published: true

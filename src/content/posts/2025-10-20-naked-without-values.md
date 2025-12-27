@@ -1,7 +1,7 @@
 ---
 title: Naked without values
 date: 2025-10-20
-type: quick-thoughts
+type: musings
 tags:
   - "Economics "
   - "Equality "

@@ -1,7 +1,7 @@
 ---
 title: "AI as a research partner "
 date: 2025-11-05
-type: quick-thoughts
+type: musings
 published: true
 draft: false
 featured: false

@@ -1,7 +1,7 @@
 ---
 title: " Where death is cheaper than life itself"
 date: 2025-10-12
-type: thats-interesting
+type: musings
 tags:
   - Healthcare
 published: true

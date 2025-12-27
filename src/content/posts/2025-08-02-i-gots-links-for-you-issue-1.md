@@ -1,7 +1,7 @@
 ---
 title: "I gots Links for you: Issue #1"
 date: 2025-08-02
-type: link-dumps
+type: links
 published: true
 ---
 A few good links. 

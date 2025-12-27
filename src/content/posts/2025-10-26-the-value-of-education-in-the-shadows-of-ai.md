@@ -1,7 +1,7 @@
 ---
 title: "The value of education in the shadows of AI "
 date: 2025-10-26
-type: thats-interesting
+type: musings
 tags:
   - AI
   - Education

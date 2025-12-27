@@ -1,7 +1,7 @@
 ---
 title: Take big shots
 date: 2025-11-14
-type: quick-thoughts
+type: musings
 tags:
   - Advice
 published: true

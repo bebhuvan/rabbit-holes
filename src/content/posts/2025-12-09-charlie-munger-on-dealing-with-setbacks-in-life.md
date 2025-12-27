@@ -1,7 +1,7 @@
 ---
 title: "Charlie Munger on dealing with setbacks in life "
 date: 2025-12-09
-type: quick-thoughts
+type: musings
 tags:
   - "Philosophy "
 published: true

@@ -1,7 +1,7 @@
 ---
 title: How Americans use AI and what they think about it
 date: 2025-09-19
-type: thats-interesting
+type: musings
 tags:
   - AI
 published: true

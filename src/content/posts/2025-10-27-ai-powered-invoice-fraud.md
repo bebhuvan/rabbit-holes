@@ -1,7 +1,7 @@
 ---
 title: AI-powered invoice fraud
 date: 2025-10-27
-type: quick-thoughts
+type: musings
 tags:
   - A
   - Fraud

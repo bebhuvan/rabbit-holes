@@ -1,7 +1,7 @@
 ---
 title: I got some links for you
 date: 2025-09-05
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

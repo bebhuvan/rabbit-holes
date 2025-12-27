@@ -1,7 +1,7 @@
 ---
 title: Here come the robots
 date: 2025-10-22
-type: thats-interesting
+type: musings
 tags:
   - "Automation "
   - Jobs

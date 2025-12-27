@@ -1,7 +1,7 @@
 ---
 title: Did we get evolution wrong?
 date: 2025-11-11
-type: quick-thoughts
+type: musings
 tags:
   - "Evolution "
 published: true

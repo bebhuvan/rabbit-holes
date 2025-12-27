@@ -1,7 +1,7 @@
 ---
 title: "The world won't end with a bang but with a shrug of indifference "
 date: 2025-08-10
-type: quick-thoughts
+type: musings
 tags:
   - Technology
   - Smartphones

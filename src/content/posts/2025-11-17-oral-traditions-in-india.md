@@ -1,7 +1,7 @@
 ---
 title: Oral traditions in India
 date: 2025-11-17
-type: quick-thoughts
+type: musings
 tags:
   - Literature
   - Orality

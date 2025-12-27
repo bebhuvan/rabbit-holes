@@ -1,7 +1,7 @@
 ---
 title: We are summoning ghosts with LLMs
 date: 2025-12-20
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

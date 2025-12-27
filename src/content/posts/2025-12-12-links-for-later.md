@@ -1,7 +1,7 @@
 ---
 title: Links for later
 date: 2025-12-12
-type: link-dumps
+type: links
 published: true
 draft: false
 featured: false

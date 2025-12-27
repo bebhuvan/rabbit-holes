@@ -1,7 +1,7 @@
 ---
 title: Evil by Arthur Rimbauld
 date: 2025-11-08
-type: reflections
+type: verse
 tags:
   - Poetry
 published: true

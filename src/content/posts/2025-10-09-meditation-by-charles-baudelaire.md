@@ -1,7 +1,7 @@
 ---
 title: Meditation by Charles Baudelaire
 date: 2025-10-09
-type: reflections
+type: verse
 tags:
   - "Poetry "
 published: true

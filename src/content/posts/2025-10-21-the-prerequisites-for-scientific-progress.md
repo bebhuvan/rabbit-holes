@@ -1,7 +1,7 @@
 ---
 title: The prerequisites for scientific progress
 date: 2025-10-21
-type: quick-thoughts
+type: musings
 tags:
   - Innovation
   - Progress

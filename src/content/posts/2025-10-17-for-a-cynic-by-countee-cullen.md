@@ -1,7 +1,7 @@
 ---
 title: For A Cynic by Countee Cullen
 date: 2025-10-17
-type: quick-thoughts
+type: verse
 dive_deeper:
   - text: Countee Cullen
     url: https://poets.org/poet/countee-cullen

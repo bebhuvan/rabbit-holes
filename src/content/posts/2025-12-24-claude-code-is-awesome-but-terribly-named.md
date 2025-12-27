@@ -1,7 +1,7 @@
 ---
 title: Claude Code is awesome, but terribly named
 date: 2025-12-24
-type: quick-thoughts
+type: musings
 tags:
   - AI
 published: true

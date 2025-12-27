@@ -1,7 +1,7 @@
 ---
 title: odds and ends
 date: 2025-10-07
-type: link-dumps
+type: links
 published: true
 draft: false
 featured: false

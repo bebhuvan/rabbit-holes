@@ -1,7 +1,7 @@
 ---
 title: "Henry Oliver on how to have good taste "
 date: 2025-10-03
-type: thats-interesting
+type: musings
 tags:
   - "Reading "
   - Taste

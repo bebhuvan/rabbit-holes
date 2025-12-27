@@ -1,7 +1,7 @@
 ---
 title: On having a philosophy of money
 date: 2025-10-25
-type: quick-thoughts
+type: musings
 tags:
   - Money
   - Philosophy

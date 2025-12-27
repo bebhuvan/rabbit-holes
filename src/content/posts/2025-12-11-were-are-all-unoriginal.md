@@ -1,7 +1,7 @@
 ---
 title: We're are all unoriginal
 date: 2025-12-11
-type: quick-thoughts
+type: musings
 tags:
   - "Writing "
 published: true

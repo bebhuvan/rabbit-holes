@@ -1,7 +1,7 @@
 ---
 title: The greatest anonymous poem
 date: 2025-08-18
-type: thats-interesting
+type: verse
 tags:
   - "Poetry "
 description: Understanding the greatest anonymous poem.

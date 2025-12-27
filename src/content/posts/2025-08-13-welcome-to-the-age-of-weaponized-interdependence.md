@@ -1,7 +1,7 @@
 ---
 title: "Welcome to the age of weaponized interdependence "
 date: 2025-08-13
-type: quick-thoughts
+type: musings
 url: https://www.economist.com/china/2025/08/12/how-scared-should-you-be-of-the-china-squeeze
 tags:
   - Weaponized interdependence

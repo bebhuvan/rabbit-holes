@@ -1,7 +1,7 @@
 ---
 title: "Self improving systems are not possible "
 date: 2025-12-25
-type: quick-thoughts
+type: musings
 tags:
   - "AI "
   - Evolution

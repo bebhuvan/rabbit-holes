@@ -1,7 +1,7 @@
 ---
 title: "Your next good read "
 date: 2025-08-27
-type: link-dumps
+type: links
 url: https://papertrails.rabbitholes.garden
 description: A collection of the most insightful articles on culture,
   philosophy, history, science, finance, economics and much more.

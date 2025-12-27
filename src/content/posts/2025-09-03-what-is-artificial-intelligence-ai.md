@@ -1,7 +1,7 @@
 ---
 title: What is artificial intelligence (AI)?
 date: 2025-09-03
-type: thats-interesting
+type: musings
 tags:
   - AI
   - Technology

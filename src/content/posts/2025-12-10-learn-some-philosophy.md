@@ -1,7 +1,7 @@
 ---
 title: "Learn some philosophy "
 date: 2025-12-10
-type: quick-thoughts
+type: musings
 tags:
   - Philosophy
 published: true

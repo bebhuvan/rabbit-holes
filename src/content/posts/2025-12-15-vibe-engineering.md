@@ -1,7 +1,7 @@
 ---
 title: "Vibe engineering "
 date: 2025-12-15
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

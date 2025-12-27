@@ -1,7 +1,7 @@
 ---
 title: On hope and despair
 date: 2025-10-17
-type: quick-thoughts
+type: musings
 tags:
   - Hope and despair
 published: true

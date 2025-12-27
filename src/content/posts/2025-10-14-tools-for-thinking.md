@@ -1,7 +1,7 @@
 ---
 title: "Tools for thinking "
 date: 2025-10-14
-type: quick-thoughts
+type: musings
 tags:
   - Tools for thinking
   - Logic

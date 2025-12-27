@@ -1,7 +1,7 @@
 ---
 title: "China is playing long games "
 date: 2025-10-20
-type: thats-interesting
+type: musings
 tags:
   - China
 published: true

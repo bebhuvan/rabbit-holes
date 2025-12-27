@@ -1,7 +1,7 @@
 ---
 title: Rousseau on reflection and reason
 date: 2025-10-22
-type: quick-thoughts
+type: musings
 published: true
 draft: false
 featured: false

@@ -1,7 +1,7 @@
 ---
 title: "Why AI is not a bubble "
 date: 2025-12-25
-type: link-dumps
+type: links
 tags:
   - AI
 published: true

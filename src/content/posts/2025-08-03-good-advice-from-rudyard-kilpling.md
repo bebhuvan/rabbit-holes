@@ -1,7 +1,7 @@
 ---
 title: Good advice from Rudyard Kilpling
 date: 2025-08-03
-type: reflections
+type: verse
 tags:
   - Rudyard Kipling
   - Poetry

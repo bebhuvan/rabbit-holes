@@ -1,7 +1,7 @@
 ---
 title: Preserving India's artistic heritage
 date: 2025-12-22
-type: quick-thoughts
+type: musings
 tags:
   - "History "
   - "Public domain "

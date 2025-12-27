@@ -1,7 +1,7 @@
 ---
 title: The death of silence and the loss of contemplative spaces
 date: 2025-08-09
-type: quick-thoughts
+type: musings
 url: https://open.substack.com/pub/bhuvan/p/the-death-of-silence?r=1eft5&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true
 tags:
   - Contemplation
