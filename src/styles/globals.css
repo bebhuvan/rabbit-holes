@@ -1,47 +1,46 @@
-/* Global Styles - Playful & Colorful Design */
+/* Global Styles - Refined Editorial Design */
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 /* Design Tokens */
 :root {
-  /* Colors - Playful palette */
-  --color-bg: #ffffff;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #1a1a1a;
-  --color-text-tertiary: #666666;
-  --color-text-light: #999999;
-  --color-accent: #ef4444;
-  --color-accent-light: #f87171;
-  --color-border: #e8e8e8;
-  --color-border-light: #eeeeee;
-  --color-surface: #f8f8f8;
-  --color-off-white: #fafaf7;
-  --color-error: #ef4444;
-  --color-success: #10b981;
+  /* Colors - Refined warm palette */
+  --color-bg: #FDFCFA;
+  --color-text-primary: #141414;
+  --color-text-secondary: #3a3a3a;
+  --color-text-tertiary: #717171;
+  --color-text-light: #a8a8a8;
+  --color-accent: #d95d0f;
+  --color-accent-light: #e87322;
+  --color-border: #e5e2dc;
+  --color-border-light: #f0ede8;
+  --color-surface: #f4f3f0;
+  --color-surface-warm: #faf8f5;
+  --color-error: #b91c1c;
+  --color-success: #15803d;
 
-  /* Fun color palette - softened */
-  --red: #e57373;
-  --orange: #ffab74;
-  --yellow: #ffd54f;
-  --green: #66bb9a;
-  --blue: #64a8e8;
-  --purple: #9d8cd9;
-  --pink: #e891b9;
+  /* Refined color palette */
+  --red: #b91c1c;
+  --orange: #d95d0f;
+  --yellow: #ca8a04;
+  --green: #15803d;
+  --blue: #1d4ed8;
+  --purple: #6d28d9;
+  --pink: #be185d;
+
+  /* Color glows for hover states */
+  --orange-glow: rgba(217, 93, 15, 0.08);
+  --purple-glow: rgba(109, 40, 217, 0.07);
+  --blue-glow: rgba(29, 78, 216, 0.07);
+  --green-glow: rgba(21, 128, 61, 0.07);
 
   /* Color semantic tokens for post types */
-  --color-type-taught-by-machine: var(--yellow);
-  --color-type-quick-thoughts: var(--blue);
-  --color-type-link-dumps: var(--pink);
-  --color-type-deep-dives: var(--green);
-  --color-type-thats-interesting: var(--purple);
-  --color-type-practical: var(--red);
-  --color-type-reflections: var(--green);
-  --color-type-data-stories: var(--orange);
-  --color-type-news-commentary: var(--purple);
-  --color-type-videos: var(--blue);
-  --color-type-music: var(--pink);
-  --color-type-photos: var(--orange);
+  --color-type-musings: var(--orange);
+  --color-type-links: var(--blue);
+  --color-type-reflections: var(--purple);
+  --color-type-verse: var(--purple);
+  --color-type-practical: var(--green);
   
   /* Spacing Scale - Logical 8px base */
   --space-xs: 4px;
@@ -68,10 +67,10 @@
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
   
-  /* Layout Widths - Editorial narrower */
-  --width-content: 720px;
-  --width-wide: 800px;
-  --width-nav: 720px;
+  /* Layout Widths */
+  --width-content: 800px;
+  --width-wide: 900px;
+  --width-nav: 800px;
   --width-full: 1200px;
   
   /* Border Radius */
@@ -88,41 +87,41 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
-  --color-bg: #0a0a0a;
-  --color-text-primary: #f5f5f5;
-  --color-text-secondary: #e5e5e5;
-  --color-text-tertiary: #a3a3a3;
-  --color-text-light: #737373;
-  --color-accent: #f87171;
-  --color-accent-light: #fca5a5;
-  --color-border: #262626;
-  --color-border-light: #1a1a1a;
-  --color-surface: #171717;
+  --color-bg: #0f0f0f;
+  --color-text-primary: #f5f5f4;
+  --color-text-secondary: #d6d3d1;
+  --color-text-tertiary: #a8a29e;
+  --color-text-light: #78716c;
+  --color-accent: #ea7e3c;
+  --color-accent-light: #f59e5e;
+  --color-border: #292524;
+  --color-border-light: #1c1917;
+  --color-surface: #1c1917;
+  --color-surface-warm: #1f1c1a;
   --color-error: #f87171;
-  --color-success: #34d399;
+  --color-success: #4ade80;
 
-  /* Dark mode colorful palette - soft and muted */
-  --red: #e08080;
-  --orange: #f0a878;
-  --yellow: #f0d070;
-  --green: #70c4a0;
-  --blue: #78b4e8;
-  --purple: #a898d8;
-  --pink: #e098b8;
+  /* Dark mode refined palette */
+  --red: #f87171;
+  --orange: #fb923c;
+  --yellow: #facc15;
+  --green: #4ade80;
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+
+  /* Color glows for dark mode */
+  --orange-glow: rgba(251, 146, 60, 0.12);
+  --purple-glow: rgba(167, 139, 250, 0.1);
+  --blue-glow: rgba(96, 165, 250, 0.1);
+  --green-glow: rgba(74, 222, 128, 0.1);
 
   /* Post type colors for dark mode */
-  --color-type-taught-by-machine: var(--yellow);
-  --color-type-quick-thoughts: var(--blue);
-  --color-type-link-dumps: var(--pink);
-  --color-type-deep-dives: var(--green);
-  --color-type-thats-interesting: var(--purple);
-  --color-type-practical: var(--red);
-  --color-type-reflections: var(--green);
-  --color-type-data-stories: var(--orange);
-  --color-type-news-commentary: var(--purple);
-  --color-type-videos: var(--blue);
-  --color-type-music: var(--pink);
-  --color-type-photos: var(--orange);
+  --color-type-musings: var(--orange);
+  --color-type-links: var(--blue);
+  --color-type-reflections: var(--purple);
+  --color-type-verse: var(--purple);
+  --color-type-practical: var(--green);
 }
 
 /* Reset & Base Styles */
@@ -334,10 +333,10 @@ button {
   color: var(--red);
 }
 
-/* Yellow selection color for playful feel */
+/* Orange selection color */
 ::selection {
-  background: var(--yellow);
-  color: var(--color-text-primary);
+  background: var(--orange);
+  color: white;
 }
 
 /* Responsive typography */

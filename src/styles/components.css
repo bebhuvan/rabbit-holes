@@ -744,18 +744,11 @@
   border-radius: 50%;
 }
 
-.post-type-indicator--taught-by-machine { background: var(--color-type-taught-by-machine); }
-.post-type-indicator--quick-thoughts { background: var(--color-type-quick-thoughts); }
-.post-type-indicator--link-dumps { background: var(--color-type-link-dumps); }
-.post-type-indicator--deep-dives { background: var(--color-type-deep-dives); }
-.post-type-indicator--thats-interesting { background: var(--color-type-thats-interesting); }
-.post-type-indicator--practical { background: var(--color-type-practical); }
+.post-type-indicator--musings { background: var(--color-type-musings); }
+.post-type-indicator--links { background: var(--color-type-links); }
 .post-type-indicator--reflections { background: var(--color-type-reflections); }
-.post-type-indicator--data-stories { background: var(--color-type-data-stories); }
-.post-type-indicator--news-commentary { background: var(--color-type-news-commentary); }
-.post-type-indicator--videos { background: var(--color-type-videos); }
-.post-type-indicator--music { background: var(--color-type-music); }
-.post-type-indicator--photos { background: var(--color-type-photos); }
+.post-type-indicator--verse { background: var(--color-type-verse); }
+.post-type-indicator--practical { background: var(--color-type-practical); }
 
 .post-title {
   font-family: 'Space Grotesk', sans-serif;
