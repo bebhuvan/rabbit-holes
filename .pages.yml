@@ -53,33 +53,19 @@ content:
         label: Post Type
         type: select
         required: true
-        default: quick-thoughts
+        default: musings
         options:
           values:
-            - value: taught-by-machine
-              label: 🤖 Taught by the machine
-            - value: quick-thoughts
-              label: 💭 Quick thoughts
-            - value: link-dumps
-              label: 🔍 Link dumps
-            - value: deep-dives
-              label: 📚 Deep dives
-            - value: thats-interesting
-              label: 🌟 That's interesting
-            - value: practical
-              label: 🎯 Practical
+            - value: musings
+              label: 💭 Musings
+            - value: links
+              label: 🔗 Links
             - value: reflections
               label: 🧠 Reflections
-            - value: data-stories
-              label: 📈 Data stories
-            - value: news-commentary
-              label: 🗞️ News & commentary
-            - value: videos
-              label: 📹 Videos
-            - value: music
-              label: 🎵 Music
-            - value: photos
-              label: 📸 Photos
+            - value: verse
+              label: ✨ Verse
+            - value: practical
+              label: 🎯 Practical
       
       - name: url
         label: External URL
