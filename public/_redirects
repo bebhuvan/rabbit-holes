@@ -1,0 +1,11 @@
+# Category redirects (old -> new)
+/types/quick-thoughts /types/musings 301
+/types/thats-interesting /types/musings 301
+/types/link-dumps /types/links 301
+/types/deep-dives /types/reflections 301
+/types/taught-by-machine /types/reflections 301
+/types/data-stories /types/reflections 301
+/types/news-commentary /types/links 301
+/types/videos /types/links 301
+/types/music /types/links 301
+/types/photos /types/musings 301
