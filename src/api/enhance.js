@@ -380,7 +380,7 @@ published: false
       'technological-innovation': ['technology', 'innovation', 'invention', 'advancement'],
       'cultural-evolution': ['culture', 'evolution', 'change', 'development'],
       'ancient-history': ['ancient', 'egypt', 'greece', 'rome', 'archaeological'],
-      'deep-dives': ['deep', 'dive', 'exploration', 'investigation'],
+      'research': ['deep', 'dive', 'exploration', 'investigation'],
       'everyday-objects': ['everyday', 'ordinary', 'mundane', 'common']
     };
     
