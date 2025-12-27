@@ -2803,28 +2803,33 @@ export const prerender = false;
           }
         });
 
+        const extensions = [
+          markdown(),
+          history(),
+          keymap.of([...defaultKeymap, ...historyKeymap]),
+          placeholder('Start writing your markdown...'),
+          theme,
+          EditorView.updateListener.of(update => {
+            if (update.docChanged) {
+              state.editor.content = update.state.doc.toString();
+              state.editor.isDirty = true;
+              elements.editorStatus.textContent = 'Unsaved';
+              elements.editorStatus.classList.remove('saved');
+              elements.publishBtn.disabled = !state.editor.title;
+              debouncedSaveDraft();
+              updatePreview();
+            }
+          })
+        ];
+
+        if (isDark) {
+          extensions.push(oneDark);
+        }
+
         state.codemirror = new EditorView({
           state: EditorState.create({
             doc: state.editor.content,
-            extensions: [
-              markdown(),
-              history(),
-              keymap.of([...defaultKeymap, ...historyKeymap]),
-              placeholder('Start writing your markdown...'),
-              theme,
-              isDark ? oneDark : [],
-              EditorView.updateListener.of(update => {
-                if (update.docChanged) {
-                  state.editor.content = update.state.doc.toString();
-                  state.editor.isDirty = true;
-                  elements.editorStatus.textContent = 'Unsaved';
-                  elements.editorStatus.classList.remove('saved');
-                  elements.publishBtn.disabled = !state.editor.title;
-                  debouncedSaveDraft();
-                  updatePreview();
-                }
-              })
-            ]
+            extensions
           }),
           parent: $('codemirror-wrapper')
         });
