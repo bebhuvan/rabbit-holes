@@ -3,8 +3,21 @@ export async function POST({ request }) {
   try {
     const { password } = await request.json();
     
-    // Get password from environment variable with fallback
-    const correctPassword = import.meta.env.CMS_PASSWORD || 'rabbit-holes-cms-2024';
+    // Get password from environment variable (must be set in Cloudflare)
+    const correctPassword = import.meta.env.CMS_PASSWORD;
+
+    if (!correctPassword) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: 'CMS_PASSWORD not configured'
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    }
     
     if (password === correctPassword) {
       // Create a simple session token (in production, use JWT or similar)
