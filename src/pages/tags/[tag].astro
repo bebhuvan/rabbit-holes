@@ -3,21 +3,20 @@ export const prerender = true;
 
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import PostCard from '../../components/PostCard.astro';
+import { calculateReadingTime } from '../../utils/shared';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => {
     return data.published !== false;
   });
-  
-  // Get all unique tags
-  const tags = [...new Set(posts.flatMap(post => post.data.tags))];
-  
+
+  const tags = [...new Set(posts.flatMap(post => post.data.tags || []))];
+
   return tags.map(tag => ({
     params: { tag },
-    props: { 
-      posts: posts.filter(post => post.data.tags.includes(tag)),
-      tag 
+    props: {
+      posts: posts.filter(post => (post.data.tags || []).includes(tag)),
+      tag
     }
   }));
 }
@@ -25,250 +24,427 @@ export async function getStaticPaths() {
 const { posts, tag } = Astro.props;
 
 // Sort posts by date (newest first)
-const sortedPosts = posts.sort((a: any, b: any) => 
+const sortedPosts = posts.sort((a: any, b: any) =>
   new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 
-// Get related tags (tags that appear together with this tag)
+// Get related tags
 const relatedTags = [...new Set(
-  posts.flatMap((post: any) => post.data.tags)
+  posts.flatMap((post: any) => post.data.tags || [])
     .filter((t: string) => t !== tag)
-)]
-  .slice(0, 10); // Limit to 10 related tags
+)].slice(0, 8);
+
+// Helper to determine post type
+function getPostType(post: any) {
+  const type = post.data.type || '';
+
+  if (type === 'musings') {
+    return { class: 'post--musing', label: 'Musing', color: 'var(--orange)' };
+  }
+  if (type === 'links') {
+    return { class: 'post--links', label: 'Links', color: 'var(--blue)' };
+  }
+  if (type === 'reflections') {
+    return { class: 'post--reflection', label: 'Reflection', color: 'var(--color-text-primary)' };
+  }
+  if (type === 'verse') {
+    return { class: 'post--verse', label: 'Verse', color: 'var(--purple)' };
+  }
+  if (type === 'practical') {
+    return { class: 'post--practical', label: 'Practical', color: 'var(--green)' };
+  }
+  return { class: 'post--musing', label: 'Post', color: 'var(--orange)' };
+}
 ---
 
-<Base title={`Posts tagged "${tag}" - Bhuvan's Blog`} description={`All posts tagged with ${tag}`}>
-  <div class="tag-page-container">
-    <div class="tag-header">
-      <h1>#{tag}</h1>
-      <p>{posts.length} post{posts.length !== 1 ? 's' : ''} tagged with <strong>{tag}</strong></p>
-    </div>
+<Base title={`${tag} — Rabbit Holes`} description={`Ideas tagged with ${tag}`}>
+  <div class="tag-page">
 
-    {/* Tag stats */}
-    <div class="tag-stats">
-      <div class="stat-item">
-        <span class="stat-number">{posts.length}</span>
-        <span class="stat-label">Posts</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">
-          {posts.reduce((acc: number, post: any) => {
-            const uniqueTypes = new Set();
-            uniqueTypes.add(post.data.type);
-            return uniqueTypes.size;
-          }, new Set(posts.map((p: any) => p.data.type)).size)}
-        </span>
-        <span class="stat-label">Content Types</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">
-          {new Date(Math.max(...posts.map((p: any) => new Date(p.data.date).getTime()))).getFullYear()}
-        </span>
-        <span class="stat-label">Latest Year</span>
-      </div>
-    </div>
+    <header class="page-header">
+      <a href="/tags" class="back-link">← All Topics</a>
+      <h1 class="page-title">{tag}</h1>
+      <p class="page-subtitle">{posts.length} idea{posts.length !== 1 ? 's' : ''} in this thread</p>
+    </header>
 
-    {/* Posts */}
-    <section class="tag-posts">
-      <h2>All Posts</h2>
-      <div class="posts-list">
-        {sortedPosts.map((post: any) => (
-          <PostCard post={post} showExcerpt={true} />
-        ))}
-      </div>
-    </section>
+    <div class="main-layout">
 
-    {/* Related tags */}
-    {relatedTags.length > 0 && (
-      <section class="related-tags">
-        <h2>Related Tags</h2>
-        <p>Tags that often appear together with <strong>{tag}</strong></p>
-        <div class="related-tags-list">
-          {relatedTags.map((relatedTag: string) => (
-            <a href={`/tags/${relatedTag}`} class="related-tag">
-              #{relatedTag}
-            </a>
-          ))}
+      <section class="posts-content">
+        <h2 class="section-label">All Posts</h2>
+        <div class="posts-list">
+          {sortedPosts.map((post: any) => {
+            const postType = getPostType(post);
+            const readingTime = calculateReadingTime(post.body || '');
+            return (
+              <a href={`/posts/${post.slug}`} class={`post-item ${postType.class}`}>
+                <div class="post-date">
+                  {new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </div>
+                <div class="post-info">
+                  <span class="post-type" style={`color: ${postType.color}`}>{postType.label}</span>
+                  <h3 class="post-title">{post.data.title}</h3>
+                  {post.data.description && (
+                    <p class="post-excerpt">{post.data.description}</p>
+                  )}
+                </div>
+                <div class="post-meta">
+                  <span class="reading-time">{readingTime} min</span>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </section>
-    )}
 
-    {/* Navigation */}
-    <div class="tag-navigation">
-      <a href="/tags" class="back-to-tags">← All Tags</a>
-      <a href="/archive" class="view-archive">View Archive →</a>
+      <aside class="tag-sidebar">
+        <div class="sidebar-section stats-section">
+          <div class="stat">
+            <span class="stat-num">{posts.length}</span>
+            <span class="stat-label">Ideas</span>
+          </div>
+        </div>
+
+        {relatedTags.length > 0 && (
+          <div class="sidebar-section">
+            <div class="sidebar-title">Related Topics</div>
+            <div class="related-tags">
+              {relatedTags.map((relatedTag: string) => (
+                <a href={`/tags/${relatedTag}`} class="related-tag">{relatedTag}</a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Navigation</div>
+          <div class="nav-links">
+            <a href="/tags" class="nav-link">
+              <span>All Topics</span>
+              <span class="nav-arrow">→</span>
+            </a>
+            <a href="/archive" class="nav-link">
+              <span>Archive</span>
+              <span class="nav-arrow">→</span>
+            </a>
+            <a href="/" class="nav-link">
+              <span>Home</span>
+              <span class="nav-arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
     </div>
+
   </div>
 
   <style>
-    .tag-page-container {
-      max-width: 700px;
+    .tag-page {
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 80px 20px;
+      padding: 0 2.5rem 4rem;
     }
 
-    .tag-header {
+    /* Page Header */
+    .page-header {
+      padding: 3.5rem 0;
       text-align: center;
-      margin-bottom: 60px;
+      border-bottom: 3px solid var(--color-text-primary);
     }
 
-    .tag-header h1 {
-      font-size: 48px;
+    .back-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
       font-weight: 700;
-      margin-bottom: 16px;
-      color: var(--accent);
-      font-family: monospace;
+      color: var(--color-text-tertiary);
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s;
     }
 
-    .tag-header p {
-      color: var(--color-text-secondary);
-      font-size: 18px;
+    .back-link:hover {
+      color: var(--orange);
     }
 
-    .tag-stats {
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+      color: var(--purple);
+    }
+
+    .page-subtitle {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--color-text-tertiary);
+    }
+
+    /* Main Layout */
+    .main-layout {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-bottom: 60px;
+      grid-template-columns: 1fr 260px;
+      gap: 4rem;
+      padding-top: 2rem;
     }
 
-    .stat-item {
-      background: var(--hover);
-      padding: 24px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid var(--border);
-    }
-
-    .stat-number {
-      font-size: 32px;
+    /* Posts Content */
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
       font-weight: 700;
-      color: var(--accent);
-      display: block;
-    }
-
-    .stat-label {
-      color: var(--color-text-secondary);
-      font-size: 14px;
-      margin-top: 4px;
-    }
-
-    .tag-posts {
-      margin-bottom: 60px;
-    }
-
-    .tag-posts h2 {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 32px;
-      color: var(--color-text-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--color-border);
     }
 
     .posts-list {
       display: flex;
       flex-direction: column;
-      gap: 40px;
+    }
+
+    .post-item {
+      display: grid;
+      grid-template-columns: 90px 1fr auto;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--color-border);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .post-item:last-child {
+      border-bottom: none;
+    }
+
+    .post-item:hover {
+      background: var(--color-surface-warm);
+      margin: 0 -1rem;
+      padding: 1.5rem 1rem;
+    }
+
+    .post-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--color-text-light);
+      text-transform: uppercase;
+      padding-top: 0.25rem;
+    }
+
+    .post-info {
+      min-width: 0;
+    }
+
+    .post-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .post-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--color-text-primary);
+      margin-bottom: 0.35rem;
+      transition: color 0.2s;
+    }
+
+    .post-item:hover .post-title {
+      color: var(--purple);
+    }
+
+    .post--quote .post-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .post-excerpt {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--color-text-tertiary);
+    }
+
+    .post-meta {
+      text-align: right;
+      padding-top: 0.25rem;
+    }
+
+    .reading-time {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--color-text-light);
+    }
+
+    /* Sidebar */
+    .tag-sidebar {
+      position: sticky;
+      top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-section {
+      padding: 1.25rem;
+      background: var(--color-surface);
+    }
+
+    .sidebar-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    .stats-section {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--purple);
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-top: 0.35rem;
+      display: block;
     }
 
     .related-tags {
-      margin-bottom: 60px;
-      padding: 32px;
-      background: var(--hover);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-
-    .related-tags h2 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--color-text-primary);
-    }
-
-    .related-tags p {
-      color: var(--color-text-secondary);
-      margin-bottom: 20px;
-      font-size: 15px;
-    }
-
-    .related-tags-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 0.35rem;
     }
 
     .related-tag {
-      display: inline-block;
-      padding: 8px 16px;
-      background: var(--bg);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 0.45rem 0.7rem;
+      background: var(--color-bg);
       color: var(--color-text-secondary);
       text-decoration: none;
-      font-size: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      transition: all 0.2s ease;
-      font-family: monospace;
+      transition: all 0.2s;
     }
 
     .related-tag:hover {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-      transform: translateY(-1px);
+      background: var(--color-text-primary);
+      color: var(--color-bg);
     }
 
-    .tag-navigation {
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .nav-link {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 40px;
-      border-top: 1px solid var(--border);
-    }
-
-    .back-to-tags,
-    .view-archive {
-      color: var(--accent);
+      padding: 0.65rem 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--color-text-secondary);
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
+      transition: all 0.2s;
     }
 
-    .back-to-tags:hover,
-    .view-archive:hover {
+    .nav-link:hover {
+      background: var(--color-bg);
       color: var(--color-text-primary);
     }
 
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-      .tag-page-container {
-        padding: var(--space-2xl) var(--space-md);
-      }
+    .nav-arrow {
+      color: var(--color-text-light);
+      transition: transform 0.2s;
+    }
 
-      .tag-header h1 {
-        font-size: 36px;
-      }
+    .nav-link:hover .nav-arrow {
+      transform: translateX(3px);
+      color: var(--orange);
+    }
 
-      .tag-stats {
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main-layout {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 2rem;
       }
 
-      .stat-item {
-        padding: var(--space-md);
+      .tag-sidebar {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
       }
 
-      .stat-number {
-        font-size: 24px;
+      .stats-section {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .tag-page {
+        padding: 0 1.5rem 3rem;
       }
 
-      .related-tags {
-        padding: 24px;
+      .page-header {
+        padding: 2.5rem 0;
       }
 
-      .tag-navigation {
-        flex-direction: column;
-        gap: 16px;
-        text-align: center;
+      .post-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      .post-date {
+        padding-top: 0;
+      }
+
+      .post-meta {
+        display: none;
+      }
+
+      .post-item:hover {
+        margin: 0 -1rem;
+        padding: 1rem;
+      }
+
+      .tag-sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-section {
+        grid-column: span 1;
       }
     }
   </style>

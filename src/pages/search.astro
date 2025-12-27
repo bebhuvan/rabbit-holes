@@ -53,9 +53,10 @@ const searchIndex = posts.map(post => ({
 
     <div class="filter-tabs">
       <button class="filter-tab active" data-filter="all">All</button>
-      <button class="filter-tab" data-filter="taught-by-machine">Essays</button>
-      <button class="filter-tab" data-filter="link-dumps">Links</button>
-      <button class="filter-tab" data-filter="quick-thoughts">Notes</button>
+      <button class="filter-tab" data-filter="musings">Musings</button>
+      <button class="filter-tab" data-filter="links">Links</button>
+      <button class="filter-tab" data-filter="reflections">Reflections</button>
+      <button class="filter-tab" data-filter="verse">Verse</button>
     </div>
 
     <div id="search-status" class="search-status"></div>
@@ -76,50 +77,55 @@ const searchIndex = posts.map(post => ({
   <style>
     .search-container {
       width: 100%;
-      max-width: var(--width-content);
+      max-width: 740px;
       margin: 0 auto;
-      padding: 0 40px;
+      padding: 0 2rem;
     }
 
     .search-wrapper {
-      padding: 100px 0 120px;
+      padding: 4rem 0 6rem;
     }
 
     .page-header {
-      margin-bottom: 60px;
+      margin-bottom: 3rem;
+      text-align: center;
     }
 
     .page-label {
-      font-family: 'Outfit', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--color-text-light);
-      margin-bottom: 24px;
+      margin-bottom: 1rem;
     }
 
     h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 52px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 700;
       line-height: 1.1;
-      letter-spacing: -0.025em;
-      margin-bottom: 24px;
-      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .page-description {
-      font-size: 21px;
-      line-height: 1.6;
+      font-size: 1.1rem;
+      line-height: 1.7;
       color: var(--color-text-tertiary);
-      max-width: 540px;
+      max-width: 500px;
+      margin: 0 auto;
     }
 
     .search-box {
-      margin-bottom: 60px;
-      padding-bottom: 60px;
-      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--color-border);
     }
 
     .search-input-wrapper {
@@ -128,17 +134,19 @@ const searchIndex = posts.map(post => ({
 
     .search-input {
       width: 100%;
-      font-family: 'Crimson Pro', Georgia, serif;
-      font-size: 18px;
-      padding: 16px 48px 16px 20px;
-      border: 1px solid #d0d0d0;
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1rem;
+      padding: 1rem 3rem 1rem 1.25rem;
+      border: 2px solid var(--color-border);
+      border-radius: 2px;
       background: var(--color-bg);
       color: var(--color-text-secondary);
       outline: none;
+      transition: border-color 0.2s ease;
     }
 
     .search-input:focus {
-      border-color: var(--color-accent);
+      border-color: var(--green);
     }
 
     .search-input::placeholder {
@@ -147,55 +155,59 @@ const searchIndex = posts.map(post => ({
 
     .search-icon {
       position: absolute;
-      right: 20px;
+      right: 1rem;
       top: 50%;
       transform: translateY(-50%);
       color: var(--color-text-light);
-      font-size: 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
     }
 
     .filter-tabs {
       display: flex;
-      gap: 12px;
-      margin-bottom: 60px;
+      gap: 0.5rem;
+      margin-bottom: 3rem;
       flex-wrap: wrap;
     }
 
     .filter-tab {
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
       letter-spacing: 0.05em;
-      padding: 10px 20px;
-      border: 1px solid #d0d0d0;
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--color-border);
       background: transparent;
-      color: var(--color-text-secondary);
+      color: var(--color-text-tertiary);
       cursor: pointer;
       text-transform: uppercase;
+      border-radius: 2px;
       transition: all 0.2s ease;
     }
 
     .filter-tab.active {
-      background: var(--color-text-secondary);
+      background: var(--color-text-primary);
       color: var(--color-bg);
-      border-color: var(--color-text-secondary);
+      border-color: var(--color-text-primary);
     }
 
     .filter-tab:hover {
-      background: var(--color-accent);
-      color: var(--color-bg);
-      border-color: var(--color-accent);
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+      transform: translateY(-2px);
     }
 
     .search-status {
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       color: var(--color-text-light);
-      margin-bottom: 48px;
-      padding: 12px 0;
-      border-top: 1px solid #f0f0f0;
-      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 2rem;
+      padding: 0.75rem 0;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
     }
 
     .search-status:empty {
@@ -203,64 +215,64 @@ const searchIndex = posts.map(post => ({
     }
 
     .search-results {
-      margin-bottom: 80px;
+      margin-bottom: 4rem;
     }
 
-    /* Apply global post card styles to search results - using :global for dynamic content */
     :global(.search-result) {
-      margin-bottom: 80px;
-      padding-bottom: 80px;
-      border-bottom: 1px solid #eeeeee;
+      padding: 2rem 0 2rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    :global(.search-result:hover) {
+      padding-left: 1.5rem;
+      border-left-color: var(--green);
     }
 
     :global(.search-result:last-child) {
       border-bottom: none;
     }
 
-    /* Use post-meta-line styling for date and type */
     :global(.search-result-meta) {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
     }
 
     :global(.search-result-date) {
-      font-family: 'Outfit', sans-serif;
-      font-size: 11px;
-      color: var(--color-accent);
-      letter-spacing: 0.15em;
-      font-weight: 600;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      font-weight: 700;
       text-transform: uppercase;
     }
 
     :global(.search-result-type) {
-      font-family: 'Outfit', sans-serif;
-      font-size: 10px;
-      color: var(--color-text-light);
-      letter-spacing: 0.1em;
-      font-weight: 500;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.5rem;
+      background: var(--green);
+      color: white;
+      border-radius: 2px;
+      font-weight: 700;
       text-transform: uppercase;
-      position: relative;
-      padding-left: 12px;
     }
 
     :global(.search-result-type::before) {
-      content: '·';
-      position: absolute;
-      left: 0;
-      color: var(--color-text-light);
-      font-weight: 400;
+      content: none;
     }
 
-    /* Use post-title styling */
     :global(.search-result-title) {
-      font-family: 'Outfit', sans-serif;
-      font-size: 36px;
-      font-weight: 600;
-      line-height: 1.15;
-      letter-spacing: -0.015em;
-      margin-bottom: 18px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
       color: var(--color-text-primary);
     }
 
@@ -271,97 +283,84 @@ const searchIndex = posts.map(post => ({
     }
 
     :global(.search-result-title a:hover) {
-      color: var(--color-accent);
+      color: var(--green);
     }
 
-    /* Use excerpt styling */
     :global(.search-result-snippet) {
-      font-size: 20px;
-      line-height: 1.75;
-      color: var(--color-text-secondary);
-      font-weight: 400;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--color-text-tertiary);
     }
 
     .search-suggestions {
-      margin-top: 60px;
+      margin-top: 3rem;
     }
 
     .suggestions-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
       color: var(--color-text-primary);
     }
 
     .tag-cloud {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 0.5rem;
     }
 
     .tag-btn {
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 16px;
-      border: 1px solid #d0d0d0;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 0.75rem;
+      border: 2px solid var(--color-border);
       background: transparent;
-      color: var(--color-text-secondary);
+      color: var(--color-text-tertiary);
       cursor: pointer;
+      border-radius: 2px;
       transition: all 0.2s ease;
     }
 
     .tag-btn:hover {
-      background: var(--color-accent);
-      color: var(--color-bg);
-      border-color: var(--color-accent);
+      background: var(--purple);
+      color: white;
+      border-color: var(--purple);
+      transform: translateY(-2px);
     }
 
-    /* Mobile responsive */
     @media (max-width: 768px) {
       .search-container {
-        padding: 0 24px;
+        padding: 0 1.5rem;
       }
 
       .search-wrapper {
-        padding: 60px 0 70px;
-      }
-
-      h1 {
-        font-size: 36px;
+        padding: 3rem 0 5rem;
       }
 
       .page-header {
-        margin-bottom: 48px;
+        margin-bottom: 2.5rem;
       }
 
       .search-box {
-        margin-bottom: 48px;
-        padding-bottom: 48px;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
       }
 
       .filter-tabs {
-        margin-bottom: 48px;
+        margin-bottom: 2.5rem;
       }
 
       :global(.search-result) {
-        margin-bottom: 50px;
-        padding-bottom: 50px;
-      }
-
-      :global(.search-result-title) {
-        font-size: 28px;
-      }
-
-      :global(.search-result-snippet) {
-        font-size: 18px;
+        padding: 1.5rem 0 1.5rem 0.75rem;
       }
     }
 
     @media (max-width: 480px) {
       .search-container {
-        padding: 0 var(--space-md); /* 16px - matches global .container */
+        padding: 0 1rem;
       }
     }
   </style>

@@ -23,77 +23,35 @@ const { type, posts } = Astro.props;
 
 // Category metadata
 const categoryMeta = {
-  'taught-by-machine': { 
-    emoji: '🤖', 
-    label: 'Taught by the machine', 
-    description: 'AI-assisted learning essays and explorations. These posts dive into topics with the help of AI, creating comprehensive educational content.',
-    color: 'var(--color-type-taught-by-machine)'
+  'musings': {
+    emoji: '💭',
+    label: 'Musings',
+    description: 'Brief observations, quotes, and spontaneous ideas. Short-form content capturing fleeting insights and immediate reactions.',
+    color: 'var(--color-type-musings)'
   },
-  'quick-thoughts': { 
-    emoji: '💭', 
-    label: 'Quick thoughts', 
-    description: 'Brief observations and spontaneous ideas. Short-form content capturing fleeting insights and immediate reactions.',
-    color: 'var(--color-type-quick-thoughts)'
+  'links': {
+    emoji: '🔗',
+    label: 'Links',
+    description: 'Curated links and resources from around the web. Interesting finds with commentary and context.',
+    color: 'var(--color-type-links)'
   },
-  'link-dumps': { 
-    emoji: '🔍', 
-    label: 'Link dumps', 
-    description: 'Collections of interesting links and resources. Curated content from around the web with commentary and context.',
-    color: 'var(--color-type-link-dumps)'
-  },
-  'deep-dives': { 
-    emoji: '📚', 
-    label: 'Deep dives', 
-    description: 'Long-form analysis and thorough research. Comprehensive explorations of complex topics with detailed investigation.',
-    color: 'var(--color-type-deep-dives)'
-  },
-  'thats-interesting': { 
-    emoji: '🌟', 
-    label: "That's interesting", 
-    description: 'Discoveries and "aha!" moments. Content that captures surprising findings and fascinating connections.',
-    color: 'var(--color-type-thats-interesting)'
-  },
-  'practical': { 
-    emoji: '🎯', 
-    label: 'Practical', 
-    description: 'How-tos and actionable content. Hands-on guides and step-by-step instructions for getting things done.',
-    color: 'var(--color-type-practical)'
-  },
-  'reflections': { 
-    emoji: '🧠', 
-    label: 'Reflections', 
-    description: 'Personal insights and experiences. Thoughtful contemplations on life, work, and learning.',
+  'reflections': {
+    emoji: '🧠',
+    label: 'Reflections',
+    description: 'Longer personal essays and explorations. Thoughtful contemplations on life, ideas, and learning.',
     color: 'var(--color-type-reflections)'
   },
-  'data-stories': { 
-    emoji: '📈', 
-    label: 'Data stories', 
-    description: 'Analysis with charts and data visualization. Posts that tell stories through numbers and visual representations.',
-    color: 'var(--color-type-data-stories)'
+  'verse': {
+    emoji: '✨',
+    label: 'Verse',
+    description: 'Poetry discoveries and sharing. Beautiful words from poets past and present.',
+    color: 'var(--color-type-verse)'
   },
-  'news-commentary': { 
-    emoji: '🗞️', 
-    label: 'News & commentary', 
-    description: 'Current events with perspective. Analysis and opinions on news, trends, and developments.',
-    color: 'var(--color-type-news-commentary)'
-  },
-  'videos': { 
-    emoji: '📹', 
-    label: 'Videos', 
-    description: 'Video content and discussions. Posts featuring or discussing video content.',
-    color: 'var(--color-type-videos)'
-  },
-  'music': { 
-    emoji: '🎵', 
-    label: 'Music', 
-    description: 'Music discoveries and thoughts. Posts about musical finds, reviews, and audio experiences.',
-    color: 'var(--color-type-music)'
-  },
-  'photos': { 
-    emoji: '📸', 
-    label: 'Photos', 
-    description: 'Visual content and photography. Posts centered around images and visual storytelling.',
-    color: 'var(--color-type-photos)'
+  'practical': {
+    emoji: '🎯',
+    label: 'Practical',
+    description: 'How-tos and actionable guides. Hands-on instructions for getting things done.',
+    color: 'var(--color-type-practical)'
   }
 };
 

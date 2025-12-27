@@ -34,22 +34,23 @@ const relatedPostsWithScores = getRelatedPosts(post, allPosts, 3);
 // Helper to determine post type
 function getPostType(p: any) {
   const type = p.data.type || '';
-  const title = p.data.title?.toLowerCase() || '';
-  const tags = p.data.tags?.join(' ').toLowerCase() || '';
 
-  if (title.startsWith('"') || type === 'quick-thoughts') {
-    return { label: 'Quote', color: 'var(--purple)' };
+  if (type === 'musings') {
+    return { label: 'Musing', color: 'var(--orange)' };
   }
-  if (type === 'link-dumps' || title.includes('links for you')) {
+  if (type === 'links') {
     return { label: 'Links', color: 'var(--blue)' };
   }
-  if (type === 'data-stories' || tags.includes('data') || tags.includes('economics')) {
-    return { label: 'Data', color: 'var(--green)' };
-  }
-  if (type === 'reflections' || type === 'deep-dives') {
+  if (type === 'reflections') {
     return { label: 'Reflection', color: 'var(--color-text-primary)' };
   }
-  return { label: 'Thought', color: 'var(--orange)' };
+  if (type === 'verse') {
+    return { label: 'Verse', color: 'var(--purple)' };
+  }
+  if (type === 'practical') {
+    return { label: 'Practical', color: 'var(--green)' };
+  }
+  return { label: 'Post', color: 'var(--orange)' };
 }
 
 const postType = getPostType(post);

@@ -4,279 +4,354 @@ export const prerender = true;
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="About — Rabbit Holes" description="Learn about Rabbit Holes, a curiosity-driven blog exploring technology, ideas, and discoveries. Find your next intellectual adventure to explore.">
-  <div class="about-container">
-    <div class="page-header">
-      <div class="page-label">About</div>
-      <h1>Hi, I'm Bhuvan</h1>
-      <p class="tagline">Searching for new rabbit holes</p>
-    </div>
+<Base title="About — Rabbit Holes" description="Learn about Rabbit Holes, a curiosity-driven digital garden exploring technology, ideas, and discoveries.">
+  <div class="about-page">
+
+    <header class="page-header">
+      <div class="header-symbol"></div>
+      <h1 class="page-title">Hi, I'm Bhuvan</h1>
+      <p class="page-subtitle">Searching for new rabbit holes</p>
+    </header>
 
     <div class="about-content">
-      <p>Hi, I'm Bhuvan and I like tumbling down weird and wonderful rabbit holes. I like knowing random things and I think there's a certain joy in being a dilettante.</p>
 
-      <p>It's not just me—everyone likes discovering new things, but for whatever reason, most people lose that ability to experience awe and wonder. It's tempting to blame social media apps and smartphones for this pathology, but that's too simplistic—they're not the only reason people seem to have become incurious and, perhaps more tragically, okay with being so.</p>
+      <section class="intro">
+        <p>Hi, I'm Bhuvan and I like tumbling down weird and wonderful rabbit holes. I like knowing random things and I think there's a certain joy in being a dilettante.</p>
 
-      <p>This blog is an attempt for me to continue slipping into weird rabbit holes and share them. The hope here is that whatever I share might trip fellow travelers on the internet and send them sliding down a rabbit hole.</p>
+        <p>It's not just me—everyone likes discovering new things, but for whatever reason, most people lose that ability to experience awe and wonder. It's tempting to blame social media apps and smartphones for this pathology, but that's too simplistic—they're not the only reason people seem to have become incurious and, perhaps more tragically, okay with being so.</p>
 
-      <p>The goal isn't to be an expert on everything, but to maintain a sense of wonder about the world. Sometimes the most interesting insights come from wandering without a destination in mind.</p>
+        <p>This blog is an attempt for me to continue slipping into weird rabbit holes and share them. The hope here is that whatever I share might trip fellow travelers on the internet and send them sliding down a rabbit hole.</p>
 
-      <div class="quote-block">
+        <p>The goal isn't to be an expert on everything, but to maintain a sense of wonder about the world. Sometimes the most interesting insights come from wandering without a destination in mind.</p>
+      </section>
+
+      <section class="quote-section">
         <blockquote>
-          Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province.
+          <p>Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province.</p>
           <cite><a href="https://paperlanterns.ink/letter/bacon-burghley-1592/" target="_blank" rel="noopener">Francis Bacon</a></cite>
         </blockquote>
-      </div>
+      </section>
 
-      <h2>Philosophy</h2>
-      <blockquote class="einstein-quote">
-        The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day.
-        <cite>Albert Einstein</cite>
-      </blockquote>
+      <section class="content-section">
+        <h2>Philosophy</h2>
+        <blockquote class="einstein">
+          <p>The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day.</p>
+          <cite>Albert Einstein</cite>
+        </blockquote>
+      </section>
 
-      <h2>Connect</h2>
-      <div class="social-links">
-        <a href="mailto:bhuvan@bebhuvan.com" class="social-link">Email</a>
-        <a href="https://twitter.com/bebhuvan" target="_blank" rel="noopener" class="social-link">Twitter</a>
-        <a href="https://bhuvan.substack.com" target="_blank" rel="noopener" class="social-link">Substack</a>
-        <a href="https://www.linkedin.com/in/bebhuvan/" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
-      </div>
+      <section class="content-section">
+        <h2>Connect</h2>
+        <div class="social-links">
+          <a href="mailto:bhuvan@bebhuvan.com" class="social-link">
+            <span class="link-label">Email</span>
+            <span class="link-arrow">→</span>
+          </a>
+          <a href="https://twitter.com/bebhuvan" target="_blank" rel="noopener" class="social-link">
+            <span class="link-label">Twitter</span>
+            <span class="link-arrow">→</span>
+          </a>
+          <a href="https://bhuvan.substack.com" target="_blank" rel="noopener" class="social-link">
+            <span class="link-label">Substack</span>
+            <span class="link-arrow">→</span>
+          </a>
+          <a href="https://www.linkedin.com/in/bebhuvan/" target="_blank" rel="noopener" class="social-link">
+            <span class="link-label">LinkedIn</span>
+            <span class="link-arrow">→</span>
+          </a>
+        </div>
+      </section>
 
-      <h2>Colophon</h2>
-      <p>This site is built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>, enhanced with AI assistance from Claude, and hosted on Cloudflare Pages. The design embraces a playful, colorful aesthetic while keeping content front and center.</p>
-      <p>Typography features Space Grotesk for headlines, Newsreader for body text, and Space Mono for UI elements. The color palette rotates through a rainbow of accent colors to keep things lively.</p>
+      <section class="content-section">
+        <h2>Colophon</h2>
+        <p>This site is built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>, enhanced with AI assistance from Claude, and hosted on Cloudflare Pages.</p>
+        <p>Typography features Space Grotesk for headlines, Newsreader for body text, and Space Mono for UI elements. The design embraces a digital garden philosophy—ideas grow and evolve over time.</p>
+      </section>
+
+      <nav class="about-nav">
+        <a href="/" class="nav-link">
+          <span>← Back to Home</span>
+        </a>
+        <a href="/archive" class="nav-link">
+          <span>Browse Archive →</span>
+        </a>
+      </nav>
+
     </div>
+
   </div>
 
   <style>
-    .about-container {
-      max-width: 740px;
+    .about-page {
+      max-width: 700px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 2rem 4rem;
     }
 
+    /* Header */
     .page-header {
-      padding: 4rem 0 3rem;
-      border-bottom: 3px solid var(--color-text-primary);
-      margin-bottom: 3rem;
+      padding: 3.5rem 0;
       text-align: center;
+      border-bottom: 3px solid var(--color-text-primary);
     }
 
-    .page-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--color-text-light);
-      margin-bottom: 1rem;
+    .header-symbol {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+      display: inline-block;
     }
 
-    h1 {
+    .header-symbol::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--color-text-primary);
+      border-radius: 50%;
+      opacity: 0.4;
+    }
+
+    .header-symbol::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background: var(--orange);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .page-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-size: clamp(2rem, 6vw, 2.75rem);
       font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.25rem;
-      background: linear-gradient(135deg, var(--orange), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+      color: var(--color-text-primary);
     }
 
-    .tagline {
+    .page-subtitle {
       font-family: 'Newsreader', Georgia, serif;
-      font-size: 1.25rem;
-      line-height: 1.65;
-      color: var(--color-text-tertiary);
+      font-size: 1.15rem;
       font-style: italic;
-      font-weight: 400;
+      color: var(--color-text-tertiary);
     }
 
+    /* Content */
     .about-content {
-      font-size: 1.1rem;
+      padding-top: 3rem;
+    }
+
+    .intro {
+      margin-bottom: 3rem;
+    }
+
+    .intro p,
+    .content-section p {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.15rem;
       line-height: 1.8;
       color: var(--color-text-secondary);
-      padding-bottom: 5rem;
-    }
-
-    .about-content p {
       margin-bottom: 1.5rem;
     }
 
-    .about-content p:last-child {
+    .intro p:last-child,
+    .content-section p:last-child {
       margin-bottom: 0;
     }
 
-    .about-content h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 700;
-      line-height: 1.3;
-      margin-top: 3rem;
-      margin-bottom: 1.25rem;
-      letter-spacing: -0.02em;
+    .content-section p a {
       color: var(--color-text-primary);
+      text-decoration: underline;
+      text-decoration-color: rgba(217, 93, 15, 0.4);
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.2s;
     }
 
-    .about-content h2:first-child {
-      margin-top: 0;
+    .content-section p a:hover {
+      text-decoration-color: var(--orange);
     }
 
-    /* Quote blocks - Readable with color accents */
-    .quote-block {
-      margin: 2.5rem 0;
-      padding: 0 0 0 1.5rem;
-      border-left: 3px solid rgba(249, 115, 22, 0.4);
+    /* Quote Section */
+    .quote-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: var(--color-surface);
     }
 
-    .quote-block blockquote {
-      font-family: 'Newsreader', Georgia, serif;
-      font-size: 1.15rem;
-      font-weight: 400;
-      line-height: 1.75;
-      font-style: normal;
-      color: var(--color-text-primary);
+    .quote-section blockquote,
+    blockquote.einstein {
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--orange);
       margin: 0;
     }
 
-    .quote-block blockquote cite {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      font-style: normal;
-      color: var(--orange);
-      display: block;
-      margin-top: 1.25rem;
+    .quote-section blockquote p,
+    blockquote.einstein p {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.1rem;
+      line-height: 1.75;
+      font-style: italic;
+      color: var(--color-text-primary);
+      margin-bottom: 0;
     }
 
-    .quote-block blockquote cite::before {
+    .quote-section blockquote cite,
+    blockquote.einstein cite {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--orange);
+      display: block;
+      margin-top: 1rem;
+    }
+
+    .quote-section blockquote cite::before,
+    blockquote.einstein cite::before {
       content: '— ';
     }
 
-    .quote-block blockquote cite a {
+    .quote-section blockquote cite a {
       color: var(--orange);
+      text-decoration: none;
+    }
+
+    .quote-section blockquote cite a:hover {
       text-decoration: underline;
-      text-decoration-color: var(--orange);
-      text-underline-offset: 2px;
     }
 
-    .quote-block blockquote cite a:hover {
-      opacity: 0.8;
+    blockquote.einstein {
+      margin: 2rem 0;
+      border-left-color: var(--blue);
     }
 
-    .einstein-quote {
-      margin: 2.5rem 0;
-      padding: 0 0 0 1.5rem;
-      border-left: 3px solid rgba(100, 168, 232, 0.5);
-      font-family: 'Newsreader', Georgia, serif;
-      font-size: 1.15rem;
-      font-weight: 400;
-      line-height: 1.75;
-      font-style: normal;
+    blockquote.einstein cite {
+      color: var(--blue);
+    }
+
+    /* Content Section */
+    .content-section {
+      margin: 3rem 0;
+    }
+
+    .content-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
       color: var(--color-text-primary);
     }
 
-    .einstein-quote cite {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      font-style: normal;
-      color: var(--color-text-tertiary);
-      display: block;
-      margin-top: 1.25rem;
-    }
-
-    .einstein-quote cite::before {
-      content: '— ';
-    }
-
-    /* Social links */
+    /* Social Links */
     .social-links {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 0.5rem;
-      margin-top: 1.5rem;
-      margin-bottom: 2rem;
     }
 
     .social-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--color-text-tertiary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      background: var(--color-surface);
       text-decoration: none;
-      padding: 0.75rem 1.25rem;
-      border: 2px solid var(--color-border);
-      transition: all 0.2s ease;
-      border-radius: 2px;
+      transition: all 0.25s ease;
     }
 
-    .social-link:nth-child(1):hover { background: var(--red); border-color: var(--red); color: white; transform: translateY(-2px); }
-    .social-link:nth-child(2):hover { background: var(--blue); border-color: var(--blue); color: white; transform: translateY(-2px); }
-    .social-link:nth-child(3):hover { background: var(--orange); border-color: var(--orange); color: white; transform: translateY(-2px); }
-    .social-link:nth-child(4):hover { background: var(--purple); border-color: var(--purple); color: white; transform: translateY(-2px); }
+    .social-link:hover {
+      background: var(--color-text-primary);
+      transform: translateX(4px);
+    }
 
+    .link-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-text-secondary);
+      transition: color 0.2s;
+    }
+
+    .social-link:hover .link-label {
+      color: var(--color-bg);
+    }
+
+    .link-arrow {
+      font-size: 1rem;
+      color: var(--color-text-light);
+      transition: all 0.2s;
+    }
+
+    .social-link:hover .link-arrow {
+      color: var(--color-bg);
+      transform: translateX(3px);
+    }
+
+    .social-link:nth-child(1):hover { background: var(--orange); }
+    .social-link:nth-child(2):hover { background: var(--blue); }
+    .social-link:nth-child(3):hover { background: var(--purple); }
+    .social-link:nth-child(4):hover { background: var(--green); }
+
+    /* Navigation */
+    .about-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .nav-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--color-text-tertiary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--orange);
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .about-container {
-        padding: 0 1.5rem;
+      .about-page {
+        padding: 0 1.5rem 3rem;
       }
 
       .page-header {
-        padding: 3rem 0 2.5rem;
-        margin-bottom: 2.5rem;
+        padding: 2.5rem 0;
       }
 
-      .tagline {
-        font-size: 1.1rem;
+      .page-title {
+        font-size: clamp(1.75rem, 7vw, 2.25rem);
       }
 
-      .about-content {
+      .intro p,
+      .content-section p {
+        font-size: 1.05rem;
+      }
+
+      .quote-section {
+        padding: 1.5rem;
+      }
+
+      .quote-section blockquote p,
+      blockquote.einstein p {
         font-size: 1rem;
-        padding-bottom: 4rem;
       }
 
-      .about-content h2 {
-        margin-top: 2.5rem;
-      }
-
-      .quote-block,
-      .einstein-quote {
-        margin: 2rem 0;
-        padding: 1.5rem 1.5rem 1.5rem 1.75rem;
-      }
-
-      .quote-block::before,
-      .einstein-quote::before {
-        font-size: 3rem;
-        top: -0.35rem;
-        left: 0.5rem;
-        opacity: 0.1;
-      }
-
-      .quote-block blockquote cite,
-      .einstein-quote cite {
-        margin-top: 1rem;
-        padding-top: 0.75rem;
-      }
-
-      .social-links {
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .about-container {
-        padding: 0 1rem;
-      }
-
-      .social-links {
+      .about-nav {
         flex-direction: column;
-        align-items: stretch;
-      }
-
-      .social-link {
-        text-align: center;
+        gap: 1rem;
+        align-items: center;
       }
     }
   </style>
