@@ -1,6 +1,6 @@
 // AI content enhancement API route
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
   const corsHeaders = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
@@ -19,7 +19,9 @@ export async function POST({ request }) {
       });
     }
 
-    const apiKey = import.meta.env.ANTHROPIC_API_KEY || import.meta.env.CLAUDE_API_KEY;
+    // Access Cloudflare env vars through runtime
+    const runtime = locals?.runtime?.env || {};
+    const apiKey = runtime.ANTHROPIC_API_KEY || runtime.CLAUDE_API_KEY || import.meta.env.ANTHROPIC_API_KEY || import.meta.env.CLAUDE_API_KEY;
 
     if (!apiKey) {
       return new Response(JSON.stringify({

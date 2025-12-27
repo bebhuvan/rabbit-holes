@@ -1,11 +1,13 @@
 // Fetch list of posts from GitHub
 // Returns post metadata for the Studio CMS
 
-export async function GET({ request }) {
+export async function GET({ request, locals }) {
   try {
+    // Access Cloudflare env vars through runtime
+    const runtime = locals?.runtime?.env || {};
     const env = {
-      GITHUB_REPO: import.meta.env.GITHUB_REPO,
-      GITHUB_TOKEN: import.meta.env.GITHUB_TOKEN
+      GITHUB_REPO: runtime.GITHUB_REPO || import.meta.env.GITHUB_REPO,
+      GITHUB_TOKEN: runtime.GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN
     };
 
     // Fetch the posts directory from GitHub

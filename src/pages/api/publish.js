@@ -1,11 +1,13 @@
 // GitHub integration for automatic publishing
 // Creates new blog posts via GitHub API
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
   try {
+    // Access Cloudflare env vars through runtime
+    const runtime = locals?.runtime?.env || {};
     const env = {
-      GITHUB_REPO: import.meta.env.GITHUB_REPO,
-      GITHUB_TOKEN: import.meta.env.GITHUB_TOKEN
+      GITHUB_REPO: runtime.GITHUB_REPO || import.meta.env.GITHUB_REPO,
+      GITHUB_TOKEN: runtime.GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN
     };
 
     const {

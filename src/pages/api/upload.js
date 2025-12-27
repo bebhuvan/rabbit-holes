@@ -1,7 +1,7 @@
 // Image upload to GitHub
 // Uploads images to public/images/ and returns the URL
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST',
@@ -9,9 +9,11 @@ export async function POST({ request }) {
   };
 
   try {
+    // Access Cloudflare env vars through runtime
+    const runtime = locals?.runtime?.env || {};
     const env = {
-      GITHUB_REPO: import.meta.env.GITHUB_REPO,
-      GITHUB_TOKEN: import.meta.env.GITHUB_TOKEN
+      GITHUB_REPO: runtime.GITHUB_REPO || import.meta.env.GITHUB_REPO,
+      GITHUB_TOKEN: runtime.GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN
     };
 
     const formData = await request.formData();

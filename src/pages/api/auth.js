@@ -1,10 +1,11 @@
 // CMS Authentication API route for Astro + Cloudflare
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
   try {
     const { password } = await request.json();
-    
-    // Get password from environment variable (must be set in Cloudflare)
-    const correctPassword = import.meta.env.CMS_PASSWORD;
+
+    // Access Cloudflare env vars through runtime
+    const runtime = locals?.runtime?.env || {};
+    const correctPassword = runtime.CMS_PASSWORD || import.meta.env.CMS_PASSWORD;
 
     if (!correctPassword) {
       return new Response(JSON.stringify({

@@ -2,11 +2,13 @@
 // GET: Fetch post content
 // PUT: Update post content
 
-export async function GET({ params }) {
+export async function GET({ params, locals }) {
   const { slug } = params;
+  // Access Cloudflare env vars through runtime
+  const runtime = locals?.runtime?.env || {};
   const env = {
-    GITHUB_REPO: import.meta.env.GITHUB_REPO,
-    GITHUB_TOKEN: import.meta.env.GITHUB_TOKEN
+    GITHUB_REPO: runtime.GITHUB_REPO || import.meta.env.GITHUB_REPO,
+    GITHUB_TOKEN: runtime.GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN
   };
 
   const corsHeaders = {
@@ -124,11 +126,13 @@ export async function GET({ params }) {
   }
 }
 
-export async function PUT({ params, request }) {
+export async function PUT({ params, request, locals }) {
   const { slug } = params;
+  // Access Cloudflare env vars through runtime
+  const runtime = locals?.runtime?.env || {};
   const env = {
-    GITHUB_REPO: import.meta.env.GITHUB_REPO,
-    GITHUB_TOKEN: import.meta.env.GITHUB_TOKEN
+    GITHUB_REPO: runtime.GITHUB_REPO || import.meta.env.GITHUB_REPO,
+    GITHUB_TOKEN: runtime.GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN
   };
 
   const corsHeaders = {
