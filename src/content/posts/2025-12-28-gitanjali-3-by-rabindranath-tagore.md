@@ -1,0 +1,20 @@
+---
+title: Gitanjali 3 by Rabindranath Tagore
+date: 2025-12-28
+type: verse
+tags:
+  - Poetry
+  - Rabindranath Tagore
+published: true
+draft: false
+featured: false
+---
+God damn it, this is beautiful!
+
+> I know not how thou singest, my master! I ever listen in silent amazement.  
+>   
+> The light of thy music illumines the world. The life breath of thy music runs from sky to sky. The holy stream of thy music breaks through all stony obstacles and rushes on.  
+>   
+> My heart longs to join in thy song, but vainly struggles for a voice. I would speak, but speech breaks not into song, and I cry out baffled. Ah, thou hast made my heart captive in the endless meshes of thy music, my master!
+
+[From WikiSource](https://en.wikisource.org/wiki/Gitanjali/3).
