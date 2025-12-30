@@ -13,7 +13,8 @@ featured: false
 ---
 Say what you will about the cesspool that Twitter has become. I refuse to call it X. It still remains, for better or worse, a big part of my media diet. Between the outrage and noise, I still find perspectives, articles, videos, and podcasts that make me pause. One such instance was [Scott Belsky’s recent set of predictions, which I found fascinating](https://x.com/scottbelsky/status/2005639350554407187). These are less my “responses” and more the thoughts his thoughts triggered.
 
-One line that stayed with me was: _“The buzzy concerns around AI in Hollywood will be grounded by the reality of what audiences increasingly crave: craft, meaning, and shared experiences.”_  
+One line that stayed with me was: _“The buzzy concerns around AI in Hollywood will be grounded by the reality of what audiences increasingly crave: craft, meaning, and shared experiences.”_
+
 That feels true. And it dovetails into something else I’ve been thinking about: the world seems to be shifting toward a default suspicion of anything remarkable. Whenever something is good, or even interesting, there is this reflex to say: “That must be AI.” We are in a liminal period. Content creation has been democratized. Before refined work emerges at scale, we will first be buried under a monumental wave of slop.
 
 > The technology and models that ultimately elevate the craft will get lasting traction in Hollywood, while the prompt-based slop tools will focus more on social and content creator use-cases. Finally, the idea of personalized films with audience cameos will be humbled by the realization that people favor shared experiences. People want to be inspired by craft – and they want a common experience to discuss (or even share, in theaters!) with friends.
