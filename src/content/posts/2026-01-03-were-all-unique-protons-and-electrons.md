@@ -11,3 +11,7 @@ featured: false
 So true. [From this wonderful post by Vaibhav](https://open.substack.com/pub/vaibhavchandra/p/the-subatomic-theory-of-vibes?utm_source=share&utm_medium=android&shareImageVariant=overlay&r=1eft5):
 
 > Most human beings are elementally similar but structurally different. Every living being around us is elementally similar, most are roughly the same few elements, but the arrangements of those carbons, protons, neutrons, electrons are different. That arrangement is what makes you you. That is the unique pattern for every species on Earth, and even for every individual. Seven billion humans, billions of animals, other species, you get this absurdly large number of distinct arrangements of atoms in space, not in vacuum, but inside this dense, interacting reality.
+
+Ooh, also this: 2025 was the year when it dawned on my feeble brain that "when in doubt, do" is a good philosophy of life to live by.
+
+> Whenever you feel shitty, stuck, or idle, you are blocking that process. You are not exchanging energy. You are not moving. That is why so many people say: just move. Do something. Take action. When you move, you exchange energy. When you move in a direction that feels positive, you move towards maximizing your entropy.
