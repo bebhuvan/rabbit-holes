@@ -1,24 +1,22 @@
 ---
-title: "If a probelm can be described, it can be solved "
+title: If you can describe it, you can solve it
 date: 2026-01-09
 type: musings
+tags:
+  - AI
+  - Work
 published: true
 draft: true
 featured: false
 ---
-Full agree with the last bit that Anish Acharya of A16Z is saying:
+I can't believe I'm agreeing with VC boyes but I [fully agree with Anish Acharya of A16Z](https://x.com/i/status/2008957804938428785):
 
-> the timeline is full of people using Claude Code to generate ads, recover corrupted video, make landing pages, manage business texts…  
->   
-> the narrow view of coding agents is that they primarily decrease the cost of software development  
->   
-> the ambitious view is that almost any problem/solution can be expressed in software and this capability is upstream of all knowledge work
+> The timeline is full of people using Claude Code to generate ads, recover corrupted video, make landing pages, manage business texts…  
+> 
+> The narrow view of coding agents is that they primarily decrease the cost of software development.  
+> 
+> The ambitious view is that almost any problem/solution can be expressed in software and this capability is upstream of all knowledge work.
 
-In my view, there are two big reason why AI adoption has been slow among normal people.
+The biggest barrier to AI adoption isn't cost or access. It's that people can't visualize what these tools can actually do. The default view among normies is still that you need to be a coder to use AI coding tools. This is plain wrong. As long as you can type English and have half a brain to describe your problem clearly, you can build tools to solve your problems.
 
-1.  People are suffering from a crisis of imagination. They now have access to a magical genie and people are clueless as to what to wish for.
-    
-2.  A lot of people aren't giving themselves permission to experiment. They are hobbled by idiotic views of AI capabilities, self doubt, inertia, and fear.
-    
-
-The biggest problem is that people are unable to visualise the capabilities of these tools. This is in part due to the lack of experimentation and the part because many normies aren't yet using the ai coding tools. Until and unless they use these coding tools, it's hard to understand just how far AI has progressed.
+A peasant in rural India can't conjure things to make his life easier. He still has to toil in the sun and break his back. But we cognitive peasants today have a personal genie at our disposal for just $20. All you have to do is rub the keyboard three times. Actually, you don't even have to do that anymore. You can just talk to it.
