@@ -1,6 +1,6 @@
 ---
 title: If you can describe it, you can solve it
-date: 2026-01-09
+date: 2026-01-08
 type: musings
 tags:
   - AI
@@ -11,9 +11,9 @@ featured: false
 ---
 I can't believe I'm agreeing with VC boyes but I [fully agree with Anish Acharya of A16Z](https://x.com/i/status/2008957804938428785):
 
-> The timeline is full of people using Claude Code to generate ads, recover corrupted video, make landing pages, manage business texts…  
+> The timeline is full of people using Claude Code to generate ads, recover corrupted video, make landing pages, manage business texts…
 > 
-> The narrow view of coding agents is that they primarily decrease the cost of software development.  
+> The narrow view of coding agents is that they primarily decrease the cost of software development.
 > 
 > The ambitious view is that almost any problem/solution can be expressed in software and this capability is upstream of all knowledge work.
 
