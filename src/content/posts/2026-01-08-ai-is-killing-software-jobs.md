@@ -1,6 +1,6 @@
 ---
 title: AI is killing software jobs
-date: 2026-01-15
+date: 2026-01-14
 type: links
 tags:
   - AI
@@ -37,8 +37,8 @@ I asked ChatGPT what Tailwind is:
 > 
 > No discovery - no business.
 > 
-> And same with ads.if OpenAI decides not to add ads - prepare for even faster business consolidation. Those businesses preferred by llms will exponentially grow, others will quickly go out of business  
->   
+> And same with ads.if OpenAI decides not to add ads - prepare for even faster business consolidation. Those businesses preferred by llms will exponentially grow, others will quickly go out of business
+> 
 > \---
 > 
 > \> No discovery - no business.
