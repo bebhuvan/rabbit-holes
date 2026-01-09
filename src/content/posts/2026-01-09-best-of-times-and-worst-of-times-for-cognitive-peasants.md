@@ -11,14 +11,17 @@ featured: false
 ---
 VCs say the damnedest things, and I hate to be the guy who agrees with a VC. But sometimes—_not often_, but sometimes—they say something useful. Today I came across [this tweet by Anish Acharya of a16z](https://x.com/i/status/2008957804938428785):
 
-> the timeline is full of people using Claude Code to generate ads, recover corrupted video, make landing pages, manage business texts…  
->   
-> the narrow view of coding agents is that they primarily decrease the cost of software development  
->   
+> the timeline is full of people using Claude Code to generate ads, recover corrupted video, make landing pages, manage business texts…
+> 
+> the narrow view of coding agents is that they primarily decrease the cost of software development
+> 
 > the ambitious view is that almost any problem/solution can be expressed in software and this capability is upstream of all knowledge work
 
-I think that's a really sensible view, and having experimented heavily with AI coding assistants, I agree with it. It got me thinking about the future of knowledge work. The first thing that popped into my head was Dickens: "It was the best of times, and it was the worst of times." Right now, it feels exactly like that.  
-We Are All Cognitive Peasants
+I think that's a really sensible view, and having experimented heavily with AI coding assistants, I agree with it. It got me thinking about the future of knowledge work. The first thing that popped into my head was Dickens:
+
+> It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of light, it was the season of darkness, it was the spring of hope, it was the winter of despair.
+
+Right now, it feels exactly like that. We Are All Cognitive Peasants
 
 Much of what passes for knowledge work today is not really knowledge work. It's cognitive peasantry.  
 I don't use the term pejoratively. Our food is grown and produced by peasants. What I mean is that we do menial cognitive labor, the equivalent of using picks and shovels. There's not a whole lot of actual knowledge work being done. Some work, yes. But is it really knowledge? Not really.
