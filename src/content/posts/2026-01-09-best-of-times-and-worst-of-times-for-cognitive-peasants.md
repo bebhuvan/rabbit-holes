@@ -17,9 +17,9 @@ VCs say the damnedest things, and I hate to be the guy who agrees with a VC. But
 > 
 > the ambitious view is that almost any problem/solution can be expressed in software and this capability is upstream of all knowledge work
 
-I think that's a really sensible view, and having experimented heavily with AI coding assistants, I agree with it. It got me thinking about the future of knowledge work. The first thing that popped into my head was Dickens:
+I think that's a really sensible view, and having experimented heavily with AI coding assistants, I agree with it. It got me thinking about the future of knowledge work. The first thing that popped into my head was [Dickens](https://www.gutenberg.org/ebooks/98):
 
-> It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of light, it was the season of darkness, it was the spring of hope, it was the winter of despair.
+> It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way—in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.
 
 Right now, it feels exactly like that. We Are All Cognitive Peasants
 
