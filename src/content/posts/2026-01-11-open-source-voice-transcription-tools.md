@@ -4,6 +4,7 @@ date: 2026-01-11
 type: links
 tags:
   - Voice typing
+  - Tools
 published: true
 draft: false
 featured: false
