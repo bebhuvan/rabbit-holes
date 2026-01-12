@@ -19,6 +19,12 @@ featured: false
 > 
 > That's why, overall, I am cautiously optimistic on what the future holds.
 
+[From anothet post by Salvatore Sanfilippo](https://antirez.com/news/158):
+
+> Anyway, back to programming. I have a single suggestion for you, my friend. Whatever you believe about what the Right Thing should be, you can't control it by refusing what is happening right now. Skipping AI is not going to help you or your career. Think about it. Test these new tools, with care, with weeks of work, not in a five minutes test where you can just reinforce your own beliefs. Find a way to multiply yourself, and if it does not work for you, try again every few months.
+> 
+> Yes, maybe you think that you worked so hard to learn coding, and now machines are doing it for you. But what was the fire inside you, when you coded till night to see your project working? It was building. And now you can build more and better, if you find your way to use AI effectively. The fun is still there, untouched.
+
 As things stand today, much of what he writes in the post applies to non-technical people as well.
 
 [Pair this post with this.](https://newsletter.pragmaticengineer.com/p/when-ai-writes-almost-all-code-what)
