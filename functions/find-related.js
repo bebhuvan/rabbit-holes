@@ -1,5 +1,5 @@
 // Cloudflare Function for AI-powered backlink discovery
-// Uses OpenAI to find semantically related posts for bidirectional linking
+// Uses Workers AI to find semantically related posts
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -25,12 +25,45 @@ export async function onRequest(context) {
   }
 
   try {
-    const { newPost, candidatePosts } = await request.json();
+    const body = await request.json();
 
-    if (!newPost || !candidatePosts || candidatePosts.length === 0) {
+    // Support two modes:
+    // 1. Simple: { title, type, tags, content } - fetches candidates automatically
+    // 2. Full: { newPost, candidatePosts } - uses provided candidates
+    let newPost, candidatePosts;
+
+    if (body.newPost && body.candidatePosts) {
+      // Full mode
+      newPost = body.newPost;
+      candidatePosts = body.candidatePosts;
+    } else if (body.title) {
+      // Simple mode - fetch candidates from GitHub
+      newPost = {
+        title: body.title,
+        type: body.type || 'musings',
+        tags: body.tags || [],
+        content: body.content || ''
+      };
+
+      // Fetch existing posts from GitHub
+      candidatePosts = await fetchExistingPosts(env);
+
+      if (candidatePosts.length === 0) {
+        return new Response(JSON.stringify({
+          success: true,
+          related: [],
+          message: 'No existing posts found to compare'
+        }), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+    } else {
       return new Response(JSON.stringify({
         success: false,
-        error: 'Missing newPost or candidatePosts'
+        error: 'Missing required fields. Send either { title, type, tags, content } or { newPost, candidatePosts }'
       }), {
         status: 400,
         headers: {
@@ -54,7 +87,7 @@ export async function onRequest(context) {
     }
 
     // Build the prompt for semantic analysis
-    const prompt = buildRelationshipPrompt(newPost, candidatePosts);
+    const prompt = buildRelationshipPrompt(newPost, candidatePosts.slice(0, 30));
 
     // Call Cloudflare Workers AI
     const aiResult = await env.AI.run('@cf/openai/gpt-oss-120b', {
@@ -71,7 +104,6 @@ export async function onRequest(context) {
     // Parse the response - Workers AI returns { response: "..." }
     let aiResponse;
     try {
-      // Try to extract JSON from the response
       const responseText = aiResult.response || '';
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
@@ -81,15 +113,22 @@ export async function onRequest(context) {
       }
     } catch (parseError) {
       console.error('Failed to parse AI response:', aiResult.response);
-      // Return empty results if parsing fails
       aiResponse = { relatedToNew: [], backlinkNew: [], reasoning: {} };
     }
 
+    // Format response with both naming conventions for compatibility
+    const related = aiResponse.relatedToNew || [];
+    const reasoning = aiResponse.reasoning || {};
+
     return new Response(JSON.stringify({
       success: true,
-      relatedToNew: aiResponse.relatedToNew || [],
+      related: related.map(slug => {
+        const reason = reasoning[slug];
+        return reason ? { slug, reason } : slug;
+      }),
+      relatedToNew: related,
       backlinkNew: aiResponse.backlinkNew || [],
-      reasoning: aiResponse.reasoning || {}
+      reasoning
     }), {
       headers: {
         'Content-Type': 'application/json',
@@ -109,6 +148,97 @@ export async function onRequest(context) {
         'Access-Control-Allow-Origin': '*'
       }
     });
+  }
+}
+
+// Fetch existing posts from GitHub
+async function fetchExistingPosts(env) {
+  if (!env.GITHUB_TOKEN || !env.GITHUB_REPO) {
+    console.error('Missing GITHUB_TOKEN or GITHUB_REPO');
+    return [];
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${env.GITHUB_REPO}/contents/src/content/posts`,
+      {
+        headers: {
+          'Authorization': `token ${env.GITHUB_TOKEN}`,
+          'User-Agent': 'Rabbit-Holes-Backlinks',
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      }
+    );
+
+    if (!response.ok) return [];
+
+    const files = await response.json();
+    const mdFiles = files.filter(f => f.name.endsWith('.md')).slice(0, 50);
+
+    // Fetch content for each post (in parallel, max 10 at a time)
+    const posts = [];
+    for (let i = 0; i < mdFiles.length; i += 10) {
+      const batch = mdFiles.slice(i, i + 10);
+      const batchResults = await Promise.all(
+        batch.map(async (file) => {
+          try {
+            const contentRes = await fetch(
+              `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${file.path}`,
+              {
+                headers: {
+                  'Authorization': `token ${env.GITHUB_TOKEN}`,
+                  'User-Agent': 'Rabbit-Holes-Backlinks'
+                }
+              }
+            );
+
+            if (!contentRes.ok) return null;
+
+            const contentData = await contentRes.json();
+            const rawContent = decodeURIComponent(escape(atob(contentData.content)));
+
+            // Parse frontmatter
+            const match = rawContent.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)/);
+            if (!match) return null;
+
+            const [, frontmatterRaw, body] = match;
+
+            // Extract slug from filename
+            const slugMatch = file.name.match(/^\d{4}-\d{2}-\d{2}-(.+)\.md$/);
+            const slug = slugMatch ? slugMatch[1] : file.name.replace('.md', '');
+
+            // Parse basic frontmatter fields
+            const titleMatch = frontmatterRaw.match(/title:\s*["']?([^"'\n]+)["']?/);
+            const typeMatch = frontmatterRaw.match(/type:\s*(\w+)/);
+            const tagsMatch = frontmatterRaw.match(/tags:\n((?:\s+-\s+.+\n?)*)/);
+
+            let tags = [];
+            if (tagsMatch) {
+              const tagLines = tagsMatch[1].match(/-\s+["']?([^"'\n]+)["']?/g);
+              if (tagLines) {
+                tags = tagLines.map(t => t.replace(/-\s+["']?/, '').replace(/["']$/, '').trim());
+              }
+            }
+
+            return {
+              slug,
+              title: titleMatch ? titleMatch[1].trim() : slug,
+              type: typeMatch ? typeMatch[1] : 'musings',
+              tags,
+              excerpt: body.trim().substring(0, 500)
+            };
+          } catch {
+            return null;
+          }
+        })
+      );
+      posts.push(...batchResults.filter(Boolean));
+    }
+
+    return posts;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
   }
 }
 
@@ -146,8 +276,8 @@ TASK: Find meaningful connections based on:
 
 Return JSON with:
 {
-  "relatedToNew": ["slug1", "slug2", "slug3"],  // 3-5 posts most related TO the new post (will be shown on new post's page)
-  "backlinkNew": ["slug4", "slug5"],            // 2-4 posts that should link BACK to the new post (the new post adds value to these)
+  "relatedToNew": ["slug1", "slug2", "slug3"],  // 3-5 posts most related TO the new post
+  "backlinkNew": ["slug4", "slug5"],            // 2-4 posts that should link BACK to the new post
   "reasoning": {
     "slug1": "Brief explanation of the connection (10-15 words)",
     "slug2": "Brief explanation...",
@@ -155,6 +285,5 @@ Return JSON with:
   }
 }
 
-Be selective - only include genuinely meaningful connections. Quality over quantity.
-A post can appear in both relatedToNew and backlinkNew if the connection is bidirectional.`;
+Be selective - only include genuinely meaningful connections. Quality over quantity.`;
 }
