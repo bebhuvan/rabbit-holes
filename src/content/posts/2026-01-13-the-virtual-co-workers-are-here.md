@@ -17,3 +17,5 @@ published: true
 > My guess is that by the end of next year products like this will exist (maybe just in general for consumers, but maybe just for specific industry verticals) and be able to perform knowledge work tasks that would take a professionally skilled human 8+ hours.
 >
 > Caveat: human to AI timing conversions are flawed. In some cases it'll take 30 minutes to do something a human could do in 5; in other cases it'll take 1-5 hours to do something that would take an individual human worker days or weeks. Think of "it will be able to do tasks that take humans 8+ hours" almost impressionistically, as a way of understanding the magnitude of the effect, though it will also sometimes literally be true that the models will be able to reliably do things that take humans a workday.
+
+The future of work is getting weird.
