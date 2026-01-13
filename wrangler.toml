@@ -8,6 +8,10 @@ compatibility_flags = ["nodejs_compat"]
 binding = "ASSETS"
 directory = "./dist"
 
+# Workers AI binding (free tier, no API key needed)
+[ai]
+binding = "AI"
+
 # Environment variables (set via wrangler secret put)
 [vars]
 ENVIRONMENT = "production"

@@ -28,8 +28,41 @@ const allPosts = await getCollection('posts', ({ data }) => {
   return data.published !== false;
 });
 
-// Use advanced related posts algorithm
-const relatedPostsWithScores = getRelatedPosts(post, allPosts, 3);
+// Get AI-suggested related posts from frontmatter
+const aiRelatedSlugs = (post.data.related_posts || []).map((r: string | { slug: string }) =>
+  typeof r === 'string' ? r : r.slug
+);
+const aiReasons: Record<string, string> = {};
+(post.data.related_posts || []).forEach((r: string | { slug: string; reason?: string }) => {
+  if (typeof r === 'object' && r.reason) {
+    aiReasons[r.slug] = r.reason;
+  }
+});
+
+// Get AI-picked posts
+const aiRelatedPosts = aiRelatedSlugs
+  .map((slug: string) => allPosts.find(p => p.slug === slug))
+  .filter(Boolean)
+  .slice(0, 3);
+
+// Use advanced related posts algorithm for additional suggestions
+const algorithmicPosts = getRelatedPosts(post, allPosts, 6)
+  .filter(({ post: p }) => !aiRelatedSlugs.includes(p.slug))
+  .slice(0, Math.max(0, 3 - aiRelatedPosts.length));
+
+// Combine: AI first, then algorithmic
+const displayRelatedPosts = [
+  ...aiRelatedPosts.map((p: any) => ({
+    post: p,
+    reason: aiReasons[p.slug],
+    source: 'ai' as const
+  })),
+  ...algorithmicPosts.map(({ post: p }) => ({
+    post: p,
+    reason: null,
+    source: 'algorithmic' as const
+  }))
+];
 
 // Helper to determine post type
 function getPostType(p: any) {
@@ -197,20 +230,22 @@ const structuredData = {
       </div>
     )}
 
-    {relatedPostsWithScores.length > 0 && (
+    {displayRelatedPosts.length > 0 && (
       <div class="related-section">
         <div class="section-label">🐇 Keep falling...</div>
         <div class="related-posts">
-          {relatedPostsWithScores.slice(0, 3).map(({ post: relatedPost }, i) => {
+          {displayRelatedPosts.slice(0, 3).map(({ post: relatedPost, reason, source }, i) => {
             const relatedType = getPostType(relatedPost);
             const colors = ['orange', 'purple', 'blue'];
             return (
-              <a href={`/posts/${relatedPost.slug}`} class="related-post" data-color={colors[i]}>
+              <a href={`/posts/${relatedPost.slug}`} class="related-post" data-color={colors[i]} data-source={source}>
                 <span class="related-num">{String(i + 1).padStart(2, '0')}</span>
                 <div class="related-content">
                   <h3 class="related-title">{relatedPost.data.title}</h3>
+                  {reason && <span class="related-reason">{reason}</span>}
                   <span class="related-meta">
                     {calculateReadingTime(relatedPost.body || '')} min · {relatedPost.data.tags?.[0] || 'musings'}
+                    {source === 'ai' && <span class="ai-badge">AI</span>}
                   </span>
                 </div>
                 <span class="related-arrow">→</span>

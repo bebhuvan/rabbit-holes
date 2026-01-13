@@ -19,7 +19,15 @@ const posts = defineCollection({
         })
       ])
     ).optional(),
-    related_posts: z.array(z.string()).optional(),
+    related_posts: z.array(
+      z.union([
+        z.string(),
+        z.object({
+          slug: z.string(),
+          reason: z.string().optional()
+        })
+      ])
+    ).optional(),
     published: z.boolean().default(true),
   }),
 });

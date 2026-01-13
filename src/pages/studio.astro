@@ -15,17 +15,16 @@ export const prerender = false;
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- CodeMirror - bundled to avoid multiple instances -->
+  <!-- CodeMirror - using ?deps to force shared instances -->
   <script type="importmap">
   {
     "imports": {
-      "codemirror": "https://esm.sh/codemirror@6.0.1?bundle",
-      "@codemirror/lang-markdown": "https://esm.sh/@codemirror/lang-markdown@6.2.5?bundle",
-      "@codemirror/state": "https://esm.sh/@codemirror/state@6.4.1?bundle",
-      "@codemirror/view": "https://esm.sh/@codemirror/view@6.26.3?bundle",
-      "@codemirror/commands": "https://esm.sh/@codemirror/commands@6.5.0?bundle",
-      "@codemirror/language": "https://esm.sh/@codemirror/language@6.10.1?bundle",
-      "@codemirror/theme-one-dark": "https://esm.sh/@codemirror/theme-one-dark@6.1.2?bundle",
+      "@codemirror/state": "https://esm.sh/@codemirror/state@6.4.1",
+      "@codemirror/view": "https://esm.sh/@codemirror/view@6.26.3?deps=@codemirror/state@6.4.1",
+      "@codemirror/commands": "https://esm.sh/@codemirror/commands@6.5.0?deps=@codemirror/state@6.4.1,@codemirror/view@6.26.3",
+      "@codemirror/language": "https://esm.sh/@codemirror/language@6.10.1?deps=@codemirror/state@6.4.1",
+      "@codemirror/lang-markdown": "https://esm.sh/@codemirror/lang-markdown@6.2.5?deps=@codemirror/state@6.4.1,@codemirror/language@6.10.1",
+      "@codemirror/theme-one-dark": "https://esm.sh/@codemirror/theme-one-dark@6.1.2?deps=@codemirror/state@6.4.1,@codemirror/view@6.26.3",
       "marked": "https://esm.sh/marked@12.0.0"
     }
   }
@@ -2949,11 +2948,10 @@ export const prerender = false;
             })
           });
         } else {
-          // Create new post
-          const today = new Date().toISOString().split('T')[0];
-          const slug = slugify(state.editor.title);
+          // Create new post with AI backlinking
+          elements.publishBtn.textContent = 'Finding connections...';
 
-          res = await fetch('/api/publish', {
+          res = await fetch('/api/publish-garden', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -2963,9 +2961,7 @@ export const prerender = false;
               title: state.editor.title,
               content: state.editor.content,
               type: state.editor.type,
-              tags: state.editor.tags,
-              date: today,
-              slug: slug
+              tags: state.editor.tags
             })
           });
         }
@@ -2979,7 +2975,19 @@ export const prerender = false;
             localStorage.setItem('studio-drafts', JSON.stringify(state.drafts));
           }
 
-          showToast(isUpdate ? 'Updated successfully!' : 'Published successfully!');
+          // Show success with backlink info for new posts
+          if (isUpdate) {
+            showToast('Updated successfully!');
+          } else {
+            const relatedCount = data.relatedPosts?.length || 0;
+            const backlinksCount = data.backlinksAdded || 0;
+            if (relatedCount > 0 || backlinksCount > 0) {
+              showToast(`Published! Found ${relatedCount} related posts, added ${backlinksCount} backlinks`);
+            } else {
+              showToast('Published successfully!');
+            }
+          }
+
           resetEditor();
           showView('posts');
           loadPosts();

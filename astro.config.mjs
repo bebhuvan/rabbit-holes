@@ -1,7 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
+import { remarkWikilinks } from './src/utils/remarkWikilinks.js';
+import { getPostsForWikilinksSync } from './src/utils/postsLoader.js';
 import cloudflare from '@astrojs/cloudflare';
+
+// Load posts for wikilink resolution at build time
+const postsForWikilinks = getPostsForWikilinksSync();
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,7 +30,10 @@ export default defineConfig({
     contentIntellisense: true
   },
   markdown: {
-    remarkPlugins: [remarkLinkEmbed],
+    remarkPlugins: [
+      remarkLinkEmbed,
+      [remarkWikilinks, { posts: postsForWikilinks }]
+    ],
     extendDefaultPlugins: true
   },
   vite: {
