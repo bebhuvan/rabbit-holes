@@ -176,12 +176,38 @@ const { pageId, pageUrl, pageTitle } = Astro.props;
 </style>
 
 <script>
-  // Load Cusdis script
-  const script = document.createElement('script');
-  script.async = true;
-  script.defer = true;
-  script.src = 'https://cusdis.com/js/cusdis.es.js';
-  document.body.appendChild(script);
+  // Lazy load Cusdis only when comments section is visible
+  let cusdisLoaded = false;
+
+  function loadCusdis() {
+    if (cusdisLoaded) return;
+    cusdisLoaded = true;
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://cusdis.com/js/cusdis.es.js';
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      updateCusdisTheme();
+      setupIframeResize();
+    };
+  }
+
+  // Use IntersectionObserver to load Cusdis when comments section is near viewport
+  const commentsSection = document.querySelector('.comments-section');
+  if (commentsSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadCusdis();
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: '200px' }); // Load when within 200px of viewport
+
+    observer.observe(commentsSection);
+  }
 
   // Update theme based on site theme
   function updateCusdisTheme() {
@@ -189,7 +215,6 @@ const { pageId, pageUrl, pageTitle } = Astro.props;
     const cusdisThread = document.getElementById('cusdis_thread');
     if (cusdisThread) {
       cusdisThread.setAttribute('data-theme', theme);
-      // Reinitialize if Cusdis is already loaded
       if (window.CUSDIS && window.CUSDIS.initial) {
         window.CUSDIS.initial();
       }
@@ -197,7 +222,7 @@ const { pageId, pageUrl, pageTitle } = Astro.props;
   }
 
   // Watch for theme changes
-  const observer = new MutationObserver((mutations) => {
+  const themeObserver = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
         updateCusdisTheme();
@@ -205,43 +230,39 @@ const { pageId, pageUrl, pageTitle } = Astro.props;
     });
   });
 
-  observer.observe(document.documentElement, {
+  themeObserver.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-theme']
   });
 
-  // Initial theme setup
-  document.addEventListener('DOMContentLoaded', updateCusdisTheme);
+  // Handle iframe resize using MutationObserver instead of polling
+  function setupIframeResize() {
+    const cusdisThread = document.getElementById('cusdis_thread');
+    if (!cusdisThread) return;
 
-  // Handle iframe resize to prevent scrolling
-  function adjustIframeHeight() {
-    const iframe = document.querySelector('#cusdis_thread iframe');
-    if (iframe) {
-      // Listen for messages from iframe
-      window.addEventListener('message', (e) => {
-        if (e.data && e.data.type === 'cusdis-resize') {
-          iframe.style.height = `${e.data.height + 50}px`;
-        }
-      });
+    const iframeObserver = new MutationObserver(() => {
+      const iframe = cusdisThread.querySelector('iframe');
+      if (iframe) {
+        // Listen for resize messages from iframe
+        window.addEventListener('message', (e) => {
+          if (e.data && e.data.type === 'cusdis-resize') {
+            iframe.style.height = `${e.data.height + 50}px`;
+          }
+        }, { once: false });
 
-      // Also try to adjust height when iframe loads
-      iframe.addEventListener('load', () => {
-        try {
-          const height = iframe.contentWindow.document.body.scrollHeight;
-          iframe.style.height = `${height + 50}px`;
-        } catch (e) {
-          // Cross-origin, can't access - rely on postMessage
-        }
-      });
-    }
+        iframe.addEventListener('load', () => {
+          try {
+            const height = iframe.contentWindow.document.body.scrollHeight;
+            iframe.style.height = `${height + 50}px`;
+          } catch (e) {
+            // Cross-origin, rely on postMessage
+          }
+        });
+
+        iframeObserver.disconnect();
+      }
+    });
+
+    iframeObserver.observe(cusdisThread, { childList: true, subtree: true });
   }
-
-  // Check for iframe periodically
-  const checkInterval = setInterval(() => {
-    const iframe = document.querySelector('#cusdis_thread iframe');
-    if (iframe) {
-      adjustIframeHeight();
-      clearInterval(checkInterval);
-    }
-  }, 500);
 </script>

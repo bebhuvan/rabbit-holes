@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #fffef9;
+            --charcoal: #1a1a1a;
+            --stone: #6b6b6b;
+            --whisper: #d4d4d4;
+            --accent: #d97706;
+            --accent-light: #fef3c7;
+            --border: #f0f0f0;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--charcoal);
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 21px;
+            line-height: 1.75;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 48px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--cream) 70%, transparent);
+        }
+
+        .site-title {
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--charcoal);
+        }
+
+        .site-title .rabbit {
+            color: var(--accent);
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        nav a {
+            color: var(--stone);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--charcoal);
+        }
+
+        /* Main container */
+        main {
+            padding: 220px 60px 160px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 180px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 500;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 32px;
+            color: var(--charcoal);
+        }
+
+        .hero p {
+            font-size: 20px;
+            line-height: 1.7;
+            color: var(--stone);
+            font-weight: 400;
+            margin-bottom: 48px;
+        }
+
+        /* Hero buttons */
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-buttons button {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            padding: 12px 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--stone);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .hero-buttons button:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--charcoal);
+        }
+
+        /* Feed */
+        .feed {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Articles - unified style */
+        article {
+            position: relative;
+            margin-bottom: 120px;
+            padding: 40px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        article:hover {
+            background: rgba(217, 119, 6, 0.02);
+        }
+
+        article h2 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: -0.015em;
+            margin-bottom: 16px;
+        }
+
+        article h2 a {
+            color: var(--charcoal);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        article h2 a:hover {
+            color: var(--accent);
+        }
+
+        article .excerpt {
+            font-size: 19px;
+            line-height: 1.7;
+            color: var(--stone);
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        /* Date */
+        .date {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--whisper);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        /* Reading time */
+        .reading-time {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            color: var(--whisper);
+            margin-top: 16px;
+        }
+
+        .reading-time::before {
+            content: '◆';
+            margin-right: 8px;
+            color: var(--accent);
+            opacity: 0.4;
+            font-size: 8px;
+        }
+
+        /* First article larger */
+        article:first-child {
+            margin-bottom: 160px;
+            padding: 60px;
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.03) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        article:first-child:hover {
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.05) 0%, transparent 100%);
+        }
+
+        article:first-child h2 {
+            font-size: 44px;
+            margin-bottom: 24px;
+        }
+
+        article:first-child .excerpt {
+            font-size: 21px;
+        }
+
+        /* Tags */
+        .tags {
+            margin-top: 20px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--stone);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            padding: 4px 12px;
+            border-radius: 3px;
+            background: rgba(217, 119, 6, 0.06);
+        }
+
+        .tag:hover {
+            color: var(--accent);
+            background: rgba(217, 119, 6, 0.12);
+        }
+
+        /* Pullquote */
+        .pullquote {
+            text-align: center;
+            padding: 80px 60px;
+            margin: 160px 0;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+            background: linear-gradient(to bottom, transparent, rgba(217, 119, 6, 0.04), transparent);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .pullquote::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            font-weight: 400;
+            color: var(--accent);
+            opacity: 0.15;
+            line-height: 1;
+            font-family: 'Crimson Pro', Georgia, serif;
+        }
+
+        .pullquote blockquote {
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.6;
+            font-style: italic;
+            color: var(--charcoal);
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .pullquote cite {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            font-style: normal;
+            letter-spacing: 0.08em;
+            color: var(--stone);
+        }
+
+        .pullquote cite::before {
+            content: '—';
+            margin-right: 8px;
+            color: var(--accent);
+            opacity: 0.6;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent-light);
+            color: var(--charcoal);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 32px 24px;
+            }
+
+            main {
+                padding: 160px 24px 100px;
+            }
+
+            .hero {
+                margin-bottom: 120px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            article {
+                margin-bottom: 80px;
+            }
+
+            article:first-child {
+                margin-bottom: 120px;
+            }
+
+            article h2 {
+                font-size: 28px;
+            }
+
+            article:first-child h2 {
+                font-size: 36px;
+            }
+
+            .pullquote {
+                padding: 80px 0;
+                margin: 120px 0;
+            }
+
+            .pullquote blockquote {
+                font-size: 24px;
+            }
+
+            nav {
+                display: none;
+            }
+        }
+
+        /* Focus states */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="site-title">
+            <span class="rabbit">Rabbit</span> Holes
+        </div>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#archive">Archive</a>
+            <a href="#subscribe">Subscribe</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Thoughts worth pursuing down unexpected paths</h1>
+            <p>
+                A collection of essays, observations, and curiosities for the endlessly curious.
+            </p>
+            <div class="hero-buttons">
+                <button id="random-btn">Surprise Me</button>
+                <button onclick="window.open('https://papertrails.rabbitholes.garden')">Paper Trails</button>
+                <button onclick="window.open('https://booktrails.rabbitholes.garden/')">BookTrails</button>
+            </div>
+        </section>
+
+        <div class="feed">
+            <article>
+                <div class="date">October 12, 2025</div>
+                <h2><a href="#">The Architecture of Thought: How Space Shapes Thinking</a></h2>
+                <p class="excerpt">
+                    Libraries arrange knowledge spatially—philosophy here, science there—creating mental maps we navigate physically. The Dewey Decimal System isn't just organization; it's architecture for thought. When you walk from history to poetry, you're traversing conceptual landscapes. Digital search flattens this. Everything is equidistant, one click away.
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Design</a>
+                    <a href="#" class="tag">Philosophy</a>
+                    <a href="#" class="tag">Space</a>
+                </div>
+                <div class="reading-time">12 min read</div>
+            </article>
+
+            <article>
+                <div class="date">October 9, 2025</div>
+                <h2><a href="#">Why We Remember Stories Better Than Facts</a></h2>
+                <p class="excerpt">
+                    The human brain is a storytelling machine. Give someone data and they'll forget it in minutes. Wrap that data in narrative and it becomes unforgettable. Stories activate multiple brain regions simultaneously, creating richer neural pathways than isolated facts ever could.
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Memory</a>
+                    <a href="#" class="tag">Science</a>
+                </div>
+                <div class="reading-time">8 min read</div>
+            </article>
+
+            <article>
+                <div class="date">October 7, 2025</div>
+                <h2><a href="#">The Illusion of Digital Permanence</a></h2>
+                <p class="excerpt">
+                    We assume the internet remembers everything. But digital files are more fragile than paper. A hard drive fails, a company shuts down, a file format becomes obsolete. The Library of Alexandria burned once. Our digital libraries burn every day, in small fires we don't notice.
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Technology</a>
+                    <a href="#" class="tag">Memory</a>
+                </div>
+                <div class="reading-time">10 min read</div>
+            </article>
+
+            <div class="pullquote">
+                <blockquote>
+                    We shape our tools and thereafter our tools shape us.
+                </blockquote>
+                <cite>Marshall McLuhan</cite>
+            </div>
+
+            <article>
+                <div class="date">October 5, 2025</div>
+                <h2><a href="#">On the Pleasure of Not Knowing</a></h2>
+                <p class="excerpt">
+                    Before we could Google everything, questions lingered. They followed us around, waiting for answers. Now we know immediately, and forget just as fast. What have we lost in gaining instant access to every fact?
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Reflection</a>
+                </div>
+                <div class="reading-time">4 min read</div>
+            </article>
+
+            <article>
+                <div class="date">October 3, 2025</div>
+                <h2><a href="#">The Aesthetics of Constraint</a></h2>
+                <p class="excerpt">
+                    Twitter's character limit forced linguistic compression—every word earned its place. When the limit expanded, something was lost. Constraint breeds creativity. Give an artist unlimited canvas and budget, watch them struggle. Give them one color and a small frame, watch them create something unforgettable.
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Creativity</a>
+                    <a href="#" class="tag">Writing</a>
+                    <a href="#" class="tag">Design</a>
+                </div>
+                <div class="reading-time">9 min read</div>
+            </article>
+
+            <article>
+                <div class="date">September 30, 2025</div>
+                <h2><a href="#">What Algorithms Cannot Capture</a></h2>
+                <p class="excerpt">
+                    Recommendation engines optimize for engagement, not meaning. They can predict what you'll click, but not what you'll remember years later. The algorithm knows you watched a show, but not that you cried at the ending.
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Technology</a>
+                    <a href="#" class="tag">AI</a>
+                </div>
+                <div class="reading-time">7 min read</div>
+            </article>
+
+            <article>
+                <div class="date">September 28, 2025</div>
+                <h2><a href="#">The Last Handwritten Letter</a></h2>
+                <p class="excerpt">
+                    When was the last time you received a letter? Not an email—an actual letter, with handwriting that changed as the pen ran out of ink. Paper that traveled through the physical world to reach you.
+                </p>
+                <div class="tags">
+                    <a href="#" class="tag">Nostalgia</a>
+                </div>
+                <div class="reading-time">5 min read</div>
+            </article>
+        </div>
+    </main>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Parallax effect on scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const hero = document.querySelector('.hero h1');
+            if (hero) {
+                hero.style.transform = `translateY(${currentScroll * 0.3}px)`;
+                hero.style.opacity = 1 - currentScroll / 600;
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --white: #ffffff;
+            --black: #1a1a1a;
+            --gray-900: #2d2d2d;
+            --gray-700: #4a4a4a;
+            --gray-600: #5d5d5d;
+            --gray-500: #737373;
+            --gray-400: #a3a3a3;
+            --gray-300: #d4d4d4;
+            --gray-200: #e5e5e5;
+            --gray-100: #f5f5f5;
+            --coral: #ff6b5a;
+            --coral-light: #fff5f3;
+        }
+
+        body {
+            background: var(--white);
+            color: var(--gray-900);
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-size: 18px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 32px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .site-title {
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: var(--black);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .site-title .rabbit {
+            color: var(--coral);
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        nav a {
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 450;
+        }
+
+        nav a:hover {
+            color: var(--coral);
+        }
+
+        /* Container */
+        main {
+            padding: 180px 64px 160px;
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 160px;
+        }
+
+        .hero h1 {
+            font-size: 58px;
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            color: var(--black);
+            max-width: 680px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            line-height: 1.6;
+            color: var(--gray-600);
+            margin-bottom: 48px;
+            max-width: 560px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-buttons button {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            text-decoration-color: transparent;
+        }
+
+        .hero-buttons button:first-child {
+            background: var(--coral);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .hero-buttons button:first-child:hover {
+            background: var(--black);
+        }
+
+        .hero-buttons button:not(:first-child):hover {
+            text-decoration-color: var(--coral);
+            color: var(--coral);
+        }
+
+        /* Feed */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 96px;
+        }
+
+        /* Articles */
+        article {
+            position: relative;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .issue-num {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .article-date {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        article h2 {
+            font-size: 34px;
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: -0.025em;
+            margin-bottom: 18px;
+        }
+
+        article h2 a {
+            color: var(--black);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        article h2 a:hover {
+            color: var(--coral);
+        }
+
+        .excerpt {
+            font-size: 18px;
+            line-height: 1.65;
+            color: var(--gray-600);
+            font-weight: 400;
+        }
+
+        /* First article */
+        article:first-child {
+            margin-bottom: 32px;
+        }
+
+        article:first-child h2 {
+            font-size: 44px;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+        }
+
+        article:first-child .excerpt {
+            font-size: 20px;
+            line-height: 1.6;
+            max-width: 720px;
+        }
+
+        article:first-child .issue-num {
+            color: var(--coral);
+        }
+
+        /* Quote interlude */
+        .interlude {
+            margin: 0;
+            padding: 0 0 0 40px;
+            border-left: 3px solid var(--coral);
+            position: relative;
+        }
+
+        .interlude blockquote {
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+            letter-spacing: -0.015em;
+        }
+
+        .interlude cite {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            font-style: normal;
+            color: var(--gray-500);
+        }
+
+        .interlude cite::before {
+            content: '— ';
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--coral-light);
+            color: var(--black);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--coral);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 160px;
+            padding-top: 56px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        footer p {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 24px 28px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            main {
+                padding: 140px 28px 100px;
+            }
+
+            .hero {
+                margin-bottom: 100px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .feed {
+                gap: 72px;
+            }
+
+            article h2 {
+                font-size: 26px;
+            }
+
+            article:first-child h2 {
+                font-size: 32px;
+            }
+
+            .interlude {
+                padding-left: 28px;
+            }
+
+            .interlude blockquote {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="site-title">
+            <span class="rabbit">Rabbit</span> Holes
+        </a>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#archive">Archive</a>
+            <a href="#subscribe">Subscribe</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Curious thoughts and unexpected connections</h1>
+            <p>
+                Essays, observations, and links exploring ideas at the intersection of technology, culture, and what it means to be human.
+            </p>
+            <div class="hero-buttons">
+                <button>Subscribe</button>
+                <button onclick="window.open('https://papertrails.rabbitholes.garden')">Paper Trails</button>
+                <button onclick="window.open('https://booktrails.rabbitholes.garden/')">Book Trails</button>
+            </div>
+        </section>
+
+        <div class="feed">
+            <article>
+                <div class="article-meta">
+                    <span class="issue-num">Latest</span>
+                    <span class="article-date">October 12, 2025</span>
+                </div>
+                <h2><a href="#">The Architecture of Thought: How Space Shapes Thinking</a></h2>
+                <p class="excerpt">
+                    Libraries arrange knowledge spatially—philosophy here, science there—creating mental maps we navigate physically. The Dewey Decimal System isn't just organization; it's architecture for thought. When you walk from history to poetry, you're not just moving between shelves, you're traversing conceptual landscapes. The physical act of browsing creates a mental topology—a sense that ideas have locations, neighborhoods, boundaries.
+                </p>
+            </article>
+
+            <article>
+                <div class="article-meta">
+                    <span class="issue-num">Essay</span>
+                    <span class="article-date">October 9, 2025</span>
+                </div>
+                <h2><a href="#">Why We Remember Stories Better Than Facts</a></h2>
+                <p class="excerpt">
+                    The human brain is a storytelling machine. Give someone data and they'll forget it in minutes. Wrap that data in narrative and it becomes unforgettable. Stories activate multiple brain regions simultaneously, creating richer neural pathways than isolated facts ever could. This isn't just poetry—it's neuroscience.
+                </p>
+            </article>
+
+            <article>
+                <div class="article-meta">
+                    <span class="issue-num">Deep Dive</span>
+                    <span class="article-date">October 7, 2025</span>
+                </div>
+                <h2><a href="#">The Illusion of Digital Permanence</a></h2>
+                <p class="excerpt">
+                    We assume the internet remembers everything. But digital files are more fragile than paper. A hard drive fails, a company shuts down, a file format becomes obsolete. The Library of Alexandria burned once. Our digital libraries burn every day, in small fires we don't notice.
+                </p>
+            </article>
+
+            <div class="interlude">
+                <blockquote>
+                    We shape our tools and thereafter our tools shape us.
+                </blockquote>
+                <cite>Marshall McLuhan</cite>
+            </div>
+
+            <article>
+                <div class="article-meta">
+                    <span class="issue-num">Reflection</span>
+                    <span class="article-date">October 5, 2025</span>
+                </div>
+                <h2><a href="#">On the Pleasure of Not Knowing</a></h2>
+                <p class="excerpt">
+                    Before we could Google everything, questions lingered. They followed us around, waiting for answers. Now we know immediately, and forget just as fast. What have we lost in gaining instant access to every fact? Perhaps the pleasure wasn't in the answer—it was in living with the question.
+                </p>
+            </article>
+
+            <article>
+                <div class="article-meta">
+                    <span class="issue-num">Essay</span>
+                    <span class="article-date">October 3, 2025</span>
+                </div>
+                <h2><a href="#">The Aesthetics of Constraint</a></h2>
+                <p class="excerpt">
+                    Twitter's character limit forced linguistic compression—every word earned its place. Constraint breeds creativity in ways unlimited possibility never can. Give an artist unlimited canvas and budget, watch them struggle. Give them one color and a small frame, watch them create something unforgettable.
+                </p>
+            </article>
+
+            <article>
+                <div class="article-meta">
+                    <span class="issue-num">Technology</span>
+                    <span class="article-date">September 30, 2025</span>
+                </div>
+                <h2><a href="#">What Algorithms Cannot Capture</a></h2>
+                <p class="excerpt">
+                    Recommendation engines optimize for engagement, not meaning. They predict what you'll click, but not what you'll remember years later. The algorithm knows you watched a show, but not that you cried at the ending. Some things resist quantification.
+                </p>
+            </article>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Rabbit Holes</p>
+        </footer>
+    </main>
+</body>
+</html>

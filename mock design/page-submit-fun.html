@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit · RabbitHoles.garden 🐇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fffef9;
+            --text: #1a1a1a;
+            --gray: #666666;
+            --light-gray: #999999;
+            --line: #e8e8e8;
+            --red: #ef4444;
+            --orange: #f97316;
+            --yellow: #fbbf24;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Newsreader', serif;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--yellow);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            padding: 2.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .site-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s ease;
+        }
+
+        .site-name:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .site-name::before {
+            content: '🐇 ';
+        }
+
+        .back-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--red);
+        }
+
+        /* Content */
+        .content {
+            padding: 5rem 0 8rem;
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--gray);
+            margin-bottom: 4rem;
+        }
+
+        /* Form */
+        .form {
+            max-width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-label .emoji {
+            margin-right: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 1rem 1.3rem;
+            font-family: 'Newsreader', serif;
+            font-size: 1rem;
+            color: var(--text);
+            background: white;
+            border: 2px solid var(--line);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px var(--green)20;
+        }
+
+        .form-textarea {
+            min-height: 140px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-hint {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--light-gray);
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .required {
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        /* Submit button */
+        .form-submit {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .form-submit::after {
+            content: ' →';
+        }
+
+        /* Guidelines - colorful cards */
+        .guidelines {
+            margin-top: 6rem;
+        }
+
+        .guidelines-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .guideline-card {
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+
+        .guideline-card:nth-child(1) {
+            border-color: var(--red);
+            background: linear-gradient(to bottom, var(--red)08, transparent);
+        }
+
+        .guideline-card:nth-child(2) {
+            border-color: var(--blue);
+            background: linear-gradient(to bottom, var(--blue)08, transparent);
+        }
+
+        .guideline-card:nth-child(3) {
+            border-color: var(--purple);
+            background: linear-gradient(to bottom, var(--purple)08, transparent);
+        }
+
+        .guideline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .guideline-emoji {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .guideline-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .guideline-card:nth-child(1) .guideline-title { color: var(--red); }
+        .guideline-card:nth-child(2) .guideline-title { color: var(--blue); }
+        .guideline-card:nth-child(3) .guideline-title { color: var(--purple); }
+
+        .guideline-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--gray);
+        }
+
+        /* Examples section */
+        .examples {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--yellow)10, var(--orange)10);
+            border: 2px solid var(--orange)40;
+            border-radius: 12px;
+        }
+
+        .examples-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .examples-title::before {
+            content: '✨ ';
+        }
+
+        .example-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--orange)30;
+        }
+
+        .example-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .example-good {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text);
+        }
+
+        .example-good strong {
+            color: var(--green);
+        }
+
+        .example-bad {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text);
+        }
+
+        .example-bad strong {
+            color: var(--red);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+        }
+
+        .footer-note {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--light-gray);
+            letter-spacing: 0.08em;
+        }
+
+        /* Success message */
+        .success-message {
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--green)15, var(--blue)15);
+            border: 2px solid var(--green);
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-emoji {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .success-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-text {
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .content {
+                padding: 4rem 0 6rem;
+            }
+
+            .page-title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+
+            .guidelines-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 700px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="site-name">RABBITHOLES</a>
+            <a href="/" class="back-link">← BACK</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="content">
+            <h1 class="page-title">Submit a Link</h1>
+            <p class="page-subtitle">
+                Found something fascinating? Share it! I read every submission, though I can't feature everything. The best ones make me say "holy shit, I need to see this."
+            </p>
+
+            <div class="success-message" id="successMessage">
+                <span class="success-emoji">🎉</span>
+                <div class="success-title">Thanks for sharing!</div>
+                <div class="success-text">I'll check it out and get back to you if I have questions.</div>
+            </div>
+
+            <form class="form" id="submitForm">
+                <div class="form-group">
+                    <label class="form-label" for="url">
+                        <span class="emoji">🔗</span>
+                        Link URL <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="url" 
+                        id="url" 
+                        class="form-input" 
+                        placeholder="https://example.com/amazing-thing"
+                        required
+                    >
+                    <div class="form-hint">The thing you want to share</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="title">
+                        <span class="emoji">✏️</span>
+                        Title
+                    </label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        class="form-input" 
+                        placeholder="What should I call this?"
+                    >
+                    <div class="form-hint">Optional—I'll use the original title if you leave this blank</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="why">
+                        <span class="emoji">💡</span>
+                        Why is this interesting? <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        id="why" 
+                        class="form-textarea" 
+                        placeholder="What makes this worth someone's time? Why did it capture your attention? What makes it special?"
+                        required
+                    ></textarea>
+                    <div class="form-hint">This is the most important part—tell me what grabbed you</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">
+                        <span class="emoji">📧</span>
+                        Your email
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="your@email.com"
+                    >
+                    <div class="form-hint">Optional—only if you want a response</div>
+                </div>
+
+                <button type="submit" class="form-submit">Submit</button>
+            </form>
+
+            <div class="guidelines">
+                <h2 class="guidelines-title">What Makes a Good Submission?</h2>
+                
+                <div class="guidelines-grid">
+                    <div class="guideline-card">
+                        <span class="guideline-emoji">🤯</span>
+                        <h3 class="guideline-title">Mind-Bending</h3>
+                        <p class="guideline-text">It made you stop and think. Not just "huh, interesting" but "holy shit, I need to tell someone about this."</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <span class="guideline-emoji">⏰</span>
+                        <h3 class="guideline-title">Time-Worthy</h3>
+                        <p class="guideline-text">You'd still remember it a week from now. It's not disposable content—it's something that sticks with you.</p>
+                    </div>
+
+                    <div class="guideline-card">
+                        <span class="guideline-emoji">✨</span>
+                        <h3 class="guideline-title">Genuinely Unique</h3>
+                        <p class="guideline-text">It's not trying to go viral or sell anything. It's just... good. Interesting for its own sake.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="examples">
+                <h3 class="examples-title">Good vs. Bad Submissions</h3>
+                
+                <div class="example-item">
+                    <div class="example-good">
+                        <strong>✓ Good:</strong> "This essay about how ancient memory techniques could help with modern information overload changed how I think about learning. The section on memory palaces is mind-blowing."
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <div class="example-bad">
+                        <strong>✗ Bad:</strong> "Cool article about productivity hacks. Check it out!"
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <div class="example-good">
+                        <strong>✓ Good:</strong> "A 4-minute video showing how wolves literally changed the physical geography of Yellowstone rivers. It's the clearest example of systems thinking I've ever seen."
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <div class="example-bad">
+                        <strong>✗ Bad:</strong> "Great video about nature. Very informative."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <nav class="footer-nav">
+            <a href="/" class="footer-link">HOME</a>
+            <a href="/about" class="footer-link">ABOUT</a>
+            <a href="/archive" class="footer-link">ARCHIVE</a>
+            <a href="/rss" class="footer-link">RSS</a>
+        </nav>
+        <p class="footer-note">Daily since 2024 🐇</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('submitForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const url = document.getElementById('url').value;
+            const why = document.getElementById('why').value;
+            
+            // Show success message
+            successMessage.classList.add('show');
+            
+            // Scroll to success message
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Reset form
+            form.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 5000);
+            
+            console.log('Submission:', { url, why });
+            // In real implementation, this would send to a backend
+        });
+
+        // Focus animation on inputs
+        document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateX(5px)';
+                this.parentElement.style.transition = 'transform 0.2s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body>
+</html>

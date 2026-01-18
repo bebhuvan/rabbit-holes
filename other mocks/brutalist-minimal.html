@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --coral: #ff6b4a;
+            --coral-light: #ff8c72;
+            --black: #111111;
+            --charcoal: #333333;
+            --gray: #666666;
+            --light: #999999;
+            --border: #e5e5e5;
+            --bg: #ffffff;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--charcoal);
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 21px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* HEADER - Minimal presence */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            text-decoration: none;
+            letter-spacing: -0.01em;
+        }
+
+        .logo span {
+            color: var(--coral);
+        }
+
+        nav {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            display: flex;
+            gap: 28px;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* MAIN CONTAINER */
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 140px 32px 100px;
+        }
+
+        /* HERO */
+        .hero {
+            margin-bottom: 140px;
+        }
+
+        .hero h1 {
+            font-size: 58px;
+            font-weight: 600;
+            line-height: 1.15;
+            letter-spacing: -0.035em;
+            margin-bottom: 28px;
+            color: var(--black);
+        }
+
+        .hero p {
+            font-size: 23px;
+            line-height: 1.6;
+            color: var(--gray);
+            max-width: 580px;
+        }
+
+        /* FEED */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 96px;
+        }
+
+        /* ARTICLE CARD */
+        article {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 96px;
+        }
+
+        article:last-child {
+            border-bottom: none;
+        }
+
+        article h2 {
+            font-size: 34px;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+        }
+
+        article h2 a {
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        article .excerpt {
+            font-size: 21px;
+            line-height: 1.7;
+            color: var(--gray);
+        }
+
+        article .excerpt p {
+            margin-bottom: 18px;
+        }
+
+        article .excerpt p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* FIRST ARTICLE - Featured */
+        article:first-child {
+            border: none;
+            padding-bottom: 110px;
+            margin-bottom: 30px;
+        }
+
+        article:first-child h2 {
+            font-size: 46px;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+
+        article:first-child .excerpt {
+            font-size: 23px;
+            line-height: 1.65;
+        }
+
+        /* DATE - Subtle, out of the way */
+        .date {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: var(--coral);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        /* QUOTE BLOCK - Playful and warm */
+        .quote-block {
+            margin: 100px -32px;
+            padding: 56px 64px;
+            background: linear-gradient(135deg, #fff5f3 0%, #fffaf9 100%);
+            border-left: 4px solid var(--coral);
+        }
+
+        .quote-block blockquote {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 1.4;
+            font-style: italic;
+            color: var(--black);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .quote-block cite {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-style: normal;
+            color: var(--coral);
+            font-weight: 500;
+        }
+
+        .quote-block cite::before {
+            content: '— ';
+        }
+
+        /* SELECTION */
+        ::selection {
+            background: rgba(255, 107, 74, 0.15);
+            color: var(--black);
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            body {
+                font-size: 19px;
+            }
+
+            main {
+                padding: 120px 24px 80px;
+            }
+
+            .header-inner {
+                padding: 20px 24px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                margin-bottom: 100px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                font-size: 20px;
+            }
+
+            .feed {
+                gap: 80px;
+            }
+
+            article {
+                padding-bottom: 80px;
+            }
+
+            article h2 {
+                font-size: 28px;
+            }
+
+            article:first-child {
+                padding-bottom: 90px;
+            }
+
+            article:first-child h2 {
+                font-size: 36px;
+            }
+
+            .quote-block {
+                margin: 80px -24px;
+                padding: 40px 32px;
+            }
+
+            .quote-block blockquote {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- FEED PAGE -->
+    <header>
+        <div class="header-inner">
+            <a href="/" class="logo"><span>RABBIT</span> HOLES</a>
+            <nav>
+                <a href="/about">About</a>
+                <a href="/archive">Archive</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Curating the best and weirdest rabbit holes</h1>
+            <p>Links, essays, and observations about ideas worth tumbling down into. Updated whenever something interesting surfaces.</p>
+        </section>
+
+        <div class="feed">
+            <article>
+                <div class="date">October 12, 2025</div>
+                <h2><a href="#article">The Architecture of Thought: How Space Shapes Thinking</a></h2>
+                <div class="excerpt">
+                    <p>Libraries arrange knowledge spatially—philosophy here, science there—creating mental maps we navigate physically. The Dewey Decimal System isn't just organization; it's architecture for thought.</p>
+                    <p>When you walk from history to poetry, you're not just moving between shelves, you're traversing conceptual landscapes. In a traditional library, serendipity is architectural.</p>
+                </div>
+            </article>
+
+            <article>
+                <div class="date">October 9, 2025</div>
+                <h2><a href="#">Why We Remember Stories Better Than Facts</a></h2>
+                <div class="excerpt">
+                    <p>The human brain is a storytelling machine. Give someone data and they'll forget it in minutes. Wrap that data in narrative and it becomes unforgettable. Stories activate multiple brain regions simultaneously, creating richer neural pathways than isolated facts ever could.</p>
+                </div>
+            </article>
+
+            <article>
+                <div class="date">October 7, 2025</div>
+                <h2><a href="#">The Illusion of Digital Permanence</a></h2>
+                <div class="excerpt">
+                    <p>We assume the internet remembers everything. But digital files are more fragile than paper. A hard drive fails, a company shuts down, a file format becomes obsolete. The Library of Alexandria burned once. Our digital libraries burn every day, in small fires we don't notice.</p>
+                </div>
+            </article>
+
+            <div class="quote-block">
+                <blockquote>We shape our tools and thereafter our tools shape us.</blockquote>
+                <cite>Marshall McLuhan</cite>
+            </div>
+
+            <article>
+                <div class="date">October 5, 2025</div>
+                <h2><a href="#">On the Pleasure of Not Knowing</a></h2>
+                <div class="excerpt">
+                    <p>Before we could Google everything, questions lingered. They followed us around, waiting for answers. Now we know immediately, and forget just as fast. What have we lost in gaining instant access to every fact?</p>
+                </div>
+            </article>
+
+            <article>
+                <div class="date">October 3, 2025</div>
+                <h2><a href="#">The Aesthetics of Constraint</a></h2>
+                <div class="excerpt">
+                    <p>Twitter's character limit forced linguistic compression—every word earned its place. When the limit expanded, something was lost. Constraint breeds creativity in ways unlimited possibility never can.</p>
+                    <p>Give an artist unlimited canvas and budget, watch them struggle. Give them one color and a small frame, watch them create something unforgettable.</p>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <script>
+        // Simple page transition demo - click article title to see article page
+        document.querySelector('article:first-child h2 a').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.body.innerHTML = `
+    <header>
+        <div class="header-inner">
+            <a href="/" class="logo"><span>RABBIT</span> HOLES</a>
+            <nav>
+                <a href="/about">About</a>
+                <a href="/archive">Archive</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <article style="border: none; padding-bottom: 0;">
+            <div class="date">October 12, 2025</div>
+            <h1 style="font-size: 58px; font-weight: 500; line-height: 1.15; letter-spacing: -0.035em; margin-bottom: 56px; color: var(--black);">The Architecture of Thought: How Space Shapes Thinking</h1>
+
+            <div class="article-content" style="font-size: 23px; line-height: 1.7; color: var(--charcoal);">
+                <p style="margin-bottom: 28px;">Libraries arrange knowledge spatially—philosophy here, science there—creating mental maps we navigate physically. The Dewey Decimal System isn't just organization; it's architecture for thought. When you walk from history to poetry, you're not just moving between shelves, you're traversing conceptual landscapes.</p>
+
+                <p style="margin-bottom: 28px;">The physical act of browsing creates a mental topology—a sense that ideas have locations, neighborhoods, boundaries. In a traditional library, serendipity is architectural. You go looking for one book and discover three others you didn't know you needed.</p>
+
+                <h2 style="font-size: 36px; font-weight: 600; line-height: 1.3; margin-top: 64px; margin-bottom: 24px; letter-spacing: -0.02em; color: var(--black);">The Collapse of Digital Distance</h2>
+
+                <p style="margin-bottom: 28px;">Digital search flattens this. Everything is equidistant, one click away, context collapsed into keywords. Google doesn't give you neighbors—it gives you matches. The algorithm optimizes for relevance, not for the adjacent possible.</p>
+
+                <div class="quote-block">
+                    <blockquote>We shape our buildings; thereafter they shape us.</blockquote>
+                    <cite>Winston Churchill</cite>
+                </div>
+
+                <p style="margin-bottom: 28px;">This isn't nostalgia for card catalogs. It's recognition that how we organize information shapes how we think about information. The library's architecture creates a model of knowledge itself—branching, hierarchical, interconnected.</p>
+
+                <h2 style="font-size: 36px; font-weight: 600; line-height: 1.3; margin-top: 64px; margin-bottom: 24px; letter-spacing: -0.02em; color: var(--black);">Physical Space as Memory Palace</h2>
+
+                <p style="margin-bottom: 28px;">Ancient orators used the "method of loci"—imagining a building and placing memories in its rooms. When they needed to recall a speech, they mentally walked through the building, picking up each memory as they passed its location.</p>
+
+                <p style="margin-bottom: 28px;">Modern libraries work the same way. Regular visitors develop internal maps. They know that feminist theory lives next to gender studies, that cookbooks are upstairs near gardening. This spatial knowledge becomes semantic knowledge.</p>
+
+                <h2 style="font-size: 36px; font-weight: 600; line-height: 1.3; margin-top: 64px; margin-bottom: 24px; letter-spacing: -0.02em; color: var(--black);">What We Lose in the Cloud</h2>
+
+                <p style="margin-bottom: 28px;">The cloud promises access to everything from anywhere. It delivers on that promise. But "from anywhere" means "from nowhere." Information without location is information without context.</p>
+
+                <p style="margin-bottom: 28px;">Perhaps the solution isn't choosing between physical and digital, but understanding what each does best. Libraries organize knowledge spatially. Search engines organize it semantically. Bookshelves create adjacency. Hyperlinks create association.</p>
+
+                <p style="margin-bottom: 28px;">The question isn't which is better. It's what kind of thinking does each enable? What cognitive habits does each reinforce? And how do we design spaces—physical or digital—that support the kinds of thinking we want to do?</p>
+
+                <p style="margin-bottom: 0;">Because in the end, how we organize information is how we organize thought itself.</p>
+            </div>
+
+            <div style="margin-top: 100px; padding-top: 48px; border-top: 1px solid var(--border);">
+                <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: var(--coral); margin-bottom: 36px; letter-spacing: 0.5px; font-weight: 500;">Continue Reading</div>
+
+                <div style="display: flex; flex-direction: column; gap: 40px;">
+                    <a href="#" style="text-decoration: none; display: block; padding-bottom: 40px; border-bottom: 1px solid var(--border);">
+                        <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: var(--coral); margin-bottom: 12px; letter-spacing: 0.5px; font-weight: 500;">October 9, 2025</div>
+                        <h3 style="font-size: 26px; font-weight: 600; line-height: 1.3; color: var(--black); margin-bottom: 12px; letter-spacing: -0.02em;">Why We Remember Stories Better Than Facts</h3>
+                        <p style="font-size: 19px; line-height: 1.6; color: var(--gray);">The human brain is a storytelling machine. Give someone data and they'll forget it in minutes.</p>
+                    </a>
+
+                    <a href="#" style="text-decoration: none; display: block;">
+                        <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: var(--coral); margin-bottom: 12px; letter-spacing: 0.5px; font-weight: 500;">October 7, 2025</div>
+                        <h3 style="font-size: 26px; font-weight: 600; line-height: 1.3; color: var(--black); margin-bottom: 12px; letter-spacing: -0.02em;">The Illusion of Digital Permanence</h3>
+                        <p style="font-size: 19px; line-height: 1.6; color: var(--gray);">We assume the internet remembers everything. But digital files are more fragile than paper.</p>
+                    </a>
+                </div>
+            </div>
+        </article>
+    </main>
+            `;
+        });
+    </script>
+</body>
+</html>

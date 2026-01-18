@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rabbit Holes — V5</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FDFCFA;
+      --text: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #8a8a8a;
+      --text-faint: #b5b5b5;
+      --border: #e8e5e1;
+      --surface: #f6f5f3;
+      --orange: #e67e22;
+      --orange-soft: rgba(230, 126, 34, 0.12);
+      --purple: #8b5cf6;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #e74c3c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Newsreader', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--orange-soft);
+    }
+
+    /* === LAYOUT === */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* === HEADER === */
+    .header {
+      padding: 2.5rem 0;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.3s ease;
+    }
+
+    .logo:hover {
+      color: var(--orange);
+    }
+
+    .logo:hover .rabbit {
+      animation: hop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes hop {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px) rotate(8deg); }
+    }
+
+    .rabbit {
+      font-size: 1.25rem;
+      display: inline-block;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--text);
+    }
+
+    /* === HERO === */
+    .hero {
+      padding: 4rem 0 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-intro {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.25rem, 6vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.25rem;
+      max-width: 600px;
+    }
+
+    .hero-title a {
+      color: inherit;
+      text-decoration: none;
+      background-image: linear-gradient(var(--orange), var(--orange));
+      background-size: 0% 2px;
+      background-repeat: no-repeat;
+      background-position: 0 92%;
+      transition: background-size 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-title a:hover {
+      background-size: 100% 2px;
+    }
+
+    .hero-excerpt {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-type {
+      color: var(--orange);
+    }
+
+    /* === STREAM === */
+    .stream {
+      padding: 4rem 0;
+    }
+
+    .stream-header {
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .stream-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .stream-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-faint);
+    }
+
+    /* Post */
+    .post {
+      padding: 2.25rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .post:last-child {
+      border-bottom: none;
+    }
+
+    .post-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .post-type {
+      color: var(--post-accent, var(--orange));
+    }
+
+    .post-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .post-title a:hover {
+      color: var(--post-accent, var(--orange));
+    }
+
+    .post-excerpt {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    /* Quote variant */
+    .post--quote {
+      --post-accent: var(--purple);
+      padding-left: 1.5rem;
+      border-left: 2px solid var(--purple);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post--quote .post-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .post--links {
+      --post-accent: var(--blue);
+    }
+
+    .post--visual {
+      --post-accent: var(--green);
+    }
+
+    /* === FAVORITES === */
+    .favorites {
+      padding: 3.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .favorites-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    .favorites-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 600px) {
+      .favorites-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .favorite {
+      padding: 1.25rem;
+      background: var(--surface);
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .favorite:hover {
+      background: var(--orange-soft);
+      transform: translateY(-2px);
+    }
+
+    .favorite-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.35rem;
+      transition: color 0.2s;
+    }
+
+    .favorite:hover .favorite-title {
+      color: var(--orange);
+    }
+
+    .favorite-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* === SURPRISE === */
+    .surprise {
+      padding: 3rem 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .surprise-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 1rem 2rem;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .surprise-btn:hover {
+      background: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .surprise-btn:hover .dice {
+      animation: roll 0.4s ease;
+    }
+
+    @keyframes roll {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .dice {
+      font-size: 1.1rem;
+    }
+
+    /* === ABOUT SECTION === */
+    .about {
+      padding: 4rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 600px) {
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    .about-text h3 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .about-text p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    .about-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .topics h3 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .topics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .topic {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.5rem 0.85rem;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .topic:hover {
+      background: var(--text);
+      border-color: var(--text);
+      color: var(--bg);
+    }
+
+    /* === NEWSLETTER === */
+    .newsletter {
+      padding: 4rem 2.5rem;
+      background: var(--text);
+      color: var(--bg);
+      text-align: center;
+      margin: 0 -2rem;
+    }
+
+    @media (max-width: 600px) {
+      .newsletter {
+        padding: 3rem 1.5rem;
+        margin: 0 -1.5rem;
+      }
+    }
+
+    .newsletter-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .newsletter-desc {
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-bottom: 1.75rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 500px) {
+      .newsletter-form {
+        flex-direction: column;
+      }
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 0.9rem 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: var(--bg);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--orange);
+    }
+
+    .newsletter-submit {
+      padding: 0.9rem 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--orange);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .newsletter-submit:hover {
+      background: #d97318;
+    }
+
+    /* === FOOTER === */
+    .footer {
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 500px) {
+      .footer-inner {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    .footer-left {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--orange);
+    }
+
+    /* === MOBILE === */
+    @media (max-width: 600px) {
+      body {
+        font-size: 17px;
+      }
+
+      .container {
+        padding: 0 1.5rem;
+      }
+
+      .header {
+        padding: 2rem 0;
+      }
+
+      .nav {
+        gap: 1.25rem;
+      }
+
+      .hero {
+        padding: 3rem 0 4rem;
+      }
+
+      .hero-title {
+        font-size: 1.85rem;
+      }
+
+      .hero-excerpt {
+        font-size: 1.1rem;
+      }
+
+      .post-title {
+        font-size: 1.25rem;
+      }
+
+      .post--quote .post-title {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+        <a href="/" class="logo">
+          <span class="rabbit">🐇</span>
+          Rabbit Holes
+        </a>
+        <nav class="nav">
+          <a href="/archive">Archive</a>
+          <a href="/tags">Topics</a>
+          <a href="/about">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <p class="hero-intro">Latest</p>
+      <h1 class="hero-title">
+        <a href="/posts/why-read">Why Read?</a>
+      </h1>
+      <p class="hero-excerpt">
+        I love reading. If I can confidently claim that I have even a smidgen of common sense, I think it's all down to reading. The more I read, the more I felt the urge to write...
+      </p>
+      <div class="hero-meta">
+        <span class="hero-type">Reflection</span>
+        <span>·</span>
+        <span>Aug 17</span>
+      </div>
+    </section>
+
+    <!-- STREAM -->
+    <section class="stream">
+      <header class="stream-header">
+        <h2 class="stream-title">Recent</h2>
+        <span class="stream-count">127 posts</span>
+      </header>
+
+      <article class="post post--quote">
+        <div class="post-meta">
+          <span class="post-type">Quote</span>
+          <span>·</span>
+          <span>Oct 10</span>
+        </div>
+        <h3 class="post-title">
+          <a href="#">"In the depths of winter, I finally learned that within me there lay an invincible summer."</a>
+        </h3>
+        <p class="post-excerpt">
+          A beautiful line from Albert Camus, from his essay <em>Return to Tipasa</em>.
+        </p>
+      </article>
+
+      <article class="post post--links">
+        <div class="post-meta">
+          <span class="post-type">Links</span>
+          <span>·</span>
+          <span>Sep 24</span>
+        </div>
+        <h3 class="post-title">
+          <a href="#">I got some links for you</a>
+        </h3>
+        <p class="post-excerpt">
+          China's trade surplus is on track to exceed $1 trillion. Plus: workslop, gig workers, and the shameless grift of our times.
+        </p>
+      </article>
+
+      <article class="post post--visual">
+        <div class="post-meta">
+          <span class="post-type">Interesting</span>
+          <span>·</span>
+          <span>Sep 9</span>
+        </div>
+        <h3 class="post-title">
+          <a href="#">The Solar Revolution</a>
+        </h3>
+        <p class="post-excerpt">
+          Solar scaling laws will prove more impactful than AI's. China is the best thing to happen to the green transition.
+        </p>
+      </article>
+
+      <article class="post post--quote">
+        <div class="post-meta">
+          <span class="post-type">Quote</span>
+          <span>·</span>
+          <span>Oct 26</span>
+        </div>
+        <h3 class="post-title">
+          <a href="#">"Pretending is the most important thing we do"</a>
+        </h3>
+        <p class="post-excerpt">
+          Brian Eno on being pretentious: it's how we make thought experiments, find out what it would be like to be otherwise.
+        </p>
+      </article>
+
+      <article class="post">
+        <div class="post-meta">
+          <span class="post-type">Thought</span>
+          <span>·</span>
+          <span>Oct 23</span>
+        </div>
+        <h3 class="post-title">
+          <a href="#">Fun is a skill</a>
+        </h3>
+        <p class="post-excerpt">
+          Everyone agrees fun is good. Yet most people aren't having it. Because having fun is actually a skill.
+        </p>
+      </article>
+
+    </section>
+
+    <!-- FAVORITES -->
+    <section class="favorites">
+      <h2 class="favorites-title">Favorites</h2>
+      <div class="favorites-grid">
+        <a href="#" class="favorite">
+          <h3 class="favorite-title">The Weight of Telling Stories</h3>
+          <span class="favorite-type">Reflection</span>
+        </a>
+        <a href="#" class="favorite">
+          <h3 class="favorite-title">We Are Borrowed Stardust</h3>
+          <span class="favorite-type">Thought</span>
+        </a>
+        <a href="#" class="favorite">
+          <h3 class="favorite-title">Zero-Sum Thinking is Ruining the World</h3>
+          <span class="favorite-type">Essay</span>
+        </a>
+        <a href="#" class="favorite">
+          <h3 class="favorite-title">Philosophy as a Way of Life</h3>
+          <span class="favorite-type">Reflection</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- SURPRISE -->
+    <section class="surprise">
+      <button class="surprise-btn">
+        <span class="dice">🎲</span>
+        Surprise me
+      </button>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about">
+      <div class="about-content">
+        <div class="about-text">
+          <h3>About</h3>
+          <p>
+            <strong>I'm Bhuvan.</strong> I collect fascinating things from the internet—quotes, links, charts, ideas. Rabbit holes worth falling into.
+          </p>
+        </div>
+        <div class="topics">
+          <h3>Topics</h3>
+          <div class="topics-list">
+            <a href="#" class="topic">AI</a>
+            <a href="#" class="topic">Reading</a>
+            <a href="#" class="topic">Philosophy</a>
+            <a href="#" class="topic">Economics</a>
+            <a href="#" class="topic">Poetry</a>
+            <a href="#" class="topic">China</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+      <h2 class="newsletter-title">Don't miss a rabbit hole</h2>
+      <p class="newsletter-desc">Curiosity in your inbox. No spam.</p>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="your@email.com">
+        <button type="submit" class="newsletter-submit">Subscribe</button>
+      </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <span>🐇</span>
+          <span>Fascinating things from the internet</span>
+        </div>
+        <nav class="footer-links">
+          <a href="/rss">RSS</a>
+          <a href="/about">About</a>
+          <a href="https://twitter.com">Twitter</a>
+        </nav>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

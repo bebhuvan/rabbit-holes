@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Method of Loci · RabbitHoles.garden 🐇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fffef9;
+            --text: #1a1a1a;
+            --gray: #666666;
+            --light-gray: #999999;
+            --line: #e8e8e8;
+            --accent: #ef4444; /* This post's color - changes per post */
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Newsreader', serif;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--accent)20;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            padding: 2.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .site-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s ease;
+        }
+
+        .site-name:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .site-name::before {
+            content: '🐇 ';
+        }
+
+        .back-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        /* Post content */
+        .post {
+            padding: 5rem 0 6rem;
+        }
+
+        /* Meta bar */
+        .post-meta {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .post-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .post-type {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            padding: 0.3rem 0.7rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Title */
+        .post-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+
+        /* Context - curator's voice */
+        .post-context {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: var(--gray);
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(to right, var(--accent)08, transparent);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .post-context em {
+            font-style: italic;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Source box */
+        .source-box {
+            padding: 2rem;
+            background: white;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .source-info {
+            flex: 1;
+        }
+
+        .source-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--light-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .source-link {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .source-link:hover {
+            opacity: 0.7;
+        }
+
+        .visit-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .visit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--accent)40;
+        }
+
+        .visit-btn::after {
+            content: ' →';
+        }
+
+        /* Preview/excerpt section */
+        .preview-section {
+            margin-bottom: 3rem;
+        }
+
+        .preview-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .preview-content {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text);
+            padding: 2.5rem;
+            background: linear-gradient(135deg, var(--accent)08, var(--accent)12);
+            border: 2px solid var(--accent)40;
+            border-radius: 8px;
+        }
+
+        .preview-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Tags */
+        .post-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            color: var(--gray);
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--line);
+            border-radius: 30px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .tag:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Related posts */
+        .related-section {
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--accent)05, transparent);
+            border-top: 2px solid var(--accent)20;
+            border-bottom: 2px solid var(--accent)20;
+            margin-bottom: 4rem;
+        }
+
+        .related-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+
+        .related-list {
+            list-style: none;
+        }
+
+        .related-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .related-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .related-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .related-item-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .related-link:hover .related-item-title {
+            color: var(--accent);
+        }
+
+        .related-item-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--light-gray);
+            letter-spacing: 0.05em;
+        }
+
+        /* Share section */
+        .share-section {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border: 2px solid var(--line);
+            border-radius: 12px;
+            margin-bottom: 4rem;
+        }
+
+        .share-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--line);
+            border-radius: 30px;
+            text-decoration: none;
+            color: var(--gray);
+            transition: all 0.2s ease;
+        }
+
+        .share-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation */
+        .post-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: space-between;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .post-nav-link {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid var(--line);
+            border-radius: 8px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .post-nav-link:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .post-nav-direction {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--light-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-nav-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+        }
+
+        .footer-note {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--light-gray);
+            letter-spacing: 0.08em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .post {
+                padding: 4rem 0 5rem;
+            }
+
+            .post-title {
+                font-size: clamp(2rem, 9vw, 3.5rem);
+            }
+
+            .post-context {
+                font-size: 1.15rem;
+                padding: 1.5rem;
+            }
+
+            .source-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .visit-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .preview-content {
+                padding: 2rem;
+                font-size: 1.05rem;
+            }
+
+            .related-section,
+            .share-section {
+                padding: 2rem;
+            }
+
+            .post-nav {
+                flex-direction: column;
+            }
+
+            .post-nav-link {
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 720px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="site-name">RABBITHOLES</a>
+            <a href="/" class="back-link">← BACK</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="post">
+            <!-- Meta -->
+            <div class="post-meta">
+                <div class="post-date">08 Dec 2024</div>
+                <div class="post-type">📄 Article</div>
+            </div>
+
+            <!-- Title -->
+            <h1 class="post-title">The Method of Loci: How Ancient Orators Memorized Entire Speeches</h1>
+
+            <!-- Curator's context -->
+            <div class="post-context">
+                Before writing became ubiquitous, memory was <em>trained</em>—like a muscle you could build. Ancient orators built entire palaces in their minds where each room held a different speech. Cicero could memorize 100,000 words this way. We've completely lost this art, but the technique still works perfectly today.
+            </div>
+
+            <!-- Source -->
+            <div class="source-box">
+                <div class="source-info">
+                    <div class="source-label">Source</div>
+                    <a href="https://artofmemory.com" class="source-link" target="_blank" rel="noopener">
+                        artofmemory.com
+                    </a>
+                </div>
+                <a href="https://artofmemory.com" class="visit-btn" target="_blank" rel="noopener">
+                    Read Article
+                </a>
+            </div>
+
+            <!-- Preview/Excerpt -->
+            <div class="preview-section">
+                <div class="preview-label">From the article</div>
+                <div class="preview-content">
+                    <p>The technique involves imagining a familiar building—your childhood home, a route you walk daily—and placing bizarre, memorable images in each location. To recall information, you simply "walk" through your mental palace, encountering each image in sequence.</p>
+
+                    <p>The weirder and more vivid the images, the better they stick. Want to remember a grocery list? Imagine a giant banana doing backflips in your living room, a waterfall of milk cascading down your stairs, eggs juggling themselves in your kitchen. The absurdity makes them unforgettable.</p>
+
+                    <p>This isn't just historical trivia—memory athletes still use this exact method to memorize the order of shuffled decks of cards in under a minute. The technique scales infinitely. Need to memorize a speech? Build a bigger palace. Need to remember names at a conference? Assign each person to a location in your mental building.</p>
+
+                    <p>We've outsourced memory to smartphones and forgotten that our brains are capable of astonishing feats when trained properly. The ancients knew something we've lost: memory isn't about repetition, it's about creating spatial, visual, emotional connections that make information impossible to forget.</p>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="post-tags">
+                <span class="tag">memory</span>
+                <span class="tag">cognition</span>
+                <span class="tag">ancient-tech</span>
+                <span class="tag">learning</span>
+                <span class="tag">neuroscience</span>
+            </div>
+
+            <!-- Related posts -->
+            <div class="related-section">
+                <h2 class="related-title">Related Discoveries</h2>
+                <ul class="related-list">
+                    <li class="related-item">
+                        <a href="#" class="related-link">
+                            <div class="related-item-title">Moonwalking with Einstein: Memory Championships</div>
+                            <div class="related-item-meta">How a journalist trained for a year and won the US Memory Championship</div>
+                        </a>
+                    </li>
+                    <li class="related-item">
+                        <a href="#" class="related-link">
+                            <div class="related-item-title">Spaced Repetition: The Forgetting Curve</div>
+                            <div class="related-item-meta">Why reviewing information at increasing intervals makes it permanent</div>
+                        </a>
+                    </li>
+                    <li class="related-item">
+                        <a href="#" class="related-link">
+                            <div class="related-item-title">How Medieval Monks Memorized Entire Books</div>
+                            <div class="related-item-meta">Illuminated manuscripts weren't just art—they were memory aids</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Share -->
+            <div class="share-section">
+                <h3 class="share-title">Worth sharing? 🎯</h3>
+                <div class="share-buttons">
+                    <a href="#" class="share-btn">📧 Email</a>
+                    <a href="#" class="share-btn">🐦 Twitter</a>
+                    <a href="#" class="share-btn">📋 Copy Link</a>
+                </div>
+            </div>
+
+            <!-- Post navigation -->
+            <nav class="post-nav">
+                <a href="#" class="post-nav-link">
+                    <div class="post-nav-direction">← Previous</div>
+                    <div class="post-nav-title">Deep Time</div>
+                </a>
+                <a href="#" class="post-nav-link">
+                    <div class="post-nav-direction">Next →</div>
+                    <div class="post-nav-title">How Wolves Change Rivers</div>
+                </a>
+            </nav>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <nav class="footer-nav">
+            <a href="/" class="footer-link">HOME</a>
+            <a href="/about" class="footer-link">ABOUT</a>
+            <a href="/archive" class="footer-link">ARCHIVE</a>
+            <a href="/submit" class="footer-link">SUBMIT</a>
+            <a href="/rss" class="footer-link">RSS</a>
+        </nav>
+        <p class="footer-note">Daily since 2024 🐇</p>
+    </footer>
+
+    <script>
+        // Copy link functionality
+        document.querySelector('.share-buttons').addEventListener('click', function(e) {
+            if (e.target.closest('.share-btn') && e.target.textContent.includes('Copy')) {
+                e.preventDefault();
+                navigator.clipboard.writeText(window.location.href);
+                
+                const btn = e.target.closest('.share-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.style.color = '#10b981';
+                btn.style.borderColor = '#10b981';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }, 2000);
+            }
+        });
+
+        // Tag clicks
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                window.location.href = '/archive?tag=' + this.textContent;
+            });
+        });
+    </script>
+</body>
+</html>

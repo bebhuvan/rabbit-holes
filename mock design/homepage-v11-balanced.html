@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rabbit Holes — V11 Balanced</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FDFCFA;
+      --bg-deep: #F7F5F2;
+      --text: #141414;
+      --text-secondary: #3a3a3a;
+      --text-muted: #717171;
+      --text-faint: #a8a8a8;
+      --border: #e5e2dc;
+      --surface: #f4f3f0;
+
+      --orange: #d95d0f;
+      --purple: #6d28d9;
+      --blue: #1d4ed8;
+      --green: #15803d;
+      --red: #b91c1c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Newsreader', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--orange);
+      color: white;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* === HEADER === */
+    .header {
+      padding: 1.25rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .logo:hover .logo-mark {
+      background: var(--orange);
+      transform: scale(1.1);
+    }
+
+    .logo-mark svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--bg);
+    }
+
+    .logo-text {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.75rem;
+      align-items: center;
+    }
+
+    .nav a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover { color: var(--text); }
+
+    .nav-random {
+      background: var(--text);
+      color: var(--bg) !important;
+      padding: 0.55rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease !important;
+    }
+
+    .nav-random:hover {
+      background: var(--orange) !important;
+    }
+
+    .nav-random svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    /* === COMPACT HERO === */
+    .hero {
+      padding: 3.5rem 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: center;
+      border-bottom: 3px solid var(--text);
+    }
+
+    .hero-content {
+      max-width: 580px;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-title .accent {
+      color: var(--orange);
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    .hero-paths {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .path-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-width: 90px;
+    }
+
+    .path-link:hover {
+      background: var(--text);
+      color: var(--bg);
+      transform: translateY(-4px);
+    }
+
+    .path-link .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .path-link:nth-child(1) .num { color: var(--orange); }
+    .path-link:nth-child(2) .num { color: var(--purple); }
+    .path-link:nth-child(3) .num { color: var(--blue); }
+
+    .path-link:hover .num { color: inherit; }
+
+    /* === MAIN LAYOUT === */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 3rem;
+      padding: 2.5rem 0;
+    }
+
+    /* === FEED === */
+    .feed {
+      min-width: 0;
+    }
+
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feed-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feed-title .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .feed-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .feed-link:hover { color: var(--orange); }
+
+    /* Post cards */
+    .post {
+      padding: 1.5rem 0;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.25s ease;
+    }
+
+    .post:last-child { border-bottom: none; }
+
+    .post:hover {
+      background: var(--post-bg, var(--surface));
+      margin: 0 -1.5rem;
+      padding: 1.5rem;
+    }
+
+    /* Markers */
+    .post-marker {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .post--quote .post-marker {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 3.5rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--purple);
+      opacity: 0.4;
+    }
+    .post--quote:hover .post-marker { opacity: 0.7; }
+    .post--quote { --post-bg: rgba(109, 40, 217, 0.06); --post-color: var(--purple); }
+
+    .post--links .post-marker::before {
+      content: '';
+      width: 22px;
+      height: 14px;
+      background: repeating-linear-gradient(to bottom, var(--blue) 0px, var(--blue) 2px, transparent 2px, transparent 5px);
+      opacity: 0.5;
+      transition: opacity 0.25s;
+    }
+    .post--links:hover .post-marker::before { opacity: 0.85; }
+    .post--links { --post-bg: rgba(29, 78, 216, 0.06); --post-color: var(--blue); }
+
+    .post--data .post-marker::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background-image: radial-gradient(var(--green) 2px, transparent 2px);
+      background-size: 6px 6px;
+      opacity: 0.55;
+      transition: opacity 0.25s;
+    }
+    .post--data:hover .post-marker::before { opacity: 0.9; }
+    .post--data { --post-bg: rgba(21, 128, 61, 0.06); --post-color: var(--green); }
+
+    .post--thought .post-marker::before {
+      content: '';
+      width: 14px;
+      height: 14px;
+      border: 2.5px solid var(--orange);
+      border-radius: 50%;
+      opacity: 0.5;
+      transition: all 0.25s;
+    }
+    .post--thought:hover .post-marker::before {
+      opacity: 1;
+      background: var(--orange);
+    }
+    .post--thought { --post-bg: rgba(217, 93, 15, 0.06); --post-color: var(--orange); }
+
+    .post--reflection .post-marker::before,
+    .post--reflection .post-marker::after {
+      content: '';
+      position: absolute;
+      border: 2px solid var(--text);
+      opacity: 0.3;
+      transition: opacity 0.25s;
+    }
+    .post--reflection .post-marker::before { width: 18px; height: 12px; }
+    .post--reflection .post-marker::after { width: 12px; height: 8px; margin-top: 3px; margin-left: 3px; }
+    .post--reflection:hover .post-marker::before,
+    .post--reflection:hover .post-marker::after { opacity: 0.6; }
+    .post--reflection { --post-bg: var(--surface); --post-color: var(--text); }
+
+    /* Post content */
+    .post-content { min-width: 0; }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .post-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--post-color, var(--orange));
+    }
+
+    .post-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--text-faint);
+    }
+
+    .post-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 0.3rem;
+    }
+
+    .post-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .post-title a:hover {
+      color: var(--post-color, var(--orange));
+    }
+
+    .post--quote .post-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .post-excerpt {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .post-connections {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .post-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      background: var(--surface);
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .post-tag:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sidebar-section {
+      padding: 1.5rem;
+      background: var(--surface);
+    }
+
+    .sidebar-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Growing thread */
+    .growing-thread {
+      text-decoration: none;
+      display: block;
+    }
+
+    .growing-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .growing-label::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: var(--orange);
+      border-radius: 50%;
+    }
+
+    .growing-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .growing-thread:hover .growing-title {
+      color: var(--orange);
+    }
+
+    .growing-excerpt {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Topics */
+    .topics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .topic {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .topic:hover {
+      background: var(--text);
+      color: var(--bg);
+      transform: translateY(-2px);
+    }
+
+    /* About */
+    .about-mini {
+      text-align: center;
+    }
+
+    .about-avatar {
+      width: 56px;
+      height: 56px;
+      background: var(--text);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--bg);
+    }
+
+    .about-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .about-desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .about-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    .about-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Newsletter mini */
+    .newsletter-mini input {
+      width: 100%;
+      padding: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      margin-bottom: 0.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .newsletter-mini input:focus {
+      border-color: var(--orange);
+    }
+
+    .newsletter-mini button {
+      width: 100%;
+      padding: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .newsletter-mini button:hover {
+      background: var(--orange);
+    }
+
+    /* === FOOTER === */
+    .footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover { color: var(--orange); }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .hero-paths {
+        justify-content: flex-start;
+      }
+
+      .main {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 1.5rem; }
+
+      .nav a:not(.nav-random) { display: none; }
+
+      .hero { padding: 2.5rem 0; }
+      .hero-title { font-size: 1.75rem; }
+
+      .hero-paths {
+        flex-wrap: wrap;
+      }
+
+      .path-link {
+        flex: 1;
+        min-width: 80px;
+      }
+
+      .post:hover {
+        margin: 0 -1rem;
+        padding: 1.5rem 1rem;
+      }
+
+      .sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="header">
+      <a href="/" class="logo">
+        <span class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/></svg>
+        </span>
+        <span class="logo-text">Rabbit Holes</span>
+      </a>
+      <nav class="nav">
+        <a href="/threads">Threads</a>
+        <a href="/atlas">Atlas</a>
+        <a href="/archive">Archive</a>
+        <a href="/about">About</a>
+        <a href="#" class="nav-random">
+          <svg viewBox="0 0 24 24"><path d="M17.66 3.31l3.03 3.03-3.03 3.03-1.41-1.41 1.62-1.62-1.54-.01c-3.31-.01-6.39 1.77-8.04 4.64-.79 1.36-1.2 2.9-1.2 4.47v.59H5.09v-.59c0-1.97.52-3.91 1.5-5.62 2.08-3.61 6-5.83 10.09-5.84h.1l-1.53-1.54 1.41-1.41v-.01zM2.31 17.66l3.03-3.03 1.41 1.41-1.62 1.62h1.87c3.31 0 6.39-1.78 8.04-4.65.79-1.36 1.2-2.9 1.2-4.47v-.58h1.99v.58c0 1.97-.52 3.92-1.5 5.63-2.08 3.61-5.99 5.83-10.09 5.84H4.77l1.53 1.53-1.41 1.41-3.03-3.03.45-.29z"/></svg>
+          Random
+        </a>
+      </nav>
+    </header>
+
+    <!-- Compact Hero -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          A garden of <span class="accent">connected ideas</span>
+        </h1>
+        <p class="hero-desc">
+          Quotes, links, data, and thoughts—collected daily, connected over time.
+          Fall down a rabbit hole.
+        </p>
+      </div>
+      <div class="hero-paths">
+        <a href="/ideas" class="path-link">
+          <span class="num">127</span>
+          Ideas
+        </a>
+        <a href="/threads" class="path-link">
+          <span class="num">12</span>
+          Threads
+        </a>
+        <a href="/atlas" class="path-link">
+          <span class="num">18</span>
+          Topics
+        </a>
+      </div>
+    </section>
+
+    <!-- Main: Feed + Sidebar -->
+    <div class="main">
+
+      <!-- Feed -->
+      <section class="feed">
+        <div class="feed-header">
+          <h2 class="feed-title">
+            <span class="dot"></span>
+            Latest
+          </h2>
+          <a href="/archive" class="feed-link">View all →</a>
+        </div>
+
+        <article class="post post--reflection">
+          <div class="post-marker"></div>
+          <div class="post-content">
+            <div class="post-meta">
+              <span class="post-type">Reflection</span>
+              <span class="post-date">Nov 21</span>
+            </div>
+            <h3 class="post-title">
+              <a href="#">The Future of Global Trade</a>
+            </h3>
+            <p class="post-excerpt">
+              As geopolitical tensions reshape supply chains and new alliances form, the rules of international commerce are being rewritten.
+            </p>
+            <div class="post-connections">
+              <a href="#" class="post-tag">Economics</a>
+              <a href="#" class="post-tag">Geopolitics</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post post--quote">
+          <div class="post-marker">"</div>
+          <div class="post-content">
+            <div class="post-meta">
+              <span class="post-type">Quote</span>
+              <span class="post-date">Nov 17</span>
+            </div>
+            <h3 class="post-title">
+              <a href="#">"In the depths of winter, I finally learned that within me there lay an invincible summer."</a>
+            </h3>
+            <p class="post-excerpt">Albert Camus, Return to Tipasa</p>
+            <div class="post-connections">
+              <a href="#" class="post-tag">Philosophy</a>
+              <a href="#" class="post-tag">Resilience</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post post--thought">
+          <div class="post-marker"></div>
+          <div class="post-content">
+            <div class="post-meta">
+              <span class="post-type">Thought</span>
+              <span class="post-date">Nov 17</span>
+            </div>
+            <h3 class="post-title">
+              <a href="#">Oral Traditions in India</a>
+            </h3>
+            <p class="post-excerpt">
+              How knowledge was preserved and transmitted for millennia before writing became widespread.
+            </p>
+            <div class="post-connections">
+              <a href="#" class="post-tag">History</a>
+              <a href="#" class="post-tag">India</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post post--links">
+          <div class="post-marker"></div>
+          <div class="post-content">
+            <div class="post-meta">
+              <span class="post-type">Links</span>
+              <span class="post-date">Nov 14</span>
+            </div>
+            <h3 class="post-title">
+              <a href="#">How Many Jobs Can AI Kill?</a>
+            </h3>
+            <p class="post-excerpt">
+              7 sources on automation, labor markets, and the future of work.
+            </p>
+            <div class="post-connections">
+              <a href="#" class="post-tag">AI</a>
+              <a href="#" class="post-tag">Work</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post post--data">
+          <div class="post-marker"></div>
+          <div class="post-content">
+            <div class="post-meta">
+              <span class="post-type">Data</span>
+              <span class="post-date">Sep 9</span>
+            </div>
+            <h3 class="post-title">
+              <a href="#">The Solar Revolution</a>
+            </h3>
+            <p class="post-excerpt">
+              Solar scaling laws will prove more impactful than AI's. The data is stunning.
+            </p>
+            <div class="post-connections">
+              <a href="#" class="post-tag">Energy</a>
+              <a href="#" class="post-tag">Climate</a>
+              <a href="#" class="post-tag">China</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post post--quote">
+          <div class="post-marker">"</div>
+          <div class="post-content">
+            <div class="post-meta">
+              <span class="post-type">Quote</span>
+              <span class="post-date">Oct 26</span>
+            </div>
+            <h3 class="post-title">
+              <a href="#">"Pretending is the most important thing we do"</a>
+            </h3>
+            <p class="post-excerpt">Brian Eno on being pretentious</p>
+            <div class="post-connections">
+              <a href="#" class="post-tag">Creativity</a>
+            </div>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Currently Growing</div>
+          <a href="#" class="growing-thread">
+            <div class="growing-label">Thread</div>
+            <h3 class="growing-title">What It Means to Be Human in the Age of AI</h3>
+            <p class="growing-excerpt">Tracing questions of identity, work, and meaning as machines grow more capable.</p>
+          </a>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Wander by Topic</div>
+          <div class="topics-list">
+            <a href="#" class="topic">AI</a>
+            <a href="#" class="topic">Reading</a>
+            <a href="#" class="topic">Philosophy</a>
+            <a href="#" class="topic">Economics</a>
+            <a href="#" class="topic">China</a>
+            <a href="#" class="topic">Poetry</a>
+            <a href="#" class="topic">History</a>
+          </div>
+        </div>
+
+        <div class="sidebar-section about-mini">
+          <div class="about-avatar">B</div>
+          <h3 class="about-name">Bhuvan</h3>
+          <p class="about-desc">Collecting fascinating things from the internet. Tending this garden daily.</p>
+          <a href="/about" class="about-link">More about me →</a>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Stay Curious</div>
+          <form class="newsletter-mini">
+            <input type="email" placeholder="your@email.com">
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+
+      </aside>
+
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">A garden of connected ideas</div>
+      <nav class="footer-links">
+        <a href="/rss.xml">RSS</a>
+        <a href="/about">About</a>
+        <a href="#">Twitter</a>
+      </nav>
+    </footer>
+
+  </div>
+
+</body>
+</html>

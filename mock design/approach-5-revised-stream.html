@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RabbitHoles.garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fefdfb;
+            --text: #1a1a1a;
+            --gray: #666;
+            --light-gray: #999;
+            --border: #e8e8e8;
+            --accent: #d63031;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Newsreader', serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-inner {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+
+        .site-tagline {
+            font-size: 0.8rem;
+            color: var(--light-gray);
+            font-style: italic;
+        }
+
+        /* The stream */
+        .stream {
+            padding: 6rem 0 12rem;
+        }
+
+        /* Individual rabbit hole */
+        .hole {
+            margin-bottom: 12rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hole.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Date stamp */
+        .hole-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            color: var(--light-gray);
+            margin-bottom: 2rem;
+        }
+
+        /* The main link/title */
+        .hole-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .hole-link:hover .hole-title {
+            color: var(--accent);
+        }
+
+        .hole-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        /* Context/why this is interesting */
+        .hole-context {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        /* Source/attribution */
+        .hole-source {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .source-domain {
+            color: var(--accent);
+        }
+
+        .source-type {
+            padding: 0.25rem 0.6rem;
+            background: var(--border);
+            border-radius: 3px;
+            font-size: 0.65rem;
+        }
+
+        /* Preview content */
+        .hole-preview {
+            background: #f8f8f8;
+            padding: 2rem;
+            border-left: 3px solid var(--border);
+            margin-bottom: 2rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .hole:hover .hole-preview {
+            border-color: var(--accent);
+        }
+
+        .preview-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Quote style */
+        .hole-preview.quote {
+            background: none;
+            border-left: none;
+            font-size: 1.8rem;
+            font-style: italic;
+            line-height: 1.5;
+            padding: 2rem 0 2rem 3rem;
+            position: relative;
+        }
+
+        .hole-preview.quote::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 6rem;
+            color: var(--border);
+            line-height: 1;
+        }
+
+        /* Image preview */
+        .hole-preview.image {
+            padding: 0;
+            background: none;
+            border: none;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Video preview */
+        .hole-preview.video {
+            aspect-ratio: 16/9;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+
+        /* Tags */
+        .hole-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            padding: 0.4rem 0.8rem;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Visit button */
+        .visit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: var(--text);
+            color: var(--bg);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .visit-btn:hover {
+            background: var(--accent);
+        }
+
+        /* Separator */
+        .separator {
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+            margin: 6rem 0;
+            position: relative;
+        }
+
+        .separator::after {
+            content: '◇';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg);
+            padding: 0 1rem;
+            color: var(--border);
+            font-size: 0.8rem;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 4rem 0;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--light-gray);
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        /* Floating actions */
+        .float-actions {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .float-btn:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .header-inner {
+                padding: 0 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .stream {
+                padding: 4rem 0 8rem;
+            }
+
+            .hole {
+                margin-bottom: 8rem;
+            }
+
+            .hole-title {
+                font-size: clamp(1.5rem, 8vw, 2.5rem);
+            }
+
+            .hole-context {
+                font-size: 1.1rem;
+            }
+
+            .hole-preview.quote {
+                font-size: 1.4rem;
+                padding-left: 2rem;
+            }
+
+            .hole-preview.quote::before {
+                font-size: 4rem;
+            }
+
+            .float-actions {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header class="header">
+        <div class="header-inner">
+            <div class="site-name">RABBITHOLES.GARDEN</div>
+            <div class="site-tagline">Fascinating things from the internet</div>
+        </div>
+    </header>
+
+    <div class="float-actions">
+        <button class="float-btn" onclick="scrollToTop()" title="Back to top">↑</button>
+        <button class="float-btn" onclick="randomHole()" title="Random hole">?</button>
+    </div>
+
+    <main class="container">
+        <div class="stream">
+            <!-- Hole 1: Article -->
+            <article class="hole">
+                <div class="hole-date">Dec 08, 2024</div>
+                
+                <a href="https://example.com/memory-palaces" class="hole-link" target="_blank">
+                    <h2 class="hole-title">The Method of Loci: How Ancient Orators Memorized Entire Speeches</h2>
+                </a>
+
+                <p class="hole-context">
+                    Before writing became ubiquitous, memory was a trained skill. This article explores how Cicero could hold 100,000 words by building elaborate architectural spaces inside his mind.
+                </p>
+
+                <div class="hole-source">
+                    <span class="source-domain">artofmemory.com</span>
+                    <span class="source-type">📄 Article · 12 min</span>
+                </div>
+
+                <div class="hole-preview">
+                    <div class="preview-label">Preview</div>
+                    <p>The technique involves imagining a familiar building and placing bizarre, memorable images in each room. To recall a speech, you simply "walk" through your mental palace, encountering each image in sequence...</p>
+                </div>
+
+                <div class="hole-tags">
+                    <span class="tag">memory</span>
+                    <span class="tag">cognition</span>
+                    <span class="tag">ancient-tech</span>
+                </div>
+
+                <a href="https://example.com/memory-palaces" class="visit-btn" target="_blank">
+                    Visit Source →
+                </a>
+            </article>
+
+            <div class="separator"></div>
+
+            <!-- Hole 2: Quote -->
+            <article class="hole">
+                <div class="hole-date">Dec 07, 2024</div>
+                
+                <a href="https://example.com/deep-time" class="hole-link" target="_blank">
+                    <h2 class="hole-title">Deep Time</h2>
+                </a>
+
+                <p class="hole-context">
+                    A perspective-shifting way to understand Earth's age. This compressed timescale makes you feel the absurdity of human recency.
+                </p>
+
+                <div class="hole-source">
+                    <span class="source-domain">twitter.com</span>
+                    <span class="source-type">💬 Quote</span>
+                </div>
+
+                <div class="hole-preview quote">
+                    If you compress Earth's 4.6 billion years into 24 hours, humans appear at 11:58 PM. All of recorded history happens in the last second.
+                </div>
+
+                <div class="hole-tags">
+                    <span class="tag">perspective</span>
+                    <span class="tag">geology</span>
+                    <span class="tag">time</span>
+                </div>
+
+                <a href="https://example.com/deep-time" class="visit-btn" target="_blank">
+                    Visit Source →
+                </a>
+            </article>
+
+            <div class="separator"></div>
+
+            <!-- Hole 3: Video -->
+            <article class="hole">
+                <div class="hole-date">Dec 06, 2024</div>
+                
+                <a href="https://youtube.com/watch?v=example" class="hole-link" target="_blank">
+                    <h2 class="hole-title">How Wolves Change Rivers</h2>
+                </a>
+
+                <p class="hole-context">
+                    A 4-minute video showing how reintroducing wolves to Yellowstone changed the entire ecosystem—including the physical geography of rivers.
+                </p>
+
+                <div class="hole-source">
+                    <span class="source-domain">youtube.com</span>
+                    <span class="source-type">🎬 Video · 4 min</span>
+                </div>
+
+                <div class="hole-preview video">
+                    ▶
+                </div>
+
+                <div class="hole-tags">
+                    <span class="tag">ecology</span>
+                    <span class="tag">nature</span>
+                    <span class="tag">systems</span>
+                </div>
+
+                <a href="https://youtube.com/watch?v=example" class="visit-btn" target="_blank">
+                    Watch on YouTube →
+                </a>
+            </article>
+
+            <div class="separator"></div>
+
+            <!-- Hole 4: Essay -->
+            <article class="hole">
+                <div class="hole-date">Dec 05, 2024</div>
+                
+                <a href="https://example.com/ma" class="hole-link" target="_blank">
+                    <h2 class="hole-title">Ma (間): The Japanese Art of Negative Space</h2>
+                </a>
+
+                <p class="hole-context">
+                    Not emptiness, but the space that gives form to what surrounds it. This essay explores how Japanese aesthetics treats silence and gaps as essential, not accidental.
+                </p>
+
+                <div class="hole-source">
+                    <span class="source-domain">aeon.co</span>
+                    <span class="source-type">📄 Essay · 15 min</span>
+                </div>
+
+                <div class="hole-preview">
+                    <div class="preview-label">Excerpt</div>
+                    <p>Ma is the pause between notes that makes music music. The pause in conversation that allows meaning to settle. The empty tokonoma alcove in a room. It's not that something is missing—the space itself is the thing.</p>
+                </div>
+
+                <div class="hole-tags">
+                    <span class="tag">philosophy</span>
+                    <span class="tag">aesthetics</span>
+                    <span class="tag">japan</span>
+                </div>
+
+                <a href="https://example.com/ma" class="visit-btn" target="_blank">
+                    Read Essay →
+                </a>
+            </article>
+
+            <div class="separator"></div>
+
+            <!-- Hole 5: Image -->
+            <article class="hole">
+                <div class="hole-date">Dec 04, 2024</div>
+                
+                <a href="https://example.com/liminal" class="hole-link" target="_blank">
+                    <h2 class="hole-title">Liminal Spaces: Empty Malls at Night</h2>
+                </a>
+
+                <p class="hole-context">
+                    A haunting photo series of spaces designed to be passed through, captured when they're empty. Why do these feel so unsettling?
+                </p>
+
+                <div class="hole-source">
+                    <span class="source-domain">instagram.com</span>
+                    <span class="source-type">🖼️ Photo Series</span>
+                </div>
+
+                <div class="hole-preview image">
+                    <img src="https://via.placeholder.com/780x520/e8e8e8/999?text=Empty+Mall+Corridor" alt="Empty mall corridor" class="preview-image">
+                </div>
+
+                <div class="hole-tags">
+                    <span class="tag">photography</span>
+                    <span class="tag">liminal</span>
+                    <span class="tag">architecture</span>
+                </div>
+
+                <a href="https://example.com/liminal" class="visit-btn" target="_blank">
+                    View Series →
+                </a>
+            </article>
+
+            <div class="separator"></div>
+
+            <!-- Hole 6: Podcast -->
+            <article class="hole">
+                <div class="hole-date">Dec 03, 2024</div>
+                
+                <a href="https://example.com/mycelium" class="hole-link" target="_blank">
+                    <h2 class="hole-title">Suzanne Simard on the Wood Wide Web</h2>
+                </a>
+
+                <p class="hole-context">
+                    The researcher who discovered that trees communicate through underground fungal networks. Her findings completely changed how we understand forests.
+                </p>
+
+                <div class="hole-source">
+                    <span class="source-domain">radiolab.org</span>
+                    <span class="source-type">🎧 Podcast · 28 min</span>
+                </div>
+
+                <div class="hole-preview">
+                    <div class="preview-label">About</div>
+                    <p>Trees aren't competing—they're collaborating. Mother trees send sugar to their offspring through mycelial networks. The forest is less like a collection of individuals and more like a single superorganism.</p>
+                </div>
+
+                <div class="hole-tags">
+                    <span class="tag">nature</span>
+                    <span class="tag">science</span>
+                    <span class="tag">networks</span>
+                </div>
+
+                <a href="https://example.com/mycelium" class="visit-btn" target="_blank">
+                    Listen →
+                </a>
+            </article>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <nav class="footer-nav">
+                <a href="#" class="footer-link">About</a>
+                <a href="#" class="footer-link">Archive</a>
+                <a href="#" class="footer-link">RSS</a>
+                <a href="#" class="footer-link">Submit a Link</a>
+            </nav>
+            <p>Daily discoveries from across the internet</p>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection observer for fade-in
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        });
+
+        document.querySelectorAll('.hole').forEach(hole => {
+            observer.observe(hole);
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Random hole
+        function randomHole() {
+            const holes = document.querySelectorAll('.hole');
+            const random = holes[Math.floor(Math.random() * holes.length)];
+            random.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Tag filtering (placeholder)
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                e.stopPropagation();
+                alert(`Filter by: ${this.textContent}\n\nWould show all links with this tag.`);
+            });
+        });
+    </script>
+</body>
+</html>

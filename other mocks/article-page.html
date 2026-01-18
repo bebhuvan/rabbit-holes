@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Thought: How Space Shapes Thinking - Rabbit Holes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #fffef9;
+            --charcoal: #1a1a1a;
+            --stone: #6b6b6b;
+            --whisper: #d4d4d4;
+            --accent: #d97706;
+            --accent-light: #fef3c7;
+            --border: #f0f0f0;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--charcoal);
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 21px;
+            line-height: 1.75;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        /* Site Header */
+        body > header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 48px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--cream) 70%, transparent);
+        }
+
+        .site-title {
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--charcoal);
+        }
+
+        .site-title .rabbit {
+            color: var(--accent);
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        nav a {
+            color: var(--stone);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--charcoal);
+        }
+
+        /* Article container */
+        article {
+            max-width: 660px;
+            margin: 0 auto;
+            padding: 200px 40px 120px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 80px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .article-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 80px;
+            height: 1px;
+            background: var(--accent);
+            opacity: 0.6;
+        }
+
+        .article-meta {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--whisper);
+            margin-bottom: 28px;
+            text-transform: uppercase;
+        }
+
+        .article-title {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 28px;
+            color: var(--charcoal);
+        }
+
+        .article-subtitle {
+            font-size: 21px;
+            line-height: 1.7;
+            color: var(--stone);
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        /* Tags */
+        .article-tags {
+            margin-top: 28px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--stone);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            padding: 4px 12px;
+            border-radius: 3px;
+            background: rgba(217, 119, 6, 0.06);
+        }
+
+        .tag:hover {
+            color: var(--accent);
+            background: rgba(217, 119, 6, 0.12);
+        }
+
+        /* Article content */
+        .article-content {
+            margin-bottom: 100px;
+        }
+
+        .article-content p {
+            margin-bottom: 28px;
+            font-size: 21px;
+            line-height: 1.75;
+        }
+
+        .article-content h2 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: -0.015em;
+            margin-top: 64px;
+            margin-bottom: 24px;
+        }
+
+        .article-content h3 {
+            font-size: 26px;
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin-top: 48px;
+            margin-bottom: 20px;
+        }
+
+        .article-content blockquote {
+            margin: 56px 0;
+            padding: 32px 40px;
+            border-left: 3px solid var(--accent);
+            background: linear-gradient(to right, rgba(217, 119, 6, 0.04), transparent);
+            font-size: 23px;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--charcoal);
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 28px 0;
+            padding-left: 28px;
+        }
+
+        .article-content li {
+            margin-bottom: 12px;
+        }
+
+        .article-content a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+            transition: color 0.3s ease;
+        }
+
+        .article-content a:hover {
+            color: var(--charcoal);
+        }
+
+        .article-content strong {
+            font-weight: 600;
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 80px 0;
+            color: var(--whisper);
+            font-size: 18px;
+            letter-spacing: 12px;
+        }
+
+        /* Read next */
+        .read-next {
+            margin: 100px 0;
+            padding-top: 80px;
+            border-top: 1px solid var(--border);
+        }
+
+        .read-next h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--whisper);
+            margin-bottom: 48px;
+        }
+
+        .next-articles {
+            display: grid;
+            gap: 60px;
+        }
+
+        .next-article {
+            text-decoration: none;
+            color: var(--charcoal);
+        }
+
+        .next-article:hover .next-article-title {
+            color: var(--accent);
+        }
+
+        .next-article-date {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--whisper);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .next-article-title {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: -0.015em;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .next-article-excerpt {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--stone);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 80px 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: var(--stone);
+            letter-spacing: 0.05em;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent-light);
+            color: var(--charcoal);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body > header {
+                padding: 32px 24px;
+            }
+
+            article {
+                padding: 160px 24px 80px;
+            }
+
+            .article-header {
+                margin-bottom: 60px;
+            }
+
+            .article-title {
+                font-size: 32px;
+            }
+
+            .article-subtitle {
+                font-size: 18px;
+            }
+
+            .article-content h2 {
+                font-size: 26px;
+            }
+
+            .article-content h3 {
+                font-size: 22px;
+            }
+
+            .article-content blockquote {
+                padding-left: 20px;
+                font-size: 20px;
+            }
+
+            nav {
+                display: none;
+            }
+        }
+
+        /* Focus states */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="site-title">
+            <span class="rabbit">Rabbit</span> Holes
+        </a>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#archive">Archive</a>
+            <a href="#subscribe">Subscribe</a>
+        </nav>
+    </header>
+
+    <!-- Sticky share bar -->
+    <aside class="share-bar">
+        <button class="share-button" title="Share on Twitter" onclick="shareOnTwitter()">𝕏</button>
+        <button class="share-button" title="Share on LinkedIn" onclick="shareOnLinkedIn()">in</button>
+        <button class="share-button" title="Copy link" onclick="copyLink()">🔗</button>
+        <button class="share-button" title="Bookmark" onclick="bookmark()">🔖</button>
+    </aside>
+
+    <article>
+        <header class="article-header">
+            <div class="article-meta">October 12, 2025 · 12 min read</div>
+            <h1 class="article-title">The Architecture of Thought: How Space Shapes Thinking</h1>
+            <p class="article-subtitle">
+                Libraries arrange knowledge spatially—philosophy here, science there—creating mental maps we navigate physically.
+            </p>
+            <div class="article-tags">
+                <a href="#" class="tag">Design</a>
+                <a href="#" class="tag">Philosophy</a>
+                <a href="#" class="tag">Space</a>
+                <a href="#" class="tag">Libraries</a>
+            </div>
+        </header>
+
+        <div class="article-content">
+            <p>
+                The Dewey Decimal System isn't just organization; it's architecture for thought. When you walk from history to poetry, you're not just moving between shelves, you're traversing conceptual landscapes. The physical act of browsing creates a mental topology—a sense that ideas have locations, neighborhoods, boundaries.
+            </p>
+
+            <p>
+                In a traditional library, serendipity is architectural. You go looking for one book and discover three others you didn't know you needed. They're adjacent not alphabetically, but conceptually. The woman who designed your local library understood that thoughts have geography, that walking from 500 to 600 means moving from pure science to applied technology, from theory to practice.
+            </p>
+
+            <h2>The Collapse of Digital Distance</h2>
+
+            <p>
+                Digital search flattens this. Everything is equidistant, one click away, context collapsed into keywords. Google doesn't give you neighbors—it gives you matches. The algorithm optimizes for relevance, not for the adjacent possible. You get what you're looking for, never what you didn't know to look for.
+            </p>
+
+            <blockquote>
+                "We shape our buildings; thereafter they shape us." — Winston Churchill
+            </blockquote>
+
+            <p>
+                This isn't nostalgia for card catalogs. It's recognition that how we organize information shapes how we think about information. The library's architecture creates a model of knowledge itself—branching, hierarchical, interconnected. Walking through it reinforces that model. Searching through it online doesn't.
+            </p>
+
+            <h3>Physical Space as Memory Palace</h3>
+
+            <p>
+                Ancient orators used the "method of loci"—imagining a building and placing memories in its rooms. When they needed to recall a speech, they mentally walked through the building, picking up each memory as they passed its location. The architecture wasn't just a mnemonic trick; it was a cognitive framework.
+            </p>
+
+            <p>
+                Modern libraries work the same way. Regular visitors develop internal maps. They know that feminist theory lives next to gender studies, that cookbooks are upstairs near gardening, that the quiet study room faces east. This spatial knowledge becomes semantic knowledge. The map and the territory merge.
+            </p>
+
+            <h2>What We Lose in the Cloud</h2>
+
+            <p>
+                The cloud promises access to everything from anywhere. It delivers on that promise. But "from anywhere" means "from nowhere." Information without location is information without context. The ebook you're reading exists everywhere and nowhere simultaneously. You can't gesture toward it, can't point someone in its direction, can't say "it's over there, near the window."
+            </p>
+
+            <p>
+                This isn't a lament—it's an observation. Digital tools offer different affordances. Searching beats browsing for finding specific information. But browsing beats searching for finding unexpected information. For discovering what you didn't know to search for.
+            </p>
+
+            <div class="divider">* * *</div>
+
+            <p>
+                Perhaps the solution isn't choosing between physical and digital, but understanding what each does best. Libraries organize knowledge spatially. Search engines organize it semantically. Bookshelves create adjacency. Hyperlinks create association.
+            </p>
+
+            <p>
+                The question isn't which is better. It's what kind of thinking does each enable? What cognitive habits does each reinforce? And how do we design spaces—physical or digital—that support the kinds of thinking we want to do?
+            </p>
+
+            <p>
+                Because in the end, how we organize information is how we organize thought itself.
+            </p>
+        </div>
+
+        <div class="read-next">
+            <h3>Continue Reading</h3>
+            <div class="next-articles">
+                <a href="#" class="next-article">
+                    <div class="next-article-date">October 9, 2025</div>
+                    <h4 class="next-article-title">Why We Remember Stories Better Than Facts</h4>
+                    <p class="next-article-excerpt">
+                        The human brain is a storytelling machine. Give someone data and they'll forget it in minutes.
+                    </p>
+                </a>
+                <a href="#" class="next-article">
+                    <div class="next-article-date">October 7, 2025</div>
+                    <h4 class="next-article-title">The Illusion of Digital Permanence</h4>
+                    <p class="next-article-excerpt">
+                        We assume the internet remembers everything. But digital files are more fragile than paper.
+                    </p>
+                </a>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2025 Rabbit Holes. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('The Architecture of Thought: How Space Shapes Thinking');
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+        }
+
+        function shareOnLinkedIn() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+        }
+
+        function shareViaEmail() {
+            const subject = encodeURIComponent('The Architecture of Thought: How Space Shapes Thinking');
+            const body = encodeURIComponent('I thought you might find this interesting: ' + window.location.href);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+
+        function bookmark() {
+            // In a real implementation, this would save to a backend
+            alert('Bookmarked! (In a real app, this would save to your account)');
+        }
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

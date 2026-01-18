@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RabbitHoles.garden 🐇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fffef9;
+            --text: #1a1a1a;
+            --gray: #666666;
+            --light-gray: #999999;
+            --line: #e8e8e8;
+            
+            /* Fun color palette */
+            --red: #ef4444;
+            --orange: #f97316;
+            --yellow: #fbbf24;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Newsreader', serif;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--yellow);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header - playful */
+        .header {
+            padding: 2.5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .site-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .site-name:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        /* Rotating emoji */
+        .site-name::before {
+            content: '🐇';
+            position: absolute;
+            left: -2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Landing - energetic */
+        .landing {
+            padding: 6rem 0 8rem;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Colorful dots */
+        .landing::before {
+            content: '• • •';
+            position: absolute;
+            top: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5rem;
+        }
+
+        .landing-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+
+        /* Gradient on key words */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--red), var(--pink), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .landing-subtitle {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--gray);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Fun call to action */
+        .landing-cta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--light-gray);
+            text-transform: uppercase;
+        }
+
+        /* Stream */
+        .stream {
+            padding: 4rem 0 0;
+        }
+
+        /* Hole - each gets random accent color */
+        .hole {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--line);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            position: relative;
+        }
+
+        .hole.visible {
+            opacity: 1;
+        }
+
+        .hole:last-child {
+            border-bottom: none;
+        }
+
+        /* Colorful markers on the left */
+        .hole::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 5.5rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-color, var(--red));
+        }
+
+        /* Different colors for different holes */
+        .hole:nth-child(1) { --accent-color: var(--red); }
+        .hole:nth-child(2) { --accent-color: var(--orange); }
+        .hole:nth-child(3) { --accent-color: var(--blue); }
+        .hole:nth-child(4) { --accent-color: var(--green); }
+        .hole:nth-child(5) { --accent-color: var(--purple); }
+        .hole:nth-child(6) { --accent-color: var(--pink); }
+
+        /* Big playful numbers */
+        .hole-number {
+            position: absolute;
+            top: 4.5rem;
+            right: -1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            opacity: 0.06;
+            line-height: 1;
+            pointer-events: none;
+            transform: rotate(-5deg);
+        }
+
+        /* Date */
+        .date {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Type badge - colorful */
+        .type-badge {
+            display: inline-block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            padding: 0.3rem 0.7rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Title - energetic */
+        .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+        }
+
+        .title a {
+            color: inherit;
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* Wavy underline on hover */
+        .title a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .title a:hover {
+            color: var(--accent-color);
+        }
+
+        .title a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Context - personality */
+        .context {
+            font-size: 1.15rem;
+            line-height: 1.75;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .context em {
+            font-style: italic;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Meta */
+        .meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .meta-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* Preview styles */
+        .preview {
+            margin-bottom: 2rem;
+        }
+
+        /* Quote - colorful border */
+        .preview.quote {
+            font-size: 1.6rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--text);
+            padding: 2rem 2rem 2rem 2.5rem;
+            border-left: 4px solid var(--accent-color);
+            background: linear-gradient(to right, var(--accent-color)08, transparent);
+            position: relative;
+        }
+
+        .preview.quote::before {
+            content: '"';
+            position: absolute;
+            left: 0.3rem;
+            top: 0.5rem;
+            font-size: 5rem;
+            color: var(--accent-color);
+            opacity: 0.2;
+            font-style: normal;
+            line-height: 1;
+        }
+
+        /* Excerpt - colorful background */
+        .preview.excerpt {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text);
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--accent-color)08, var(--accent-color)12);
+            border: 2px solid var(--accent-color)40;
+            border-radius: 4px;
+        }
+
+        /* Image - colorful border on hover */
+        .preview.image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 3px solid var(--line);
+            transition: border-color 0.3s ease;
+        }
+
+        .preview.image:hover {
+            border-color: var(--accent-color);
+        }
+
+        .preview.image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .preview.image:hover img {
+            transform: scale(1.03);
+        }
+
+        /* Video */
+        .preview.video {
+            aspect-ratio: 16/9;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.5);
+            position: relative;
+            cursor: pointer;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .preview.video::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .preview.video:hover::before {
+            opacity: 0.2;
+        }
+
+        .preview.video:hover {
+            color: white;
+            transform: scale(1.01);
+        }
+
+        /* Tags - colorful on hover */
+        .tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            color: var(--gray);
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer - fun */
+        .footer {
+            padding: 8rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Rainbow separator */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+            border-radius: 2px;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 700;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+            transform: translateY(-2px);
+        }
+
+        .footer-note {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--light-gray);
+            letter-spacing: 0.08em;
+        }
+
+        /* Progress bar - rainbow gradient */
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--line);
+            z-index: 100;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Floating scroll hint */
+        .scroll-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            opacity: 0.3;
+            animation: float 2s ease-in-out infinite;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-hint.hidden {
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        /* Fun cursor effect on holes */
+        .hole:hover {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">🐇</text></svg>'), auto;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .landing {
+                padding: 5rem 0 6rem;
+            }
+
+            .landing-title {
+                font-size: clamp(2rem, 9vw, 3rem);
+            }
+
+            .hole {
+                padding: 4rem 0;
+            }
+
+            .hole::before {
+                left: -1rem;
+            }
+
+            .hole-number {
+                font-size: 5rem;
+                right: -0.5rem;
+            }
+
+            .title {
+                font-size: clamp(1.75rem, 8vw, 2.8rem);
+            }
+
+            .context {
+                font-size: 1.05rem;
+            }
+
+            .preview.quote {
+                font-size: 1.35rem;
+                padding: 1.5rem 1.5rem 1.5rem 2rem;
+            }
+
+            .preview.excerpt {
+                padding: 1.5rem;
+            }
+
+            .scroll-hint {
+                display: none;
+            }
+        }
+
+        /* Extra playful details */
+        @media (prefers-reduced-motion: no-preference) {
+            .type-badge {
+                animation: slideIn 0.5s ease;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(-20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="scroll-hint" id="scrollHint">↓</div>
+
+    <header class="header">
+        <div class="site-name">RABBITHOLES</div>
+    </header>
+
+    <main class="container">
+        <section class="landing">
+            <h1 class="landing-title">
+                Fascinating things from the <span class="gradient-text">internet</span>
+            </h1>
+            <p class="landing-subtitle">
+                Daily discoveries worth your time. The weird, the wonderful, the mind-bending. 
+                Not what's trending—what's actually interesting.
+            </p>
+            <div class="landing-cta">Scroll to explore →</div>
+        </section>
+
+        <div class="stream">
+            <!-- Article -->
+            <article class="hole">
+                <div class="hole-number">01</div>
+                <div class="date">08 DEC 2024</div>
+                <div class="type-badge">📄 Article</div>
+                
+                <h2 class="title">
+                    <a href="https://example.com" target="_blank" rel="noopener">
+                        The Method of Loci
+                    </a>
+                </h2>
+
+                <p class="context">
+                    Before writing, memory was <em>trained</em>—like a muscle you could build. Ancient orators built entire palaces in their minds where each room held a different speech. Cicero could memorize 100,000 words this way. We've completely lost this art.
+                </p>
+
+                <div class="meta">
+                    <a href="https://artofmemory.com" class="meta-link">artofmemory.com</a> · 12 min read
+                </div>
+
+                <div class="preview excerpt">
+                    The technique involves imagining a familiar building—your childhood home, a route you walk daily—and placing bizarre, memorable images in each location. To recall information, you simply "walk" through your mental palace, encountering each image in sequence. The weirder the image, the better it sticks.
+                </div>
+
+                <div class="tags">
+                    <span class="tag">memory</span>
+                    <span class="tag">cognition</span>
+                    <span class="tag">ancient-tech</span>
+                </div>
+            </article>
+
+            <!-- Quote -->
+            <article class="hole">
+                <div class="hole-number">02</div>
+                <div class="date">07 DEC 2024</div>
+                <div class="type-badge">💬 Quote</div>
+                
+                <h2 class="title">
+                    <a href="https://example.com" target="_blank" rel="noopener">
+                        Deep Time
+                    </a>
+                </h2>
+
+                <p class="context">
+                    A simple thought experiment that makes human civilization feel <em>absurdly</em> recent. We think we're old. We're not even close to a blink.
+                </p>
+
+                <div class="meta">
+                    <a href="https://twitter.com" class="meta-link">twitter.com</a> · Quote
+                </div>
+
+                <div class="preview quote">
+                    If you compress Earth's 4.6 billion years into 24 hours, humans appear at 11:58 PM. All of recorded history—everything from the pyramids to the internet—happens in the last second.
+                </div>
+
+                <div class="tags">
+                    <span class="tag">perspective</span>
+                    <span class="tag">geology</span>
+                    <span class="tag">time</span>
+                </div>
+            </article>
+
+            <!-- Video -->
+            <article class="hole">
+                <div class="hole-number">03</div>
+                <div class="date">06 DEC 2024</div>
+                <div class="type-badge">🎬 Video</div>
+                
+                <h2 class="title">
+                    <a href="https://youtube.com" target="_blank" rel="noopener">
+                        How Wolves Change Rivers
+                    </a>
+                </h2>
+
+                <p class="context">
+                    Four minutes that completely changed how I think about ecosystems. When wolves were reintroduced to Yellowstone, the rivers <em>literally changed shape</em>. This is systems thinking in pure visual form.
+                </p>
+
+                <div class="meta">
+                    <a href="https://youtube.com" class="meta-link">youtube.com</a> · 4 min
+                </div>
+
+                <div class="preview video">
+                    ▶
+                </div>
+
+                <div class="tags">
+                    <span class="tag">ecology</span>
+                    <span class="tag">systems</span>
+                    <span class="tag">nature</span>
+                </div>
+            </article>
+
+            <!-- Essay -->
+            <article class="hole">
+                <div class="hole-number">04</div>
+                <div class="date">05 DEC 2024</div>
+                <div class="type-badge">📝 Essay</div>
+                
+                <h2 class="title">
+                    <a href="https://example.com" target="_blank" rel="noopener">
+                        Ma (間)
+                    </a>
+                </h2>
+
+                <p class="context">
+                    The Japanese art of negative space. Not emptiness—the space that <em>gives form</em> to everything around it. Western culture tries to fill every gap. In Japanese aesthetics, the gap is the whole point.
+                </p>
+
+                <div class="meta">
+                    <a href="https://aeon.co" class="meta-link">aeon.co</a> · 15 min read
+                </div>
+
+                <div class="preview excerpt">
+                    Ma is the pause between notes that makes music music. The silence in conversation that allows meaning to settle. The empty alcove in a traditional room. It's not that something is missing—the space itself is the essential element. Without ma, everything collapses into noise.
+                </div>
+
+                <div class="tags">
+                    <span class="tag">philosophy</span>
+                    <span class="tag">aesthetics</span>
+                    <span class="tag">japan</span>
+                </div>
+            </article>
+
+            <!-- Image -->
+            <article class="hole">
+                <div class="hole-number">05</div>
+                <div class="date">04 DEC 2024</div>
+                <div class="type-badge">🖼️ Photos</div>
+                
+                <h2 class="title">
+                    <a href="https://example.com" target="_blank" rel="noopener">
+                        Liminal Spaces
+                    </a>
+                </h2>
+
+                <p class="context">
+                    Empty malls at 2 AM. Parking garages with no cars. There's something <em>deeply wrong</em> about spaces designed for crowds, captured in total emptiness. This photo series is genuinely haunting.
+                </p>
+
+                <div class="meta">
+                    <a href="https://instagram.com" class="meta-link">instagram.com</a> · Photo series
+                </div>
+
+                <div class="preview image">
+                    <img src="https://via.placeholder.com/680x453/f5f5f5/999?text=Empty+Mall+Corridor" alt="Empty mall corridor">
+                </div>
+
+                <div class="tags">
+                    <span class="tag">photography</span>
+                    <span class="tag">liminal</span>
+                    <span class="tag">eerie</span>
+                </div>
+            </article>
+
+            <!-- Podcast -->
+            <article class="hole">
+                <div class="hole-number">06</div>
+                <div class="date">03 DEC 2024</div>
+                <div class="type-badge">🎧 Podcast</div>
+                
+                <h2 class="title">
+                    <a href="https://example.com" target="_blank" rel="noopener">
+                        The Wood Wide Web
+                    </a>
+                </h2>
+
+                <p class="context">
+                    Suzanne Simard discovered that trees communicate through underground fungal networks. Mother trees literally send sugar to their offspring through mycelial highways. The forest isn't a collection of competing individuals—it's <em>one living superorganism</em>.
+                </p>
+
+                <div class="meta">
+                    <a href="https://radiolab.org" class="meta-link">radiolab.org</a> · 28 min listen
+                </div>
+
+                <div class="preview excerpt">
+                    Trees aren't competing for resources—they're actively collaborating. When one tree gets sick, nearby trees send it nutrients through the fungal network. Old "mother trees" nurture saplings in the understory. The implications completely change how we understand cooperation in nature.
+                </div>
+
+                <div class="tags">
+                    <span class="tag">nature</span>
+                    <span class="tag">science</span>
+                    <span class="tag">networks</span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <nav class="footer-nav">
+            <a href="/about" class="footer-link">ABOUT</a>
+            <a href="/archive" class="footer-link">ARCHIVE</a>
+            <a href="/submit" class="footer-link">SUBMIT</a>
+            <a href="/rss" class="footer-link">RSS</a>
+        </nav>
+        <p class="footer-note">Daily since 2024 🐇</p>
+    </footer>
+
+    <script>
+        // Fade in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -80px 0px'
+        });
+
+        document.querySelectorAll('.hole').forEach(hole => {
+            observer.observe(hole);
+        });
+
+        // Rainbow progress bar
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('progressFill').style.width = scrolled + '%';
+        });
+
+        // Hide scroll hint
+        const scrollHint = document.getElementById('scrollHint');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                scrollHint.classList.add('hidden');
+            }
+        }, { once: true });
+
+        // Tag clicks
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                console.log('Filter:', this.textContent);
+            });
+        });
+
+        // Easter egg: click the rabbit
+        document.querySelector('.site-name').addEventListener('click', () => {
+            document.body.style.transform = 'rotate(360deg)';
+            document.body.style.transition = 'transform 1s ease';
+            setTimeout(() => {
+                document.body.style.transform = '';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

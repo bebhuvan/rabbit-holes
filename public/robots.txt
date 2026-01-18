@@ -1,5 +1,5 @@
 # Robots.txt for Rabbit Holes
-# https://bhuvan.dev
+# https://www.rabbitholes.garden
 
 User-agent: *
 Allow: /
@@ -15,8 +15,8 @@ Disallow: /404
 Disallow: /*?*
 
 # Sitemaps
-Sitemap: https://bhuvan.dev/sitemap.xml
-Sitemap: https://bhuvan.dev/rss.xml
+Sitemap: https://www.rabbitholes.garden/sitemap.xml
+Sitemap: https://www.rabbitholes.garden/rss.xml
 
 # Crawl delay (optional - remove if you want faster crawling)
 # Crawl-delay: 1

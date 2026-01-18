@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ site }) => {
   // Get all unique tags for tag pages
   const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 
-  const siteUrl = site || 'https://bhuvan.dev';
+  const siteUrl = site || 'https://www.rabbitholes.garden/';
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

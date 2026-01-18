@@ -97,13 +97,6 @@
       "description": "Discover a random post",
       "url": "/?random=true",
       "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "AI Dashboard",
-      "short_name": "AI",
-      "description": "Create content with AI",
-      "url": "/xyz",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
     }
   ]
 }

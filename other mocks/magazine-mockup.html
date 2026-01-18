@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes  Magazine Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* MAGAZINE EDITION
+         * Inspired by modern editorial design
+         * Think: Monocle, The Face, Kinfolk
+         * Super-minimal, elegant, sophisticated
+         */
+
+        :root {
+            /* Magazine color palette */
+            --color-bg: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-light: #6b6b6b;
+            --color-text-lighter: #9a9a9a;
+            --color-accent: #f97316;
+            --color-line: #e8e8e8;
+
+            /* Editorial spacing */
+            --gutter: 24px;
+            --section-spacing: 120px;
+            --article-spacing: 80px;
+
+            /* Typography scale */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background: var(--color-bg);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Magazine Masthead */
+        .masthead {
+            border-bottom: 1px solid var(--color-line);
+            padding: 32px 0;
+        }
+
+        .masthead-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 var(--gutter);
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+        }
+
+        .issue-info {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-light);
+            font-weight: 500;
+        }
+
+        .magazine-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+        }
+
+        .nav-menu {
+            text-align: right;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        .nav-menu a {
+            color: var(--color-text-light);
+            text-decoration: none;
+            margin-left: 24px;
+        }
+
+        /* Magazine Cover/Hero */
+        .cover {
+            max-width: 1100px;
+            margin: var(--section-spacing) auto;
+            padding: 0 var(--gutter);
+        }
+
+        .cover-content {
+            border-top: 1px solid var(--color-text);
+            border-bottom: 1px solid var(--color-text);
+            padding: 60px 0;
+        }
+
+        .cover-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .cover-title {
+            font-family: var(--font-display);
+            font-size: 64px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            font-weight: 600;
+            margin-bottom: 32px;
+            max-width: 800px;
+        }
+
+        .cover-intro {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            max-width: 600px;
+            font-weight: 400;
+        }
+
+        /* Editorial Grid */
+        .editorial-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 var(--gutter);
+        }
+
+        /* Article Entry */
+        .article {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 40px;
+            margin-bottom: var(--article-spacing);
+            padding-bottom: var(--article-spacing);
+            border-bottom: 1px solid var(--color-line);
+        }
+
+        .article:last-child {
+            border-bottom: none;
+        }
+
+        /* Article Number */
+        .article-number {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--color-line);
+            line-height: 1;
+            padding-top: 8px;
+        }
+
+        /* Article Content */
+        .article-content {
+            max-width: 720px;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-lighter);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .article-category {
+            color: var(--color-accent);
+        }
+
+        .article-title {
+            font-family: var(--font-display);
+            font-size: 36px;
+            line-height: 1.25;
+            letter-spacing: -0.015em;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .article-title a {
+            color: var(--color-text);
+            text-decoration: none;
+        }
+
+        .article-excerpt {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            margin-bottom: 20px;
+        }
+
+        .article-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 11px;
+            color: var(--color-text-lighter);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        /* Pull Quote - Magazine Style */
+        .pullquote {
+            margin: var(--article-spacing) 0;
+            padding: 60px 0;
+            border-top: 1px solid var(--color-text);
+            border-bottom: 1px solid var(--color-text);
+        }
+
+        .pullquote-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 var(--gutter);
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 40px;
+        }
+
+        .pullquote-mark {
+            font-family: var(--font-display);
+            font-size: 120px;
+            line-height: 0.5;
+            color: var(--color-accent);
+            opacity: 0.3;
+        }
+
+        .pullquote-text {
+            font-family: var(--font-display);
+            font-size: 32px;
+            line-height: 1.4;
+            font-style: italic;
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        .pullquote-author {
+            font-family: var(--font-body);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-light);
+            font-weight: 500;
+        }
+
+        /* Featured Article - Full Width */
+        .article-featured {
+            display: block;
+            margin-bottom: var(--article-spacing);
+            padding-bottom: var(--article-spacing);
+            border-bottom: 1px solid var(--color-line);
+        }
+
+        .article-featured .article-meta {
+            margin-bottom: 24px;
+        }
+
+        .article-featured .article-title {
+            font-size: 52px;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            max-width: 900px;
+        }
+
+        .article-featured .article-excerpt {
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-bottom: 24px;
+        }
+
+        /* Footer */
+        .magazine-footer {
+            margin-top: var(--section-spacing);
+            padding: 60px 0;
+            border-top: 1px solid var(--color-line);
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 var(--gutter);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-info {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-lighter);
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .masthead-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .nav-menu {
+                text-align: center;
+            }
+
+            .nav-menu a {
+                margin: 0 12px;
+            }
+
+            .cover-title {
+                font-size: 40px;
+            }
+
+            .article {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .article-number {
+                font-size: 32px;
+            }
+
+            .article-title {
+                font-size: 28px;
+            }
+
+            .article-featured .article-title {
+                font-size: 36px;
+            }
+
+            .pullquote-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .pullquote-mark {
+                display: none;
+            }
+
+            .pullquote-text {
+                font-size: 24px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Masthead -->
+    <header class="masthead">
+        <div class="masthead-content">
+            <div class="issue-info">Issue 024 · October 2025</div>
+            <h1 class="magazine-title">Rabbit Holes</h1>
+            <nav class="nav-menu">
+                <a href="/about">About</a>
+                <a href="/archive">Archive</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Cover Story -->
+    <section class="cover">
+        <div class="cover-content">
+            <div class="cover-label">Cover Story</div>
+            <h2 class="cover-title">A collection of thoughts, links, and discoveries</h2>
+            <p class="cover-intro">
+                Exploring the intersection of technology, culture, and human behavior.
+                Where curiosity leads and ideas take root.
+            </p>
+        </div>
+    </section>
+
+    <!-- Editorial Grid -->
+    <main class="editorial-grid">
+
+        <!-- Featured Article -->
+        <article class="article-featured">
+            <div class="article-meta">
+                <span class="article-category">Featured</span>
+                <span>·</span>
+                <span>Sep 24</span>
+                <span>·</span>
+                <span>12 min read</span>
+            </div>
+            <h3 class="article-title">
+                <a href="#">What It Means to Be Human in the Age of AI</a>
+            </h3>
+            <p class="article-excerpt">
+                As artificial intelligence becomes increasingly sophisticated, we must reconsider what makes us uniquely human. This exploration delves into consciousness, creativity, and connection in a world shared with intelligent machines. What remains distinctly ours when machines can write, create, and reason?
+            </p>
+            <div class="article-tags">
+                <span class="tag">AI</span>
+                <span class="tag">Philosophy</span>
+                <span class="tag">Technology</span>
+                <span class="tag">Consciousness</span>
+            </div>
+        </article>
+
+        <!-- Pull Quote -->
+        <aside class="pullquote">
+            <div class="pullquote-content">
+                <div class="pullquote-mark">"</div>
+                <div>
+                    <p class="pullquote-text">
+                        You do not have to be good. You do not have to walk on your knees
+                        for a hundred miles through the desert, repenting.
+                    </p>
+                    <p class="pullquote-author">Mary Oliver  Wild Geese</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Article 01 -->
+        <article class="article">
+            <div class="article-number">01</div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category">Deep Dive</span>
+                    <span>·</span>
+                    <span>Sep 19</span>
+                    <span>·</span>
+                    <span>8 min</span>
+                </div>
+                <h3 class="article-title">
+                    <a href="#">How Americans Use AI and What They Think About It</a>
+                </h3>
+                <p class="article-excerpt">
+                    A comprehensive look at AI adoption patterns across demographics, revealing surprising trends in how different groups interact with and perceive artificial intelligence. The data shows we're at an inflection point in public perception.
+                </p>
+                <div class="article-tags">
+                    <span class="tag">AI</span>
+                    <span class="tag">Research</span>
+                    <span class="tag">Data</span>
+                    <span class="tag">Society</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 02 -->
+        <article class="article">
+            <div class="article-number">02</div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category">Reflection</span>
+                    <span>·</span>
+                    <span>Sep 16</span>
+                    <span>·</span>
+                    <span>5 min</span>
+                </div>
+                <h3 class="article-title">
+                    <a href="#">Philosophy Understood as a Way of Life</a>
+                </h3>
+                <p class="article-excerpt">
+                    Ancient philosophy wasn't just abstract theoryit was a practical guide for living. The Stoics, Epicureans, and Skeptics all offered concrete practices for daily life. They had exercises, habits, and mental frameworks that shaped how they moved through the world.
+                </p>
+                <div class="article-tags">
+                    <span class="tag">Philosophy</span>
+                    <span class="tag">Stoicism</span>
+                    <span class="tag">Practice</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 03 -->
+        <article class="article">
+            <div class="article-number">03</div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category">Link Collection</span>
+                    <span>·</span>
+                    <span>Sep 5</span>
+                    <span>·</span>
+                    <span>3 min</span>
+                </div>
+                <h3 class="article-title">
+                    <a href="#">I Got Some Links for You</a>
+                </h3>
+                <p class="article-excerpt">
+                    A curated collection of fascinating reads this weekfrom behavioral economics to digital minimalism and everything in between. This week features a deep dive into decision fatigue, an essay on the paradox of choice, and a thoughtful piece about reclaiming attention.
+                </p>
+                <div class="article-tags">
+                    <span class="tag">Links</span>
+                    <span class="tag">Curation</span>
+                    <span class="tag">Technology</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 04 -->
+        <article class="article">
+            <div class="article-number">04</div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category">Taught by Machine</span>
+                    <span>·</span>
+                    <span>Sep 4</span>
+                    <span>·</span>
+                    <span>6 min</span>
+                </div>
+                <h3 class="article-title">
+                    <a href="#">How Fiber Optic Cables Work</a>
+                </h3>
+                <p class="article-excerpt">
+                    A deep dive into the physics and engineering behind the invisible infrastructure that powers our connected world. Light, glass, and information traveling at incredible speeds through thin strands of ultra-pure glass.
+                </p>
+                <div class="article-tags">
+                    <span class="tag">Technology</span>
+                    <span class="tag">Science</span>
+                    <span class="tag">Infrastructure</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 05 -->
+        <article class="article">
+            <div class="article-number">05</div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category">Reflection</span>
+                    <span>·</span>
+                    <span>Aug 30</span>
+                    <span>·</span>
+                    <span>7 min</span>
+                </div>
+                <h3 class="article-title">
+                    <a href="#">Speculation is Like WaterIt Always Finds a Way</a>
+                </h3>
+                <p class="article-excerpt">
+                    From tulip bulbs to NFTs, human nature's relationship with speculation remains constant across centuries. What can history teach us about modern markets and our collective psychology? The patterns repeat with striking regularity.
+                </p>
+                <div class="article-tags">
+                    <span class="tag">Economics</span>
+                    <span class="tag">History</span>
+                    <span class="tag">Markets</span>
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="magazine-footer">
+        <div class="footer-content">
+            <div class="footer-info">Rabbit Holes  A digital magazine of curiosities</div>
+            <nav class="footer-links">
+                <a href="/about">About</a>
+                <a href="/archive">Archive</a>
+                <a href="/rss">RSS</a>
+                <a href="https://twitter.com/bhuvan">Twitter</a>
+            </nav>
+        </div>
+    </footer>
+
+</body>
+</html>

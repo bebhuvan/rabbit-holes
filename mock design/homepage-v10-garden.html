@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rabbit Holes — A Knowledge Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FDFCFA;
+      --bg-deep: #F7F5F2;
+      --text: #141414;
+      --text-secondary: #3a3a3a;
+      --text-muted: #717171;
+      --text-faint: #a8a8a8;
+      --border: #e5e2dc;
+      --surface: #f4f3f0;
+
+      --orange: #d95d0f;
+      --purple: #6d28d9;
+      --blue: #1d4ed8;
+      --green: #15803d;
+      --red: #b91c1c;
+      --gold: #b8860b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Newsreader', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--orange);
+      color: white;
+    }
+
+    /* === OPENING - Full viewport wonder === */
+    .opening {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Floating header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      transition: all 0.4s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(253, 252, 250, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .logo:hover .logo-mark {
+      background: var(--orange);
+      transform: scale(1.15);
+    }
+
+    .logo-mark svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--bg);
+    }
+
+    .logo-text {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover { color: var(--text); }
+
+    .nav-enter {
+      background: var(--text);
+      color: var(--bg) !important;
+      padding: 0.6rem 1.25rem;
+      transition: all 0.3s ease !important;
+    }
+
+    .nav-enter:hover {
+      background: var(--orange) !important;
+    }
+
+    /* === HERO - Mysterious & Inviting === */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 6rem;
+      position: relative;
+    }
+
+    /* Subtle pattern background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(217, 93, 15, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(109, 40, 217, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(29, 78, 216, 0.02) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .hero-symbol {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+
+    .hero-symbol::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--text);
+      border-radius: 50%;
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    .hero-symbol::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.15); opacity: 0.6; }
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title span {
+      display: block;
+    }
+
+    .hero-title .line-2 {
+      font-family: 'Newsreader', Georgia, serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: 0.6em;
+      letter-spacing: 0;
+      color: var(--text-secondary);
+      margin-top: 0.25em;
+    }
+
+    .hero-desc {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 1rem 2rem;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      background: var(--orange);
+      transform: translateY(-3px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text);
+      transform: translateY(-3px);
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-faint);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .scroll-hint::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--text-faint), transparent);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* === PATHWAYS - Entry points into the garden === */
+    .pathways {
+      padding: 6rem 2.5rem;
+      background: var(--bg-deep);
+      position: relative;
+    }
+
+    .pathways::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .section-intro {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 4rem;
+    }
+
+    .section-intro h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-intro p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    .pathways-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .pathway {
+      background: var(--bg);
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+
+    .pathway::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--pathway-color, var(--orange));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .pathway:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    .pathway:hover::before {
+      transform: scaleX(1);
+    }
+
+    .pathway-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Different pathway markers */
+    .pathway--ideas .pathway-icon::before {
+      content: '';
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--purple);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .pathway--ideas { --pathway-color: var(--purple); }
+
+    .pathway--threads .pathway-icon::before {
+      content: '';
+      width: 28px;
+      height: 2px;
+      background: var(--blue);
+      opacity: 0.6;
+      box-shadow: 0 8px 0 var(--blue), 0 16px 0 var(--blue);
+    }
+    .pathway--threads { --pathway-color: var(--blue); }
+
+    .pathway--atlas .pathway-icon::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(var(--green) 2px, transparent 2px);
+      background-size: 6px 6px;
+      opacity: 0.7;
+    }
+    .pathway--atlas { --pathway-color: var(--green); }
+
+    .pathway-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      transition: color 0.3s;
+    }
+
+    .pathway:hover .pathway-title {
+      color: var(--pathway-color);
+    }
+
+    .pathway-desc {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .pathway-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pathway-meta::before {
+      content: '';
+      width: 16px;
+      height: 1px;
+      background: var(--pathway-color);
+    }
+
+    /* === FEATURED IDEA - Spotlight === */
+    .spotlight {
+      padding: 6rem 2.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .spotlight-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .spotlight-label::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+    }
+
+    .spotlight-card {
+      position: relative;
+      padding: 3rem;
+      background: var(--surface);
+      border-left: 4px solid var(--orange);
+    }
+
+    .spotlight-category {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .spotlight-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .spotlight-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .spotlight-title a:hover {
+      color: var(--orange);
+    }
+
+    .spotlight-excerpt {
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 640px;
+    }
+
+    .spotlight-connections {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .connection {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      color: var(--text-muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.25s;
+    }
+
+    .connection:hover {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    /* === RECENT ADDITIONS - The stream in background === */
+    .recent {
+      padding: 4rem 2.5rem 6rem;
+      background: var(--bg-deep);
+    }
+
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto 2rem;
+    }
+
+    .recent-header h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .recent-header a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .recent-header a:hover { color: var(--orange); }
+
+    .recent-list {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .recent-item {
+      background: var(--bg);
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .recent-item:hover {
+      background: var(--surface);
+    }
+
+    .recent-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--item-color, var(--text-faint));
+      margin-bottom: 0.5rem;
+    }
+
+    .recent-item--quote { --item-color: var(--purple); }
+    .recent-item--links { --item-color: var(--blue); }
+    .recent-item--thought { --item-color: var(--orange); }
+    .recent-item--data { --item-color: var(--green); }
+
+    .recent-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .recent-item:hover .recent-title {
+      color: var(--item-color);
+    }
+
+    .recent-item--quote .recent-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .recent-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--text-faint);
+    }
+
+    /* === ABOUT THE GARDEN === */
+    .about-garden {
+      padding: 6rem 2.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-garden h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-garden .desc {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+    }
+
+    .gardener {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .gardener:hover {
+      background: var(--text);
+    }
+
+    .gardener-avatar {
+      width: 48px;
+      height: 48px;
+      background: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--bg);
+      transition: background 0.3s;
+    }
+
+    .gardener:hover .gardener-avatar {
+      background: var(--orange);
+    }
+
+    .gardener-info {
+      text-align: left;
+    }
+
+    .gardener-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      transition: color 0.3s;
+    }
+
+    .gardener:hover .gardener-name {
+      color: var(--bg);
+    }
+
+    .gardener-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      transition: color 0.3s;
+    }
+
+    .gardener:hover .gardener-role {
+      color: var(--text-faint);
+    }
+
+    /* === NEWSLETTER === */
+    .newsletter {
+      background: var(--text);
+      color: var(--bg);
+      padding: 5rem 2.5rem;
+      text-align: center;
+    }
+
+    .newsletter h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .newsletter p {
+      font-size: 1rem;
+      opacity: 0.6;
+      margin-bottom: 2rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.12);
+      color: var(--bg);
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--orange);
+    }
+
+    .newsletter-btn {
+      padding: 1rem 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--orange);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .newsletter-btn:hover {
+      filter: brightness(1.15);
+    }
+
+    /* === FOOTER === */
+    .footer {
+      padding: 2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-left {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover { color: var(--orange); }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 900px) {
+      .pathways-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+      }
+
+      .recent-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header { padding: 1rem 1.5rem; }
+      .nav a:not(.nav-enter) { display: none; }
+
+      .hero { padding: 7rem 1.5rem 4rem; }
+      .hero-symbol { width: 60px; height: 60px; }
+
+      .pathways, .spotlight, .recent, .about-garden {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+
+      .spotlight-card { padding: 2rem 1.5rem; }
+
+      .recent-list {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter { padding: 3.5rem 1.5rem; }
+      .newsletter-form { flex-direction: column; }
+
+      .footer { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Opening - Full viewport experience -->
+  <div class="opening">
+    <header class="header">
+      <a href="/" class="logo">
+        <span class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/></svg>
+        </span>
+        <span class="logo-text">Rabbit Holes</span>
+      </a>
+      <nav class="nav">
+        <a href="/ideas">Ideas</a>
+        <a href="/threads">Threads</a>
+        <a href="/atlas">Atlas</a>
+        <a href="/about">About</a>
+        <a href="#" class="nav-enter">Enter</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-symbol"></div>
+        <h1 class="hero-title">
+          <span>Rabbit Holes</span>
+          <span class="line-2">A garden of connected ideas</span>
+        </h1>
+        <p class="hero-desc">
+          A living collection of ideas, questions, and curiosities.
+          Not a blog—a place where thoughts grow, connect, and evolve.
+        </p>
+        <div class="hero-cta">
+          <a href="#pathways" class="btn btn-primary">Start Exploring</a>
+          <a href="/random" class="btn btn-secondary">Random Hole</a>
+        </div>
+      </div>
+      <div class="scroll-hint">SCROLL</div>
+    </section>
+  </div>
+
+  <!-- Pathways - Entry points -->
+  <section class="pathways" id="pathways">
+    <div class="section-intro">
+      <h2>Choose your path</h2>
+      <p>Every rabbit hole leads somewhere. Here are a few ways in.</p>
+    </div>
+
+    <div class="pathways-grid">
+      <a href="/ideas" class="pathway pathway--ideas">
+        <div class="pathway-icon"></div>
+        <h3 class="pathway-title">Ideas</h3>
+        <p class="pathway-desc">
+          Standalone thoughts, questions, and observations. Seeds that might grow into something larger.
+        </p>
+        <div class="pathway-meta">127 ideas planted</div>
+      </a>
+
+      <a href="/threads" class="pathway pathway--threads">
+        <div class="pathway-icon"></div>
+        <h3 class="pathway-title">Threads</h3>
+        <p class="pathway-desc">
+          Connected sequences of ideas that trace a line of thought. Follow where curiosity leads.
+        </p>
+        <div class="pathway-meta">12 threads to follow</div>
+      </a>
+
+      <a href="/atlas" class="pathway pathway--atlas">
+        <div class="pathway-icon"></div>
+        <h3 class="pathway-title">Atlas</h3>
+        <p class="pathway-desc">
+          A map of recurring themes and territories. See how everything connects.
+        </p>
+        <div class="pathway-meta">18 territories mapped</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Spotlight - Featured deep piece -->
+  <section class="spotlight">
+    <div class="spotlight-label">Currently Growing</div>
+    <article class="spotlight-card">
+      <div class="spotlight-category">Thread / AI + Humanity</div>
+      <h2 class="spotlight-title">
+        <a href="#">What It Means to Be Human in the Age of AI</a>
+      </h2>
+      <p class="spotlight-excerpt">
+        As machines become capable of tasks we once thought uniquely human—creativity, reasoning,
+        conversation—we're forced to ask harder questions about what actually makes us... us.
+        This thread traces that question across philosophy, economics, and lived experience.
+      </p>
+      <div class="spotlight-connections">
+        <a href="#" class="connection">Philosophy</a>
+        <a href="#" class="connection">AI</a>
+        <a href="#" class="connection">Work</a>
+        <a href="#" class="connection">Identity</a>
+      </div>
+    </article>
+  </section>
+
+  <!-- Recent - Background stream -->
+  <section class="recent">
+    <div class="recent-header">
+      <h2>Recently Added to the Garden</h2>
+      <a href="/archive">View all →</a>
+    </div>
+
+    <div class="recent-list">
+      <a href="#" class="recent-item recent-item--thought">
+        <div class="recent-type">Idea</div>
+        <h3 class="recent-title">The Future of Global Trade</h3>
+        <div class="recent-date">Nov 21</div>
+      </a>
+
+      <a href="#" class="recent-item recent-item--quote">
+        <div class="recent-type">Quote</div>
+        <h3 class="recent-title">"In the depths of winter, I finally learned that within me there lay an invincible summer."</h3>
+        <div class="recent-date">Nov 17</div>
+      </a>
+
+      <a href="#" class="recent-item recent-item--thought">
+        <div class="recent-type">Idea</div>
+        <h3 class="recent-title">Oral Traditions in India</h3>
+        <div class="recent-date">Nov 17</div>
+      </a>
+
+      <a href="#" class="recent-item recent-item--links">
+        <div class="recent-type">Links</div>
+        <h3 class="recent-title">How Many Jobs Can AI Kill?</h3>
+        <div class="recent-date">Nov 14</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- About the garden -->
+  <section class="about-garden">
+    <h2>What is this place?</h2>
+    <p class="desc">
+      This is a digital garden—a public notebook where ideas grow over time instead of being
+      published and forgotten. Unlike a blog, things here aren't finished. They're tended,
+      connected, and allowed to evolve. Think of it as wandering through someone's mind.
+    </p>
+    <a href="/about" class="gardener">
+      <div class="gardener-avatar">B</div>
+      <div class="gardener-info">
+        <div class="gardener-name">Bhuvan</div>
+        <div class="gardener-role">Gardener & Curator</div>
+      </div>
+    </a>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter">
+    <h2>Seeds in your inbox</h2>
+    <p>Occasional dispatches when something interesting blooms.</p>
+    <form class="newsletter-form">
+      <input type="email" class="newsletter-input" placeholder="your@email.com">
+      <button type="submit" class="newsletter-btn">Subscribe</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-left">A garden of connected ideas, tended daily</div>
+    <nav class="footer-links">
+      <a href="/rss.xml">RSS</a>
+      <a href="/about">About</a>
+      <a href="#">Twitter</a>
+    </nav>
+  </footer>
+
+  <script>
+    // Header scroll effect
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+
+</body>
+</html>
