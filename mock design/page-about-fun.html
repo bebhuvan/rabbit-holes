@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About · RabbitHoles.garden 🐇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fffef9;
+            --text: #1a1a1a;
+            --gray: #666666;
+            --light-gray: #999999;
+            --line: #e8e8e8;
+            --red: #ef4444;
+            --orange: #f97316;
+            --yellow: #fbbf24;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Newsreader', serif;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--yellow);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            padding: 2.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .site-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s ease;
+        }
+
+        .site-name:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .site-name::before {
+            content: '🐇 ';
+        }
+
+        .back-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--red);
+        }
+
+        /* Content */
+        .content {
+            padding: 6rem 0 8rem;
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--red), var(--pink), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: var(--light-gray);
+            text-transform: uppercase;
+            margin-bottom: 4rem;
+        }
+
+        /* Prose */
+        .prose {
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        .prose p {
+            margin-bottom: 1.8rem;
+        }
+
+        /* First paragraph - special treatment */
+        .prose p:first-of-type::first-letter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            float: left;
+            line-height: 0.85;
+            margin-right: 0.15em;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .prose em {
+            font-style: italic;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .prose strong {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Colorful callout boxes */
+        .callout {
+            padding: 2rem;
+            margin: 3rem 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+            background: linear-gradient(to right, transparent, transparent);
+        }
+
+        .callout.red {
+            border-color: var(--red);
+            background: linear-gradient(to right, var(--red)08, transparent);
+        }
+
+        .callout.blue {
+            border-color: var(--blue);
+            background: linear-gradient(to right, var(--blue)08, transparent);
+        }
+
+        .callout.green {
+            border-color: var(--green);
+            background: linear-gradient(to right, var(--green)08, transparent);
+        }
+
+        .callout-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .callout p {
+            margin-bottom: 0.75rem;
+        }
+
+        .callout p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* List styling */
+        .prose ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .prose ul li {
+            padding-left: 2rem;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .prose ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        /* Contact section */
+        .contact {
+            margin-top: 5rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--purple)08, var(--pink)12);
+            border: 2px solid var(--pink)40;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--pink);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--pink);
+            border-radius: 30px;
+            transition: all 0.2s ease;
+        }
+
+        .contact-link:hover {
+            background: var(--pink);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Stats section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid var(--line);
+            transition: all 0.2s ease;
+        }
+
+        .stat:nth-child(1) { border-color: var(--red); }
+        .stat:nth-child(2) { border-color: var(--blue); }
+        .stat:nth-child(3) { border-color: var(--green); }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat:nth-child(1) .stat-number { color: var(--red); }
+        .stat:nth-child(2) .stat-number { color: var(--blue); }
+        .stat:nth-child(3) .stat-number { color: var(--green); }
+
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+        }
+
+        .footer-note {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--light-gray);
+            letter-spacing: 0.08em;
+        }
+
+        /* Rainbow separator */
+        .rainbow-line {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--purple));
+            margin: 4rem 0;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .content {
+                padding: 4rem 0 6rem;
+            }
+
+            .page-title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+
+            .prose {
+                font-size: 1.05rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 650px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="site-name">RABBITHOLES</a>
+            <a href="/" class="back-link">← BACK</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="content">
+            <h1 class="page-title">About</h1>
+            <div class="page-subtitle">What This Is & Why It Exists</div>
+
+            <div class="prose">
+                <p>The internet is infinite and overwhelming. Most of what's out there is noise—algorithmic slop, engagement bait, the same recycled takes trending for the third time this month. But buried in all that chaos are moments of genuine wonder.</p>
+
+                <p>An essay that shifts how you see the world. A video that makes time disappear. A quote that you'll remember for years. An idea so strange it rewires something in your brain. <em>These moments are rare, but they're out there.</em></p>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number">847</span>
+                        <span class="stat-label">Discoveries</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">365</span>
+                        <span class="stat-label">Days Running</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">42</span>
+                        <span class="stat-label">Topics</span>
+                    </div>
+                </div>
+
+                <p>This site exists to surface those moments. Every day, I find something worth your attention—a rabbit hole deep enough to get lost in. Not because an algorithm told me to. Not because it's trending. Because it's <strong>genuinely interesting</strong>.</p>
+
+                <div class="callout red">
+                    <div class="callout-title">🎯 The Mission</div>
+                    <p>To fight the algorithmic monotony of the modern internet by hand-picking things that are actually worth your time. One discovery per day. No ads, no engagement metrics, no bullshit.</p>
+                </div>
+
+                <div class="rainbow-line"></div>
+
+                <p><strong>Why "rabbit holes"?</strong> Because the best experiences online aren't about consuming content—they're about <em>falling into something</em> and emerging different. One link leads to another, which leads to something you never expected to find. That sense of serendipitous discovery is the magic the algorithm killed.</p>
+
+                <div class="callout blue">
+                    <div class="callout-title">📚 What You'll Find Here</div>
+                    <p><strong>Articles</strong> that challenge assumptions · <strong>Videos</strong> that expand perspective · <strong>Quotes</strong> that stop you mid-scroll · <strong>Podcasts</strong> worth the time · <strong>Images</strong> that won't leave your mind · <strong>Ideas</strong> that linger for days</p>
+                </div>
+
+                <p>The only consistency is quality over quantity. Sometimes it's a 30-second quote. Sometimes it's a 2-hour documentary. Sometimes it's just a single photograph. But it's always something I'd want someone to send <em>me</em>.</p>
+
+                <div class="callout green">
+                    <div class="callout-title">✨ The Philosophy</div>
+                    <p>Curation as an art form. Discovery as resistance. The internet can still be a place of curiosity, wonder, and genuine surprise—but only if we fight for it. This site is that fight, one link at a time.</p>
+                </div>
+
+                <div class="rainbow-line"></div>
+
+                <p><em>This site is maintained by one person who reads too much, thinks too much, and believes the internet deserves better than what the algorithms are giving us.</em></p>
+            </div>
+
+            <div class="contact">
+                <div class="contact-title">Let's Connect 👋</div>
+                <div class="contact-links">
+                    <a href="mailto:hello@rabbitholes.garden" class="contact-link">✉️ Email</a>
+                    <a href="https://twitter.com/rabbitholes" class="contact-link">🐦 Twitter</a>
+                    <a href="/submit" class="contact-link">💡 Submit</a>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <nav class="footer-nav">
+            <a href="/" class="footer-link">HOME</a>
+            <a href="/archive" class="footer-link">ARCHIVE</a>
+            <a href="/submit" class="footer-link">SUBMIT</a>
+            <a href="/rss" class="footer-link">RSS</a>
+        </nav>
+        <p class="footer-note">Daily since 2024 🐇</p>
+    </footer>
+</body>
+</html>

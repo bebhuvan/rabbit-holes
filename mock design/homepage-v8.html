@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rabbit Holes — V8</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FDFCFA;
+      --text: #141414;
+      --text-secondary: #3a3a3a;
+      --text-muted: #717171;
+      --text-faint: #a8a8a8;
+      --border: #e5e2dc;
+      --surface: #f4f3f0;
+      --surface-warm: #faf8f5;
+
+      --orange: #d95d0f;
+      --orange-glow: rgba(217, 93, 15, 0.08);
+      --purple: #6d28d9;
+      --purple-glow: rgba(109, 40, 217, 0.07);
+      --blue: #1d4ed8;
+      --blue-glow: rgba(29, 78, 216, 0.07);
+      --green: #15803d;
+      --green-glow: rgba(21, 128, 61, 0.07);
+      --red: #b91c1c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Newsreader', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--orange);
+      color: white;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* === HEADER === */
+    .header {
+      padding: 1.75rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo:hover { color: var(--orange); }
+    .logo:hover .logo-mark { background: var(--orange); }
+
+    .logo-mark {
+      width: 24px;
+      height: 24px;
+      background: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .logo-mark svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--bg);
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.75rem;
+      align-items: center;
+    }
+
+    .nav a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover { color: var(--text); }
+
+    .nav-random {
+      background: var(--text);
+      color: var(--bg) !important;
+      padding: 0.55rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease !important;
+    }
+
+    .nav-random:hover {
+      background: var(--orange) !important;
+      transform: translateY(-2px);
+    }
+
+    .nav-random svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    /* === HERO === */
+    .hero {
+      padding: 4.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--text);
+      color: var(--bg);
+      padding: 0.45rem 0.85rem;
+    }
+
+    .hero-length {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .length-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .length-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .length-dots span.filled {
+      background: var(--text-muted);
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6.5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title a {
+      color: inherit;
+      text-decoration: none;
+      background: linear-gradient(180deg, transparent 85%, var(--orange-glow) 85%);
+      transition: background 0.3s ease;
+    }
+
+    .hero-title a:hover {
+      background: linear-gradient(180deg, transparent 50%, var(--orange-glow) 50%);
+    }
+
+    .hero-excerpt {
+      font-size: 1.25rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      max-width: 620px;
+    }
+
+    .hero-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* === TIME GROUPS === */
+    .time-group {
+      padding: 3rem 0;
+    }
+
+    .time-group + .time-group {
+      border-top: 1px solid var(--border);
+    }
+
+    .time-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .time-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* === POST CARDS === */
+    .post {
+      padding: 1.75rem 0;
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 1.25rem;
+      align-items: start;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.25s ease;
+    }
+
+    .post:last-child { border-bottom: none; }
+
+    .post:hover {
+      background: var(--post-bg, var(--surface-warm));
+      margin: 0 -1.5rem;
+      padding: 1.75rem 1.5rem;
+    }
+
+    /* Type indicator — abstract geometric shapes */
+    .post-marker {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Quote: Large elegant quotation mark */
+    .post--quote .post-marker {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 4rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--purple);
+      opacity: 0.25;
+      margin-top: -0.5rem;
+    }
+
+    .post--quote:hover .post-marker {
+      opacity: 0.5;
+    }
+
+    .post--quote {
+      --post-bg: var(--purple-glow);
+      --post-color: var(--purple);
+    }
+
+    /* Links: Stacked lines */
+    .post--links .post-marker::before {
+      content: '';
+      width: 24px;
+      height: 16px;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--blue) 0px,
+        var(--blue) 2px,
+        transparent 2px,
+        transparent 6px
+      );
+      opacity: 0.4;
+      transition: opacity 0.25s;
+    }
+
+    .post--links:hover .post-marker::before {
+      opacity: 0.7;
+    }
+
+    .post--links {
+      --post-bg: var(--blue-glow);
+      --post-color: var(--blue);
+    }
+
+    /* Visual/Data: Grid of dots */
+    .post--visual .post-marker::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background-image: radial-gradient(var(--green) 2px, transparent 2px);
+      background-size: 6px 6px;
+      opacity: 0.5;
+      transition: opacity 0.25s;
+    }
+
+    .post--visual:hover .post-marker::before {
+      opacity: 0.8;
+    }
+
+    .post--visual {
+      --post-bg: var(--green-glow);
+      --post-color: var(--green);
+    }
+
+    /* Thought: Single circle */
+    .post--thought .post-marker::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--orange);
+      border-radius: 50%;
+      opacity: 0.5;
+      transition: all 0.25s;
+    }
+
+    .post--thought:hover .post-marker::before {
+      opacity: 1;
+      background: var(--orange);
+    }
+
+    .post--thought {
+      --post-bg: var(--orange-glow);
+      --post-color: var(--orange);
+    }
+
+    /* Reflection: Nested rectangles */
+    .post--reflection .post-marker {
+      position: relative;
+    }
+
+    .post--reflection .post-marker::before,
+    .post--reflection .post-marker::after {
+      content: '';
+      position: absolute;
+      border: 2px solid var(--text);
+      opacity: 0.2;
+      transition: opacity 0.25s;
+    }
+
+    .post--reflection .post-marker::before {
+      width: 20px;
+      height: 14px;
+    }
+
+    .post--reflection .post-marker::after {
+      width: 14px;
+      height: 10px;
+      margin-top: 4px;
+      margin-left: 4px;
+    }
+
+    .post--reflection:hover .post-marker::before,
+    .post--reflection:hover .post-marker::after {
+      opacity: 0.5;
+    }
+
+    .post--reflection {
+      --post-bg: var(--surface);
+      --post-color: var(--text);
+    }
+
+    /* Content */
+    .post-content {
+      min-width: 0;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .post-type {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--post-color, var(--orange));
+    }
+
+    .post-source {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-faint);
+    }
+
+    .post-source::before {
+      content: '— ';
+    }
+
+    .post-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 0.4rem;
+    }
+
+    .post-title a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .post-title a:hover {
+      color: var(--post-color, var(--orange));
+    }
+
+    .post--quote .post-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .post-excerpt {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .post-take {
+      margin-top: 0.65rem;
+      padding-left: 0.9rem;
+      border-left: 2px solid var(--orange);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Aside */
+    .post-aside {
+      text-align: right;
+      flex-shrink: 0;
+      padding-top: 0.25rem;
+    }
+
+    .post-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-faint);
+      margin-bottom: 0.5rem;
+    }
+
+    .post-dots {
+      display: flex;
+      gap: 3px;
+      justify-content: flex-end;
+    }
+
+    .post-dots span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .post-dots span.filled {
+      background: var(--text-muted);
+    }
+
+    /* === FAVORITES === */
+    .favorites {
+      padding: 3.5rem 0;
+      border-top: 2px solid var(--text);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .section-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .section-link:hover {
+      color: var(--orange);
+    }
+
+    .fav-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    @media (max-width: 600px) {
+      .fav-grid { grid-template-columns: 1fr; }
+    }
+
+    .fav {
+      padding: 1.5rem;
+      background: var(--bg);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .fav::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--fav-color, var(--orange));
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fav:hover::before {
+      transform: scaleY(1);
+    }
+
+    .fav:hover {
+      background: var(--surface);
+      padding-left: 1.75rem;
+    }
+
+    .fav:nth-child(1) { --fav-color: var(--red); }
+    .fav:nth-child(2) { --fav-color: var(--purple); }
+    .fav:nth-child(3) { --fav-color: var(--blue); }
+    .fav:nth-child(4) { --fav-color: var(--green); }
+
+    .fav-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.35rem;
+    }
+
+    .fav:hover .fav-title {
+      color: var(--fav-color);
+    }
+
+    .fav-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-faint);
+    }
+
+    /* === RABBIT TRAIL === */
+    .trail {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .trail-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .trail-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .trail-subtitle {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text-faint);
+    }
+
+    .trail-items {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: none;
+    }
+
+    .trail-items::-webkit-scrollbar { display: none; }
+
+    .trail-card {
+      flex: 0 0 200px;
+      padding: 1.25rem;
+      background: var(--surface);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .trail-card::after {
+      content: '→';
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all 0.25s ease;
+    }
+
+    .trail-card:hover::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .trail-card:hover {
+      background: var(--surface-warm);
+      transform: translateY(-3px);
+    }
+
+    .trail-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+    }
+
+    .trail-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .trail-card:hover .trail-card-title {
+      color: var(--orange);
+    }
+
+    /* === ABOUT === */
+    .about-section {
+      padding: 3.5rem 0;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 650px) {
+      .about-section {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+    }
+
+    .about-card {
+      padding: 2rem;
+      background: var(--surface);
+    }
+
+    .about-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .about-desc {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .about-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .about-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .topics-card h3 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .topics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .topic {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.55rem 0.9rem;
+      background: var(--surface);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .topic:hover {
+      background: var(--text);
+      color: var(--bg);
+      transform: translateY(-2px);
+    }
+
+    /* === NEWSLETTER === */
+    .newsletter {
+      background: var(--text);
+      color: var(--bg);
+      padding: 3.5rem 2.5rem;
+      margin: 0 -2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 700px) {
+      .newsletter {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 3rem 2rem;
+      }
+    }
+
+    .newsletter h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .newsletter p {
+      font-size: 0.95rem;
+      opacity: 0.65;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 500px) {
+      .newsletter-form {
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+
+    .newsletter-input {
+      padding: 0.9rem 1.15rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.12);
+      color: var(--bg);
+      outline: none;
+      min-width: 220px;
+      transition: all 0.2s;
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--orange);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .newsletter-btn {
+      padding: 0.9rem 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--orange);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .newsletter-btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+    }
+
+    /* === FOOTER === */
+    .footer {
+      padding: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 500px) {
+      .footer {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    .footer-left {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .footer-mark {
+      width: 18px;
+      height: 18px;
+      background: var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-mark svg {
+      width: 10px;
+      height: 10px;
+      fill: var(--bg);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--orange);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 600px) {
+      body { font-size: 17px; }
+      .container { padding: 0 1.5rem; }
+      .hero { padding: 3.5rem 0; }
+      .hero-title { font-size: 2rem; }
+      .hero-excerpt { font-size: 1.1rem; }
+
+      .post {
+        grid-template-columns: 40px 1fr;
+        gap: 1rem;
+      }
+      .post-aside { display: none; }
+      .post-marker { width: 40px; height: 40px; }
+      .post--quote .post-marker { font-size: 3rem; }
+      .post-title { font-size: 1.15rem; }
+      .post--quote .post-title { font-size: 1.1rem; }
+
+      .nav a:not(.nav-random) { display: none; }
+      .newsletter { margin: 0 -1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="header">
+      <a href="/" class="logo">
+        <span class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/></svg>
+        </span>
+        Rabbit Holes
+      </a>
+      <nav class="nav">
+        <a href="/archive">Archive</a>
+        <a href="/tags">Topics</a>
+        <a href="/about">About</a>
+        <a href="#" class="nav-random">
+          <svg viewBox="0 0 24 24"><path d="M17.66 3.31l3.03 3.03-3.03 3.03-1.41-1.41 1.62-1.62-1.54-.01c-3.31-.01-6.39 1.77-8.04 4.64-.79 1.36-1.2 2.9-1.2 4.47v.59H5.09v-.59c0-1.97.52-3.91 1.5-5.62 2.08-3.61 6-5.83 10.09-5.84h.1l-1.53-1.54 1.41-1.41v-.01zM2.31 17.66l3.03-3.03 1.41 1.41-1.62 1.62h1.87c3.31 0 6.39-1.78 8.04-4.65.79-1.36 1.2-2.9 1.2-4.47v-.58h1.99v.58c0 1.97-.52 3.92-1.5 5.63-2.08 3.61-5.99 5.83-10.09 5.84H4.77l1.53 1.53-1.41 1.41-3.03-3.03.45-.29z"/></svg>
+          Random
+        </a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="hero-type">Reflection</span>
+        <span class="hero-length">
+          <span class="length-dots">
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span></span>
+            <span></span>
+          </span>
+          5 min
+        </span>
+      </div>
+      <h1 class="hero-title">
+        <a href="#">Why Read?</a>
+      </h1>
+      <p class="hero-excerpt">
+        I love reading. If I can confidently claim that I have even a smidgen of common sense, I think it's all down to reading. The more I read, the more I felt the urge to write...
+      </p>
+      <div class="hero-meta">Aug 17, 2025</div>
+    </section>
+
+    <section class="time-group">
+      <h2 class="time-label">This week</h2>
+
+      <article class="post post--quote">
+        <div class="post-marker">"</div>
+        <div class="post-content">
+          <div class="post-header">
+            <span class="post-type">Quote</span>
+            <span class="post-source">Albert Camus</span>
+          </div>
+          <h3 class="post-title">
+            <a href="#">"In the depths of winter, I finally learned that within me there lay an invincible summer."</a>
+          </h3>
+          <p class="post-excerpt">From <em>Return to Tipasa</em>—on beauty and resilience.</p>
+        </div>
+        <div class="post-aside">
+          <div class="post-date">Oct 10</div>
+          <div class="post-dots">
+            <span class="filled"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="post post--links">
+        <div class="post-marker"></div>
+        <div class="post-content">
+          <div class="post-header">
+            <span class="post-type">Links</span>
+            <span class="post-source">7 sources</span>
+          </div>
+          <h3 class="post-title">
+            <a href="#">I got some links for you</a>
+          </h3>
+          <p class="post-excerpt">China's $1T trade surplus, workslop epidemic, the gig economy.</p>
+          <p class="post-take">The American president is up for sale. Wild times.</p>
+        </div>
+        <div class="post-aside">
+          <div class="post-date">Sep 24</div>
+          <div class="post-dots">
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span></span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="time-group">
+      <h2 class="time-label">Earlier</h2>
+
+      <article class="post post--visual">
+        <div class="post-marker"></div>
+        <div class="post-content">
+          <div class="post-header">
+            <span class="post-type">Data</span>
+            <span class="post-source">Our World in Data</span>
+          </div>
+          <h3 class="post-title">
+            <a href="#">The Solar Revolution</a>
+          </h3>
+          <p class="post-excerpt">Solar scaling laws will prove more impactful than AI's.</p>
+          <p class="post-take">China is the best thing to happen to the green transition.</p>
+        </div>
+        <div class="post-aside">
+          <div class="post-date">Sep 9</div>
+          <div class="post-dots">
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="post post--quote">
+        <div class="post-marker">"</div>
+        <div class="post-content">
+          <div class="post-header">
+            <span class="post-type">Quote</span>
+            <span class="post-source">Brian Eno</span>
+          </div>
+          <h3 class="post-title">
+            <a href="#">"Pretending is the most important thing we do"</a>
+          </h3>
+          <p class="post-excerpt">On being pretentious: it's how we make thought experiments.</p>
+        </div>
+        <div class="post-aside">
+          <div class="post-date">Oct 26</div>
+          <div class="post-dots">
+            <span class="filled"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="post post--thought">
+        <div class="post-marker"></div>
+        <div class="post-content">
+          <div class="post-header">
+            <span class="post-type">Thought</span>
+          </div>
+          <h3 class="post-title">
+            <a href="#">Fun is a skill</a>
+          </h3>
+          <p class="post-excerpt">Everyone agrees fun is good. Yet most people aren't having it.</p>
+        </div>
+        <div class="post-aside">
+          <div class="post-date">Oct 23</div>
+          <div class="post-dots">
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="favorites">
+      <header class="section-header">
+        <h2 class="section-title">Favorites</h2>
+        <a href="/archive" class="section-link">View all →</a>
+      </header>
+      <div class="fav-grid">
+        <a href="#" class="fav">
+          <h3 class="fav-title">The Weight of Telling Stories</h3>
+          <div class="fav-meta">Reflection · 6 min</div>
+        </a>
+        <a href="#" class="fav">
+          <h3 class="fav-title">We Are Borrowed Stardust</h3>
+          <div class="fav-meta">Thought · 2 min</div>
+        </a>
+        <a href="#" class="fav">
+          <h3 class="fav-title">Zero-Sum Thinking is Ruining the World</h3>
+          <div class="fav-meta">Essay · 8 min</div>
+        </a>
+        <a href="#" class="fav">
+          <h3 class="fav-title">Philosophy as a Way of Life</h3>
+          <div class="fav-meta">Reflection · 5 min</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="trail">
+      <header class="trail-header">
+        <h2 class="trail-title">Follow the thread</h2>
+        <p class="trail-subtitle">More on AI, since you might be curious</p>
+      </header>
+      <div class="trail-items">
+        <a href="#" class="trail-card">
+          <div class="trail-tag">AI</div>
+          <div class="trail-card-title">What It Means to Be Human in the Age of AI</div>
+        </a>
+        <a href="#" class="trail-card">
+          <div class="trail-tag">AI</div>
+          <div class="trail-card-title">How Many Jobs Can AI Kill?</div>
+        </a>
+        <a href="#" class="trail-card">
+          <div class="trail-tag">AI</div>
+          <div class="trail-card-title">AI as a Research Partner</div>
+        </a>
+        <a href="#" class="trail-card">
+          <div class="trail-tag">AI</div>
+          <div class="trail-card-title">The Real Cost of Using AI Tools</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="about-card">
+        <h3 class="about-name">I'm Bhuvan</h3>
+        <p class="about-desc">I collect fascinating things from the internet—quotes, links, charts, ideas. Rabbit holes worth falling into.</p>
+        <div class="about-stat">
+          <span class="about-num">127</span>
+          <span class="about-label">rabbit holes</span>
+        </div>
+      </div>
+      <div class="topics-card">
+        <h3>Topics</h3>
+        <div class="topics-list">
+          <a href="#" class="topic">AI</a>
+          <a href="#" class="topic">Reading</a>
+          <a href="#" class="topic">Philosophy</a>
+          <a href="#" class="topic">Economics</a>
+          <a href="#" class="topic">China</a>
+          <a href="#" class="topic">Poetry</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter">
+      <div>
+        <h2>Don't miss a rabbit hole</h2>
+        <p>Curiosity delivered. No spam.</p>
+      </div>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="your@email.com">
+        <button type="submit" class="newsletter-btn">Subscribe</button>
+      </form>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-left">
+        <span class="footer-mark">
+          <svg viewBox="0 0 24 24"><path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/></svg>
+        </span>
+        Fascinating things from the internet
+      </div>
+      <nav class="footer-links">
+        <a href="/rss">RSS</a>
+        <a href="/about">About</a>
+        <a href="#">Twitter</a>
+      </nav>
+    </footer>
+
+  </div>
+
+</body>
+</html>

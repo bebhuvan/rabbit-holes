@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Thought - Rabbit Holes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --white: #ffffff;
+            --black: #0a0a0a;
+            --gray-900: #1a1a1a;
+            --gray-800: #262626;
+            --gray-600: #525252;
+            --gray-500: #737373;
+            --gray-400: #a3a3a3;
+            --gray-200: #e5e5e5;
+            --gray-100: #fafafa;
+            --coral: #ff7f6b;
+            --coral-light: #fff5f3;
+        }
+
+        body {
+            background: var(--white);
+            color: var(--gray-900);
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 19px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .site-title {
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: var(--gray-900);
+            text-decoration: none;
+        }
+
+        .site-title .rabbit {
+            color: var(--coral);
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        nav a {
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 400;
+        }
+
+        nav a:hover {
+            color: var(--coral);
+        }
+
+        /* Article */
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 200px 64px 160px;
+        }
+
+        /* Article header */
+        .article-header {
+            margin-bottom: 96px;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .issue-badge {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .article-date {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .article-title {
+            font-size: 56px;
+            font-weight: 300;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 32px;
+            color: var(--black);
+        }
+
+        .article-subtitle {
+            font-size: 24px;
+            line-height: 1.6;
+            color: var(--gray-600);
+            font-weight: 300;
+        }
+
+        /* Article content */
+        .article-content {
+            margin-bottom: 120px;
+        }
+
+        .article-content p {
+            margin-bottom: 32px;
+            font-size: 21px;
+            line-height: 1.7;
+            color: var(--gray-900);
+            font-weight: 300;
+        }
+
+        .article-content h2 {
+            font-size: 40px;
+            font-weight: 400;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-top: 80px;
+            margin-bottom: 32px;
+            color: var(--black);
+        }
+
+        .article-content h3 {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin-top: 64px;
+            margin-bottom: 24px;
+            color: var(--gray-900);
+            font-style: italic;
+        }
+
+        .article-content blockquote {
+            margin: 80px 0;
+            padding-left: 32px;
+            border-left: 2px solid var(--coral);
+            font-size: 28px;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--gray-800);
+            font-weight: 400;
+        }
+
+        .article-content a {
+            color: var(--coral);
+            text-decoration: none;
+            border-bottom: 1px solid var(--coral-light);
+            transition: all 0.3s;
+        }
+
+        .article-content a:hover {
+            border-bottom-color: var(--coral);
+        }
+
+        .article-content strong {
+            font-weight: 500;
+            color: var(--black);
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 80px 0;
+            color: var(--gray-200);
+            font-size: 16px;
+            letter-spacing: 16px;
+        }
+
+        /* Read next */
+        .read-next {
+            margin-top: 120px;
+            padding-top: 80px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .read-next h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 48px;
+        }
+
+        .next-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+        }
+
+        .next-article {
+            text-decoration: none;
+            color: var(--gray-900);
+            display: block;
+            transition: all 0.3s;
+            padding-bottom: 48px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .next-article:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .next-article:hover {
+            transform: translateY(-2px);
+        }
+
+        .next-article-date {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--gray-400);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .next-article-title {
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin-bottom: 16px;
+            color: var(--black);
+            transition: color 0.3s;
+        }
+
+        .next-article:hover .next-article-title {
+            color: var(--coral);
+        }
+
+        .next-article-excerpt {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--gray-600);
+            font-weight: 300;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 80px 64px;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        footer p {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--coral-light);
+            color: var(--black);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-200);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--coral);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 32px 24px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            article {
+                padding: 160px 24px 120px;
+            }
+
+            .article-header {
+                margin-bottom: 64px;
+            }
+
+            .article-title {
+                font-size: 42px;
+            }
+
+            .article-subtitle {
+                font-size: 20px;
+            }
+
+            .article-content p {
+                font-size: 19px;
+            }
+
+            .article-content h2 {
+                font-size: 32px;
+                margin-top: 56px;
+            }
+
+            .article-content h3 {
+                font-size: 26px;
+            }
+
+            .article-content blockquote {
+                padding-left: 20px;
+                font-size: 22px;
+            }
+
+            .next-article-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="site-title">
+            <span class="rabbit">Rabbit</span> Holes
+        </a>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#archive">Archive</a>
+            <a href="#subscribe">Subscribe</a>
+        </nav>
+    </header>
+
+    <article>
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="issue-badge">Issue 01</span>
+                <span class="article-date">October 12, 2025</span>
+            </div>
+            <h1 class="article-title">The Architecture of Thought: How Space Shapes Thinking</h1>
+            <p class="article-subtitle">
+                Libraries arrange knowledge spatially—philosophy here, science there—creating mental maps we navigate physically.
+            </p>
+        </header>
+
+        <div class="article-content">
+            <p>
+                The Dewey Decimal System isn't just organization; it's architecture for thought. When you walk from history to poetry, you're not just moving between shelves, you're traversing conceptual landscapes. The physical act of browsing creates a mental topology—a sense that ideas have locations, neighborhoods, boundaries.
+            </p>
+
+            <p>
+                In a traditional library, serendipity is architectural. You go looking for one book and discover three others you didn't know you needed. They're adjacent not alphabetically, but conceptually. The woman who designed your local library understood that thoughts have geography, that walking from 500 to 600 means moving from pure science to applied technology, from theory to practice.
+            </p>
+
+            <h2>The Collapse of Digital Distance</h2>
+
+            <p>
+                Digital search flattens this. Everything is equidistant, one click away, context collapsed into keywords. Google doesn't give you neighbors—it gives you matches. The algorithm optimizes for relevance, not for the adjacent possible. You get what you're looking for, never what you didn't know to look for.
+            </p>
+
+            <blockquote>
+                We shape our buildings; thereafter they shape us. — Winston Churchill
+            </blockquote>
+
+            <p>
+                This isn't nostalgia for card catalogs. It's recognition that how we organize information shapes how we think about information. The library's architecture creates a model of knowledge itself—branching, hierarchical, interconnected. Walking through it reinforces that model. Searching through it online doesn't.
+            </p>
+
+            <h3>Physical Space as Memory Palace</h3>
+
+            <p>
+                Ancient orators used the "method of loci"—imagining a building and placing memories in its rooms. When they needed to recall a speech, they mentally walked through the building, picking up each memory as they passed its location. The architecture wasn't just a mnemonic trick; it was a cognitive framework.
+            </p>
+
+            <p>
+                Modern libraries work the same way. Regular visitors develop internal maps. They know that feminist theory lives next to gender studies, that cookbooks are upstairs near gardening, that the quiet study room faces east. This spatial knowledge becomes semantic knowledge. The map and the territory merge.
+            </p>
+
+            <h2>What We Lose in the Cloud</h2>
+
+            <p>
+                The cloud promises access to everything from anywhere. It delivers on that promise. But "from anywhere" means "from nowhere." Information without location is information without context. The ebook you're reading exists everywhere and nowhere simultaneously. You can't gesture toward it, can't point someone in its direction, can't say "it's over there, near the window."
+            </p>
+
+            <p>
+                This isn't a lament—it's an observation. Digital tools offer different affordances. Searching beats browsing for finding specific information. But browsing beats searching for finding unexpected information. For discovering what you didn't know to search for.
+            </p>
+
+            <div class="divider">* * *</div>
+
+            <p>
+                Perhaps the solution isn't choosing between physical and digital, but understanding what each does best. Libraries organize knowledge spatially. Search engines organize it semantically. Bookshelves create adjacency. Hyperlinks create association.
+            </p>
+
+            <p>
+                The question isn't which is better. It's what kind of thinking does each enable? What cognitive habits does each reinforce? And how do we design spaces—physical or digital—that support the kinds of thinking we want to do?
+            </p>
+
+            <p>
+                Because in the end, how we organize information is how we organize thought itself.
+            </p>
+        </div>
+
+        <div class="read-next">
+            <h3>Continue Reading</h3>
+            <div class="next-articles">
+                <a href="#" class="next-article">
+                    <div class="next-article-date">October 9, 2025</div>
+                    <h4 class="next-article-title">Why We Remember Stories Better Than Facts</h4>
+                    <p class="next-article-excerpt">
+                        The human brain is a storytelling machine. Give someone data and they'll forget it in minutes. Wrap that data in narrative and it becomes unforgettable.
+                    </p>
+                </a>
+                <a href="#" class="next-article">
+                    <div class="next-article-date">October 7, 2025</div>
+                    <h4 class="next-article-title">The Illusion of Digital Permanence</h4>
+                    <p class="next-article-excerpt">
+                        We assume the internet remembers everything. But digital files are more fragile than paper. Our digital libraries burn every day, in small fires we don't notice.
+                    </p>
+                </a>
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2025 Rabbit Holes. All thoughts reserved.</p>
+    </footer>
+</body>
+</html>

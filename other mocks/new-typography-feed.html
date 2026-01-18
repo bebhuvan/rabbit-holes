@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fdfcfa;
+            --surface: #f9f7f4;
+            --text: #292524;
+            --text-medium: #57534e;
+            --text-light: #a8a29e;
+            --accent: #f59e7c;
+            --accent-bright: #fbb19a;
+            --accent-muted: #fef1eb;
+            --line: #f5f5f4;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0c0a09;
+            --surface: #1c1917;
+            --text: #fafaf9;
+            --text-medium: #a8a29e;
+            --text-light: #78716c;
+            --accent: #fb8b6b;
+            --accent-bright: #ff9773;
+            --accent-muted: #292524;
+            --line: #292524;
+        }
+
+        body {
+            font-family: 'Lora', Georgia, serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 17px;
+            line-height: 1.8;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .sans {
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        /* Container */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Header */
+        header {
+            padding: 96px 0 64px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .masthead {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 64px;
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: 0;
+            line-height: 1;
+        }
+
+        .site-title span {
+            color: var(--accent);
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        nav a {
+            color: var(--text-medium);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .intro {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--text-light);
+            max-width: 540px;
+            font-weight: 400;
+        }
+
+        /* Main */
+        main {
+            padding: 96px 0 160px;
+        }
+
+        /* Post styles */
+        article {
+            margin-bottom: 96px;
+            position: relative;
+        }
+
+        /* Featured - first post */
+        article.featured {
+            padding-bottom: 96px;
+            margin-bottom: 120px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .post-type {
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 11px;
+        }
+
+        .post-date {
+            font-weight: 500;
+        }
+
+        .post-dot {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--text-light);
+        }
+
+        .post-read-time {
+            font-weight: 500;
+        }
+
+        /* Titles */
+        .post-title {
+            font-size: 32px;
+            line-height: 1.3;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-bottom: 16px;
+        }
+
+        article.featured .post-title {
+            font-size: 42px;
+            line-height: 1.25;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: -0.015em;
+        }
+
+        .post-title a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .post-title a:hover {
+            color: var(--accent);
+        }
+
+        /* Excerpts */
+        .post-excerpt {
+            font-size: 17px;
+            line-height: 1.75;
+            color: var(--text-medium);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        article.featured .post-excerpt {
+            font-size: 19px;
+            line-height: 1.7;
+            max-width: 620px;
+        }
+
+        /* Tags */
+        .post-tags {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tag:hover {
+            color: var(--accent);
+        }
+
+        /* Quote posts */
+        article.quote {
+            padding: 64px 0;
+            margin: 96px 0;
+            position: relative;
+        }
+
+        article.quote::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-muted), transparent);
+            border-radius: 2px;
+        }
+
+        article.quote blockquote {
+            font-size: 28px;
+            line-height: 1.5;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 20px;
+            max-width: 620px;
+            padding-left: 32px;
+            position: relative;
+        }
+
+        article.quote blockquote::before {
+            content: '"';
+            position: absolute;
+            left: -8px;
+            top: -12px;
+            font-size: 72px;
+            color: var(--accent-muted);
+            font-family: Georgia, serif;
+            line-height: 1;
+            opacity: 0.4;
+        }
+
+        article.quote cite {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-style: normal;
+            color: var(--text-light);
+            font-weight: 500;
+            padding-left: 32px;
+            display: block;
+        }
+
+        article.quote cite::before {
+            content: '— ';
+        }
+
+        /* Link posts - compact */
+        article.link {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 0;
+        }
+
+        article.link:hover {
+            background: var(--surface);
+            margin-left: -20px;
+            margin-right: -20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 8px;
+            border-bottom: 1px solid transparent;
+        }
+
+        article.link .post-title {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        article.link .post-excerpt {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--text-light);
+        }
+
+        /* Read more link */
+        .read-more {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap 0.2s ease;
+        }
+
+        .read-more:hover {
+            gap: 10px;
+        }
+
+        .read-more::after {
+            content: '→';
+            font-size: 16px;
+        }
+
+        /* Divider between sections */
+        .section-divider {
+            width: 64px;
+            height: 1px;
+            background: var(--line);
+            margin: 120px auto;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--line);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent-muted);
+            color: var(--text);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--line);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            header {
+                padding: 48px 0 32px;
+            }
+
+            .masthead {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .site-title {
+                font-size: 28px;
+            }
+
+            .intro {
+                font-size: 19px;
+            }
+
+            main {
+                padding: 48px 0 80px;
+            }
+
+            article.featured .post-title {
+                font-size: 38px;
+            }
+
+            article.featured .post-excerpt {
+                font-size: 19px;
+            }
+
+            .post-title {
+                font-size: 30px;
+            }
+
+            article.quote blockquote {
+                font-size: 24px;
+            }
+
+            article {
+                margin-bottom: 56px;
+            }
+
+            .theme-toggle {
+                bottom: 24px;
+                right: 24px;
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Focus states */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="masthead">
+                <h1 class="site-title">Rabbit <span>Holes</span></h1>
+                <nav>
+                    <a href="#about">About</a>
+                    <a href="#archive">Archive</a>
+                    <a href="#subscribe">Subscribe</a>
+                </nav>
+            </div>
+            <p class="intro">
+                A collection of thoughts, observations, and curiosities. Updated whenever something feels worth sharing.
+            </p>
+        </header>
+
+        <main>
+            <article class="featured">
+                <div class="post-meta">
+                    <span class="post-type">Essay</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Oct 12</time>
+                    <span class="post-dot"></span>
+                    <span class="post-read-time">8 min</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">The Texture of Silence: What We Lose When Everything Is Always On</a>
+                </h2>
+                <p class="post-excerpt">
+                    We've filled every gap with noise. Waiting rooms pulse with screens, walks are soundtracked by podcasts, silence is something to escape from rather than sink into. But it's in those quiet moments—the ones we've learned to fear—that something else emerges. Boredom isn't a void to be filled; it's a signal that we're ready for something deeper. The discomfort of an empty afternoon, a long commute without distraction, five minutes waiting in line—these are invitations to think, to feel, to notice what's actually there beneath the constant stimulation.
+                </p>
+                <div class="post-tags">
+                    <a href="#" class="tag">Attention</a>
+                    <a href="#" class="tag">Culture</a>
+                    <a href="#" class="tag">Reflection</a>
+                </div>
+            </article>
+
+            <article>
+                <div class="post-meta">
+                    <span class="post-type">Research</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Oct 9</time>
+                    <span class="post-dot"></span>
+                    <span class="post-read-time">12 min</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">How Cities Remember: The Architecture of Collective Memory</a>
+                </h2>
+                <p class="post-excerpt">
+                    Every street corner is a timestamp, every building a fragment of who we were. Cities are time made visible—layers of decisions, accidents, and intentions stacked across centuries. What happens when we forget how to read them? The Victorian shopfront next to the modernist tower, the cobblestone lane behind the shopping mall—these aren't just aesthetic choices, they're archaeological records of how people lived, what they valued, who had power. When we demolish a neighborhood for a highway, we're not just removing buildings; we're erasing memory itself.
+                </p>
+                <div class="post-tags">
+                    <a href="#" class="tag">Urbanism</a>
+                    <a href="#" class="tag">History</a>
+                    <a href="#" class="tag">Memory</a>
+                </div>
+            </article>
+
+            <article class="quote">
+                <blockquote>
+                    The cure for boredom is curiosity. There is no cure for curiosity.
+                </blockquote>
+                <cite>Dorothy Parker</cite>
+            </article>
+
+            <article>
+                <div class="post-meta">
+                    <span class="post-type">Analysis</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Oct 5</time>
+                    <span class="post-dot"></span>
+                    <span class="post-read-time">10 min</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">The Paradox of Choice in an Age of Algorithmic Curation</a>
+                </h2>
+                <p class="post-excerpt">
+                    We have access to every song ever recorded, every movie ever made, every book ever written. And somehow, we all watch the same ten shows on Netflix. The algorithm doesn't expand taste—it collapses it into a lowest common denominator. Choice without curation is paralysis. The streaming service promises infinite possibility, then immediately narrows it to "Top 10 in your area" and "Because you watched." The algorithm optimizes for engagement, not discovery. It shows you what you're likely to click, not what might change your mind.
+                </p>
+                <div class="post-tags">
+                    <a href="#" class="tag">Technology</a>
+                    <a href="#" class="tag">Media</a>
+                    <a href="#" class="tag">Culture</a>
+                </div>
+            </article>
+
+            <div class="section-divider"></div>
+
+            <article class="link">
+                <div class="post-meta">
+                    <span class="post-type">Link</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Oct 3</time>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">The Philosophy of Walking: Why Great Minds Need Movement</a>
+                </h2>
+                <p class="post-excerpt">
+                    Nietzsche claimed all truly great thoughts are conceived while walking. Turns out, he was onto something.
+                </p>
+                <a href="#" class="read-more">Read article</a>
+            </article>
+
+            <article class="link">
+                <div class="post-meta">
+                    <span class="post-type">Link</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Oct 1</time>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">Deep Work in a Shallow World</a>
+                </h2>
+                <p class="post-excerpt">
+                    Cal Newport on cultivating the increasingly rare ability to focus without distraction.
+                </p>
+                <a href="#" class="read-more">Read article</a>
+            </article>
+
+            <article class="link">
+                <div class="post-meta">
+                    <span class="post-type">Link</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Sep 28</time>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">The Aesthetics of Boredom</a>
+                </h2>
+                <p class="post-excerpt">
+                    An essay on stillness, waiting, and the productive emptiness we've optimized away.
+                </p>
+                <a href="#" class="read-more">Read article</a>
+            </article>
+
+            <div class="section-divider"></div>
+
+            <article>
+                <div class="post-meta">
+                    <span class="post-type">Reflection</span>
+                    <span class="post-dot"></span>
+                    <time class="post-date">Sep 24</time>
+                    <span class="post-dot"></span>
+                    <span class="post-read-time">6 min</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#">Why I'm Building in Public (And Why You Might Not Want To)</a>
+                </h2>
+                <p class="post-excerpt">
+                    There's a cult around transparency right now—sharing everything, constantly, publicly. But some things need privacy to grow. A meditation on when to show your work and when to protect it. Not every process needs to be documented. Not every idea needs an audience before it's ready. Some thoughts are too fragile for public consumption, some experiments need to fail privately. Building in public has benefits, but it also shapes what you build—toward the performative, the immediately legible, the crowd-pleasing.
+                </p>
+                <div class="post-tags">
+                    <a href="#" class="tag">Process</a>
+                    <a href="#" class="tag">Creativity</a>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <span id="theme-icon">☀</span>
+    </button>
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const icon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        html.setAttribute('data-theme', savedTheme);
+        icon.textContent = savedTheme === 'dark' ? '☾' : '☀';
+
+        toggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            icon.textContent = next === 'dark' ? '☾' : '☀';
+        });
+    </script>
+</body>
+</html>

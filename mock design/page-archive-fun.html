@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive · RabbitHoles.garden 🐇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fffef9;
+            --text: #1a1a1a;
+            --gray: #666666;
+            --light-gray: #999999;
+            --line: #e8e8e8;
+            --red: #ef4444;
+            --orange: #f97316;
+            --yellow: #fbbf24;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Newsreader', serif;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--yellow);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            padding: 2.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .site-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s ease;
+        }
+
+        .site-name:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .site-name::before {
+            content: '🐇 ';
+        }
+
+        .back-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--red);
+        }
+
+        /* Content */
+        .content {
+            padding: 5rem 0 8rem;
+        }
+
+        /* Page header */
+        .page-header {
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.2rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Stats banner */
+        .stats-banner {
+            display: flex;
+            gap: 2rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, var(--purple)08, var(--blue)12);
+            border: 2px solid var(--blue)40;
+            border-radius: 8px;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat {
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat:nth-child(1) .stat-number { color: var(--red); }
+        .stat:nth-child(2) .stat-number { color: var(--blue); }
+        .stat:nth-child(3) .stat-number { color: var(--green); }
+
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gray);
+        }
+
+        /* Filters - colorful pills */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px dashed var(--line);
+        }
+
+        .filter-btn {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.6rem 1.2rem;
+            background: white;
+            border: 2px solid var(--line);
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .filter-btn.all { border-color: var(--text); }
+        .filter-btn.articles { border-color: var(--red); }
+        .filter-btn.videos { border-color: var(--blue); }
+        .filter-btn.quotes { border-color: var(--purple); }
+        .filter-btn.podcasts { border-color: var(--green); }
+        .filter-btn.images { border-color: var(--pink); }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .filter-btn.all.active { background: var(--text); color: white; }
+        .filter-btn.articles.active { background: var(--red); color: white; }
+        .filter-btn.videos.active { background: var(--blue); color: white; }
+        .filter-btn.quotes.active { background: var(--purple); color: white; }
+        .filter-btn.podcasts.active { background: var(--green); color: white; }
+        .filter-btn.images.active { background: var(--pink); color: white; }
+
+        /* Archive list */
+        .archive-list {
+            list-style: none;
+        }
+
+        .archive-item {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 2px solid var(--line);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Color stripe on left */
+        .archive-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--item-color, var(--gray));
+        }
+
+        .archive-item:nth-child(6n+1) { --item-color: var(--red); }
+        .archive-item:nth-child(6n+2) { --item-color: var(--orange); }
+        .archive-item:nth-child(6n+3) { --item-color: var(--blue); }
+        .archive-item:nth-child(6n+4) { --item-color: var(--green); }
+        .archive-item:nth-child(6n+5) { --item-color: var(--purple); }
+        .archive-item:nth-child(6n+6) { --item-color: var(--pink); }
+
+        .archive-item:hover {
+            border-color: var(--item-color);
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .item-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            color: var(--item-color);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .item-type {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            padding: 0.3rem 0.7rem;
+            background: var(--item-color);
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .item-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .item-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            transition: color 0.2s ease;
+        }
+
+        .item-link:hover .item-title {
+            color: var(--item-color);
+        }
+
+        .item-context {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .item-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            color: var(--light-gray);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+        }
+
+        .footer-note {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--light-gray);
+            letter-spacing: 0.08em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .content {
+                padding: 4rem 0 6rem;
+            }
+
+            .page-title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+
+            .stats-banner {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .archive-item {
+                padding: 1.5rem;
+            }
+
+            .item-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" class="site-name">RABBITHOLES</a>
+            <a href="/" class="back-link">← BACK</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="content">
+            <div class="page-header">
+                <h1 class="page-title">Archive</h1>
+                <p class="page-description">Every rabbit hole, organized and ready to explore. 847 discoveries and counting.</p>
+            </div>
+
+            <div class="stats-banner">
+                <div class="stat">
+                    <span class="stat-number">847</span>
+                    <span class="stat-label">Total Holes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">365</span>
+                    <span class="stat-label">Days Running</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">42</span>
+                    <span class="stat-label">Topics</span>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn all active" data-filter="all">✨ All</button>
+                <button class="filter-btn articles" data-filter="article">📄 Articles</button>
+                <button class="filter-btn videos" data-filter="video">🎬 Videos</button>
+                <button class="filter-btn quotes" data-filter="quote">💬 Quotes</button>
+                <button class="filter-btn podcasts" data-filter="podcast">🎧 Podcasts</button>
+                <button class="filter-btn images" data-filter="image">🖼️ Images</button>
+            </div>
+
+            <ul class="archive-list">
+                <li class="archive-item" data-type="article">
+                    <div class="item-header">
+                        <div class="item-date">08 Dec 2024</div>
+                        <div class="item-type">📄 Article</div>
+                    </div>
+                    <a href="#" class="item-link">
+                        <h2 class="item-title">The Method of Loci: How Ancient Orators Memorized Entire Speeches</h2>
+                        <p class="item-context">Before writing, memory was trained—like a muscle. Ancient orators built palaces in their minds where each room held a speech. Cicero could hold 100,000 words this way.</p>
+                        <div class="item-tags">
+                            <span class="item-tag">memory</span>
+                            <span class="item-tag">cognition</span>
+                            <span class="item-tag">ancient</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="archive-item" data-type="quote">
+                    <div class="item-header">
+                        <div class="item-date">07 Dec 2024</div>
+                        <div class="item-type">💬 Quote</div>
+                    </div>
+                    <a href="#" class="item-link">
+                        <h2 class="item-title">Deep Time</h2>
+                        <p class="item-context">A perspective shift that makes human civilization feel absurdly recent. If Earth's age is 24 hours, humans appear at 11:58 PM.</p>
+                        <div class="item-tags">
+                            <span class="item-tag">perspective</span>
+                            <span class="item-tag">geology</span>
+                            <span class="item-tag">time</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="archive-item" data-type="video">
+                    <div class="item-header">
+                        <div class="item-date">06 Dec 2024</div>
+                        <div class="item-type">🎬 Video</div>
+                    </div>
+                    <a href="#" class="item-link">
+                        <h2 class="item-title">How Wolves Change Rivers</h2>
+                        <p class="item-context">Four minutes that changed how I think about ecosystems. Wolves were reintroduced to Yellowstone and the rivers literally changed shape.</p>
+                        <div class="item-tags">
+                            <span class="item-tag">ecology</span>
+                            <span class="item-tag">systems</span>
+                            <span class="item-tag">nature</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="archive-item" data-type="article">
+                    <div class="item-header">
+                        <div class="item-date">05 Dec 2024</div>
+                        <div class="item-type">📄 Essay</div>
+                    </div>
+                    <a href="#" class="item-link">
+                        <h2 class="item-title">Ma (間): The Japanese Art of Negative Space</h2>
+                        <p class="item-context">Not emptiness—the space that gives form to what surrounds it. Western culture fills every gap. In ma, the gap is the point.</p>
+                        <div class="item-tags">
+                            <span class="item-tag">philosophy</span>
+                            <span class="item-tag">aesthetics</span>
+                            <span class="item-tag">japan</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="archive-item" data-type="image">
+                    <div class="item-header">
+                        <div class="item-date">04 Dec 2024</div>
+                        <div class="item-type">🖼️ Photos</div>
+                    </div>
+                    <a href="#" class="item-link">
+                        <h2 class="item-title">Liminal Spaces: Empty Malls at Night</h2>
+                        <p class="item-context">There's something deeply wrong about spaces designed for crowds, captured in total emptiness. A haunting photo series.</p>
+                        <div class="item-tags">
+                            <span class="item-tag">photography</span>
+                            <span class="item-tag">liminal</span>
+                            <span class="item-tag">architecture</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="archive-item" data-type="podcast">
+                    <div class="item-header">
+                        <div class="item-date">03 Dec 2024</div>
+                        <div class="item-type">🎧 Podcast</div>
+                    </div>
+                    <a href="#" class="item-link">
+                        <h2 class="item-title">Suzanne Simard on the Wood Wide Web</h2>
+                        <p class="item-context">Trees communicate through underground fungal networks. Mother trees send sugar to their offspring. The forest is one living superorganism.</p>
+                        <div class="item-tags">
+                            <span class="item-tag">nature</span>
+                            <span class="item-tag">science</span>
+                            <span class="item-tag">networks</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <nav class="footer-nav">
+            <a href="/" class="footer-link">HOME</a>
+            <a href="/about" class="footer-link">ABOUT</a>
+            <a href="/submit" class="footer-link">SUBMIT</a>
+            <a href="/rss" class="footer-link">RSS</a>
+        </nav>
+        <p class="footer-note">Daily since 2024 🐇</p>
+    </footer>
+
+    <script>
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.archive-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active from all
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active to clicked
+                this.classList.add('active');
+
+                const filter = this.dataset.filter;
+
+                items.forEach(item => {
+                    if (filter === 'all' || item.dataset.type === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
