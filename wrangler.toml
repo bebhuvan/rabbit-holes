@@ -23,8 +23,8 @@ command = "npm run build"
 
 # Production routes
 routes = [
-  { pattern = "bhuvan.dev/*", zone_name = "bhuvan.dev" },
-  { pattern = "www.bhuvan.dev/*", zone_name = "bhuvan.dev" }
+  { pattern = "rabbitholes.garden/*", zone_name = "rabbitholes.garden" },
+  { pattern = "www.rabbitholes.garden/*", zone_name = "rabbitholes.garden" }
 ]
 
 # Development configuration  

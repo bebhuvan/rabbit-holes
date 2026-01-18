@@ -1,11 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.rabbitholes.garden',
-  output: 'static', // Static for best performance - no SSR features are used
+  output: 'server',
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true
+    }
+  }),
   build: {
     inlineStylesheets: 'always',
     assetsInlineLimit: 8192,
