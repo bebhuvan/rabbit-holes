@@ -1,24 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
-import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://bhuvan.dev', // Replace with your actual domain
-  output: 'server', // Server mode for Cloudflare Workers
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true
-    }
-  }),
+  site: 'https://www.rabbitholes.garden',
+  output: 'static', // Static for best performance - no SSR features are used
   build: {
     inlineStylesheets: 'always',
     assetsInlineLimit: 8192,
   },
   compressHTML: true,
   prefetch: {
-    defaultStrategy: 'hover'
+    defaultStrategy: 'viewport', // More conservative than 'hover'
+    prefetchAll: false
   },
   experimental: {
     contentIntellisense: true

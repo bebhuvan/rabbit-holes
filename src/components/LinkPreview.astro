@@ -27,7 +27,7 @@ const linkData = {
     </div>
     {linkData.image && (
       <div class="link-preview-image">
-        <img src={linkData.image} alt={linkData.title} loading="lazy" />
+        <img src={linkData.image} alt={linkData.title} loading="lazy" decoding="async" fetchpriority="low" />
       </div>
     )}
   </div>

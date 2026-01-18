@@ -1,3 +1,6 @@
+# Canonical domain redirect (non-www to www)
+https://rabbitholes.garden/* https://www.rabbitholes.garden/:splat 301!
+
 # Category redirects (old -> new)
 /types/quick-thoughts /types/musings 301
 /types/thats-interesting /types/musings 301

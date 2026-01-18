@@ -1,7 +1,6 @@
 /* Global Styles - Refined Editorial Design */
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+/* Note: Google Fonts are loaded via <link> tags in Base.astro for better performance */
 
 /* Design Tokens */
 :root {
@@ -9,8 +8,8 @@
   --color-bg: #FDFCFA;
   --color-text-primary: #141414;
   --color-text-secondary: #3a3a3a;
-  --color-text-tertiary: #717171;
-  --color-text-light: #a8a8a8;
+  --color-text-tertiary: #595959;
+  --color-text-light: #767676;
   --color-accent: #d95d0f;
   --color-accent-light: #e87322;
   --color-border: #e5e2dc;
@@ -90,8 +89,8 @@
   --color-bg: #0f0f0f;
   --color-text-primary: #f5f5f4;
   --color-text-secondary: #d6d3d1;
-  --color-text-tertiary: #a8a29e;
-  --color-text-light: #78716c;
+  --color-text-tertiary: #9a9590;
+  --color-text-light: #8a8580;
   --color-accent: #ea7e3c;
   --color-accent-light: #f59e5e;
   --color-border: #292524;
@@ -145,7 +144,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
   background: var(--color-bg);
   color: var(--color-text-secondary);
   line-height: 1.7;
@@ -158,7 +157,7 @@ body {
 /* Typography - Playful style */
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;

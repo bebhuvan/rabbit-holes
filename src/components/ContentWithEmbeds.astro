@@ -128,7 +128,7 @@ const { Content: PostContent } = await post.render();
               <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
                 <div style="display: flex; gap: 1rem; align-items: start;">
                   ${data.image ? `
-                    <img src="${data.image}" alt="" style="width: 120px; height: 120px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                    <img src="${data.image}" alt="" loading="lazy" decoding="async" style="width: 120px; height: 120px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
                   ` : ''}
                   <div style="flex: 1; min-width: 0;">
                     <div style="font-weight: 600; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
