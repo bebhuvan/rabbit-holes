@@ -67,9 +67,21 @@ const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journ
     <link rel="dns-prefetch" href="https://www.youtube.com" />
     <link rel="dns-prefetch" href="https://open.spotify.com" />
 
-    <!-- Google Fonts - non-blocking with font-display: optional for no layout shift -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=optional" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=optional" /></noscript>
+    <!-- Google Fonts - deferred loading, not render-blocking -->
+    <script>
+      // Load fonts after page renders
+      if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(() => loadFonts());
+      } else {
+        setTimeout(loadFonts, 100);
+      }
+      function loadFonts() {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Space+Grotesk:wght@500;700&display=swap';
+        document.head.appendChild(link);
+      }
+    </script>
     
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
