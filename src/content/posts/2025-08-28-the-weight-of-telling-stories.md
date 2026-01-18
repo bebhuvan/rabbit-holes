@@ -19,7 +19,7 @@ description: >+
 
 published: true
 draft: false
-featured: false
+featured: true
 ---
 I loved this conversation between Dave Chappelle and Mo Amer, the comedian and creator of the wonderful Netflix series [_Mo_](https://www.imdb.com/title/tt15875168/).
 

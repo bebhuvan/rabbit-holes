@@ -29,6 +29,7 @@ const posts = defineCollection({
       ])
     ).optional(),
     published: z.boolean().default(true),
+    featured: z.boolean().default(false),
   }),
 });
 

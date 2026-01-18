@@ -7,7 +7,7 @@ tags:
   - "Society "
 published: true
 draft: false
-featured: false
+featured: true
 ---
 This [tweet thread](https://x.com/EconomPic/status/1971031520862523831) by Jake resonated deeply with me. We all seem to be becoming increasingly adversarial in how we think about the world, and that's not a good thing:
 

@@ -15,11 +15,20 @@ const sortedPosts = posts.sort((a, b) =>
 
 const feedPosts = sortedPosts.slice(0, 5);
 
-// Favorites
-const favoritesSlugs = ['why-read', 'the-weight-of-telling-stories', 'we-are-borrowed-stardust', 'zero-sum-thinking-is-ruining-the-world'];
-const favorites = favoritesSlugs.map(slug => sortedPosts.find(p => p.slug.includes(slug))).filter(Boolean).slice(0, 4);
+// Featured posts for "Worth revisiting" - rotates daily if more than 4
+const featuredPosts = sortedPosts.filter(p => p.data.featured === true);
+// Daily rotation: use day of year as seed to shuffle featured posts
+const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+const shuffledFeatured = [...featuredPosts].sort((a, b) => {
+  // Simple seeded shuffle based on day
+  const hashA = (a.slug.length * 31 + dayOfYear) % 100;
+  const hashB = (b.slug.length * 31 + dayOfYear) % 100;
+  return hashA - hashB;
+});
+// Take 4 featured posts, or fill with recent posts if not enough
+const favorites = shuffledFeatured.slice(0, 4);
 while (favorites.length < 4 && sortedPosts.length > favorites.length) {
-  const post = sortedPosts.find(p => !favorites.includes(p));
+  const post = sortedPosts.find(p => !favorites.includes(p) && !p.data.featured);
   if (post) favorites.push(post);
 }
 
@@ -106,7 +115,6 @@ function formatDate(date: Date) {
       <section class="feed" id="feed">
         <header class="section-header">
           <h2>Latest</h2>
-          <a href="/archive" class="see-all">All {sortedPosts.length} →</a>
         </header>
 
         <div class="posts">
@@ -136,6 +144,7 @@ function formatDate(date: Date) {
             );
           })}
         </div>
+        <a href="/archive" class="see-all see-all--bottom">All {sortedPosts.length} posts →</a>
       </section>
 
       <aside class="sidebar">
@@ -390,6 +399,15 @@ function formatDate(date: Date) {
 
   .see-all:hover {
     color: var(--orange);
+  }
+
+  .see-all--bottom {
+    display: block;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-light);
+    text-align: center;
+    font-size: 0.8rem;
   }
 
   /* ═══════════════════════════════════════

@@ -6,7 +6,7 @@ tags:
   - Philosophy
 published: true
 draft: false
-featured: false
+featured: true
 ---
 The ease with which Maria Popova [strings together words](https://www.themarginalian.org/2025/09/12/the-coziest-place-on-the-moon/) of lyrical rhythm and immense depth is striking.
 
