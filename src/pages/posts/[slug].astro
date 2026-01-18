@@ -200,6 +200,34 @@ const structuredData = {
           ))}
         </div>
       )}
+
+      {post.data.url && (
+        <div class="source-attribution">
+          <a href={post.data.url} target="_blank" rel="noopener noreferrer" class="source-link">
+            <img
+              src={`https://www.google.com/s2/favicons?domain=${new URL(post.data.url).hostname}&sz=32`}
+              alt=""
+              class="source-favicon"
+              width="16"
+              height="16"
+              loading="lazy"
+            />
+            <span class="source-domain">{new URL(post.data.url).hostname.replace('www.', '')}</span>
+            <span class="source-arrow">↗</span>
+          </a>
+          {post.data.via && (
+            <span class="via-attribution">
+              · via {post.data.via.startsWith('http') ? (
+                <a href={post.data.via} target="_blank" rel="noopener noreferrer">
+                  {post.data.via.includes('twitter.com') || post.data.via.includes('x.com')
+                    ? '@' + post.data.via.split('/').pop()
+                    : new URL(post.data.via).hostname.replace('www.', '')}
+                </a>
+              ) : post.data.via}
+            </span>
+          )}
+        </div>
+      )}
     </header>
 
     <div class="post-content">
@@ -373,6 +401,57 @@ const structuredData = {
     .tag:hover {
       background: var(--color-text-primary);
       color: var(--color-bg);
+    }
+
+    /* Source Attribution */
+    .source-attribution {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-surface);
+      border-radius: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .source-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .source-link:hover {
+      color: var(--orange);
+    }
+
+    .source-favicon {
+      border-radius: 2px;
+    }
+
+    .source-domain {
+      font-weight: 600;
+    }
+
+    .source-arrow {
+      opacity: 0.5;
+    }
+
+    .via-attribution {
+      color: var(--color-text-tertiary);
+    }
+
+    .via-attribution a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+    }
+
+    .via-attribution a:hover {
+      color: var(--orange);
     }
 
     /* Content */

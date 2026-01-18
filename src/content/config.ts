@@ -7,6 +7,7 @@ const posts = defineCollection({
     date: z.date(),
     type: z.enum(['musings', 'links', 'reflections', 'verse', 'practical']),
     url: z.string().url().optional(),
+    via: z.string().optional(), // Attribution: where you found this link (URL or @username)
     tags: z.array(z.string()).default([]),
     description: z.string().optional(),
     dive_deeper: z.array(

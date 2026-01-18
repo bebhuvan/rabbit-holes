@@ -1,0 +1,332 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { calculateReadingTime } from '../utils/shared';
+
+const posts = await getCollection('posts', ({ data }) => {
+  return data.published !== false;
+});
+
+const sortedPosts = posts.sort((a, b) =>
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Define curated collections
+const collections = [
+  {
+    id: 'start-here',
+    title: 'Start Here',
+    description: 'New to Rabbit Holes? These posts capture what this place is about.',
+    emoji: '👋',
+    color: 'var(--orange)',
+    slugs: ['why-read', 'the-weight-of-telling-stories', 'we-are-borrowed-stardust', 'zero-sum-thinking-is-ruining-the-world']
+  },
+  {
+    id: 'deep-thoughts',
+    title: 'Deep Thoughts',
+    description: 'Posts that made me stop and think for days.',
+    emoji: '🧠',
+    color: 'var(--purple)',
+    filter: (post: any) => post.data.type === 'reflections' && calculateReadingTime(post.body || '') >= 4
+  },
+  {
+    id: 'quick-hits',
+    title: 'Quick Hits',
+    description: 'Bite-sized ideas you can read in under 2 minutes.',
+    emoji: '⚡',
+    color: 'var(--yellow)',
+    filter: (post: any) => calculateReadingTime(post.body || '') <= 2
+  },
+  {
+    id: 'link-safari',
+    title: 'Link Safari',
+    description: 'The best stuff I found around the internet.',
+    emoji: '🔗',
+    color: 'var(--blue)',
+    filter: (post: any) => post.data.type === 'links'
+  },
+  {
+    id: 'philosophy',
+    title: 'Life & Philosophy',
+    description: 'On meaning, existence, and how to live.',
+    emoji: '🌿',
+    color: 'var(--green)',
+    filter: (post: any) => (post.data.tags || []).some((t: string) =>
+      ['Philosophy', 'Life', 'Psychology', 'Wisdom'].includes(t)
+    )
+  },
+  {
+    id: 'tech-ai',
+    title: 'Tech & AI',
+    description: 'The future is already here, just unevenly distributed.',
+    emoji: '🤖',
+    color: 'var(--blue)',
+    filter: (post: any) => (post.data.tags || []).some((t: string) =>
+      ['AI', 'Technology', 'Tech', 'Artificial Intelligence', 'Future'].includes(t)
+    )
+  },
+  {
+    id: 'economics',
+    title: 'Money & Markets',
+    description: 'Economics, finance, and how the world really works.',
+    emoji: '📈',
+    color: 'var(--green)',
+    filter: (post: any) => (post.data.tags || []).some((t: string) =>
+      ['Economics', 'Finance', 'Markets', 'Money', 'Business'].includes(t)
+    )
+  },
+  {
+    id: 'creativity',
+    title: 'Art & Creativity',
+    description: 'On making things and why it matters.',
+    emoji: '🎨',
+    color: 'var(--pink)',
+    filter: (post: any) => (post.data.tags || []).some((t: string) =>
+      ['Art', 'Creativity', 'Writing', 'Music', 'Books', 'Literature', 'Reading'].includes(t)
+    )
+  }
+];
+
+// Resolve posts for each collection
+const resolvedCollections = collections.map(collection => {
+  let collectionPosts;
+
+  if (collection.slugs) {
+    // Manual curation by slugs
+    collectionPosts = collection.slugs
+      .map(slug => sortedPosts.find(p => p.slug.includes(slug)))
+      .filter(Boolean);
+  } else if (collection.filter) {
+    // Dynamic filter
+    collectionPosts = sortedPosts.filter(collection.filter).slice(0, 8);
+  } else {
+    collectionPosts = [];
+  }
+
+  return {
+    ...collection,
+    posts: collectionPosts,
+    count: collectionPosts.length
+  };
+}).filter(c => c.count > 0);
+
+function formatDate(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+---
+
+<Base title="Collections — Rabbit Holes">
+  <div class="collections-page">
+
+    <header class="page-header">
+      <h1 class="page-title">Collections</h1>
+      <p class="page-description">
+        Curated rabbit holes, organized by theme. Start anywhere that catches your eye.
+      </p>
+    </header>
+
+    <div class="collections-grid">
+      {resolvedCollections.map((collection) => (
+        <section class="collection" id={collection.id}>
+          <header class="collection-header">
+            <span class="collection-emoji">{collection.emoji}</span>
+            <div class="collection-info">
+              <h2 class="collection-title" style={`color: ${collection.color}`}>
+                {collection.title}
+              </h2>
+              <p class="collection-description">{collection.description}</p>
+            </div>
+            <span class="collection-count">{collection.count}</span>
+          </header>
+
+          <div class="collection-posts">
+            {collection.posts.map((post: any) => (
+              <a href={`/posts/${post.slug}`} class="collection-post">
+                <span class="post-title">{post.data.title}</span>
+                <span class="post-meta">
+                  <time>{formatDate(post.data.date)}</time>
+                  <span class="dot">·</span>
+                  <span>{calculateReadingTime(post.body || '')} min</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+  </div>
+</Base>
+
+<style>
+  .collections-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .page-header {
+    padding: 3rem 0;
+    text-align: center;
+    border-bottom: 3px solid var(--color-text-primary);
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
+  }
+
+  .page-description {
+    font-size: 1.1rem;
+    color: var(--color-text-tertiary);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .collections-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .collection {
+    background: var(--color-surface-warm);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .collection:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .collection-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .collection-emoji {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .collection-info {
+    flex: 1;
+  }
+
+  .collection-title {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+  }
+
+  .collection-description {
+    font-size: 0.9rem;
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  .collection-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    background: var(--color-surface);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .collection-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .collection-post {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s;
+    gap: 1rem;
+  }
+
+  .collection-post:hover {
+    background: var(--color-surface);
+    transform: translateX(4px);
+  }
+
+  .post-title {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .post-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--color-text-light);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .dot {
+    opacity: 0.5;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 640px) {
+    .collections-page {
+      padding: 0 1rem 3rem;
+    }
+
+    .collection {
+      padding: 1rem;
+    }
+
+    .collection-header {
+      flex-wrap: wrap;
+    }
+
+    .collection-emoji {
+      font-size: 1.5rem;
+    }
+
+    .collection-post {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    .post-title {
+      white-space: normal;
+    }
+
+    .post-meta {
+      margin-top: 0.25rem;
+    }
+  }
+</style>
