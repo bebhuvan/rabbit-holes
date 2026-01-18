@@ -1,5 +1,3 @@
-# Category redirects (old -> new)
-# Note: www redirect should be configured in Cloudflare DNS/Page Rules
 /types/quick-thoughts /types/musings 301
 /types/thats-interesting /types/musings 301
 /types/link-dumps /types/links 301
