@@ -2,7 +2,7 @@
 // This processes markdown during build time to convert standalone links to embeds
 
 import { visit } from 'unist-util-visit';
-import type { Root, Paragraph, Text } from 'mdast';
+import type { Root, Paragraph, Text, Link, Html } from 'mdast';
 
 interface EmbedInfo {
   type: 'youtube' | 'vimeo' | 'twitter' | 'codepen' | 'spotify' | 'generic';
@@ -10,27 +10,74 @@ interface EmbedInfo {
   url: string;
 }
 
+// Check if a URL is embeddable (not generic)
+function isEmbeddableUrl(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
+    return (
+      hostname.includes('youtube.com') ||
+      hostname.includes('youtu.be') ||
+      hostname.includes('vimeo.com') ||
+      hostname.includes('twitter.com') ||
+      hostname.includes('x.com') ||
+      hostname.includes('codepen.io') ||
+      hostname.includes('spotify.com')
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function remarkLinkEmbed() {
   return (tree: Root) => {
     visit(tree, 'paragraph', (node: Paragraph, index, parent) => {
-      // Check if paragraph contains only a single text node with a URL
+      let url: string | null = null;
+
+      // Case 1: Paragraph with a single text node containing a URL
       if (node.children.length === 1 && node.children[0].type === 'text') {
         const textNode = node.children[0] as Text;
         const text = textNode.value.trim();
-        
-        // Check if it's a standalone URL
         const urlMatch = text.match(/^https?:\/\/[^\s]+$/);
-        
         if (urlMatch) {
-          const url = urlMatch[0];
-          const embedInfo = detectEmbedType(url);
-          
-          // Replace the paragraph with an embed directive
-          const embedNode = createEmbedNode(embedInfo);
-          
-          if (parent && typeof index === 'number') {
-            parent.children[index] = embedNode;
+          url = urlMatch[0];
+        }
+      }
+
+      // Case 2: Paragraph with a single link node (markdown link on its own line)
+      if (node.children.length === 1 && node.children[0].type === 'link') {
+        const linkNode = node.children[0] as Link;
+        // Only embed if it's an embeddable service
+        if (isEmbeddableUrl(linkNode.url)) {
+          url = linkNode.url;
+        }
+      }
+
+      // Case 3: Paragraph with link + optional whitespace text nodes
+      // Handles cases like: [url](url)\n or similar
+      if (!url && node.children.length <= 3) {
+        const nonWhitespaceChildren = node.children.filter((child) => {
+          if (child.type === 'text') {
+            return (child as Text).value.trim() !== '';
           }
+          return true;
+        });
+
+        if (nonWhitespaceChildren.length === 1 && nonWhitespaceChildren[0].type === 'link') {
+          const linkNode = nonWhitespaceChildren[0] as Link;
+          if (isEmbeddableUrl(linkNode.url)) {
+            url = linkNode.url;
+          }
+        }
+      }
+
+      // If we found an embeddable URL, replace the paragraph
+      if (url) {
+        const embedInfo = detectEmbedType(url);
+        const embedNode = createEmbedNode(embedInfo);
+
+        if (parent && typeof index === 'number') {
+          parent.children[index] = embedNode;
         }
       }
     });
@@ -76,7 +123,7 @@ function detectEmbedType(url: string): EmbedInfo {
   }
 }
 
-function createEmbedNode(embedInfo: EmbedInfo) {
+function createEmbedNode(embedInfo: EmbedInfo): Html {
   // Create a custom directive node that will be processed by Astro
   return {
     type: 'html',
