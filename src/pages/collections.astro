@@ -21,7 +21,7 @@ const collections = [
     description: 'New to Rabbit Holes? These posts capture what this place is about.',
     emoji: '👋',
     color: 'var(--orange)',
-    slugs: ['why-read', 'the-weight-of-telling-stories', 'we-are-borrowed-stardust', 'zero-sum-thinking-is-ruining-the-world']
+    filter: (post: any) => post.data.featured === true
   },
   {
     id: 'deep-thoughts',
