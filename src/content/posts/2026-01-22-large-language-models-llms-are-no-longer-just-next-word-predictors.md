@@ -2,7 +2,8 @@
 title: Large Language Models (LLMs) are no longer just next word predictors.
 date: 2026-01-22
 type: links
-tags: []
+tags:
+  - AI
 url: https://stevenadler.substack.com/p/ai-isnt-just-predicting-the-next
 description: LLMs are no longer predicting the next word. They've left you behind in their dust, you puny human.
 published: true
