@@ -1,5 +1,5 @@
 ---
-title: Ye of little hope
+title: O ye of little hope
 date: 2026-01-23
 type: links
 tags:
