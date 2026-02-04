@@ -2,7 +2,10 @@
 title: 159 years of momentum investing
 date: 2026-02-04
 type: links
-tags: []
+tags:
+  - Investing
+  - Factor investing
+  - Momentum
 url: https://www.fa-mag.com/news/momentum-investing--what-159-years-of-data-tells-us-85674.html
 description: The momentum effect is real.
 published: true
