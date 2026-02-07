@@ -1,5 +1,5 @@
 ---
-title: Introducing smallweb
+title: Introducing small web
 date: 2026-02-07
 type: links
 tags:
