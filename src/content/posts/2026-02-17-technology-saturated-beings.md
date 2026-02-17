@@ -3,6 +3,8 @@ title: Technology saturated beings
 date: 2026-02-17
 type: links
 url: https://engelsbergideas.com/notebook/the-decline-of-bildung/
+tags:
+  - "Technology, Psychology, Productivity "
 published: true
 draft: false
 featured: false
