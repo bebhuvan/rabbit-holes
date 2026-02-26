@@ -2,7 +2,9 @@
 title: The physical limits of AI
 date: 2026-02-26
 type: links
-tags: []
+tags:
+  - AI
+  - Technological diffusion
 url: https://www.citadelsecurities.com/news-and-insights/2026-global-intelligence-crisis/
 description: The physical bounds on AI.
 published: true
