@@ -2,7 +2,8 @@
 title: Use the damn tools and then judge
 date: 2026-03-01
 type: links
-tags: []
+tags:
+  - AI
 url: https://x.com/i/status/2027018464670491065
 published: true
 draft: false
