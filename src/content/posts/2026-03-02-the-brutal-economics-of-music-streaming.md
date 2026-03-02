@@ -2,7 +2,10 @@
 title: The brutal economics of music streaming
 date: 2026-03-02
 type: links
-tags: []
+tags:
+  - Music
+  - Streaming
+  - Spotify
 url: https://joelgouveia.substack.com/p/the-death-of-spotify-why-streaming?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true
 description: Spotify is fucked, or so this piece tells me.
 published: true
