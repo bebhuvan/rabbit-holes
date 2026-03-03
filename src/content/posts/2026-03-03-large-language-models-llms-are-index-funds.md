@@ -12,10 +12,10 @@ featured: false
 ---
 Ooh, I love this analogy of LLMs being the equivalent of market beta [by Karthik Shashidhar](https://open.substack.com/pub/artofdatascience/p/llms-are-beta?utm_source=share&utm_medium=android&r=1eft5):
 
-> In a sense, LLMs are like an index with a lag. Assuming that these models are constantly trained, the “intelligence” of LLMs basically represents the average internet of the internet from a (slightly) prior point in time. And this lag is super useful in not making it a zero sum game.  
->   
-> As long as people use LLMs cleverly, the average quality of “intelligence” or “writing quality” can go up over time. Basically, if you consider yourself to be a bad writer, or doing something you don’t know, just use an LLM. If you know what you are doing, add your own intelligence.  
->   
+> In a sense, LLMs are like an index with a lag. Assuming that these models are constantly trained, the “intelligence” of LLMs basically represents the average internet of the internet from a (slightly) prior point in time. And this lag is super useful in not making it a zero sum game.
+> 
+> As long as people use LLMs cleverly, the average quality of “intelligence” or “writing quality” can go up over time. Basically, if you consider yourself to be a bad writer, or doing something you don’t know, just use an LLM. If you know what you are doing, add your own intelligence.
+> 
 > In other words, LLMs are Beta. Or index investing. For any given task they will give you the average output. If you decide to vibe code an app or algorithm, what you get is the average.
 
 I've been a long time reader of his writing and enjoy reading his musings. Subscribe to both [his newsletters](https://open.substack.com/pub/noenthuda?utm_source=share&utm_medium=android&r=1eft5).
