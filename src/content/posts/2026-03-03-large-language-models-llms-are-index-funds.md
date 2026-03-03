@@ -2,7 +2,7 @@
 title: Large language models (LLMs) are index funds
 date: 2026-03-03
 type: musings
-url: https://open.substack.com/pub/artofdatascience/p/llms-are-beta?utm_source=share&utm_medium=android&r=1eft5
+url: https://artofdatascience.substack.com/p/llms-are-beta?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true
 tags:
   - AI, Index funds
 description: LLMs are like index funds. You get beta of humanity.
