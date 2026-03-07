@@ -22,3 +22,5 @@ The paper was presented at this event. Haven't yet watched it though.
 [https://www.youtube.com/live/ats1HPTaV64?si=WVUDcubVINaE8K\_P](https://www.youtube.com/live/ats1HPTaV64?si=WVUDcubVINaE8K_P)
 
 [Hat tip to Krzysztof Iwanek for sharing this.](https://x.com/i/status/2029896654187380845)
+
+[Interesting discussion](https://x.com/i/status/2030079199315104001).
