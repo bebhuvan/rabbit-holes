@@ -11,6 +11,14 @@ published: true
 draft: false
 featured: false
 ---
+This is so cool. Goes to show the extent of [ancient trade links](https://www.thehindu.com/news/national/tamil-nadu/tamil-brahmi-inscriptions-found-in-egypts-valley-of-the-kings-shed-light-on-ancient-trade-links/article70619929.ece).
+
 > A path-breaking finding has shed new light on trade links between ancient Tamilagam, other parts of India and the Roman Empire. Two researchers have identified close to 30 inscriptions in Tamil Brahmi, Prakrit and Sanskrit at tombs in the Valley of the Kings in Egypt. These inscriptions are said to belong to the period between the 1st and 3rd Centuries C.E.
 > 
 > These inscriptions were identified during a study carried out in 2024 and 2025 by Charlotte Schmid, Professor at the French School of Asian Studies (EFEO) in Paris and Ingo Strauch, Professor at the University of Lausanne in Switzerland. The team documented them across six tombs in the Theban Necropolis. They followed the footsteps of French scholar Jules Baillet, who surveyed the Valley of the Kings in 1926 and published more than 2,000 Greek graffiti marks.
+
+The paper was presented at this event. Haven't yet watched it though.
+
+[https://www.youtube.com/live/ats1HPTaV64?si=WVUDcubVINaE8K\_P](https://www.youtube.com/live/ats1HPTaV64?si=WVUDcubVINaE8K_P)
+
+[Hat tip to Krzysztof Iwanek for sharing this.](https://x.com/i/status/2029896654187380845)
