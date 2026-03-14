@@ -4,7 +4,7 @@ date: 2026-03-14
 type: links
 url: https://substack.com/@frederikgieschen/note/c-227456669?r=1eft5
 tags:
-  - "Writing "
+  - "Writing, Good advice "
 published: true
 draft: false
 featured: false
