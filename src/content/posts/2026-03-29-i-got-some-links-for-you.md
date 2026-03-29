@@ -10,7 +10,7 @@ This week's digest
 
 Venkatesh Rao is consistently one of the most thoughtful people online. He is one of my favorite writers, and one of the sharpest observers of whatever is happening around us, especially in technology. I have been following [his thoughts on AI](https://substack.com/@contraptions/note/c-229709856?r=1eft5), specifically on making things with AI, and more specifically on writing with AI.  
 
-Right now, there is a lot of angst around this. A lot of it, frankly, is just stupidity: this idea that if writing is touched by AI, it immediately stops being good. “AI-written” or “AI-assisted” has become a kind of weird epitaph, as though all human writing is some sanctified thing that exists in a divine, unsullied realm. And somehow, the moment AI interacts with it, it gets tainted and becomes bad.  
+Right now, there is a lot of angst around this. A lot of it, frankly, is just stupidity: this idea that if writing is touched by AI, it immediately stops being good. “AI-written” or “AI-assisted” has become a kind of weird epithet, as though all human writing is some sanctified thing that exists in a divine, unsullied realm. And somehow, the moment AI interacts with it, it gets tainted and becomes bad.  
 
 There is clearly a bit of a moral panic going on. People are incessantly labeling anything AI touches as a flop, or as inherently inferior, and so on. It is not only irritating, but also funny, because people seem to forget something basic: it is not AI that is flawed. Most people are flawed. People just need the sense to listen to themselves speak for a while, maybe in front of a mirror, and they will realize that even the median stochastic vomit produced by an LLM is better than 80 percent of the things we humans say.  
 
