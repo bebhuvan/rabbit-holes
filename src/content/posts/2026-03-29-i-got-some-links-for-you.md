@@ -22,6 +22,8 @@ But anyway, this is a weird moment. A new technology has entered the fray and is
 >
 > Finally: Reading good AI generated writing is a new kind of literacy that’s currently evolving from pidgin to creole. Most people not only lack this literacy (beyond having rudimentary hostile radars; a bit like being on alert for human accents that trigger distrust for you), they are unaware there even is a literacy taking shape. Developing this literacy yourself is the main goal for you as a writer. Catalyzing it in the eligible subset of readers is a nice extra. For me, this practically translates to a personal re-read test. Do I go back and read one of my own sloptraptions for the content later? About a third or so pass this test strongly. 
 
+---
+
 Get ready to be a part of the [permanent underclass](https://www.ml.com/capital-market-outlook/capital-market-outlook-mar-23-2026.recent.html)!
 
 > While the laborers who were displaced by machines during the industrial revolution were able to move into new and growing service industries, allowing the economy to keep expanding and unemployment to stay low while incomes and living standards rose, with the higher productivity that comes from technological progress, there are major doubts about where the jobs and incomes will come from if AI is eventually able to do everything that workers do today. These same doubts have been around ever since the Luddites, yet the progress that follows rising productivity and new technologies has always created new industries that provide incomes for labor.
@@ -29,5 +31,21 @@ Get ready to be a part of the [permanent underclass](https://www.ml.com/capital-
 > However, one of the consequences of digital technology has been an increasing share of income going to the owners of capital and a declining share to labor (Exhibit 1A). AI is likely to exacerbate this trend even more. The growing share of capital as opposed to labor income is also implicit in the rising level of wealth relative to income. Since the 1960s the ratio of household wealth to income has risen from around five times to about eight times (Exhibit 1B). 
 >
 > An important implication of this transition from most labor income to mostly capital income is a need to broaden ownership of capital to mitigate the effects of a shrinking labor income share on the broader population. To some extent, this is already happening, at least in the U.S., where there is much wider ownership of Equities compared to most other economies. Without policies to make the ownership of capital and its growing income share more widespread, political polarization and instability are likely to increase as we have seen in recent years. 
+
+---
+
+This has been my experience as well. I am now doing more things than ever, both personally and professionally. In fact, after LLMs, I'm starting to feel like there isn't enough time to do all the things I want to do. Work fills available tokens?
+
+> It's remarkable how much of my work is completely automated w/ AI, and yet, I still am necessary. The amount of time I personally have to spend working just isn't going down. Instead, the leverage of my own time is going up. Every second I spend not working becomes more painful
+>
+> I have been working less and less recently. I still work a crazy amount. More than I ever have. Every spare second. It's just that, as my family grows, the opportunity cost of not working equally goes up. That's the only thing that is saving me, I think
+>
+> [Tweet link](https://x.com/i/status/2037986817807470812)
+
+I also relate to the family angle. Given the miserable state of the world, my *feeling* that we're headed for an age of discord and increased economic instability only continues to become stronger. Which means, LLMs now give me the leverage to work harder.
+
+---
+
+&nbsp;
 
 &nbsp;
