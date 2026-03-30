@@ -10,9 +10,9 @@ draft: false
 featured: false
 ---
 I'm not a religious person. I think there are traces, but more or less, I'm not a religious person. I have few traces remaining, thanks to the fact that I grew up in a religious household, and my parents are still deeply religious. Depending on the day you ask me, and depending on what I've read the previous day, I might call myself spiritual, atheist, hard or soft determinist. But religious I am not.  
-  
+
 That said, I think one of the closest instances I've come to seeing God is when reading the sublime verses in a poem. Tagore, Dickinson, Mary Oliver, William Blake. You can't help but take a shovel and pitchfork to the hardened layer of rationalist sediment on your psyche, uproot it all, and make way for some other feeling, some non-cold feeling of vibrancy. Though with poetry, I think I'm more inclined towards what [Baruch Spinoza](https://plato.stanford.edu/entries/spinoza/) had to say: that God and Nature are one and the same thing.  
-  
+
 And when you lie down on your back on a beautiful warm summer night, and gaze up at the heavens to see fluffy white clouds parting to reveal a crescent moon and distant stars, you know you are in the presence of something truly grand. I don't know if that is an all-knowing deity, wise and powerful, magic wand in hand, stirring things up. But this, to me, is also feeling the hand of God.
 
 I resonate with what [Elizabeth Bruenig is saying](https://www.theatlantic.com/ideas/2026/03/faith-god-science/686534/):
@@ -21,5 +21,23 @@ I resonate with what [Elizabeth Bruenig is saying](https://www.theatlantic.com/i
 > This was not always apparent to me. 
 >
 > I came to this understanding through trial, error, and my own brushes with scientific rebuttals to the existence of God.
+
+Here's what [God sounds like](https://poeticreveries.com/read/william-blake/auguries-of-innocence/):
+
+> To see a World in a Grain of Sand  
+> And a Heaven in a Wild Flower  
+> Hold Infinity in the palm of your hand  
+> And Eternity in an hour  
+> A Robin Red breast in a Cage  
+> Puts all Heaven in a Rage  
+> A Dove house filld with Doves and Pigeons  
+> Shudders Hell thro all its regions  
+> A Dog starvd at his Masters Gate  
+> Predicts the ruin of the State  
+> A Horse misused upon the Road  
+> Calls to Heaven for Human blood  
+> Each outcry of the hunted Hare  
+> A fibre from the Brain does tear  
+> A Skylark wounded in the wing
 
 &nbsp;
