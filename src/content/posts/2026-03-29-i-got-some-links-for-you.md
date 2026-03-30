@@ -2,8 +2,8 @@
 title: I got some links for you
 date: 2026-03-29
 type: links
-published: false
-draft: true
+published: true
+draft: false
 featured: false
 ---
 This week's digest
