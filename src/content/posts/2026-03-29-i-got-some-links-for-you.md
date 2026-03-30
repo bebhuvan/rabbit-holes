@@ -1,14 +1,14 @@
 ---
 title: I got some links for you
 date: 2026-03-29
-type: musings
+type: links
 published: false
 draft: true
 featured: false
 ---
 This week's digest
 
-Venkatesh Rao is consistently one of the most thoughtful people online. He is one of my favorite writers, and one of the sharpest observers of whatever is happening around us, especially in technology. I have been following [his thoughts on AI](https://substack.com/@contraptions/note/c-229709856?r=1eft5), specifically on making things with AI, and more specifically on writing with AI.  
+Venkatesh Rao is consistently one of the most thoughtful people online. He is one of my favorite writers and one of the sharpest observers of whatever is happening around us, especially in technology. I have been following [his thoughts on AI](https://substack.com/@contraptions/note/c-229709856?r=1eft5), specifically on making things with AI and more specifically on writing with AI.  
 
 Right now, there is a lot of angst around this. A lot of it, frankly, is just stupidity: this idea that if writing is touched by AI, it immediately stops being good. “AI-written” or “AI-assisted” has become a kind of weird epithet, as though all human writing is some sanctified thing that exists in a divine, unsullied realm. And somehow, the moment AI interacts with it, it gets tainted and becomes bad.  
 
@@ -18,7 +18,7 @@ But anyway, this is a weird moment. A new technology has entered the fray and is
 
 > Take readers’ opinions seriously, but not too seriously. I’d say 1/6 have real spiritual-angst resistance. Ignore them. Another 1/6 will never get past attachment to gleegloom over the not-X-but-Y “tell” du jour. Ignore them too. Counterintuitively, at the other end, 1/3 of readers will be delusionally committed to declaring any and all AI writing “good” (similar to how committed feminists might insist that any work done by women is necessarily good). Ignore them too. The middle third is the target audience. People who will simply treat AI writing like human writing — keep reading if they like a particular piece but abandon if they don’t. You want those who discriminate at piece level, not class level (AI classists/racists?).
 >
-> - &nbsp;
+>  -
 >
 > Finally: Reading good AI generated writing is a new kind of literacy that’s currently evolving from pidgin to creole. Most people not only lack this literacy (beyond having rudimentary hostile radars; a bit like being on alert for human accents that trigger distrust for you), they are unaware there even is a literacy taking shape. Developing this literacy yourself is the main goal for you as a writer. Catalyzing it in the eligible subset of readers is a nice extra. For me, this practically translates to a personal re-read test. Do I go back and read one of my own sloptraptions for the content later? About a third or so pass this test strongly. 
 
@@ -42,12 +42,20 @@ This has been my experience as well. I am now doing more things than ever, both 
 >
 > [Tweet link](https://x.com/i/status/2037986817807470812)
 
-I also relate to the family angle. Given the miserable state of the world, my *feeling* that we're headed for an age of discord and increased economic instability only continues to become stronger. Which means, LLMs now give me the leverage to work harder.
+I also relate to the family angle. Given the miserable state of the world, my *feeling* that we're headed for an age of discord and increased economic instability only continues to become stronger. Which means LLMs now give me the leverage to work harder.
 
 ---
 
-&nbsp;
+China is the new [pharma superpower:](https://www.economist.com/china/2025/11/23/chinese-pharma-is-on-the-cusp-of-going-global) 
 
-&nbsp;
+> Until recently, China’s drug industry was best known for making generic drugs, supplying ingredients and running trials for Western firms. Over the past decade it has reinvented itself. Approval processes have been streamlined, priority reviews conducted for drugs tackling critical conditions, and regulations brought closer to international standards. The workforce at China’s drug regulator quadrupled between 2015 and 2018, and a backlog of 20,000 new drug applications was cleared in just two years. The time taken to secure approval for human trials shrank from 501 days to 87. And the output of new medicines soared. In 2015 China approved only 11 treatments, mostly Western imports. By 2024 the figure had risen to 93, with 42% developed domestically.
+
+---
+
+The [illusion of technological omnipotence](https://www.nytimes.com/2026/03/29/opinion/israel-us-war-iran-literature.html?unlocked_article_code=1.XFA.mpd3.Nc_QhpIE8Mo-&smid=url-share): 
+
+> Yet never has so much been seen, so precisely, by so many people who understand so little of what they are seeing. A system can tell you where a man is. It cannot tell you what his death will mean for a nation. Such systems are trained on behavior, not on meaning — they can track what an adversary does but not what he fears, honors, remembers or would die for.
+>
+> This is the recurring illusion of overequipped leaders: Because they can map the battle space, they think they understand the war. But war is never merely a technical contest. It is shaped by grievance, sacred narrative, the memory of past humiliations and the desire for revenge. Those are not atmospheric complications added to an otherwise technical enterprise. They are what the war is about.
 
 &nbsp;
