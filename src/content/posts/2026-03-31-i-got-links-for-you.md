@@ -12,4 +12,6 @@ There's de-dollarization in the underground economy, and the dollar is losing gr
 >
 > And cryptocurrency already is very competitive for illicit transactions, where the US dollar was once the undisputed king. People were always using suitcases of US$100 bills to pay for houses, to pay for drugs, and so forth. Now, there are many papers showing that cryptocurrency, particularly stablecoins, has become very important. So cryptocurrency is already taking significant market shares from the US dollar in the underground economy.
 
+---
+
 &nbsp;
