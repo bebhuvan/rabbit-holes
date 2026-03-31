@@ -14,4 +14,12 @@ There's de-dollarization in the underground economy, and the dollar is losing gr
 
 ---
 
+[Adam Tooze on what China should do](https://www.ft.com/content/cf2eeead-461d-4e3b-aeb7-48b30114643c) as the United States walks into a gun store, tests out different types of guns, chooses one based on careful research, and shoots itself in the ass.
+
+> Beijing has adopted a defensive stance, prioritising its own supplies. In a world as messy as ours, playing the role of adult is hard. It is far easier for Beijing to bide its time and to wait out the crisis, allowing the US to destroy its own credibility and Russia to become more and more dependent. Meanwhile, at events like the CDF, the participants, including representatives of the US, pontificate about “global geopolitical risks” as though they were natural disasters rather than the result of decisions made by the US and Israel.  
+>
+> But the choice lies with Beijing. The script for Chinese leadership is more or less writing itself.
+
+---
+
 &nbsp;
