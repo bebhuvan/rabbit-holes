@@ -19,3 +19,13 @@ Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https
 
 ---
 
+#### Stomach quarter full?
+
+[This is depressing](https://scroll.in/article/1091341/why-indias-diabetes-epidemic-is-a-policy-failure). I didn't know.
+
+> On top of that, there have been disturbing findings about the quality of food itself. A study published in November 2023 in Scientific Reports by researchers from the Indian Council of Agricultural Research, found that five decades of breeding programmes of the Green Revolution have systematically reduced the nutritional content of the staple grains of India.  
+>
+> Zinc concentration in rice has dropped by approximately 33% since the 1960s and iron by 27%. In wheat, zinc declined by 30% and iron by 19%. The study warns that if current trends continue, rice and wheat stand to lose up to 45% of their food value by 2040.  
+>
+> In other words, India’s population is eating less and also eating food that delivers less nourishment per mouthful.
+
