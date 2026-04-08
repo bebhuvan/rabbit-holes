@@ -29,3 +29,5 @@ Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https
 >
 > In other words, India’s population is eating less and also eating food that delivers less nourishment per mouthful.
 
+---
+
