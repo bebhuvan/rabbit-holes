@@ -17,3 +17,5 @@ Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https
 
 ![](/images/resnick_private-credit-what-it-is-and-where-it-fits_display-1_d1(1).svg)
 
+---
+
