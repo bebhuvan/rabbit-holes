@@ -55,3 +55,9 @@ This is a dangerous one and [we all suffer from it](https://nesslabs.com/illusio
 
 ---
 
+Joachim Klement in why US markets have elevated valuations:
+
+> Personally, I am on the record for favouring the third option, since something that has become obvious is that companies like the Mag7 in the US enjoy profit margins that are way above normal levels and are no longer mean-reverting because there is no competition emerging that could undermine their profit margins. If there is a competitor that could become a danger, the big tech companies tend to simply buy that rival, thus creating a kill zone around them.
+>
+> Plus, Cory Doctorow’s Enshittification thesis claims that, besides the lack of competition, a lack of antitrust enforcement has enabled these companies to lock in both consumers and advertisers, thus creating virtual monopolies that they can extract to the benefit of the owners of these companies.
+
