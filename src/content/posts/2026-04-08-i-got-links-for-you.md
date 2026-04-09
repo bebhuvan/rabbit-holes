@@ -41,3 +41,9 @@ If [small models are really this good](https://aisle.com/blog/ai-cybersecurity-a
 
 ---
 
+[Beautiful photos from Atemis II](https://kottke.org/26/04/stunning-artemis-ii-phone-wallpapers)
+
+![](/images/02-artemis-ii-lunar-flyby-wallpaper-earthset-image.jpg)
+
+---
+
