@@ -31,3 +31,13 @@ Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https
 
 ---
 
+#### Myth and mythos
+
+If [small models are really this good](https://aisle.com/blog/ai-cybersecurity-after-mythos-the-jagged-frontier) then we may be underestimating their impact when LLMs diffuse. 
+
+> But here is what we found when we tested: We took the specific vulnerabilities Anthropic showcases in their announcement, isolated the relevant code, and ran them through small, cheap, open-weights models. Those models recovered much of the same analysis. Eight out of eight models detected Mythos's flagship FreeBSD exploit, including one with only 3.6 billion active parameters costing $0.11 per million tokens. A 5.1B-active open model recovered the core chain of the 27-year-old OpenBSD bug.
+>
+> And on a basic security reasoning task, small open models outperformed most frontier models from every major lab. The capability rankings reshuffled completely across tasks. There is no stable best model across cybersecurity tasks. The capability frontier is jagged.
+
+---
+
