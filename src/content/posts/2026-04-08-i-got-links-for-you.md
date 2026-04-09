@@ -55,7 +55,7 @@ This is a dangerous one and [we all suffer from it](https://nesslabs.com/illusio
 
 ---
 
-Joachim Klement in why US markets have elevated valuations:
+Joachim Klement in why US markets have [elevated valuations](https://klementoninvesting.substack.com/p/a-macro-explanation-of-high-us-stock?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true):
 
 > Personally, I am on the record for favouring the third option, since something that has become obvious is that companies like the Mag7 in the US enjoy profit margins that are way above normal levels and are no longer mean-reverting because there is no competition emerging that could undermine their profit margins. If there is a competitor that could become a danger, the big tech companies tend to simply buy that rival, thus creating a kill zone around them.
 >
