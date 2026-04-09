@@ -47,3 +47,9 @@ If [small models are really this good](https://aisle.com/blog/ai-cybersecurity-a
 
 ---
 
+This is a dangerous one and [we all suffer from it](https://nesslabs.com/illusion-of-clarity):
+
+> But something unexpected happened. Every time I sat down and needed to actually explain a concept – really explain it, step by step, in plain language – I’d hit a wall. What I thought was knowledge didn’t survive the simple test of having to put it into my own words.
+>
+> This exercise forced me to confront what I’ve come to call the illusion of clarity: the confident feeling that you understand something, when in reality your grasp is full of gaps you’ve never noticed.
+
