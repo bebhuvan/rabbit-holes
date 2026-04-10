@@ -61,3 +61,11 @@ Joachim Klement in why US markets have [elevated valuations](https://klementonin
 >
 > Plus, Cory Doctorow’s Enshittification thesis claims that, besides the lack of competition, a lack of antitrust enforcement has enabled these companies to lock in both consumers and advertisers, thus creating virtual monopolies that they can extract to the benefit of the owners of these companies.
 
+---
+
+[Branko Milanovic on China's growth slowdown](https://branko2f7.substack.com/p/how-severe-is-chinas-growth-slowdown?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true):
+
+> So, yes: Chinese growth is slowing down faster than the typical world growth would slow, but China is still growing at significantly higher rates than we would expect, basing ourselves on the global data covering the past 75 years.
+>
+> How does it compare with Japan’s experience that many people are arguing China is heading towards? What we notice in figure below is that Japan too has had much higher growth rates during its expansion than one would expect based on global experience. When Japan’s GDP per capita was around $PPP 10,000, it grew at almost 6% annually vs. (as we have seen) about 2.5% for the world. But then, from about $PPP 30,000 (see the dashed line in the graph) Japan’s deceleration was remarkably sharp so much so that eventually, and very briefly, Japan’s growth performance became inferior to the average world performance at that income level, Since then Japan seems to have fully gone back to the “world line”; in other words, its performance is neither exceptionally good, nor exceptionally bad, but average for a country at Japan’s income level.
+
