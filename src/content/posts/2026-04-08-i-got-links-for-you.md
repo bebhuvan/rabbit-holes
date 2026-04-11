@@ -58,7 +58,7 @@ Good quote:
 
 I remembered this quote as I was reading the post:
 
- “He who has a why to live for can bear almost any how.”
+> “He who has a why to live for can bear almost any how.”
 
 ― Friedrich Nietzsche
 
