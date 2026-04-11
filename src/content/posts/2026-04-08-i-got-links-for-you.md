@@ -97,3 +97,21 @@ Reminds me of Shannon Vallor's metaphor of AI as a mirror.
 
 ---
 
+As someone who is constantly anxious and worried about the future, [I relate to everything in this post](https://pointingatthings.substack.com/p/a-profoundly-good-time?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true):
+
+> Jhanas are not the most important thing in life. Probably not even close.  
+>
+> But neither are jobs and goals and stories we tell ourselves to make getting out of bed and scratching out a living more bearable.  
+>
+> I’m not going to tell you to go meditate. I’m not a teacher, this wasn’t a how-to, and I don’t think you need to sit on a cushion and attain something called enlightenment to live a life worth living.  
+>
+> But I will say that with years of distance now between me and that swingset, when I scroll back through my memories of that period, with the panic attacks, the feelings of betrayal, the 14-hour days, the obsidian dagger in my chest, what I actually remember most isn’t the suffering.  
+>
+> What I remember is those 20 minutes a day in the redwoods, and hugging my wife.  
+>
+> I remember it as a profoundly good time. That still kind of surprises me.  
+>
+> Jhanas didn’t “fix” anything in my life. They didn’t save my failing business or mend the friendship I lost or give me back the years I’d spent building them.  
+>
+> What they did was quietly, repeatedly demonstrate, in a way that apparently my rational brain could not do on its own, that I was already okay.
+
