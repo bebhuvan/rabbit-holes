@@ -1,6 +1,6 @@
 ---
 title: I got rabbit holes for you
-date: 2026-04-08
+date: 2026-04-11
 type: links
 tags:
   - A gaggle of links
