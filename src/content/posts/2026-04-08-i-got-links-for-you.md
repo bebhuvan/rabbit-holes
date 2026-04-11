@@ -12,7 +12,7 @@ A few good rabbit holes for your enjoyment.
 
 ---
 
-A few things to move you rouse you from The Marginalian: 
+A few things to move you and rouse you from The Marginalian: 
 
 As a person with remarkable talent for getting in my own way, [this one hit hard](https://www.themarginalian.org/2026/04/09/regret/): 
 
