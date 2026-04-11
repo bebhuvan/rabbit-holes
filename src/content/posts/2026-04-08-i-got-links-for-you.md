@@ -85,7 +85,7 @@ Venkatesh Rao on [writing to think in the age of AI](https://substack.com/@contr
 >
 > Second, when it comes to expressing preferences for one option or another, all they can rely on is what they have learned from the output of other humans. And that is where human-like behaviour comes in. In particular, the most popular genAI models GPT, Claude and Gemini show clear human-like biases in many of the tasks they were asked to perform.
 
-Sadly, the study is bad on outdated models. I wonder if the latest frontier models are much better:
+Sadly, [the study is bad on outdated models](https://www.nber.org/papers/w34745). I wonder if the latest frontier models are much better:
 
 > Fourth, we examine LLMs’ responses to questions from two recent experimental economics studies. Afrouzi et al. (2023) ask human participants to observe a sequence of past realizations of a random variable and then forecast its future values; the random variable follows an autoregressive process. We elicit LLMs’ responses in this setting and find that advanced small-scale LLMs—GPT- 4o, Claude 3 Haiku, and Gemini 1.5 Flash—produce forecasts that are human-like and irrational: they perceive an autoregressive process that is more persistent than the true process. By contrast, their larger-scale counterparts generate more rational forecasts, with perceived persistence similar to the true persistence. 
 >
