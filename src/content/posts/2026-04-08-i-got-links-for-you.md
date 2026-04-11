@@ -85,6 +85,12 @@ Venkatesh Rao on [writing to think in the age of AI](https://substack.com/@contr
 >
 > Second, when it comes to expressing preferences for one option or another, all they can rely on is what they have learned from the output of other humans. And that is where human-like behaviour comes in. In particular, the most popular genAI models GPT, Claude and Gemini show clear human-like biases in many of the tasks they were asked to perform.
 
+Sadly, the study is bad on outdated models. I wonder if the latest frontier models are much better:
+
+> Fourth, we examine LLMs’ responses to questions from two recent experimental economics studies. Afrouzi et al. (2023) ask human participants to observe a sequence of past realizations of a random variable and then forecast its future values; the random variable follows an autoregressive process. We elicit LLMs’ responses in this setting and find that advanced small-scale LLMs—GPT- 4o, Claude 3 Haiku, and Gemini 1.5 Flash—produce forecasts that are human-like and irrational: they perceive an autoregressive process that is more persistent than the true process. By contrast, their larger-scale counterparts generate more rational forecasts, with perceived persistence similar to the true persistence. 
+>
+> Bose et al. (2022) present human participants with stock price trajectories and ask them how much to invest in each stock. Replicating this setting for LLMs, we find that large-scale models— GPT-4, Claude 3 Opus, and Gemini 1.5 Pro—make investment decisions that are more human-like than their smaller-scale counterparts: investment depends more strongly on the visual salience of a stock’s price trajectory, a preference-based variable identified by Bose et al. (2022) as driving human investment behavior. Taken together, these results suggest that the patterns documented with cognitive psychology questions also hold in experimental economics studies: for preference- based questions, larger models produce increasingly human-like responses, while for belief-based questions, larger models produce increasingly rational responses
+
 Reminds me of Shannon Vallor's metaphor of AI as a mirror. 
 
 [https://youtu.be/rMmcb2EunEw?si=ztKJSfbwsA5zYSlf](https://youtu.be/rMmcb2EunEw?si=ztKJSfbwsA5zYSlf)
