@@ -4,8 +4,8 @@ date: 2026-04-08
 type: links
 tags:
   - A gaggle of links
-published: false
-draft: true
+published: true
+draft: false
 featured: false
 ---
 A few good rabbit holes for your enjoyment.
