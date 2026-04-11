@@ -125,3 +125,11 @@ As someone who is constantly anxious and worried about the future, [I relate to 
 >
 > For example, we can leverage LLMs to assist in brainstorming, gathering diverse viewpoints, identifying patterns in data, or summarizing large amounts of information. But we have to always review and fact-check the results using our own judgment and expertise. More importantly, we have to infuse our own original thinking and experience.
 
+---
+
+[A thoughtful post by Séb Krier on recursive self-improvement](https://technologik.substack.com/p/musings-on-recursive-self-improvement?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true) and a looming singularity:
+
+> On the deployment side, things get even more complicated. Deploying models into the world is not just a ‘nice to have’ thing that labs do out of charity. Labs have strong incentives to see these systems deployed, permitted, adopted, and integrated across the economy. Over time, this is one major way the scale of frontier spending gets justified. And in parallel, you need to go through the court cases, the regulatory burdens, the legal compliance, the weird adoption dynamics, the integration into legacy systems, the cultural adjustments, the political headwinds, everything! There are all sorts of reasons why deployment takes time and I think people are too quick to just wave these away with some handwavy remark about ‘competitive pressures’. This is less a point about narrow model self-improvement than about industrial diffusion: even if models improve quickly, the automation of the economy still has to run through deployment bottlenecks.
+>
+> When people talk about recursive self-improvement and then talk about society being unrecognizably transformed at a very fast speed, they’re not talking about models developing, but essentially about the entire economy self-improving, where every physical and human constraint disappears. I think it’s uncontroversial to claim that getting to this point will take time. Even if you get much better robots in the coming years, which I expect will happen, getting humans completely out of the physical and digital economy loop is a pretty damn high bar. And even in such a world, you still do not get a ‘hard takeoff’, because so much remains tethered to human time still.
+
