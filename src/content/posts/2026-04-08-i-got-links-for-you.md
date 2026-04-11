@@ -1,12 +1,69 @@
 ---
-title: "I got links for you "
+title: I got rabbit holes for you
 date: 2026-04-08
-type: musings
-url: https://www.nytimes.com/2026/04/06/opinion/banking-crisis-private-credit.html
+type: links
+tags:
+  - A gaggle of links
 published: false
 draft: true
 featured: false
 ---
+A few good rabbit holes for your enjoyment.
+
+---
+
+A few things to move you rouse you from The Marginalian: 
+
+As a person with remarkable talent for getting in my own way, [this one hit hard](https://www.themarginalian.org/2026/04/09/regret/): 
+
+> In a sentiment he would later deepen in [his moving 2013 Syracuse commencement address](https://www.themarginalian.org/2014/04/28/george-saunders-on-kindness-animated/), he adds:
+>
+> > So what is stopping me from stepping outside my habitual crap?
+> >
+> > My mind, my limited mind.
+> >
+> > The story of life is the story of the same basic mind readdressing the same problems in the same already discredited ways.
+>
+> In a wonderful aside from another essay, he offers what may be the best recipe for breaking out of the mind’s recursive and limiting stories:
+>
+> > Don’t be afraid to be confused. Try to remain permanently confused. Anything is possible. Stay open, forever, so open it hurts, and then open up some more, until the day you die, world without end, amen.
+
+[This his equally hard](https://www.themarginalian.org/2026/04/09/brian-eno-burnout/):
+
+> One thing experience shows us over and over, if we pay enough attention, is that the way out of such suffering, out of the abyss of self-concern with [our mattering project](https://www.themarginalian.org/2026/02/22/mattering-instinct-goldstein/), is always [unselfing](https://www.themarginalian.org/2021/12/26/margaret-fuller-the-all/). Eno describes the cycle:
+>
+> > It goes like this: me thinking, “What’s it all for?/ What’s the bloody point?/ I haven’t done anything I like and I don’t have a clue what to do next/ I’m a completely empty shell.” This lasts two days or so… Then I suddenly notice — apropos of something very minor, like the way a plane crosses the sky, or the smell of trees, or the light in the early evening, or remembering one of my brother’s jokes — that I am thoroughly enjoying myself and completely, utterly glad to be alive. Not one of the questions I asked myself has been answered. Instead, like all good philosophical questions, they’ve just ceased to matter.
+
+---
+
+Good quote:
+
+> "The most tragic form of loss isn't the loss of security; it's the loss of the capacity to imagine that things could be different."
+>
+> Ernst Bloch
+
+[Hat tip](https://substack.com/@nicholasgruen/note/c-241079581?utm_source=notes-share-action&r=1eft5) to the awesome Nicholas Gruen.
+
+---
+
+A fucking men! 
+
+> Not having a worthy purpose, a worthy “why”, will end up harming every important area of your life.
+>
+> The problem of distraction, for example, of excessive screen time, is also, at bottom, a “why” problem. It’s a problem of motivation. If I told you that you’d receive $1 million for quitting all screens for three months, every single person would do it in a heartbeat.
+>
+> People “can’t” stop scrolling because they don’t have a strong enough reason to cultivate an ultra-sharp, ultra-focused attention span. They’re not trying to write the next great novel, direct the next great film, or lead a great new political movement. Or even just be a person who wants to think more clearly and carefully. The same applies to porn addiction, junk eating, etc. You don’t have **a strong enough reason** to be free from those dopamine traps, to use yourself in the way you want to.
+>
+> No matter how you spin it, part of you has accepted mediocrity. And that’s a tragedy: because there is work that you, and only you, can bring into this world. There is an excellence in you that remains offline.
+
+I remembered this quote as I was reading the post:
+
+ “He who has a why to live for can bear almost any how.”
+
+― Friedrich Nietzsche
+
+---
+
 Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https://www.nytimes.com/2026/04/06/opinion/banking-crisis-private-credit.html):
 
 > Worth keeping in mind, for those nervous about private credit runs, is that the market is a relatively small sliver of the financial sector. It’s a roughly $2 trillion market, compared with a banking industry more than 12 times that size. That means the aftershocks should be smaller than the bank failures of the past.
@@ -19,7 +76,7 @@ Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https
 
 ---
 
-#### Stomach quarter full?
+Stomach quarter full?
 
 [This is depressing](https://scroll.in/article/1091341/why-indias-diabetes-epidemic-is-a-policy-failure). I didn't know.
 
@@ -31,7 +88,7 @@ Is a private credit crisis just a matter of time? [Yes, says Natash Sarin](https
 
 ---
 
-#### Myth and mythos
+Myth and mythos
 
 If [small models are really this good](https://aisle.com/blog/ai-cybersecurity-after-mythos-the-jagged-frontier) then we may be underestimating their impact when LLMs diffuse. 
 
