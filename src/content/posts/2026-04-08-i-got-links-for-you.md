@@ -77,3 +77,11 @@ Venkatesh Rao on [writing to think in the age of AI](https://substack.com/@contr
 >
 > Now with AI, I think about 10x faster than I can write, not just with language but with code, which used to be a painfully slow medium of thought for me before. Thinking by mindful doing was always more powerful and intense than thinking by writing but I sucked at doing anything besides writing. I still suck, but with Claude code, the AI does the actual doing, and I just have to bring the mindfulness, which I can. The result is thinky doing. I’m resurrecting a term I used to use privately for this long ago, “thinkering” (like tinkering). Thinkering with AI with or without words is about 10x faster than unassisted writing, which means trying to write about what’s on my mind feels painfully slow, laggy, and brittle. Like producing documentation. This divergence between writing and thinking will only increase. I can imagine a “Claude Make” that does for physical AI what Claude Code did for code. That will be mindful doing that’s even further from thinking by writing. It might be no-inner-monologue pure fingerspitzengefuhl zen-no-mind thoughtless thoughts. 
 
+---
+
+[AI exhibits human biases](https://substack.com/home/post/p-187518918). Shocking...not!
+
+> Note a couple of things. First, belief-based questions typically involve maths and statistics, and genAI models tend to be really good at maths, so they give the rational answer almost all the time.
+>
+> Second, when it comes to expressing preferences for one option or another, all they can rely on is what they have learned from the output of other humans. And that is where human-like behaviour comes in. In particular, the most popular genAI models GPT, Claude and Gemini show clear human-like biases in many of the tasks they were asked to perform.
+
