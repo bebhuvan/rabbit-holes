@@ -85,3 +85,9 @@ Venkatesh Rao on [writing to think in the age of AI](https://substack.com/@contr
 >
 > Second, when it comes to expressing preferences for one option or another, all they can rely on is what they have learned from the output of other humans. And that is where human-like behaviour comes in. In particular, the most popular genAI models GPT, Claude and Gemini show clear human-like biases in many of the tasks they were asked to perform.
 
+Reminds me of Shannon Vallor's metaphor of AI as a mirror. 
+
+[https://youtu.be/rMmcb2EunEw?si=ztKJSfbwsA5zYSlf](https://youtu.be/rMmcb2EunEw?si=ztKJSfbwsA5zYSlf)
+
+---
+
