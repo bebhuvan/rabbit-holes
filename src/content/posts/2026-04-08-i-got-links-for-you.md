@@ -46,7 +46,7 @@ Good quote:
 
 ---
 
-A fucking men! 
+[A fucking men!](https://omarnajjarine.substack.com/p/i-cant-overcome-my-lust-no-matter) 
 
 > Not having a worthy purpose, a worthy “why”, will end up harming every important area of your life.
 >
