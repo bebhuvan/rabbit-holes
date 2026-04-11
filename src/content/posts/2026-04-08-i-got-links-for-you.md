@@ -115,3 +115,13 @@ As someone who is constantly anxious and worried about the future, [I relate to 
 >
 > What they did was quietly, repeatedly demonstrate, in a way that apparently my rational brain could not do on its own, that I was already okay.
 
+---
+
+[Wonderful post by Stephanie](https://stephanieshen.substack.com/p/the-illusion-of-understanding?utm_source=share&utm_medium=android&r=1eft5&triedRedirect=true) Shen drawing on Wittgenstein to psychoanalyze LLMs:
+
+> Human thinking and understanding are embodied and rooted in a reality far greater than the compressed domain of language. LLMs only know what humans have figured out, which is a small subset of reality.  
+>
+> Truth and meaning result from human interactions with the real world. Once we anchor in this frame, LLMs are not a threat but merely a tool to leverage. They are, in essence, not different from calculators or planes, which can do specific things far better than humans, but are still the instruments under humans’ control. Instead of comparing them to humans, we should focus on determining how best to use them in appropriate circumstances with the right expectations.  
+>
+> For example, we can leverage LLMs to assist in brainstorming, gathering diverse viewpoints, identifying patterns in data, or summarizing large amounts of information. But we have to always review and fact-check the results using our own judgment and expertise. More importantly, we have to infuse our own original thinking and experience.
+
