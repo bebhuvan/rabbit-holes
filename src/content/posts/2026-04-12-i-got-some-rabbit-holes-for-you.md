@@ -20,3 +20,15 @@ I didn't know [India has large reserves](https://ourworldindata.org/countries-cr
 
 ![](/images/20260412_075458.jpg)
 
+---
+
+[Entropy everywhere!](https://x.com/i/status/2043060679062479200)
+
+> Good advice. All real edges decay over time. So your rate of improving the strategy determines your outcome:  
+>
+> improvement > edge decay => pnl growth, understanding compounds   
+> improvement = edge decay => stasis  
+> improvement < edge decay => eventual death  
+>
+> Note that if you stop improving the strategy you aren’t in stasis, you are in the start of your eventual death arc.
+
