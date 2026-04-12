@@ -26,7 +26,7 @@ I didn't know [India has large reserves](https://ourworldindata.org/countries-cr
 
 > Good advice. All real edges decay over time. So your rate of improving the strategy determines your outcome:  
 >
-> improvement > edge decay => pnl growth, understanding compounds   
+> improvement > edge decay => pnl growth, understanding compounds  
 > improvement = edge decay => stasis  
 > improvement < edge decay => eventual death  
 >
