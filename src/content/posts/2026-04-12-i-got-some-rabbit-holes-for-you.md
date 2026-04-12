@@ -32,3 +32,13 @@ I didn't know [India has large reserves](https://ourworldindata.org/countries-cr
 >
 > Note that if you stop improving the strategy you aren’t in stasis, you are in the start of your eventual death arc.
 
+---
+
+[This is true](https://en.wikipedia.org/wiki/Hofstadter%27s_law):
+
+> Hofstadter's law is a self-referential adage, coined by Douglas Hofstadter in his book Gödel, Escher, Bach: An Eternal Golden Braid (1979) to describe the widely experienced difficulty of accurately estimating the time it will take to complete tasks of substantial complexity:[1][2]
+>
+>  Hofstadter's law: It always takes longer than you expect, even when you take into account Hofstadter's law.[2]
+
+---
+
