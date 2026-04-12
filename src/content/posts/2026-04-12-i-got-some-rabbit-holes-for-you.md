@@ -1,7 +1,7 @@
 ---
 title: I got some rabbit holes for you
 date: 2026-04-12
-type: musings
+type: links
 published: false
 draft: true
 featured: false
@@ -16,6 +16,7 @@ featured: false
 
 ---
 
+I didn't know [India has large reserves](https://ourworldindata.org/countries-critical-minerals-needed-energy-transition) of rare earth minerals.
 
+![](/images/20260412_075458.jpg)
 
-&nbsp;
