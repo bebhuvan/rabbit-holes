@@ -42,3 +42,17 @@ I didn't know [India has large reserves](https://ourworldindata.org/countries-cr
 
 ---
 
+Whenever I read about China, I keep coming back to this part of the conversation between [Adam Tooze and Kaiser Kuo](https://www.sinicapodcast.com/p/transcript-adam-tooze-climbs-the):
+
+> **Adam Tooze:** And this is, I think, to really come to the answer to your question, like increasingly, I think—and I wrote a piece on Chartbook a while back on the basis of some work by a geographer called Jamie Peck, who’s thinking about the conjuncture using stuff coming from Stuart Hall, which I was interested in. And he and I agree that China isn’t just sort of an analytical problem. It is the lexical problem of the master key. Developmental China is the master key, I think, to understanding modernity. And without it, you just don’t have a hope of grasping what’s going on.
+
+I thought about this while skimming a [CSIS piece](https://www.csis.org/analysis/chinas-high-tech-drive-10-charts) on China’s push for technological supremacy.
+
+As an aside, I’m a sucker for China charts because they all look so unreal. If someone who hasn’t followed China looked at these charts, they’d be perfectly rational in calling them made up.
+
+![](/images/china-pharma-supremacy-CSIS-1.webp)
+
+![](/images/china-vs-us-r-and-d-csis.webp)
+
+---
+
