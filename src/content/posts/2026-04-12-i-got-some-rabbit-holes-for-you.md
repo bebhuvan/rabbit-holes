@@ -6,6 +6,16 @@ published: false
 draft: true
 featured: false
 ---
+
+
+&nbsp;
+
+---
+
+[Smallweb](https://smallweb.blog) has a fresh coat of paint, and I've also added more feeds worth following. Check it out. 
+
+---
+
 [Dreadful yet beautiful:](https://variety.com/2022/tv/news/william-shatner-space-boldly-go-excerpt-1235395113/)
 
 >  It was among the strongest feelings of grief I have ever encountered. The contrast between the vicious coldness of space and the warm nurturing of Earth below filled me with overwhelming sadness. Every day, we are confronted with the knowledge of further destruction of Earth at our hands: the extinction of animal species, of flora and fauna . . . things that took five billion years to evolve, and suddenly we will never see them again because of the interference of mankind. It filled me with dread. My trip to space was supposed to be a celebration; instead, it felt like a funeral.
@@ -71,4 +81,6 @@ I'm a huge fan of Kyla Scanlon, and, unsurprisingly, [her latest piece is brilli
 > - Same with social media - if you’re having trouble establishing connections in real life, the online world provides a form of that, but people are increasingly disturbed by our collective reliance on it, as we saw in the recent [Google and Meta ruling](https://www.wsj.com/tech/meta-and-youtube-lose-landmark-social-media-trial-33e4c5cb).
 >
 > Naturally, industries have formed to monetize this nihlism through promising solutions. But the solutions never arrive, because the nihilism, the giving up, must persist in order for these products to survive. [It’s a version of Ivan Illich’s Limits to Medicine](https://en.wikipedia.org/wiki/Limits_to_Medicine), where he argues that the medical establishment itself produces illness by making people dependent on professional intervention rather than building health. That effect carries across all these optimization tools, creating dependency on the fix rather than addressing the cause. The optimization economy can't deliver control, because the desperation is the market condition, and the pursuit of control through optimization is itself a loss of control.
+
+---
 
