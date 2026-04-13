@@ -6,6 +6,10 @@ published: false
 draft: true
 featured: false
 ---
+
+
+---
+
 I regret [not reading Whitman](https://poeticreveries.com/read/walt-whitman/song-of-myself-19/) much earlier:
 
 > *Do you guess I have some intricate purpose?*
@@ -22,7 +26,9 @@ I regret [not reading Whitman](https://poeticreveries.com/read/walt-whitman/song
 >
 > *I might not tell everybody, but I will tell you.*
 
-Came by this poem thanks to her [warm and moving tribute](https://www.amazon.in/Upstream-Selected-Essays-Mary-Oliver/dp/1594206708) to Whitman in her marvelous book *[Upstream:](https://www.amazon.in/Upstream-Selected-Essays-Mary-Oliver/dp/1594206708)*
+Came across this poem thanks to her [warm and moving tribute](https://www.amazon.in/Upstream-Selected-Essays-Mary-Oliver/dp/1594206708) to Whitman in her marvelous book *[Upstream.](https://www.amazon.in/Upstream-Selected-Essays-Mary-Oliver/dp/1594206708)*
+
+> Thus Whitman’s poems stood before me like a model of delivery when I began to write poems myself: I mean the oceanic power and rumble that travels through a Whitman poem—the incantatory syntax, the boundless affirmation. In those years, truth was elusive—as was my own faith that I could recognize and contain it. Whitman kept me from the swamps of a worse uncertainty, and I lived many hours within the lit circle of his certainty, and his bravado. *Unscrew the locks from the doors! Unscrew the doors themselves from their jambs!* And there was the passion which he invested in the poems. The metaphysical curiosity! The oracular tenderness with which he viewed the world-its roughness, its differences, the stars, the spider—nothing was outside the range of his interest. I reveled in the specificity of his words. And his faith—that kept my spirit buoyant surely, though his faith was without a name that I ever heard of. *Do you guess I have some intricate purpose? Well I have … for the April rain has, and the mica on the side of a rock has.*
 
 ---
 
