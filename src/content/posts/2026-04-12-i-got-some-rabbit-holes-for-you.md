@@ -56,3 +56,9 @@ As an aside, I’m a sucker for China charts because they all look so unreal. If
 
 ---
 
+Dollar dominance is least worst option out of the most worst options, [argues Eswar Prasad](https://www.ft.com/content/5cf684f1-d198-40aa-8d4c-2e2bbb5873f0):
+
+> The dollar will thus remain the pre-eminent global currency, at least in relative terms, even if it loses some of its shine. Meanwhile, the second tier, comprised of all other currencies, is fragmenting into a set of middle-sized and small players, each with its own limitations and weaknesses.  What if this resulted in greater parity, with the dollar ceasing to be dominant but no other currency taking its place? We would then have multiple currencies competing, none of them particularly sound or trusted. In a moment of crisis, investors wouldn’t know which currency to turn to, swinging sharply from one to another and adding to instability. With no anchor currency that everyone was familiar with and trusted, no central bank would be in the position of providing abundant liquidity to global markets, as the Fed did during the great financial crisis.
+
+---
+
