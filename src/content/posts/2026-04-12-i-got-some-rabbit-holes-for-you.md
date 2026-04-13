@@ -6,9 +6,23 @@ published: false
 draft: true
 featured: false
 ---
+I regret [not reading Whitman](https://poeticreveries.com/read/walt-whitman/song-of-myself-19/) much earlier:
 
+> *Do you guess I have some intricate purpose?*
+>
+> *Well I have, for the Fourth-month showers have, and the mica on the side of a rock has.*
+>
+> *Do you take it I would astonish?*
+>
+> *Does the daylight astonish? does the early redstart twittering through the woods?*
+>
+> *Do I astonish more than they?*
+>
+> *This hour I tell things in confidence,*
+>
+> *I might not tell everybody, but I will tell you.*
 
-&nbsp;
+Came by this poem thanks to her [warm and moving tribute](https://www.amazon.in/Upstream-Selected-Essays-Mary-Oliver/dp/1594206708) to Whitman in her marvelous book *[Upstream:](https://www.amazon.in/Upstream-Selected-Essays-Mary-Oliver/dp/1594206708)*
 
 ---
 
