@@ -62,3 +62,13 @@ Dollar dominance is least worst option out of the most worst options, [argues Es
 
 ---
 
+I'm a huge fan of Kyla Scanlon, and, unsurprisingly, [her latest piece is brilliant](https://kyla.substack.com/p/the-ozempicization-of-the-economy?selection=96068488-0c13-42b0-a389-9a9e66330b80#:~:text=The%20optimization%20economy%20can't%20deliver%20control%2C%20because%20the%20desperation%20is%20the%20market%20condition%2C%20and%20the%20pursuit%20of%20control%20through%20optimization%20is%20itself%20a%20loss%20of%20control): 
+
+> The desire for control is really intense right now, showing up in lots of corners of both the digital and physical world.
+>
+> - I think it is functionally a response to [financial nihilism](https://www.wsj.com/personal-finance/financial-nihilism-gen-z-gambling-meme-stocks-options-kyla-scanlon-7ae4f2aa?gaa_at=eafs&gaa_n=AWEtsqfrimiWUcLs9eJNk5guj5m5urEnGaVD3eliey4A1K_cJxacuIyRqYRZxHTA1Gc%3D&gaa_ts=69c3dc9a&gaa_sig=33qprD_ToPVIutBEUAwY3wgE7WnroU6tH-9K8xRS1rt2m2JC3vQ1Vqzd55lz2g8XpEBy1suiOhMfvZpN9xjrDg%3D%3D), where people stop believing that the underlying economy is working for them and turn to gambling or some other seemingly quick fix instead to try and find stability.
+> - 80% of Gen Z and 75% of Millennials feel behind, according to a survey from [Northwestern Mutual](https://news.northwesternmutual.com/2026-03-09-Americans-Finances-are-Improving-But-Some-Still-Feel-Behind-and-are-Turning-to-Prediction-Markets,-Sports-Betting-and-Crypto-to-Catch-Up,-According-to-Northwestern-Mutuals-2026-Planning-Progress-Study), and that drives them to speculation.
+> - Same with social media - if you’re having trouble establishing connections in real life, the online world provides a form of that, but people are increasingly disturbed by our collective reliance on it, as we saw in the recent [Google and Meta ruling](https://www.wsj.com/tech/meta-and-youtube-lose-landmark-social-media-trial-33e4c5cb).
+>
+> Naturally, industries have formed to monetize this nihlism through promising solutions. But the solutions never arrive, because the nihilism, the giving up, must persist in order for these products to survive. [It’s a version of Ivan Illich’s Limits to Medicine](https://en.wikipedia.org/wiki/Limits_to_Medicine), where he argues that the medical establishment itself produces illness by making people dependent on professional intervention rather than building health. That effect carries across all these optimization tools, creating dependency on the fix rather than addressing the cause. The optimization economy can't deliver control, because the desperation is the market condition, and the pursuit of control through optimization is itself a loss of control.
+
