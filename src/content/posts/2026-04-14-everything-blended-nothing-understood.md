@@ -12,7 +12,7 @@ featured: false
 
 **Epistemic status:** Not very sure. I'm thinking this through out loud. This is more of a placeholder for future thought than a finished argument — something to return to with more reading, more perspectives, and more time. Treat it accordingly.
 
-**How this was written:** I dictated the whole thing as a series of voice notes, dumped the monologue into Claude, and assembled the post with its help.  
+**How this was written:** I dictated the whole thing as a series of voice notes, dumped the monologue into Claude, and assembled the post with its help.  The irony of using AI to write a post about the dangers of AI-assisted compression is not lost on me.
 
 ---
 
