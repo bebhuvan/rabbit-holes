@@ -6,8 +6,6 @@ published: false
 draft: true
 featured: false
 ---
-
-
 ---
 
 I regret [not reading Whitman](https://poeticreveries.com/read/walt-whitman/song-of-myself-19/) much earlier:
@@ -36,6 +34,16 @@ Came across this poem thanks to her [warm and moving tribute](https://www.amazon
 
 ---
 
+---
+
+From *[Four Thousand Weeks: Time Management for Mortals](https://www.amazon.in/Four-Thousand-Weeks-Management-Mortals/dp/0374159122)*: 
+
+> In his book *Back to Sanity*, the psychologist Steve Taylor recalls watching tourists at the British Museum in London who weren't really looking at the Rosetta Stone, the ancient Egyptian artefact on display in front of them, so much as preparing to look at it later, by recording images and videos of it on their phones. So intently were they focused on using their time for a future benefit – for the ability to revisit or share the experience later on – that they were barely experiencing the exhibition itself at all. (And who ever watches most of those videos anyway?) Of course, grumbling about younger people’s smartphone habits is a favourite pastime of middle-aged curmudgeons like Taylor and me. But his deeper point is that we're all frequently guilty of something similar. We treat everything we’re doing – life itself, in other words – as valuable only insofar as it lays the groundwork for something else.
+>
+>
+
+---
+
 [Dreadful yet beautiful:](https://variety.com/2022/tv/news/william-shatner-space-boldly-go-excerpt-1235395113/)
 
 >  It was among the strongest feelings of grief I have ever encountered. The contrast between the vicious coldness of space and the warm nurturing of Earth below filled me with overwhelming sadness. Every day, we are confronted with the knowledge of further destruction of Earth at our hands: the extinction of animal species, of flora and fauna . . . things that took five billion years to evolve, and suddenly we will never see them again because of the interference of mankind. It filled me with dread. My trip to space was supposed to be a celebration; instead, it felt like a funeral.
@@ -49,6 +57,14 @@ Came across this poem thanks to her [warm and moving tribute](https://www.amazon
 I didn't know [India has large reserves](https://ourworldindata.org/countries-critical-minerals-needed-energy-transition) of rare earth minerals.
 
 ![](/images/20260412_075458.jpg)
+
+---
+
+[Good stuff](https://x.com/johnrhanger/status/2043361420553670960?s=20): 
+
+![](/images/gobal-solar.webp)
+
+
 
 ---
 
