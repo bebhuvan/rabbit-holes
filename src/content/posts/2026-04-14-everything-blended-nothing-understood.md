@@ -18,6 +18,8 @@ featured: false
 
 Something I've been thinking about for a while, but this particular post was prompted by that Gemini AI button you see under YouTube videos. Click on it, and one of the pre-selected prompts is "summarize this video."
 
+![](/images/youtube-summarize-button.webp)
+
 And it's not just there. On Google Chat, if you haven't read the last 10 messages, the first thing you see when you open a chat is a prompt to summarize them. More broadly, there's been this anxiety that [people don't read](https://www.ft.com/content/583de986-a295-4697-a2fe-3c6b13c99145?syn-25a6b1a6=1), that reading is declining as a cultural habit, that we're entering a compression culture where everything has to be stripped of nuance and context and delivered in bite-sized morsels.
 
 As AI keeps getting better, and given that one thing it's genuinely good at is transforming text, I keep wondering: what are the unintended consequences of this on how people read and think?
