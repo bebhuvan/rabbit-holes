@@ -1,11 +1,15 @@
 ---
 title: I got some rabbit holes for you
-date: 2026-04-12
+date: 2026-04-15
 type: links
+related_posts:
+  - A gaggle of links
 published: false
 draft: true
 featured: false
 ---
+I got some rabbit holes for you. 
+
 ---
 
 I regret [not reading Whitman](https://poeticreveries.com/read/walt-whitman/song-of-myself-19/) much earlier:
