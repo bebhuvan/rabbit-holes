@@ -32,6 +32,8 @@ Came across this poem thanks to her [warm and moving tribute](https://www.amazon
 
 [Smallweb](https://smallweb.blog) has a fresh coat of paint, and I've also added more feeds worth following. Check it out. 
 
+Claude gave [Seneca.ink](http://Seneca.ink) a visual uplift and made several visual and reading enhancements. 
+
 ---
 
 ---
