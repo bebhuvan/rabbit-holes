@@ -3,6 +3,8 @@ title: Prompting people
 date: 2026-04-23
 type: musings
 url: https://substack.com/@henrikkarlsson/note/c-247668851?utm_source=notes-share-action&r=45bycr
+tags:
+  - AI, Life
 published: true
 draft: false
 featured: false
