@@ -2,8 +2,8 @@
 title: I got links for you
 date: 2026-05-12
 type: links
-published: false
-draft: true
+published: true
+draft: false
 featured: false
 ---
 The AI squeeze is real. While AI may or may not lead to *widespread* job losses, I think people are underestimating the number of basic job it will kill, jobs that were done by entry level e
@@ -26,7 +26,7 @@ The AI squeeze is real. While AI may or may not lead to *widespread* job losses,
 
 [The age of weaponized interdependence](https://www.ft.com/content/5fefc72b-aded-46d6-b509-1904204ca8b0):
 
-> Please use the sharing tools found via the share button at the top or side of articles. Copying articles to   
+> Please use the sharing tools found via the share button at the top or side of articles. Copying articles to  
 > The post-cold war assumption that dependencies were broadly shared and the open economy was a global public good has quietly come apart. We are living through an age of asymmetry, a transitional period in which power flows less from size or wealth than from the ability to convert imbalance into leverage. Strategic advantage now accrues to actors that recognise the imbalance and act on it before a new equilibrium settles. 
 >
 > While Tehran and TSMC compound advantage, others are absorbing costs they haven’t yet learned to price, from the EU’s limited sovereignty over its own consumer data to Volkswagen, whose EV transition rests on Chinese components.
