@@ -14,3 +14,11 @@ I'm surprised that these proposals have become part of the mainstream discourse 
 
 ---
 
+[The will to care](https://open.substack.com/pub/kindredspirits/p/god-i-just-want-to-get-smarter?utm_source=share&utm_medium=android&r=1eft5):
+
+> I think caring about being good at something, at the quality of being good, matters. For one, it allows you to expose yourself to the outer and inner mechanics of that thing. The indifferent person glazes over details, allowing their mental models to remain low-resolution. The person who cares about being good is open to 10x more data, because they become naturally curious about what makes something good (and not in the moral sense).
+>
+> Unfortunately or fortunately, caring is a prerequisite for becoming smarter. If I’m not forever thirsting to crack open the world around me, it’s—in my opinion—almost impossible to gather the data I need to become smarter.
+
+---
+
