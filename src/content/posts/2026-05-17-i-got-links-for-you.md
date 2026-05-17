@@ -1,5 +1,5 @@
 ---
-title: "I got links for you "
+title: "A gaggle of links "
 date: 2026-05-17
 type: musings
 published: false
