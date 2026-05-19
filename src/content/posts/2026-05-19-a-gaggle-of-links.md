@@ -1,9 +1,11 @@
 ---
 title: "A gaggle of links "
 date: 2026-05-19
-type: musings
-published: false
-draft: true
+type: links
+tags:
+  - AI
+published: true
+draft: false
 featured: false
 ---
 [Ken Griffin on AI](https://www.youtube.com/watch?v=Csjy_A3Kj9s): 
