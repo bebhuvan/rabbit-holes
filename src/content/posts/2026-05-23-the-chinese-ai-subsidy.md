@@ -33,3 +33,11 @@ A lot of the people I follow online, including several companies, are already do
 I don’t know the full economics here. I don’t know if DeepSeek is losing money, or what the unit economics look like. But as long as these prices are available, I’ll use them.  
 
 Once again, China is leading the race in making expensive things cheap.
+
+I’m also wondering what all of this means for what people lazily call the “global south.” I hate that term, but the point still stands. A lot of poorer countries simply cannot afford to build around the APIs of the American labs.   
+  
+And I don’t think we have properly thought through the first-order and second-order effects of low-cost Chinese AI models, low-cost Chinese API pricing, and the vast menu of open-source and open-weight Chinese models.  
+  
+For individuals, small businesses, universities, developers, civil society groups, and even governments in poorer countries, this could be a very big deal. If you can get good-enough AI at a fraction of the cost, or self-host models instead of paying API rent forever, the possibilities increase.
+
+We are already starting to see stories of individuals, small businesses, and governments across Asia and Africa using these models in creative ways. And I suspect this is still very early. We probably haven’t yet internalized what happens when capable AI becomes cheap enough for countries, companies, and people who were never really the target customers of the American frontier labs.
