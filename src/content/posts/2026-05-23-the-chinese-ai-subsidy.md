@@ -26,6 +26,10 @@ I had also used GLM Turbo along with Qwen in a few digitization tasks, and it wa
 
 So yes, it’s kind of funny that China is once again making costly things cheaper for the rest of the world. You can now get near-frontier-model-like capabilities for a whole lot of regular use cases at ridiculously low prices.  
 
+The subsidy is not just in the API pricing either. A lot of these Chinese models are also open-weight or open-source. DeepSeek V4 Pro’s weights are available under an MIT license, Qwen has a whole ecosystem of open models, and [Z.ai](http://Z.ai) has open-sourced several GLM models under permissive licenses. If you have the technical ability and the infrastructure, you can download the models and self-host them instead of paying API rent forever.
+
+A lot of the people I follow online, including several companies, are already doing this. They are realizing that for many internal workflows, inference-heavy tasks, document processing, coding assistants, classification, OCR cleanup, customer-support automation, and boring high-volume work, self-hosting a good-enough open model can lead to phenomenal cost savings compared to piping everything through the APIs of the American labs.
+
 I don’t know the full economics here. I don’t know if DeepSeek is losing money, or what the unit economics look like. But as long as these prices are available, I’ll use them.  
 
 Once again, China is leading the race in making expensive things cheap.
