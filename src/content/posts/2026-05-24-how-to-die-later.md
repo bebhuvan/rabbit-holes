@@ -17,3 +17,7 @@ Feels commonsensical enough:
 
 ---
 
+The brutal economics of the AI race:
+
+> The figures hide a larger structural problem. Even when inference becomes profitable, the incentives are for the labs to invest back every dollar into the next training run in order to stay ahead. The cost of doing that run keeps increasing: Epoch AI estimates that the cost of training a frontier model has risen about 2.4 times a year since 2016. They cannot stop and harvest, that is the logic of the race. And when the growth slows down, the rest catch up. This has been an old trap for innovators. The classic case is EMI, which invented the CT scanner in the early 1970s. Its chief engineer won the Nobel prize in 1979. By 1980 it had to be rescued, because all the revenue it had made from its invention was ploughed back into staying ahead.
+
