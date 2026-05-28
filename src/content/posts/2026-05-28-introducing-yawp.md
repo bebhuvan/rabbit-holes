@@ -5,6 +5,7 @@ type: links
 url: https://bebhuvan.github.io/yawp/
 tags:
   - "Voice typing "
+  - "Vibe coding "
 published: true
 draft: false
 featured: false
