@@ -88,3 +88,8 @@ Whether there was something worth saying in the first place. Whether someone did
 Everything else feels secondary.
 
 But to each their own.
+
+Agree with what's [Alex Tabarrok is saying](https://x.com/i/status/2068392110026367379):
+
+> We should treat this just as if another Erdos problem has been solved by an AI. Another literary prize has been won by an AI! Amazing!
+
