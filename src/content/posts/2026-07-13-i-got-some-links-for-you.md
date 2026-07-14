@@ -32,3 +32,14 @@ Good to know I’m not [eating a credit card's worth of plastic](https://e360.ya
 
 ---
 
+Good quote: 
+
+> “It is inevitable that we face problems, but no particular problem is inevitable. We survive, and thrive, by solving each problem as it comes up. And, since the human ability to transform nature is limited only by the laws of physics, none of the endless stream of problems will ever constitute an impassable barrier. So a complementary and equally important truth about people and the physical world is that problems are soluble. By ‘soluble’ I mean that the right knowledge would solve them. It is not, of course, that we can possess knowledge just by wishing for it; but it is in principle accessible to”
+>
+> ― David Deutsch, The Beginning of Infinity: Explanations That Transform the World.
+
+---
+
+
+
+&nbsp;
