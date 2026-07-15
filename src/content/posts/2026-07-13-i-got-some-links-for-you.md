@@ -40,6 +40,9 @@ Good quote:
 
 ---
 
+[Academic food fight](https://www.vox.com/future-perfect/494045/ultra-processed-foods-science-rcts?utm_source=sailthru&utm_medium=email_acq&utm_campaign=ssultraprocessedfoodswidesend&ueid=9a288c0775cb1bc5fb39edf2ec7c16fe&utm_term=Highly%20engaged%20non-contribs) on what the hell '*ultra-processed foods' means:* 
 
+> The *Science* analysis, though, finds that the ultra-processed and non-ultra-processed diets in Hall’s study and other RCTs still differed in ways that could confound the trials’ results. The UPFs used in the trials tended to be softer than the non-ultra-processed foods, which can accelerate eating rate and lead to excess calorie consumption. They also tended to be more energy-dense (meaning that they had more calories per gram of food), less fiber-dense, and higher in saturated fat and sodium.
+>
+> These aren’t inherent properties of “ultra-processed” foods. “While UPFs are often characterized by properties such as soft texture, higher energy density, and lower fiber content, these features are neither unique to UPFs nor consistently present across them,” Faidon Magkos, a professor in obesity and metabolism at the University of Copenhagen and an author of the *Science* analysis, told me in an email. “There are many non-UPF foods with similar properties, and conversely, many UPFs that are harder in texture, lower in energy density, or higher in fiber.” (To name one example, I eat these [ultra-processed bars](https://archive.md/o/1Igvs/https://nugo.com/products/nugo-slim-chocolate-mint), which are hard in texture and a good source of fiber, multiple times a week.)
 
-&nbsp;
