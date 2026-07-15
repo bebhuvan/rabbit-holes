@@ -2,7 +2,7 @@
 title: I got some links for you
 date: 2026-07-15
 type: musings
-published: false
+published: true
 draft: false
 featured: false
 ---
