@@ -42,10 +42,11 @@ Roshan Kishore, as usual, [provides a brilliant statistical angle](https://x.com
 [https://x.com/Roshanjnu/status/2080562584890274217?s=20](https://x.com/Roshanjnu/status/2080562584890274217?s=20)
 
 [https://x.com/Roshanjnu/status/2079780872186978403?s=20](https://x.com/Roshanjnu/status/2079780872186978403?s=20)  
-  
+
 If you are wondering why I said *yutes:*
 
 [https://www.youtube.com/watch?v=lmnI-wubL1M](https://www.youtube.com/watch?v=lmnI-wubL1M)
 
 ---
 
+I had worked on a detailed brief on what we know about how India works for [This Indian Life](https://thisindianlife.today/articles/how-does-india-work/). 
