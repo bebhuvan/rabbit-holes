@@ -68,9 +68,12 @@ content:
               label: 🎯 Practical
       
       - name: url
-        label: External URL
+        label: Source URL
         type: string
-        description: "Required for Links, Videos, and Music"
+        description: "For link posts: paste one complete URL only, including https://. Put commentary and additional links in Content."
+        pattern:
+          regex: "^https?://\\S+$"
+          message: "Enter one complete URL beginning with http:// or https://, with no spaces or commentary."
       
       - name: tags
         label: Tags

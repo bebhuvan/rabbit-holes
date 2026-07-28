@@ -2,11 +2,10 @@
 title: Visualizing trade flows and tariffs
 date: 2026-07-28
 type: links
-url: Cool site to visualize tariffs, sanctions, and global trade deals.
-  https://portolan.cc/ https://x.com/i/status/2081473121953911112
+url: https://portolan.cc/
 tags:
   - Trade
-  - "Tariffs "
+  - Tariffs
   - Sanctions
 published: true
 draft: false
