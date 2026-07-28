@@ -1,0 +1,19 @@
+name = "rabbit-holes"
+main = "./dist/_worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = false
+preview_urls = false
+
+# Production routes are provisioned through wrangler.toml. CI only updates the
+# existing Worker because its scoped API token cannot administer zone routes.
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+
+[vars]
+ENVIRONMENT = "production"
+GITHUB_REPO = "bebhuvan/rabbit-holes"
+
+[build]
+command = "npm run build"
