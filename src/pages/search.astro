@@ -3,535 +3,118 @@ export const prerender = true;
 
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import '../styles/ledger.css';
+import { canonicalTags, newestFirst } from '../utils/content';
 
-const posts = await getCollection('posts', ({ data }) => {
-  return data.published !== false;
-});
-
-// Sort posts by date (newest first)
-const sortedPosts = posts.sort((a, b) => 
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-);
-
-// Get all unique tags for suggestions
-const allTags = [...new Set(posts.flatMap(post => post.data.tags))];
-
-// Prepare search data for client-side
-const searchIndex = posts.map(post => ({
-  slug: post.slug,
-  title: post.data.title,
-  content: post.body,
-  type: post.data.type,
-  tags: post.data.tags || [],
-  date: post.data.date.toISOString(),
-  url: `/posts/${post.slug}`,
-  description: post.data.description || ''
-}));
+const posts = newestFirst(await getCollection('posts'));
+const tags = canonicalTags(posts).slice(0, 18);
 ---
 
-<Base title="Search — Rabbit Holes" description="Search through all blog posts and discover content">
-  <div class="search-container">
-    <div class="search-wrapper">
-      <div class="page-header">
-      <div class="page-label">Search</div>
-      <h1>Find Your Rabbit Hole</h1>
-      <p class="page-description">Search through {posts.length} posts by title, content, or tags.</p>
+<Base title="Search" description="Search the titles, subjects, and text of the commonplace book." active="search">
+  <main class="page-shell" style="max-width:52rem">
+    <header class="ledger-head">
+      <div class="ledger-kicker">Search · {posts.length} folios</div>
+      <h1>Find a thread.</h1>
+      <p>Search titles, subjects, and a compact index of the text. The full book is loaded only when you begin typing.</p>
+    </header>
+    <div class="ledger-tools">
+      <label class="visually-hidden" for="search-query">Search Rabbit Holes</label>
+      <input class="ledger-search" id="search-query" type="search" placeholder="Try “attention”, “China”, or “poetry”…" autocomplete="off" autofocus />
     </div>
-
-    <div class="search-box">
-      <div class="search-input-wrapper">
-        <input
-          type="text"
-          id="search-input"
-          class="search-input"
-          placeholder="Search archives..."
-          autocomplete="off"
-        />
-        <span class="search-icon">⌘</span>
-      </div>
+    <p class="search-status" data-search-status>Choose a subject below, or begin typing.</p>
+    <div class="search-results" data-search-results></div>
+    <div class="tag-cloud" data-search-suggestions>
+      {tags.map((tag) => <a href={`/tags/${tag.slug}`}>{tag.name} · {tag.count}</a>)}
     </div>
+  </main>
 
-    <div class="filter-tabs">
-      <button class="filter-tab active" data-filter="all">All</button>
-      <button class="filter-tab" data-filter="musings">Musings</button>
-      <button class="filter-tab" data-filter="links">Links</button>
-      <button class="filter-tab" data-filter="reflections">Reflections</button>
-      <button class="filter-tab" data-filter="verse">Verse</button>
-    </div>
-
-    <div id="search-status" class="search-status"></div>
-
-    <div id="search-results" class="search-results"></div>
-
-    <div id="search-suggestions" class="search-suggestions">
-      <h2 class="suggestions-title">Popular Tags</h2>
-      <div class="tag-cloud">
-        {allTags.slice(0, 20).map((tag) => (
-          <button class="tag-btn" data-tag={tag}>#{tag}</button>
-        ))}
-      </div>
-    </div>
-    </div>
-  </div>
-
-  <style>
-    .search-container {
-      width: 100%;
-      max-width: 740px;
-      margin: 0 auto;
-      padding: 0 2rem;
+  <script>
+    interface SearchItem {
+      slug: string;
+      number: string;
+      title: string;
+      description: string;
+      content: string;
+      kind: string;
+      kindLabel: string;
+      tags: string[];
+      date: string;
     }
 
-    .search-wrapper {
-      padding: 4rem 0 6rem;
-    }
+    const input = document.querySelector<HTMLInputElement>('#search-query');
+    const results = document.querySelector<HTMLElement>('[data-search-results]');
+    const status = document.querySelector<HTMLElement>('[data-search-status]');
+    const suggestions = document.querySelector<HTMLElement>('[data-search-suggestions]');
+    let index: SearchItem[] | null = null;
 
-    .page-header {
-      margin-bottom: 3rem;
-      text-align: center;
-    }
+    const loadIndex = async () => {
+      if (index) return index;
+      status && (status.textContent = 'Opening the index…');
+      const response = await fetch('/search-index.json');
+      if (!response.ok) throw new Error('Search index unavailable');
+      index = await response.json();
+      return index!;
+    };
 
-    .page-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--color-text-light);
-      margin-bottom: 1rem;
-    }
+    const render = (items: SearchItem[], term: string) => {
+      if (!results || !status) return;
+      results.replaceChildren();
+      status.textContent = items.length
+        ? `${items.length} ${items.length === 1 ? 'folio' : 'folios'} for “${term}”.`
+        : `No folios found for “${term}”.`;
 
-    h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--green), var(--blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+      items.slice(0, 40).forEach((item) => {
+        const link = document.createElement('a');
+        link.className = 'search-result';
+        link.href = `/posts/${item.slug}`;
 
-    .page-description {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: var(--color-text-tertiary);
-      max-width: 500px;
-      margin: 0 auto;
-    }
+        const number = document.createElement('span');
+        number.className = 'result-num';
+        number.textContent = item.number;
 
-    .search-box {
-      margin-bottom: 2.5rem;
-      padding-bottom: 2.5rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .search-input-wrapper {
-      position: relative;
-    }
-
-    .search-input {
-      width: 100%;
-      font-family: 'Newsreader', Georgia, serif;
-      font-size: 1rem;
-      padding: 1rem 3rem 1rem 1.25rem;
-      border: 2px solid var(--color-border);
-      border-radius: 2px;
-      background: var(--color-bg);
-      color: var(--color-text-secondary);
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    .search-input:focus {
-      border-color: var(--green);
-    }
-
-    .search-input::placeholder {
-      color: var(--color-text-light);
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--color-text-light);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-tab {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 0.5rem 1rem;
-      border: 2px solid var(--color-border);
-      background: transparent;
-      color: var(--color-text-tertiary);
-      cursor: pointer;
-      text-transform: uppercase;
-      border-radius: 2px;
-      transition: all 0.2s ease;
-    }
-
-    .filter-tab.active {
-      background: var(--color-text-primary);
-      color: var(--color-bg);
-      border-color: var(--color-text-primary);
-    }
-
-    .filter-tab:hover {
-      background: var(--green);
-      color: white;
-      border-color: var(--green);
-      transform: translateY(-2px);
-    }
-
-    .search-status {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--color-text-light);
-      margin-bottom: 2rem;
-      padding: 0.75rem 0;
-      border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .search-status:empty {
-      display: none;
-    }
-
-    .search-results {
-      margin-bottom: 4rem;
-    }
-
-    :global(.search-result) {
-      padding: 2rem 0 2rem 1rem;
-      border-bottom: 1px solid var(--color-border);
-      border-left: 3px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    :global(.search-result:hover) {
-      padding-left: 1.5rem;
-      border-left-color: var(--green);
-    }
-
-    :global(.search-result:last-child) {
-      border-bottom: none;
-    }
-
-    :global(.search-result-meta) {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    :global(.search-result-date) {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--green);
-      letter-spacing: 0.1em;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    :global(.search-result-type) {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
-      padding: 0.25rem 0.5rem;
-      background: var(--green);
-      color: white;
-      border-radius: 2px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    :global(.search-result-type::before) {
-      content: none;
-    }
-
-    :global(.search-result-title) {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.25rem, 3vw, 1.5rem);
-      font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: -0.01em;
-      margin-bottom: 0.5rem;
-      color: var(--color-text-primary);
-    }
-
-    :global(.search-result-title a) {
-      color: var(--color-text-primary);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    :global(.search-result-title a:hover) {
-      color: var(--green);
-    }
-
-    :global(.search-result-snippet) {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: var(--color-text-tertiary);
-    }
-
-    .search-suggestions {
-      margin-top: 3rem;
-    }
-
-    .suggestions-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: var(--color-text-primary);
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tag-btn {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 0.4rem 0.75rem;
-      border: 2px solid var(--color-border);
-      background: transparent;
-      color: var(--color-text-tertiary);
-      cursor: pointer;
-      border-radius: 2px;
-      transition: all 0.2s ease;
-    }
-
-    .tag-btn:hover {
-      background: var(--purple);
-      color: white;
-      border-color: var(--purple);
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 768px) {
-      .search-container {
-        padding: 0 1.5rem;
-      }
-
-      .search-wrapper {
-        padding: 3rem 0 5rem;
-      }
-
-      .page-header {
-        margin-bottom: 2.5rem;
-      }
-
-      .search-box {
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
-      }
-
-      .filter-tabs {
-        margin-bottom: 2.5rem;
-      }
-
-      :global(.search-result) {
-        padding: 1.5rem 0 1.5rem 0.75rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .search-container {
-        padding: 0 1rem;
-      }
-    }
-  </style>
-
-  <script type="module" define:vars={{ searchIndex }}>
-    console.log('Search index loaded:', searchIndex.length, 'posts');
-
-    let currentFilter = 'all';
-
-    // Search input event listeners
-    const searchInput = document.getElementById('search-input');
-
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        const query = this.value.trim();
-        if (query.length >= 2) {
-          performSearch(query);
-        } else if (query.length === 0) {
-          clearResults();
-        }
+        const body = document.createElement('span');
+        const title = document.createElement('h2');
+        title.textContent = item.title;
+        const description = document.createElement('p');
+        description.textContent = item.description;
+        const meta = document.createElement('span');
+        meta.className = 'result-meta';
+        meta.textContent = `${item.kindLabel} · ${item.tags.slice(0, 3).join(' · ')}`;
+        body.append(title, description, meta);
+        link.append(number, body);
+        results.append(link);
       });
+    };
 
-      searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const query = this.value.trim();
-          if (query.length >= 2) {
-            performSearch(query);
-          }
-        }
-      });
-    }
-
-    // Filter functionality
-    document.querySelectorAll('.filter-tab').forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Update active state
-        document.querySelectorAll('.filter-tab').forEach(b => {
-          b.classList.remove('active');
-        });
-        this.classList.add('active');
-
-        currentFilter = this.dataset.filter;
-
-        // Re-run search if there's a query
-        if (searchInput && searchInput.value.trim()) {
-          performSearch(searchInput.value.trim());
-        }
-      });
-    });
-
-    // Tag button functionality
-    document.querySelectorAll('.tag-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const tag = this.dataset.tag;
-        if (searchInput) {
-          searchInput.value = tag;
-          searchInput.focus();
-          performSearch(tag);
-        }
-      });
-    });
-
-    function performSearch(query) {
-      console.log('Performing search for:', query);
-      if (!query.trim()) return;
-
-      const results = searchPosts(query, currentFilter);
-      console.log('Search results:', results.length);
-      displayResults(results, query);
-    }
-
-    function clearResults() {
-      const resultsContainer = document.getElementById('search-results');
-      const statusContainer = document.getElementById('search-status');
-      const suggestionsContainer = document.getElementById('search-suggestions');
-
-      resultsContainer.innerHTML = '';
-      statusContainer.textContent = '';
-      suggestionsContainer.style.display = 'block';
-    }
-
-    function searchPosts(query, filter) {
-      const lowerQuery = query.toLowerCase();
-
-      return searchIndex.filter(post => {
-        // Filter by type
-        if (filter !== 'all' && post.type !== filter) {
-          return false;
-        }
-
-        // Search in title, content, description, and tags
-        const searchText = [
-          post.title,
-          post.content,
-          post.description,
-          ...post.tags
-        ].join(' ').toLowerCase();
-
-        return searchText.includes(lowerQuery);
-      });
-    }
-
-    function displayResults(results, query) {
-      const resultsContainer = document.getElementById('search-results');
-      const statusContainer = document.getElementById('search-status');
-      const suggestionsContainer = document.getElementById('search-suggestions');
-
-      if (!resultsContainer || !statusContainer) return;
-
-      if (results.length === 0) {
-        statusContainer.textContent = `No results found for "${query}"`;
-        resultsContainer.innerHTML = '';
-        suggestionsContainer.style.display = 'none';
+    input?.addEventListener('input', async () => {
+      const term = input.value.trim().toLowerCase();
+      suggestions && (suggestions.hidden = term.length > 0);
+      if (term.length < 2) {
+        results?.replaceChildren();
+        status && (status.textContent = 'Type at least two characters.');
         return;
       }
-
-      const filterText = currentFilter === 'all' ? '' : ` in ${currentFilter.replace(/-/g, ' ')}`;
-      statusContainer.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"${filterText}`;
-
-      resultsContainer.innerHTML = results.map(post => `
-        <article class="search-result">
-          <div class="search-result-meta">
-            <div class="search-result-date">${new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
-            <div class="search-result-type">${post.type.replace(/-/g, ' ')}</div>
-          </div>
-          <h2 class="search-result-title">
-            <a href="${post.url}">${post.title}</a>
-          </h2>
-          <div class="search-result-snippet">${generateSnippet(post, query)}</div>
-        </article>
-      `).join('');
-
-      suggestionsContainer.style.display = 'none';
-    }
-
-    function generateSnippet(post, query) {
-      let content = post.content || post.description || '';
-
-      // Clean markdown formatting
-      content = content
-        .replace(/#+\s*/g, '')                      // Remove headings
-        .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text
-        .replace(/\\\[(\d+)\\\]/g, '')              // Remove escaped footnotes
-        .replace(/\[(\d+)\]/g, '')                  // Remove footnotes
-        .replace(/^>+\s*/gm, '')                    // Remove blockquote markers
-        .replace(/>\s*/g, '')                       // Remove remaining >
-        .replace(/\*\*([^\*]+?)\*\*/g, '$1')        // Remove bold formatting
-        .replace(/\*([^\*]+?)\*/g, '$1')            // Remove italic formatting
-        .replace(/\\/g, '')                         // Remove backslashes
-        .replace(/\s+/g, ' ')                       // Normalize spaces
-        .trim();
-
-      const maxLength = 150;
-      const lowerQuery = query.toLowerCase();
-      const queryIndex = content.toLowerCase().indexOf(lowerQuery);
-
-      if (queryIndex !== -1) {
-        const start = Math.max(0, queryIndex - 50);
-        const end = Math.min(content.length, queryIndex + 100);
-        let snippet = content.slice(start, end);
-
-        if (start > 0) snippet = '...' + snippet;
-        if (end < content.length) snippet = snippet + '...';
-
-        return snippet;
+      try {
+        const data = await loadIndex();
+        const terms = term.split(/\s+/);
+        const matches = data
+          .map((item) => {
+            const title = item.title.toLowerCase();
+            const tags = item.tags.join(' ').toLowerCase();
+            const haystack = `${title} ${tags} ${item.description} ${item.content}`.toLowerCase();
+            const score = terms.reduce((total, word) => total +
+              (title.includes(word) ? 8 : 0) +
+              (tags.includes(word) ? 5 : 0) +
+              (haystack.includes(word) ? 1 : -20), 0);
+            return { item, score };
+          })
+          .filter(({ score }) => score >= 0)
+          .sort((a, b) => b.score - a.score)
+          .map(({ item }) => item);
+        render(matches, input.value.trim());
+      } catch {
+        status && (status.textContent = 'The index could not be opened. Try the archive instead.');
       }
-
-      return content.length > maxLength ?
-        content.slice(0, maxLength) + '...' :
-        content;
-    }
+    });
   </script>
 </Base>

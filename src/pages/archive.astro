@@ -3,610 +3,123 @@ export const prerender = true;
 
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { calculateReadingTime } from '../utils/shared';
+import '../styles/ledger.css';
+import {
+  buildFolioNumbers,
+  displayTag,
+  folioLabel,
+  newestFirst,
+  postKinds,
+  readingTime,
+} from '../utils/content';
 
-const posts = await getCollection('posts', ({ data }) => {
-  return data.published !== false;
-});
+const posts = newestFirst(await getCollection('posts'));
+const folioNumbers = buildFolioNumbers(posts);
+const grouped = new Map<number, Map<string, typeof posts>>();
 
-// Sort posts by date (newest first)
-const sortedPosts = posts.sort((a, b) =>
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-);
-
-// Group posts by year
-const postsByYear = sortedPosts.reduce((acc, post) => {
-  const year = new Date(post.data.date).getFullYear();
-  if (!acc[year]) acc[year] = [];
-  acc[year].push(post);
-  return acc;
-}, {} as Record<number, typeof posts>);
-
-const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
-
-// All unique tags
-const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
-
-// Helper to determine post type
-function getPostType(post: any) {
-  const type = post.data.type || '';
-
-  if (type === 'musings') {
-    return { class: 'post--musing', label: 'Musing', color: 'var(--orange)' };
-  }
-  if (type === 'links') {
-    return { class: 'post--links', label: 'Links', color: 'var(--blue)' };
-  }
-  if (type === 'reflections') {
-    return { class: 'post--reflection', label: 'Reflection', color: 'var(--color-text-primary)' };
-  }
-  if (type === 'verse') {
-    return { class: 'post--verse', label: 'Verse', color: 'var(--purple)' };
-  }
-  if (type === 'practical') {
-    return { class: 'post--practical', label: 'Practical', color: 'var(--green)' };
-  }
-  return { class: 'post--musing', label: 'Post', color: 'var(--orange)' };
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  const month = post.data.date.toLocaleDateString('en-GB', { month: 'long' });
+  if (!grouped.has(year)) grouped.set(year, new Map());
+  const months = grouped.get(year)!;
+  if (!months.has(month)) months.set(month, []);
+  months.get(month)!.push(post);
 }
-
-// Search index for client-side
-const searchIndex = sortedPosts.map(post => ({
-  slug: post.slug,
-  title: post.data.title,
-  content: post.body,
-  type: post.data.type,
-  tags: post.data.tags || [],
-  date: post.data.date.toISOString(),
-  description: post.data.description || ''
-}));
 ---
 
-<Base title="Archive — Rabbit Holes" description="Browse all ideas in the garden">
-  <div class="archive-page">
+<Base title="The Ledger" description={`Every one of the ${posts.length} published folios, in reverse chronological order.`} active="index">
+  <div class="ledger-shell">
+    <aside class="filter-rail">
+      <div class="filter-title">Filter the ledger</div>
+      <p class="filter-intro">Every published folio. Search titles and subjects, or narrow by form.</p>
+      <ul class="filter-list">
+        <li><button class="active" type="button" data-kind="all"><span>Everything</span><span>{posts.length}</span></button></li>
+        {Object.entries(postKinds).map(([key, kind]) => (
+          <li>
+            <button type="button" data-kind={key}>
+              <span>{kind.plural}</span><span>{posts.filter((post) => post.data.type === key).length}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </aside>
 
-    <header class="page-header">
-      <div class="header-symbol"></div>
-      <h1 class="page-title">Archive</h1>
-      <p class="page-subtitle">All {sortedPosts.length} ideas in the garden</p>
-    </header>
-
-    <div class="search-section">
-      <div class="search-wrapper">
-        <input type="text" class="search-input" placeholder="Search ideas..." id="archive-search" />
-        <span class="search-shortcut">⌘K</span>
+    <main class="ledger-main">
+      <header class="ledger-head">
+        <div class="ledger-kicker">The ledger · {posts.length} folios</div>
+        <h1>Everything kept.</h1>
+        <p>The book in full, newest first. Folio numbers run the other way: the oldest leaf is always number one.</p>
+      </header>
+      <div class="ledger-tools">
+        <label class="visually-hidden" for="ledger-query">Search the ledger</label>
+        <input class="ledger-search" id="ledger-query" type="search" placeholder="Search titles and subjects…" autocomplete="off" />
       </div>
-    </div>
 
-    <div class="main-layout">
-
-      <div class="archive-content">
-        {years.map(year => (
-          <section class="year-section" data-year={year}>
-            <h2 class="year-header">{year}</h2>
-            <div class="posts-list">
-              {postsByYear[parseInt(year)].map((post: any) => {
-                const postType = getPostType(post);
-                const readingTime = calculateReadingTime(post.body || '');
-                return (
-                  <a href={`/posts/${post.slug}`} class={`archive-post ${postType.class}`} data-type={post.data.type}>
-                    <div class="post-date">
-                      {new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </div>
-                    <div class="post-info">
-                      <span class="post-type" style={`color: ${postType.color}`}>{postType.label}</span>
-                      <h3 class="post-title">{post.data.title}</h3>
-                      {post.data.description && (
-                        <p class="post-excerpt">{post.data.description}</p>
-                      )}
-                    </div>
-                    <div class="post-meta">
-                      <span class="reading-time">{readingTime} min</span>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
+      <div data-ledger>
+        {[...grouped.entries()].map(([year, months]) => (
+          <section class="year-block" data-year-block>
+            <h2 class="year-title">{year}</h2>
+            {[...months.entries()].map(([month, monthPosts]) => (
+              <div data-month-block>
+                <h3 class="month-title">{month}</h3>
+                {monthPosts.map((post) => {
+                  const kind = postKinds[post.data.type];
+                  const number = folioNumbers.get(post.slug) || 0;
+                  const search = `${post.data.title} ${(post.data.tags || []).map(displayTag).join(' ')}`.toLowerCase();
+                  return (
+                    <a
+                      class="ledger-row"
+                      href={`/posts/${post.slug}`}
+                      data-ledger-row
+                      data-kind={post.data.type}
+                      data-search={search}
+                    >
+                      <span class="ledger-num" style={`color:${kind.color}`}>{folioLabel(number, posts.length)}</span>
+                      <span class="ledger-date">{post.data.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</span>
+                      <span class="ledger-row-title">{post.data.title}</span>
+                      <span class="ledger-read">{readingTime(post.body || '')} min</span>
+                    </a>
+                  );
+                })}
+              </div>
+            ))}
           </section>
         ))}
       </div>
-
-      <aside class="archive-sidebar">
-        <div class="sidebar-section">
-          <div class="sidebar-title">Jump to Year</div>
-          <div class="year-links">
-            {years.map(year => (
-              <a href={`#${year}`} class="year-link" data-year={year}>
-                {year}
-                <span class="year-count">{postsByYear[parseInt(year)].length}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div class="sidebar-section">
-          <div class="sidebar-title">Browse by Topic</div>
-          <div class="topics-list">
-            {allTags.slice(0, 8).map((tag) => (
-              <a href={`/tags/${tag}`} class="topic-tag">{tag}</a>
-            ))}
-          </div>
-          <a href="/tags" class="see-all-link">See all topics →</a>
-        </div>
-
-        <div class="sidebar-section stats-section">
-          <div class="stat">
-            <span class="stat-num">{sortedPosts.length}</span>
-            <span class="stat-label">Ideas</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">{allTags.length}</span>
-            <span class="stat-label">Topics</span>
-          </div>
-        </div>
-      </aside>
-
-    </div>
-
+      <p class="empty-state" data-ledger-empty hidden>Nothing in the ledger matches that combination.</p>
+    </main>
   </div>
 
-  <style>
-    .archive-page {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 2.5rem 4rem;
-    }
+  <script>
+    const query = document.querySelector<HTMLInputElement>('#ledger-query');
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-kind]')];
+    const rows = [...document.querySelectorAll<HTMLElement>('[data-ledger-row]')];
+    const empty = document.querySelector<HTMLElement>('[data-ledger-empty]');
+    let selectedKind = 'all';
 
-    /* Page Header */
-    .page-header {
-      padding: 3.5rem 0;
-      text-align: center;
-      border-bottom: 3px solid var(--color-text-primary);
-    }
-
-    .header-symbol {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 1.25rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    .header-symbol::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid var(--color-text-primary);
-      border-radius: 50%;
-      opacity: 0.4;
-    }
-
-    .header-symbol::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 8px;
-      height: 8px;
-      background: var(--blue);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .page-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2rem, 5vw, 2.75rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.5rem;
-    }
-
-    .page-subtitle {
-      font-family: 'Newsreader', Georgia, serif;
-      font-size: 1.1rem;
-      font-style: italic;
-      color: var(--color-text-tertiary);
-    }
-
-    /* Search */
-    .search-section {
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .search-wrapper {
-      position: relative;
-      max-width: 500px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 1rem 1.25rem;
-      padding-right: 4rem;
-      font-family: 'Newsreader', Georgia, serif;
-      font-size: 1rem;
-      border: 2px solid var(--color-border);
-      background: var(--color-bg);
-      color: var(--color-text-primary);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .search-input:focus {
-      border-color: var(--blue);
-    }
-
-    .search-input::placeholder {
-      color: var(--color-text-light);
-    }
-
-    .search-shortcut {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--color-text-light);
-      background: var(--color-surface);
-      padding: 0.25rem 0.5rem;
-    }
-
-    /* Main Layout */
-    .main-layout {
-      display: grid;
-      grid-template-columns: 1fr 240px;
-      gap: 4rem;
-      padding-top: 2rem;
-    }
-
-    /* Archive Content */
-    .year-section {
-      margin-bottom: 3rem;
-    }
-
-    .year-header {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--color-text-primary);
-      padding-bottom: 0.75rem;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid var(--color-text-primary);
-      scroll-margin-top: 2rem;
-    }
-
-    .posts-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .archive-post {
-      display: grid;
-      grid-template-columns: 70px 1fr auto;
-      gap: 1.25rem;
-      padding: 1.25rem 0;
-      border-bottom: 1px solid var(--color-border);
-      text-decoration: none;
-      transition: all 0.25s ease;
-    }
-
-    .archive-post:last-child {
-      border-bottom: none;
-    }
-
-    .archive-post:hover {
-      background: var(--color-surface-warm);
-      margin: 0 -1rem;
-      padding: 1.25rem 1rem;
-    }
-
-    .post-date {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--color-text-light);
-      text-transform: uppercase;
-      padding-top: 0.25rem;
-    }
-
-    .post-info {
-      min-width: 0;
-    }
-
-    .post-type {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 0.35rem;
-      display: block;
-    }
-
-    .post-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-      line-height: 1.35;
-      color: var(--color-text-primary);
-      margin-bottom: 0.3rem;
-      transition: color 0.2s;
-    }
-
-    .archive-post:hover .post-title {
-      color: var(--orange);
-    }
-
-    .post--quote .post-title {
-      font-family: 'Newsreader', Georgia, serif;
-      font-style: italic;
-      font-weight: 500;
-    }
-
-    .post-excerpt {
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--color-text-tertiary);
-    }
-
-    .post-meta {
-      text-align: right;
-      padding-top: 0.25rem;
-    }
-
-    .reading-time {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--color-text-light);
-    }
-
-    /* Sidebar */
-    .archive-sidebar {
-      position: sticky;
-      top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .sidebar-section {
-      padding: 1.25rem;
-      background: var(--color-surface);
-    }
-
-    .sidebar-title {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-text-tertiary);
-      margin-bottom: 1rem;
-    }
-
-    .year-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .year-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.5rem 0.75rem;
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      display: flex;
-      justify-content: space-between;
-      transition: all 0.2s;
-    }
-
-    .year-link:hover {
-      background: var(--color-bg);
-      color: var(--color-text-primary);
-    }
-
-    .year-count {
-      color: var(--color-text-light);
-    }
-
-    .topics-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-bottom: 1rem;
-    }
-
-    .topic-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.62rem;
-      font-weight: 700;
-      padding: 0.4rem 0.65rem;
-      background: var(--color-bg);
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .topic-tag:hover {
-      background: var(--color-text-primary);
-      color: var(--color-bg);
-    }
-
-    .see-all-link {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: var(--orange);
-      text-decoration: none;
-    }
-
-    .see-all-link:hover {
-      text-decoration: underline;
-    }
-
-    .stats-section {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .stat {
-      text-align: center;
-      flex: 1;
-    }
-
-    .stat-num {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--orange);
-      display: block;
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--color-text-light);
-      margin-top: 0.35rem;
-      display: block;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .main-layout {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      .archive-sidebar {
-        position: static;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-      }
-
-      .stats-section {
-        grid-column: span 2;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .archive-page {
-        padding: 0 1.5rem 3rem;
-      }
-
-      .page-header {
-        padding: 2.5rem 0;
-      }
-
-      .archive-post {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-      }
-
-      .post-date {
-        padding-top: 0;
-      }
-
-      .post-meta {
-        display: none;
-      }
-
-      .archive-post:hover {
-        margin: 0 -1rem;
-        padding: 1rem;
-      }
-
-      .archive-sidebar {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-section {
-        grid-column: span 1;
-      }
-    }
-  </style>
-
-  <script type="module" define:vars={{ searchIndex }}>
-    const searchInput = document.getElementById('archive-search');
-    let matchingSlugs = new Set();
-
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.trim().toLowerCase();
-
-        if (query.length === 0) {
-          matchingSlugs.clear();
-          showAllPosts();
-          return;
-        }
-
-        if (query.length < 2) return;
-
-        const results = searchIndex.filter(post => {
-          const searchText = [
-            post.title,
-            post.content,
-            post.description,
-            ...post.tags
-          ].join(' ').toLowerCase();
-          return searchText.includes(query);
-        });
-
-        matchingSlugs = new Set(results.map(r => r.slug));
-        filterPosts();
+    const applyFilters = () => {
+      const term = query?.value.trim().toLowerCase() || '';
+      let visible = 0;
+      rows.forEach((row) => {
+        const matchesKind = selectedKind === 'all' || row.dataset.kind === selectedKind;
+        const matchesTerm = !term || row.dataset.search?.includes(term);
+        row.hidden = !(matchesKind && matchesTerm);
+        if (!row.hidden) visible += 1;
       });
-    }
-
-    function filterPosts() {
-      const posts = document.querySelectorAll('.archive-post');
-      posts.forEach(post => {
-        const href = post.getAttribute('href') || '';
-        const slug = href.replace('/posts/', '').replace('/', '');
-        post.style.display = matchingSlugs.has(slug) ? '' : 'none';
+      document.querySelectorAll<HTMLElement>('[data-month-block]').forEach((block) => {
+        block.hidden = !block.querySelector('[data-ledger-row]:not([hidden])');
       });
-      updateSectionVisibility();
-    }
-
-    function showAllPosts() {
-      const posts = document.querySelectorAll('.archive-post');
-      posts.forEach(post => post.style.display = '');
-      const sections = document.querySelectorAll('.year-section');
-      sections.forEach(section => section.style.display = '');
-    }
-
-    function updateSectionVisibility() {
-      const sections = document.querySelectorAll('.year-section');
-      sections.forEach(section => {
-        const visiblePosts = section.querySelectorAll('.archive-post:not([style*="display: none"])');
-        section.style.display = visiblePosts.length > 0 ? '' : 'none';
+      document.querySelectorAll<HTMLElement>('[data-year-block]').forEach((block) => {
+        block.hidden = !block.querySelector('[data-ledger-row]:not([hidden])');
       });
-    }
+      if (empty) empty.hidden = visible > 0;
+    };
 
-    // Keyboard shortcut
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        searchInput?.focus();
-      }
-    });
-
-    // Smooth scroll for year links
-    document.querySelectorAll('.year-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const year = link.dataset.year;
-        const section = document.querySelector(`.year-section[data-year="${year}"] .year-header`);
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
+    query?.addEventListener('input', applyFilters);
+    buttons.forEach((button) => button.addEventListener('click', () => {
+      selectedKind = button.dataset.kind || 'all';
+      buttons.forEach((candidate) => candidate.classList.toggle('active', candidate === button));
+      applyFilters();
+    }));
   </script>
 </Base>

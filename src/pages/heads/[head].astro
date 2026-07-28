@@ -1,0 +1,52 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import FolioPreview from '../../components/FolioPreview.astro';
+import '../../styles/ledger.css';
+import { heads, getHead } from '../../data/heads';
+import { buildFolioNumbers, newestFirst, postsForHead, relatedPosts } from '../../utils/content';
+
+export async function getStaticPaths() {
+  return heads.map((head) => ({ params: { head: head.slug } }));
+}
+
+const head = getHead(Astro.params.head || '');
+if (!head) return Astro.redirect('/heads');
+const posts = newestFirst(await getCollection('posts'));
+const folioNumbers = buildFolioNumbers(posts);
+const headPosts = postsForHead(posts, head);
+---
+
+<Base title={head.title} description={head.description} active="heads">
+  <div class="ledger-shell">
+    <aside class="filter-rail">
+      <div class="filter-title">Movements</div>
+      <p class="filter-intro">{headPosts.length} leaves filed here, newest first.</p>
+      <ul class="filter-list">
+        {headPosts.slice(0, 8).map((post) => (
+          <li><a href={`#${post.slug}`}><span>{post.data.title}</span></a></li>
+        ))}
+      </ul>
+    </aside>
+    <main class="ledger-main head-stream">
+      <header class="ledger-head">
+        <div class="ledger-kicker">Subject · {headPosts.length} folios</div>
+        <h1>{head.title}</h1>
+        <p>{head.description}</p>
+      </header>
+      {headPosts.map((post, index) => (
+        <div id={post.slug}>
+          <FolioPreview
+            post={post}
+            number={folioNumbers.get(post.slug) || 0}
+            total={posts.length}
+            relatedCount={relatedPosts(post, posts).length}
+            rubric={index === 0}
+          />
+        </div>
+      ))}
+    </main>
+  </div>
+</Base>

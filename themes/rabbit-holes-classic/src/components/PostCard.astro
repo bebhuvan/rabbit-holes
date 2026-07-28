@@ -1,0 +1,163 @@
+---
+import LinkPreviewDynamic from './LinkPreviewDynamic.astro';
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import SpotifyEmbed from './SpotifyEmbed.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
+import TwitterEmbed from './TwitterEmbed.astro';
+import CodePenEmbed from './CodePenEmbed.astro';
+import GenericEmbed from './GenericEmbed.astro';
+import ContentWithEmbeds from './ContentWithEmbeds.astro';
+import TruncatedContent from './TruncatedContent.astro';
+import { formatDate, calculateReadingTime } from '../utils/shared';
+
+export interface Props {
+  post: any;
+  showExcerpt?: boolean;
+  maxWords?: number;
+  allowTruncation?: boolean;
+  isFirst?: boolean;
+}
+
+const { post, showExcerpt = true, maxWords = 325, allowTruncation = true, isFirst = false } = Astro.props;
+const { Content } = await post.render();
+
+// Helper functions to detect embed types
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  return match ? match[1] : null;
+}
+
+function getVimeoId(url: string): string | null {
+  const match = url.match(/vimeo\.com\/(?:.*#|.*\/videos\/)?([0-9]+)/);
+  return match ? match[1] : null;
+}
+
+function getSpotifyId(url: string): string | null {
+  const match = url.match(/spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+  return match ? match[2] : null;
+}
+
+function isTwitterUrl(url: string): boolean {
+  return /twitter\.com\/[^\/]+\/status\/\d+/.test(url) || /x\.com\/[^\/]+\/status\/\d+/.test(url);
+}
+
+function isCodePenUrl(url: string): boolean {
+  return /codepen\.io\/[^\/]+\/pen\/[^\/\?]+/.test(url);
+}
+
+// Detect embed type for the URL
+function detectEmbedType(url: string) {
+  if (!url) return 'link';
+
+  if (getYouTubeId(url)) return 'youtube';
+  if (getVimeoId(url)) return 'vimeo';
+  if (getSpotifyId(url)) return 'spotify';
+  if (isTwitterUrl(url)) return 'twitter';
+  if (isCodePenUrl(url)) return 'codepen';
+
+  // Check for other embeddable services
+  const domain = new URL(url).hostname.toLowerCase();
+  if (domain.includes('instagram.com') ||
+      domain.includes('tiktok.com') ||
+      domain.includes('soundcloud.com') ||
+      domain.includes('figma.com') ||
+      domain.includes('gist.github.com') ||
+      domain.includes('observablehq.com')) {
+    return 'generic';
+  }
+
+  return 'link';
+}
+---
+
+<article class="post-card">
+  <div class="post-meta-line">
+    <time class="date">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>
+    {post.data.type && (
+      <span class="type-badge">{post.data.type.replace(/-/g, ' ')}</span>
+    )}
+  </div>
+
+  <h2 class="post-title">
+    <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+  </h2>
+
+  <div class={`excerpt ${isFirst ? 'drop-cap' : ''}`}>
+    {post.data.description ? (
+      <p>{post.data.description}</p>
+    ) : (
+      <p set:html={(() => {
+        const cleaned = (post.body || '')
+          .replace(/#+\s*/g, '')                      // Remove headings
+          .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')   // Extract link text, remove URL
+          .replace(/\\\[(\d+)\\\]/g, '')              // Remove escaped footnote refs like \[1\]
+          .replace(/\[(\d+)\]/g, '')                  // Remove regular footnote refs like [1]
+          .replace(/^>+\s*/gm, '')                    // Remove all blockquote markers (including nested)
+          .replace(/>\s*/g, '')                       // Remove any remaining > characters with spaces
+          .replace(/:\s*$/gm, '')                     // Remove trailing colons from lines
+          .replace(/^\s*\d+\\?\.\s*/gm, '')           // Remove numbered list markers (1. or 1\.)
+          .replace(/^\s*[:•\-]\s*/gm, '')             // Remove standalone punctuation at line starts
+          .replace(/\*\*([^\*]+?)\*\*/g, '<strong>$1</strong>') // Convert bold markdown
+          .replace(/\*([^\*]+?)\*/g, '<em>$1</em>')   // Convert italic markdown
+          .replace(/\\/g, '')                         // Remove any remaining backslashes
+          .replace(/\n/g, ' ')                        // Newlines become spaces
+          .replace(/\s+/g, ' ')                       // Normalize multiple spaces
+          .trim();
+
+        // Smart truncation: try to end at sentence boundary
+        let truncated = cleaned.slice(0, isFirst ? 450 : 280);
+
+        // Try to find last sentence ending
+        const lastPeriod = truncated.lastIndexOf('. ');
+        const lastQuestion = truncated.lastIndexOf('? ');
+        const lastExclaim = truncated.lastIndexOf('! ');
+        const lastSentence = Math.max(lastPeriod, lastQuestion, lastExclaim);
+
+        // If we found a sentence boundary and it's not too short, use it
+        if (lastSentence > truncated.length * 0.6) {
+          truncated = truncated.slice(0, lastSentence + 1);
+        } else {
+          // Otherwise, cut at last space to avoid mid-word
+          const lastSpace = truncated.lastIndexOf(' ');
+          if (lastSpace > 0) {
+            truncated = truncated.slice(0, lastSpace);
+          }
+          truncated += '…';
+        }
+
+        return truncated;
+      })()} />
+    )}
+  </div>
+
+  {/* Enhanced embed handling for all URL types */}
+  {post.data.url && (() => {
+    const embedType = detectEmbedType(post.data.url);
+
+    switch (embedType) {
+      case 'youtube':
+        return <YouTubeEmbed videoId={getYouTubeId(post.data.url)} />;
+
+      case 'vimeo':
+        return <VimeoEmbed url={post.data.url} />;
+
+      case 'spotify':
+        return <SpotifyEmbed url={post.data.url} title={post.data.title} />;
+
+      case 'twitter':
+        return <TwitterEmbed url={post.data.url} />;
+
+      case 'codepen':
+        return <CodePenEmbed url={post.data.url} />;
+
+      case 'generic':
+        return <GenericEmbed url={post.data.url} title={post.data.title} />;
+
+      case 'link':
+      default:
+        return <LinkPreviewDynamic url={post.data.url} />;
+    }
+  })()}
+
+</article>
+

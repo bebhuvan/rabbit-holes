@@ -1,0 +1,413 @@
+---
+import '../styles/globals.css';
+import '../styles/components.css';
+import '../styles/utilities.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journey through ideas, discoveries, and fascinating tangents. Find your next intellectual adventure here.", image } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={image} />}
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    {image && <meta property="twitter:image" content={image} />}
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
+
+    <!-- Sitemap for search engines -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+
+    <!-- SEO and Performance optimizations -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Bhuvan" />
+    <meta name="theme-color" content="#e87653" />
+    <link rel="canonical" href={Astro.url} />
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Rabbit Holes" />
+    <meta name="msapplication-TileColor" content="#e87653" />
+
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+
+    <!-- DNS prefetch for embeds (fonts loaded after LCP) -->
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://open.spotify.com" />
+
+    <!-- Google Fonts - loaded after LCP to not affect Core Web Vitals -->
+    <script>
+      // Load fonts after page is interactive (not just idle)
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Space+Grotesk:wght@500;700&display=swap';
+          document.head.appendChild(link);
+        }, 100);
+      });
+    </script>
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Rabbit Holes",
+        "description": "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
+        "url": "https://www.rabbitholes.garden",
+        "author": {
+          "@type": "Person",
+          "name": "Bhuvan",
+          "url": "https://www.rabbitholes.garden/about"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Rabbit Holes",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.rabbitholes.garden/favicon.svg"
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Skip link for keyboard navigation -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn btn-primary z-50">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="header-container">
+        <a href="/" class="logo">
+          <span class="logo-mark">🐇</span>
+          <span class="logo-text">Rabbit Holes</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="/collections" class="nav-link">Collections</a>
+          <a href="/archive" class="nav-link">Archive</a>
+          <a href="/tags" class="nav-link">Topics</a>
+          <a href="/about" class="nav-link">About</a>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+            <svg class="theme-icon theme-icon--light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="theme-icon theme-icon--dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </nav>
+
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <svg class="mobile-menu-icon mobile-menu-icon--hamburger" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+          <svg class="mobile-menu-icon mobile-menu-icon--close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Overlay -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-content">
+          <a href="/collections" class="mobile-menu-link">Collections</a>
+          <a href="/archive" class="mobile-menu-link">Archive</a>
+          <a href="/tags" class="mobile-menu-link">Topics</a>
+          <a href="/about" class="mobile-menu-link">About</a>
+          <a href="/rss.xml" class="mobile-menu-link">RSS</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <span class="footer-mark">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+              <path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/>
+            </svg>
+          </span>
+          <span class="footer-tagline">Fascinating things from the internet</span>
+        </div>
+        <nav class="footer-links">
+          <a href="/rss.xml">RSS</a>
+          <a href="/about">About</a>
+          <a href="https://twitter.com/bebhuvan" target="_blank" rel="noopener">Twitter</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- Share Feedback -->
+    <div class="share-feedback" id="share-feedback"></div>
+
+    <script>
+      // Theme switching - load immediately to prevent flash
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+
+      // Theme toggle functionality
+      document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.getElementById('theme-toggle');
+
+        themeToggle?.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+        });
+
+        // Header scroll effect with passive listener and throttle
+        const header = document.querySelector('.site-header');
+        if (header) {
+          let ticking = false;
+          window.addEventListener('scroll', () => {
+            if (!ticking) {
+              requestAnimationFrame(() => {
+                if (window.scrollY > 10) {
+                  header.classList.add('scrolled');
+                } else {
+                  header.classList.remove('scrolled');
+                }
+                ticking = false;
+              });
+              ticking = true;
+            }
+          }, { passive: true });
+        }
+
+        // Random post button
+        const randomBtn = document.getElementById('random-post-btn');
+        if (randomBtn) {
+          randomBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+              const response = await fetch('/sitemap.xml');
+              const text = await response.text();
+              const parser = new DOMParser();
+              const xml = parser.parseFromString(text, 'text/xml');
+              const urls = Array.from(xml.querySelectorAll('loc'))
+                .map(loc => loc.textContent)
+                .filter(url => url.includes('/posts/'));
+              if (urls.length > 0) {
+                const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+                window.location.href = randomUrl;
+              }
+            } catch (err) {
+              console.warn('Failed to load random post:', err);
+            }
+          });
+        }
+
+        // Mobile menu toggle functionality
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuToggle?.addEventListener('click', () => {
+          const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
+          mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+          mobileMenu?.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside or on a link
+        mobileMenu?.addEventListener('click', (e) => {
+          if (e.target === mobileMenu || e.target.classList.contains('mobile-menu-link')) {
+            mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+            mobileMenu?.classList.remove('active');
+          }
+        });
+
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && mobileMenu?.classList.contains('active')) {
+            mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+            mobileMenu?.classList.remove('active');
+          }
+        });
+      });
+
+      // Load utils.js dynamically to avoid blocking render
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadUtils);
+      } else {
+        requestIdleCallback(loadUtils, { timeout: 1000 });
+      }
+
+      function loadUtils() {
+        import('/src/scripts/utils.js').then(({ app }) => {
+          // Utils loaded and app auto-initialized
+        }).catch(err => {
+          console.warn('Failed to load utils:', err);
+        });
+      }
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        // In development, unregister any existing service workers
+        if (location.hostname === 'localhost') {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => {
+              console.log('🔧 Dev mode: Unregistering service worker');
+              registration.unregister();
+            });
+          });
+          // Also clear caches
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              console.log('🔧 Dev mode: Deleting cache:', name);
+              caches.delete(name);
+            });
+          });
+        } else {
+          // Production: register service worker
+          window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              // Service worker registered successfully
+
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (newWorker) {
+                  newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      // New content available, show update notification
+                      showUpdateNotification();
+                    }
+                  });
+                }
+              });
+            })
+            .catch((registrationError) => {
+              // Service worker registration failed
+            });
+          });
+
+          // Listen for messages from service worker
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
+              showUpdateNotification();
+            }
+          });
+        }
+      }
+
+      function showUpdateNotification() {
+        // Create a subtle update notification
+        const notification = document.createElement('div');
+        notification.innerHTML = `
+          <div style="
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--color-accent);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(251, 146, 60, 0.3);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+          ">
+            <span>🚀 New content available!</span>
+            <button onclick="window.location.reload()" style="
+              background: rgba(255,255,255,0.2);
+              border: none;
+              color: white;
+              padding: 8px 16px;
+              border-radius: 4px;
+              cursor: pointer;
+              font-weight: 500;
+            ">Update</button>
+          </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 10000);
+      }
+
+      // Install prompt handling
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // Show custom install button if desired
+        showInstallButton();
+      });
+
+      function showInstallButton() {
+        // You can add a custom "Add to Home Screen" button here
+        // PWA install available
+      }
+
+      // Handle successful installation
+      window.addEventListener('appinstalled', () => {
+        // PWA installed successfully
+        deferredPrompt = null;
+      });
+    </script>
+  </body>
+</html>

@@ -10,27 +10,10 @@ interface EmbedInfo {
   url: string;
 }
 
-// Check if a URL is embeddable (not generic)
-function isEmbeddableUrl(url: string): boolean {
-  try {
-    const urlObj = new URL(url);
-    const hostname = urlObj.hostname.toLowerCase();
-    return (
-      hostname.includes('youtube.com') ||
-      hostname.includes('youtu.be') ||
-      hostname.includes('vimeo.com') ||
-      hostname.includes('twitter.com') ||
-      hostname.includes('x.com') ||
-      hostname.includes('codepen.io') ||
-      hostname.includes('spotify.com')
-    );
-  } catch {
-    return false;
-  }
-}
-
 export function remarkLinkEmbed() {
   return (tree: Root) => {
+    const replacements: Array<{ parent: { children: unknown[] }; index: number; node: Html }> = [];
+
     visit(tree, 'paragraph', (node: Paragraph, index, parent) => {
       let url: string | null = null;
 
@@ -47,10 +30,7 @@ export function remarkLinkEmbed() {
       // Case 2: Paragraph with a single link node (markdown link on its own line)
       if (node.children.length === 1 && node.children[0].type === 'link') {
         const linkNode = node.children[0] as Link;
-        // Only embed if it's an embeddable service
-        if (isEmbeddableUrl(linkNode.url)) {
-          url = linkNode.url;
-        }
+        url = linkNode.url;
       }
 
       // Case 3: Paragraph with link + optional whitespace text nodes
@@ -65,9 +45,7 @@ export function remarkLinkEmbed() {
 
         if (nonWhitespaceChildren.length === 1 && nonWhitespaceChildren[0].type === 'link') {
           const linkNode = nonWhitespaceChildren[0] as Link;
-          if (isEmbeddableUrl(linkNode.url)) {
-            url = linkNode.url;
-          }
+          url = linkNode.url;
         }
       }
 
@@ -77,10 +55,18 @@ export function remarkLinkEmbed() {
         const embedNode = createEmbedNode(embedInfo);
 
         if (parent && typeof index === 'number') {
-          parent.children[index] = embedNode;
+          replacements.push({
+            parent: parent as { children: unknown[] },
+            index,
+            node: embedNode,
+          });
         }
       }
     });
+
+    for (const replacement of replacements) {
+      replacement.parent.children[replacement.index] = replacement.node;
+    }
   };
 }
 
@@ -90,30 +76,34 @@ function detectEmbedType(url: string): EmbedInfo {
     const hostname = urlObj.hostname.toLowerCase();
     
     // YouTube
-    if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
+    if (hostname === 'youtube.com' || hostname.endsWith('.youtube.com') || hostname === 'youtu.be') {
       const id = extractYouTubeId(url);
       return { type: 'youtube', id, url };
     }
     
     // Vimeo
-    if (hostname.includes('vimeo.com')) {
+    if (hostname === 'vimeo.com' || hostname.endsWith('.vimeo.com')) {
       const id = extractVimeoId(url);
       return { type: 'vimeo', id, url };
     }
     
     // Twitter/X
-    if (hostname.includes('twitter.com') || hostname.includes('x.com')) {
+    if (
+      (hostname === 'twitter.com' || hostname.endsWith('.twitter.com') ||
+        hostname === 'x.com' || hostname.endsWith('.x.com')) &&
+      /\/(?:i\/)?status\/\d+/.test(urlObj.pathname)
+    ) {
       return { type: 'twitter', url };
     }
     
     // CodePen
-    if (hostname.includes('codepen.io')) {
+    if (hostname === 'codepen.io' || hostname.endsWith('.codepen.io')) {
       const id = extractCodePenId(url);
       return { type: 'codepen', id, url };
     }
     
     // Spotify
-    if (hostname.includes('spotify.com')) {
+    if (hostname === 'spotify.com' || hostname.endsWith('.spotify.com')) {
       return { type: 'spotify', url };
     }
     
@@ -132,6 +122,8 @@ function createEmbedNode(embedInfo: EmbedInfo): Html {
 }
 
 function generateEmbedHTML(embedInfo: EmbedInfo): string {
+  const safeUrl = escapeAttribute(embedInfo.url);
+
   // Generate the actual embed HTML inline
   switch (embedInfo.type) {
     case 'youtube':
@@ -139,6 +131,7 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
         return `<div class="youtube-embed" style="margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
           <iframe 
             src="https://www.youtube.com/embed/${embedInfo.id}?rel=0" 
+            title="Embedded YouTube video"
             frameborder="0" 
             allowfullscreen
             loading="lazy"
@@ -152,6 +145,7 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
         return `<div class="vimeo-embed" style="margin: 2rem 0; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
           <iframe 
             src="https://player.vimeo.com/video/${embedInfo.id}" 
+            title="Embedded Vimeo video"
             frameborder="0" 
             allowfullscreen
             loading="lazy"
@@ -161,31 +155,11 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
       }
       break;
     case 'twitter':
-      return `<div class="twitter-embed" style="margin: 2rem 0;">
-        <blockquote class="twitter-tweet" data-theme="light">
-          <a href="${embedInfo.url}">Loading tweet...</a>
+      return `<div class="twitter-embed" data-tweet-embed>
+        <blockquote class="twitter-tweet" data-dnt="true">
+          <a href="${safeUrl}">View this post on X</a>
         </blockquote>
-      </div>
-      <script>
-        if (typeof window !== 'undefined' && !window.twttr) {
-          window.twttr = (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0],
-              t = window.twttr || {};
-            if (d.getElementById(id)) return t;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "https://platform.twitter.com/widgets.js";
-            fjs.parentNode.insertBefore(js, fjs);
-            t._e = [];
-            t.ready = function(f) {
-              t._e.push(f);
-            };
-            return t;
-          }(document, "script", "twitter-wjs"));
-        } else if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load();
-        }
-      </script>`;
+      </div>`;
     case 'spotify':
       // Handle various Spotify URL formats
       const spotifyPatterns = [
@@ -234,20 +208,52 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
       break;
   }
   
-  // For generic embeds, render as a link preview
-  return `<div class="link-preview-placeholder" data-url="${embedInfo.url}" style="margin: 2rem 0; padding: 1rem; border: 1px solid var(--color-border, #e2e8f0); border-radius: 8px;">
-    <a href="${embedInfo.url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-      <div style="font-weight: 600; margin-bottom: 0.5rem;">🔗 ${embedInfo.url}</div>
-      <div style="font-size: 0.9em; color: var(--color-text-secondary, #666);">Loading preview...</div>
-    </a>
-  </div>`;
-}
-
-function createLinkPreviewHTML(url: string): string {
-  return `<LinkPreviewDynamic url="${url}" />`;
+  return createLinkPreviewHTML(embedInfo.url);
 }
 
 // Helper functions
+function escapeAttribute(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+function readablePath(url: URL): string {
+  const lastPart = url.pathname.split('/').filter(Boolean).at(-1);
+  if (!lastPart) return url.hostname.replace(/^www\./, '');
+
+  try {
+    return decodeURIComponent(lastPart)
+      .replace(/\.[a-z0-9]+$/i, '')
+      .replace(/[-_]+/g, ' ')
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  } catch {
+    return url.hostname.replace(/^www\./, '');
+  }
+}
+
+function createLinkPreviewHTML(url: string): string {
+  const parsed = new URL(url);
+  const domain = parsed.hostname.replace(/^www\./, '');
+  const safeUrl = escapeAttribute(url);
+  const safeDomain = escapeAttribute(domain);
+  const fallbackTitle = escapeAttribute(readablePath(parsed));
+
+  return `<aside class="link-preview" data-link-preview data-preview-url="${safeUrl}">
+    <a href="${safeUrl}" target="_blank" rel="noopener noreferrer">
+      <span class="link-preview-copy">
+        <span class="link-preview-domain">${safeDomain}</span>
+        <strong data-preview-title>${fallbackTitle}</strong>
+        <span class="link-preview-description" data-preview-description hidden></span>
+      </span>
+      <span class="link-preview-image" data-preview-image hidden><img alt="" loading="lazy" decoding="async"></span>
+      <span class="link-preview-arrow" aria-hidden="true">↗</span>
+    </a>
+  </aside>`;
+}
+
 function extractYouTubeId(url: string): string | undefined {
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,

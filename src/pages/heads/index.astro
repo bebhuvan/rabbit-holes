@@ -1,0 +1,40 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import '../../styles/ledger.css';
+import { headCounts, newestFirst } from '../../utils/content';
+
+const posts = newestFirst(await getCollection('posts'));
+const curatedHeads = headCounts(posts).filter((head) => head.count > 0);
+---
+
+<Base title="Subjects" description="Hand-chosen paths through the commonplace book." active="heads">
+  <div class="ledger-shell">
+    <aside class="filter-rail">
+      <div class="filter-title">About subjects</div>
+      <p class="filter-intro">Tags describe individual folios. Subjects are broader paths I have chosen because I keep returning to them.</p>
+      <ul class="filter-list">
+        <li><a href="/tags"><span>All tags</span><span>→</span></a></li>
+        <li><a href="/archive"><span>The ledger</span><span>→</span></a></li>
+      </ul>
+    </aside>
+    <main class="ledger-main">
+      <header class="ledger-head">
+        <div class="ledger-kicker">Subjects · chosen by hand</div>
+        <h1>Ways into the book.</h1>
+        <p>Eight recurring interests, each gathering links and ideas from across the commonplace book.</p>
+      </header>
+      <div class="head-grid">
+        {curatedHeads.map((head) => (
+          <a class="head-card" href={`/heads/${head.slug}`}>
+            <span class="head-count">{head.count}</span>
+            <h2>{head.title}</h2>
+            <p>{head.description}</p>
+          </a>
+        ))}
+      </div>
+    </main>
+  </div>
+</Base>

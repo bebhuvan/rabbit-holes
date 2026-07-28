@@ -172,6 +172,111 @@ content:
         rows: 25
         description: "Alternative: Write directly in markdown. Use this instead of the rich editor above if you prefer markdown syntax. **bold**, *italic*, # headings, - lists, > quotes"
 
+  # Study Notes Collection
+  - name: glosses
+    label: Study Notes
+    type: collection
+    path: src/content/glosses
+    format: yaml-frontmatter
+    filename:
+      template: "{year}-{month}-{day}-{primary}.md"
+      field: create
+    view:
+      primary: title
+      fields: [title, source_kind, date, published]
+      sort: [date, title, source_kind]
+      search: [title, description, source_title, source_author]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Note Title
+        type: string
+        required: true
+        description: "The title shown on the Study Notes page."
+
+      - name: date
+        label: Date
+        type: date
+        required: true
+        description: "When you finished or published this note."
+
+      - name: description
+        label: Introduction
+        type: text
+        description: "A short introduction shown below the title and in the Study Notes index."
+
+      - name: source_title
+        label: Source Title
+        type: string
+        required: true
+        description: "The podcast, video, paper, book, or article this note is about."
+
+      - name: source_url
+        label: Source URL
+        type: string
+        required: true
+        description: "A full link to the original source, including https://."
+
+      - name: source_author
+        label: Source Author
+        type: string
+        description: "The author, speaker, host, or creator."
+
+      - name: source_kind
+        label: Source Type
+        type: select
+        required: true
+        default: Article
+        options:
+          values:
+            - name: Article
+              label: Article or essay
+            - name: Podcast
+              label: Podcast
+            - name: Video
+              label: Video
+            - name: Paper
+              label: Paper
+            - name: Book
+              label: Book
+            - name: Other
+              label: Other
+
+      - name: note
+        label: Why I Asked
+        type: text
+        description: "Optional context about what prompted the conversation or what you wanted to understand."
+
+      - name: model
+        label: AI System
+        type: string
+        description: "Optional. For example: ChatGPT, Claude, or Gemini. The public note will say “an AI system” when left blank."
+
+      - name: folio
+        label: Related Commonplace Entry
+        type: string
+        description: "Optional slug of a related Rabbit Holes post."
+
+      - name: published
+        label: Published
+        type: boolean
+        default: false
+        description: "Turn this on when the note is ready to appear publicly."
+
+      - name: body
+        label: Study Note
+        type: rich-text
+        required: true
+        description: "Your reviewed summary, questions, answers, and brief."
+        options:
+          format: markdown
+          media: images
+          path: public/images
+          rename: true
+          switcher: true
+
   # Site Settings
   - name: settings
     label: Site Settings

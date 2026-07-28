@@ -1,0 +1,17 @@
+{
+  "name": "rabbit-holes-classic",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "The original Rabbit Holes Astro theme, preserved as a reusable starter.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.12",
+    "astro": "^5.11.0",
+    "marked": "^16.1.2"
+  }
+}

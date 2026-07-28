@@ -48,7 +48,9 @@ function validateFrontmatter(content, filename) {
   const frontmatter = content.substring(3, endIndex);
   
   // Required fields
-  const requiredFields = ['title', 'date', 'description'];
+  // Keep this in step with src/content/config.ts. Descriptions are optional:
+  // the reader-facing pages derive an excerpt when one is not supplied.
+  const requiredFields = ['title', 'date', 'type'];
   for (const field of requiredFields) {
     const regex = new RegExp(`^${field}:`, 'm');
     if (!regex.test(frontmatter)) {

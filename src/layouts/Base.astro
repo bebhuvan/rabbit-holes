@@ -1,413 +1,193 @@
 ---
-import '../styles/globals.css';
-import '../styles/components.css';
-import '../styles/utilities.css';
+import '../styles/tokens.css';
+import '../styles/commonplace.css';
+import Masthead from '../components/Masthead.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 export interface Props {
   title: string;
   description?: string;
   image?: string;
+  active?: 'index' | 'heads' | 'glosses' | 'search' | 'about';
+  noindex?: boolean;
 }
 
-const { title, description = "Welcome to Rabbit Holes - a curiosity-driven journey through ideas, discoveries, and fascinating tangents. Find your next intellectual adventure here.", image } = Astro.props;
+const {
+  title,
+  description = 'A public commonplace book: links, quotes, poems and stray thoughts, kept in the open.',
+  image,
+  active,
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = title === 'Rabbit Holes' ? title : `${title} — Rabbit Holes`;
+const canonical = new URL(Astro.url.pathname, Astro.site || 'https://www.rabbitholes.garden');
+const socialImage = image ? new URL(image, canonical).href : undefined;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
-    
-    <!-- Open Graph / Facebook -->
+    <meta name="author" content="Bhuvanesh" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#181713" media="(prefers-color-scheme: dark)" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Rabbit Holes RSS" href="/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap"
+    />
+
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content="Rabbit Holes" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    {image && <meta property="og:image" content={image} />}
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    {image && <meta property="twitter:image" content={image} />}
-    
-    <!-- RSS Feed -->
-    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
-    
-    <!-- Sitemap for search engines -->
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
-    
-    <!-- SEO and Performance optimizations -->
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Bhuvan" />
-    <meta name="theme-color" content="#e87653" />
-    <link rel="canonical" href={Astro.url} />
-    
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Rabbit Holes" />
-    <meta name="msapplication-TileColor" content="#e87653" />
-    
-    <!-- PWA Icons -->
-    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
 
-    <!-- DNS prefetch for embeds (fonts loaded after LCP) -->
-    <link rel="dns-prefetch" href="https://www.youtube.com" />
-    <link rel="dns-prefetch" href="https://open.spotify.com" />
-
-    <!-- Google Fonts - loaded after LCP to not affect Core Web Vitals -->
-    <script>
-      // Load fonts after page is interactive (not just idle)
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Space+Grotesk:wght@500;700&display=swap';
-          document.head.appendChild(link);
-        }, 100);
-      });
-    </script>
-    
-    <!-- Structured Data for SEO -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Blog",
-        "name": "Rabbit Holes",
-        "description": "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
-        "url": "https://www.rabbitholes.garden",
-        "author": {
-          "@type": "Person",
-          "name": "Bhuvan",
-          "url": "https://www.rabbitholes.garden/about"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Rabbit Holes",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.rabbitholes.garden/favicon.svg"
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('rabbit-holes-theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.dataset.theme = saved;
           }
-        }
-      }
+        } catch {}
+      })();
     </script>
+    <slot name="head" />
   </head>
   <body>
-    <!-- Skip link for keyboard navigation -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn btn-primary z-50">Skip to main content</a>
-    
-    <header class="site-header">
-      <div class="header-container">
-        <a href="/" class="logo">
-          <span class="logo-mark">🐇</span>
-          <span class="logo-text">Rabbit Holes</span>
-        </a>
-
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="/collections" class="nav-link">Collections</a>
-          <a href="/archive" class="nav-link">Archive</a>
-          <a href="/tags" class="nav-link">Topics</a>
-          <a href="/about" class="nav-link">About</a>
-          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-            <svg class="theme-icon theme-icon--light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <svg class="theme-icon theme-icon--dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </button>
-        </nav>
-
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-          <svg class="mobile-menu-icon mobile-menu-icon--hamburger" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="4" y1="12" x2="20" y2="12"></line>
-            <line x1="4" y1="6" x2="20" y2="6"></line>
-            <line x1="4" y1="18" x2="20" y2="18"></line>
-          </svg>
-          <svg class="mobile-menu-icon mobile-menu-icon--close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Mobile Menu Overlay -->
-      <div class="mobile-menu" id="mobile-menu">
-        <div class="mobile-menu-content">
-          <a href="/collections" class="mobile-menu-link">Collections</a>
-          <a href="/archive" class="mobile-menu-link">Archive</a>
-          <a href="/tags" class="mobile-menu-link">Topics</a>
-          <a href="/about" class="mobile-menu-link">About</a>
-          <a href="/rss.xml" class="mobile-menu-link">RSS</a>
-        </div>
-      </div>
-    </header>
-
-    <main id="main-content">
+    <a class="skip-link" href="#content">Skip to the page</a>
+    <Masthead active={active} />
+    <div id="content">
       <slot />
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="footer-container">
-        <div class="footer-left">
-          <span class="footer-mark">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
-              <path d="M18.5 3.5c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2.5 1 3.5-2-1-4.5-1.5-5-1.5s-3 .5-5 1.5c.5-1 1-2.5 1-3.5 0-2-1-3.5-2.5-3.5S3 5 3 7c0 1.5.5 2.5 1 3.5C2.5 12 2 14.5 2 16c0 3 2.5 5 5.5 5 2 0 3.5-1 4.5-2 1 1 2.5 2 4.5 2 3 0 5.5-2 5.5-5 0-1.5-.5-4-1.5-5.5.5-1 1-2 1-3.5 0-2-1-3.5-2.5-3.5z"/>
-            </svg>
-          </span>
-          <span class="footer-tagline">Fascinating things from the internet</span>
-        </div>
-        <nav class="footer-links">
-          <a href="/rss.xml">RSS</a>
-          <a href="/about">About</a>
-          <a href="https://twitter.com/bebhuvan" target="_blank" rel="noopener">Twitter</a>
-        </nav>
-      </div>
-    </footer>
-
-    <!-- Share Feedback -->
-    <div class="share-feedback" id="share-feedback"></div>
+    </div>
+    <SiteFooter />
 
     <script>
-      // Theme switching - load immediately to prevent flash
-      (function() {
-        const theme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
+      const root = document.documentElement;
+      const lamp = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+      const navToggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+      const nav = document.querySelector<HTMLElement>('[data-site-nav]');
 
-      // Theme toggle functionality
-      document.addEventListener('DOMContentLoaded', () => {
-        const themeToggle = document.getElementById('theme-toggle');
-
-        themeToggle?.addEventListener('click', () => {
-          const currentTheme = document.documentElement.getAttribute('data-theme');
-          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-          document.documentElement.setAttribute('data-theme', newTheme);
-          localStorage.setItem('theme', newTheme);
-        });
-
-        // Header scroll effect with passive listener and throttle
-        const header = document.querySelector('.site-header');
-        if (header) {
-          let ticking = false;
-          window.addEventListener('scroll', () => {
-            if (!ticking) {
-              requestAnimationFrame(() => {
-                if (window.scrollY > 10) {
-                  header.classList.add('scrolled');
-                } else {
-                  header.classList.remove('scrolled');
-                }
-                ticking = false;
-              });
-              ticking = true;
-            }
-          }, { passive: true });
-        }
-
-        // Random post button
-        const randomBtn = document.getElementById('random-post-btn');
-        if (randomBtn) {
-          randomBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-              const response = await fetch('/sitemap.xml');
-              const text = await response.text();
-              const parser = new DOMParser();
-              const xml = parser.parseFromString(text, 'text/xml');
-              const urls = Array.from(xml.querySelectorAll('loc'))
-                .map(loc => loc.textContent)
-                .filter(url => url.includes('/posts/'));
-              if (urls.length > 0) {
-                const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-                window.location.href = randomUrl;
-              }
-            } catch (err) {
-              console.warn('Failed to load random post:', err);
-            }
-          });
-        }
-
-        // Mobile menu toggle functionality
-        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuToggle?.addEventListener('click', () => {
-          const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
-          mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
-          mobileMenu?.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking outside or on a link
-        mobileMenu?.addEventListener('click', (e) => {
-          if (e.target === mobileMenu || e.target.classList.contains('mobile-menu-link')) {
-            mobileMenuToggle?.setAttribute('aria-expanded', 'false');
-            mobileMenu?.classList.remove('active');
-          }
-        });
-
-        // Close mobile menu on escape key
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && mobileMenu?.classList.contains('active')) {
-            mobileMenuToggle?.setAttribute('aria-expanded', 'false');
-            mobileMenu?.classList.remove('active');
-          }
-        });
+      lamp?.addEventListener('click', () => {
+        const rendered = root.dataset.theme ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const next = rendered === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('rabbit-holes-theme', next); } catch {}
+        lamp.setAttribute('aria-label', `Use ${rendered} theme`);
       });
 
-      // Load utils.js dynamically to avoid blocking render
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadUtils);
+      navToggle?.addEventListener('click', () => {
+        const open = nav?.dataset.open === 'true';
+        if (nav) nav.dataset.open = String(!open);
+        navToggle.setAttribute('aria-expanded', String(!open));
+      });
+
+      nav?.addEventListener('click', (event) => {
+        if ((event.target as HTMLElement).closest('a')) {
+          nav.dataset.open = 'false';
+          navToggle?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && nav?.dataset.open === 'true') {
+          nav.dataset.open = 'false';
+          navToggle?.setAttribute('aria-expanded', 'false');
+          navToggle?.focus();
+        }
+      });
+
+      const previews = Array.from(document.querySelectorAll<HTMLElement>('[data-link-preview]'));
+      const previewRequests = new Map<string, Promise<{
+        title?: string;
+        description?: string;
+        image?: string | null;
+      }>>();
+
+      const loadPreview = async (card: HTMLElement) => {
+        const url = card.dataset.previewUrl;
+        if (!url || card.dataset.previewState) return;
+        card.dataset.previewState = 'loading';
+
+        try {
+          let request = previewRequests.get(url);
+          if (!request) {
+            request = fetch(`/api/metadata?${new URLSearchParams({ url })}`)
+              .then((response) => {
+                if (!response.ok) throw new Error('Preview unavailable');
+                return response.json();
+              });
+            previewRequests.set(url, request);
+          }
+
+          const metadata = await request;
+          const title = card.querySelector<HTMLElement>('[data-preview-title]');
+          const description = card.querySelector<HTMLElement>('[data-preview-description]');
+          const imageWrap = card.querySelector<HTMLElement>('[data-preview-image]');
+          const image = imageWrap?.querySelector<HTMLImageElement>('img');
+
+          if (title && metadata.title) title.textContent = metadata.title;
+          if (description && metadata.description) {
+            description.textContent = metadata.description;
+            description.hidden = false;
+          }
+          if (imageWrap && image && metadata.image) {
+            image.addEventListener('error', () => { imageWrap.hidden = true; }, { once: true });
+            image.src = metadata.image;
+            imageWrap.hidden = false;
+          }
+          card.dataset.previewState = 'ready';
+        } catch {
+          card.dataset.previewState = 'fallback';
+        }
+      };
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            observer.unobserve(entry.target);
+            void loadPreview(entry.target as HTMLElement);
+          }
+        }, { rootMargin: '600px 0px' });
+        previews.forEach((preview) => observer.observe(preview));
       } else {
-        requestIdleCallback(loadUtils, { timeout: 1000 });
+        previews.forEach((preview) => { void loadPreview(preview); });
       }
 
-      function loadUtils() {
-        import('/src/scripts/utils.js').then(({ app }) => {
-          // Utils loaded and app auto-initialized
-        }).catch(err => {
-          console.warn('Failed to load utils:', err);
+      const tweetEmbeds = document.querySelectorAll<HTMLElement>('[data-tweet-embed]');
+      if (tweetEmbeds.length) {
+        const theme = root.dataset.theme ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        tweetEmbeds.forEach((embed) => {
+          const tweet = embed.querySelector<HTMLElement>('.twitter-tweet');
+          if (tweet) tweet.dataset.theme = theme;
         });
-      }
-    </script>
 
-    <!-- PWA Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        // In development, unregister any existing service workers
-        if (location.hostname === 'localhost') {
-          navigator.serviceWorker.getRegistrations().then((registrations) => {
-            registrations.forEach((registration) => {
-              console.log('🔧 Dev mode: Unregistering service worker');
-              registration.unregister();
-            });
-          });
-          // Also clear caches
-          caches.keys().then((names) => {
-            names.forEach((name) => {
-              console.log('🔧 Dev mode: Deleting cache:', name);
-              caches.delete(name);
-            });
-          });
-        } else {
-          // Production: register service worker
-          window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              // Service worker registered successfully
-              
-              // Check for updates
-              registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                if (newWorker) {
-                  newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                      // New content available, show update notification
-                      showUpdateNotification();
-                    }
-                  });
-                }
-              });
-            })
-            .catch((registrationError) => {
-              // Service worker registration failed
-            });
-          });
-
-          // Listen for messages from service worker
-          navigator.serviceWorker.addEventListener('message', (event) => {
-            if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
-              showUpdateNotification();
-            }
-          });
+        if (!document.querySelector('#twitter-widgets')) {
+          const script = document.createElement('script');
+          script.id = 'twitter-widgets';
+          script.src = 'https://platform.twitter.com/widgets.js';
+          script.async = true;
+          document.head.append(script);
         }
       }
-
-      function showUpdateNotification() {
-        // Create a subtle update notification
-        const notification = document.createElement('div');
-        notification.innerHTML = `
-          <div style="
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: var(--color-accent);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(251, 146, 60, 0.3);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 400px;
-            margin: 0 auto;
-          ">
-            <span>🚀 New content available!</span>
-            <button onclick="window.location.reload()" style="
-              background: rgba(255,255,255,0.2);
-              border: none;
-              color: white;
-              padding: 8px 16px;
-              border-radius: 4px;
-              cursor: pointer;
-              font-weight: 500;
-            ">Update</button>
-          </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto-hide after 10 seconds
-        setTimeout(() => {
-          if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-          }
-        }, 10000);
-      }
-
-      // Install prompt handling
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent the mini-infobar from appearing on mobile
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // Show custom install button if desired
-        showInstallButton();
-      });
-
-      function showInstallButton() {
-        // You can add a custom "Add to Home Screen" button here
-        // PWA install available
-      }
-
-      // Handle successful installation
-      window.addEventListener('appinstalled', () => {
-        // PWA installed successfully
-        deferredPrompt = null;
-      });
     </script>
   </body>
 </html>

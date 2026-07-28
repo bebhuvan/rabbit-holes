@@ -1,0 +1,91 @@
+---
+import type { Post } from '../utils/content';
+import {
+  displayTag,
+  excerpt,
+  folioLabel,
+  formatPostDate,
+  postKinds,
+  readingTime,
+  tagSlug,
+} from '../utils/content';
+
+interface Props {
+  post: Post;
+  number: number;
+  total: number;
+  relatedCount?: number;
+  rubric?: boolean;
+}
+
+const { post, number, total, relatedCount = 0, rubric = false } = Astro.props;
+const kind = postKinds[post.data.type];
+const body = post.body || '';
+const minutes = readingTime(body);
+const sourceDomain = post.data.url
+  ? new URL(post.data.url).hostname.replace(/^www\./, '')
+  : undefined;
+const imageMatch = body.match(/!\[([^\]]*)\]\((\/images\/[^)\s]+(?:\s[^)]*)?)\)/);
+const image = imageMatch?.[2]?.replace(/%20/g, ' ');
+const quoteLines = body.match(/(?:^>\s?.+(?:\n|$))+/m)?.[0]
+  ?.split('\n')
+  .map((line) => line.replace(/^>\s?/, '').trim())
+  .filter(Boolean)
+  .join(' ');
+const summary = post.data.description || excerpt(quoteLines || body, 320);
+const verseLines = post.data.type === 'verse'
+  ? body
+      .replace(/^---[\s\S]*?---/, '')
+      .split('\n')
+      .map((line) => line.replace(/^>\s?/, '').trim())
+      .filter((line) => line && !line.startsWith('!['))
+      .slice(0, 6)
+  : [];
+---
+
+<article class="entry">
+  <div class="runhead">
+    <span class="folio-big" style={`color:${kind.color}`}>{folioLabel(number, total)}</span>
+    <span class="meta">
+      <span>{kind.singular}</span>
+      <span>{formatPostDate(post.data.date)}</span>
+    </span>
+  </div>
+  <h2><a href={`/posts/${post.slug}`}>{post.data.title}</a></h2>
+
+  {post.data.note && (
+    <div class="hand-line">
+      <span class="hand-say">{post.data.note}</span>
+      {sourceDomain && <span class="hand-src">{sourceDomain}</span>}
+    </div>
+  )}
+
+  {!post.data.note && post.data.url && (
+    <a class="source-chip" href={post.data.url} target="_blank" rel="noopener noreferrer">
+      source · {sourceDomain} ↗
+    </a>
+  )}
+
+  {image && <img class="folio-media" src={image} alt={imageMatch?.[1] || ''} loading="lazy" decoding="async" />}
+
+  {post.data.type === 'verse' && verseLines.length > 0 ? (
+    <div class="verse">
+      {verseLines.map((line) => <span class="l">{line}</span>)}
+    </div>
+  ) : quoteLines ? (
+    <blockquote><p>{excerpt(quoteLines, 430)}</p></blockquote>
+  ) : summary ? (
+    <p class:list={['say', { rubric }]}>{summary}</p>
+  ) : null}
+
+  <a class="more" href={`/posts/${post.slug}`}>
+    keep reading — {minutes} min ↗
+  </a>
+
+  <div class="entry-foot">
+    {(post.data.tags || []).slice(0, 3).map((tag) => (
+      <a class="head" href={`/tags/${tagSlug(tag)}`}>{displayTag(tag)}</a>
+    ))}
+    {relatedCount > 0 && <a class="thr" href={`/posts/${post.slug}#threads`}>{relatedCount} threads →</a>}
+  </div>
+</article>

@@ -185,4 +185,3 @@ This focuses on **government actions aimed at banning or sharply restricting min
 
 ## One-sentence takeaway
 The global pattern right now is: **Australia created the most concrete template, Indonesia is the newest national mover, Europe is filling up with proposals, Karnataka is the standout subnational example in India, and the U.S. has become the main battlefield where many state-level restrictions run into constitutional challenges.**
-```0

@@ -1,18 +1,14 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { heads } from '../data/heads';
+import { canonicalTags, newestFirst } from '../utils/content';
+
+export const prerender = true;
 
 export const GET: APIRoute = async ({ site }) => {
-  const posts = await getCollection('posts', ({ data }) => {
-    return data.published !== false;
-  });
-
-  // Sort posts by date for better sitemap organization
-  const sortedPosts = posts.sort((a, b) => 
-    new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-  );
-
-  // Get all unique tags for tag pages
-  const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
+  const sortedPosts = newestFirst(await getCollection('posts'));
+  const allTags = canonicalTags(sortedPosts);
+  const glosses = await getCollection('glosses', ({ data }) => data.published !== false);
 
   const siteUrl = site || 'https://www.rabbitholes.garden/';
 
@@ -50,12 +46,29 @@ export const GET: APIRoute = async ({ site }) => {
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>${siteUrl}heads</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${siteUrl}glosses</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 
   <!-- Individual tag pages -->
   ${allTags.map(tag => `  <url>
-    <loc>${siteUrl}tags/${encodeURIComponent(tag)}</loc>
+    <loc>${siteUrl}tags/${tag.slug}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+  </url>`).join('\n')}
+
+  <!-- Curated heads -->
+  ${heads.map(head => `  <url>
+    <loc>${siteUrl}heads/${head.slug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>`).join('\n')}
 
   <!-- Blog posts -->
@@ -64,6 +77,14 @@ export const GET: APIRoute = async ({ site }) => {
     <lastmod>${post.data.date.toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+  </url>`).join('\n')}
+
+  <!-- Glosses -->
+  ${glosses.map(gloss => `  <url>
+    <loc>${siteUrl}glosses/${gloss.slug}</loc>
+    <lastmod>${gloss.data.date.toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>`).join('\n')}
 
   <!-- RSS Feed -->

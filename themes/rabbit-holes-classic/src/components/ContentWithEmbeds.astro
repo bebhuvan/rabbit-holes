@@ -1,0 +1,290 @@
+---
+// Content renderer with automatic embed processing
+import YouTubeEmbed from './YouTubeEmbed.astro';
+import VimeoEmbed from './VimeoEmbed.astro';
+import TwitterEmbed from './TwitterEmbed.astro';
+import CodePenEmbed from './CodePenEmbed.astro';
+import SpotifyEmbed from './SpotifyEmbed.astro';
+import LinkPreviewDynamic from './LinkPreviewDynamic.astro';
+
+export interface Props {
+  post: any;
+}
+
+const { post } = Astro.props;
+
+// Helper functions to extract IDs from URLs
+function getYouTubeId(url: string): string | undefined {
+  if (!url) return undefined;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+    /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+
+  return undefined;
+}
+
+function getVimeoId(url: string): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/vimeo\.com\/(?:.*\/)?(\d+)/);
+  return match ? match[1] : undefined;
+}
+
+function getCodePenId(url: string): string | undefined {
+  if (!url) return undefined;
+  const match = url.match(/codepen\.io\/[^\/]+\/pen\/([^\/\?]+)/);
+  return match ? match[1] : undefined;
+}
+
+// Check if URL should be embedded
+function shouldEmbed(url: string): { type: string; id?: string } | null {
+  if (!url) return null;
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+
+  if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
+    const id = getYouTubeId(url);
+    return { type: 'youtube', id };
+  }
+
+  if (hostname.includes('vimeo.com')) {
+    const id = getVimeoId(url);
+    return { type: 'vimeo', id };
+  }
+
+  if (hostname.includes('twitter.com') || hostname.includes('x.com')) {
+    return { type: 'twitter' };
+  }
+
+  if (hostname.includes('codepen.io')) {
+    const id = getCodePenId(url);
+    return { type: 'codepen', id };
+  }
+
+  if (hostname.includes('spotify.com')) {
+    return { type: 'spotify' };
+  }
+
+  return { type: 'generic' };
+  } catch {
+    return null;
+  }
+}
+
+// Simply render the content - embeds are now handled by the remark plugin
+const { Content: PostContent } = await post.render();
+---
+
+<div class="content-with-embeds">
+  <PostContent />
+</div>
+
+<script>
+  // Helper function for YouTube ID extraction (client-side)
+  function getYouTubeId(url) {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+    ];
+
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+
+    return null;
+  }
+
+  // Client-side enhancement for link previews and embeds
+  console.log('ContentWithEmbeds script loaded');
+
+  async function processEmbeds() {
+    console.log('Processing embeds...');
+    // Find all link preview placeholders
+    const linkPreviews = document.querySelectorAll('.link-preview-placeholder[data-url]');
+
+    for (const placeholder of linkPreviews) {
+      const url = placeholder.getAttribute('data-url');
+      if (!url) continue;
+
+      try {
+        // Fetch link preview data from the server
+        const response = await fetch('/api/metadata', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.title || data.description || data.image) {
+            // Create a proper link preview
+            placeholder.innerHTML = `
+              <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
+                <div style="display: flex; gap: 1rem; align-items: start;">
+                  ${data.image ? `
+                    <img src="${data.image}" alt="" loading="lazy" decoding="async" style="width: 120px; height: 120px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                  ` : ''}
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 600; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      ${data.title || url}
+                    </div>
+                    ${data.description ? `
+                      <div style="font-size: 0.9em; color: var(--color-text-secondary, #666); margin-bottom: 0.25rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                        ${data.description}
+                      </div>
+                    ` : ''}
+                    <div style="font-size: 0.85em; color: var(--color-text-tertiary, #999); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      ${new URL(url).hostname}
+                    </div>
+                  </div>
+                </div>
+              </a>
+            `;
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to fetch link preview:', e);
+        // Keep the basic preview on error
+      }
+    }
+
+    // Convert standalone URLs to embeds (YouTube, Twitter, etc.)
+    const content = document.querySelector('.post-full-content, .content-with-embeds');
+    if (content) {
+      // Find all <a> tags that contain standalone URLs
+      const links = content.querySelectorAll('a[href^="http"]');
+
+      for (const link of links) {
+        const href = link.getAttribute('href');
+        const text = link.textContent.trim();
+
+        console.log('Processing link:', href, 'Text:', text);
+
+        // Check if the link text is the same as the href (standalone URL)
+        if (href === text) {
+          console.log('Found standalone URL:', href);
+          // YouTube embed
+          if (href.match(/(youtube\.com\/watch\?v=|youtu\.be\/)/)) {
+            const videoId = getYouTubeId(href);
+            if (videoId) {
+              const embed = document.createElement('div');
+              embed.className = 'youtube-embed';
+              embed.style.cssText = 'margin: 2rem 0; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface);';
+              embed.innerHTML = `
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                  <iframe
+                    src="https://www.youtube.com/embed/${videoId}"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy">
+                  </iframe>
+                </div>
+                <div style="padding: 8px 16px; display: flex; align-items: center; gap: 8px; background: var(--color-surface);">
+                  <span style="font-size: 16px;">📺</span>
+                  <span style="color: var(--color-text-secondary); font-size: 14px; font-weight: 500;">YouTube Video</span>
+                </div>
+              `;
+
+              // Replace the paragraph containing the link
+              const paragraph = link.closest('p');
+              if (paragraph && paragraph.children.length === 1) {
+                paragraph.replaceWith(embed);
+              }
+              continue;
+            }
+          }
+
+          // Twitter embed
+          if (href.match(/(twitter\.com|x\.com)\/[^\/]+\/status\/\d+/)) {
+            console.log('Creating Twitter embed for:', href);
+            const embed = document.createElement('div');
+            embed.className = 'twitter-embed';
+            embed.style.cssText = 'margin: 2rem 0;';
+
+            const blockquote = document.createElement('blockquote');
+            blockquote.className = 'twitter-tweet';
+            blockquote.setAttribute('data-theme', 'light');
+            blockquote.setAttribute('data-dnt', 'true');
+            blockquote.setAttribute('data-width', '550');
+            blockquote.innerHTML = `<p lang="en" dir="ltr"><a href="${href}">View Tweet</a></p>&mdash; <a href="${href.split('/status/')[0]}">${href.split('/')[3]}</a>`;
+
+            embed.appendChild(blockquote);
+
+            // Replace the paragraph containing the link
+            const paragraph = link.closest('p');
+            if (paragraph && paragraph.children.length === 1) {
+              paragraph.replaceWith(embed);
+            }
+          }
+        }
+      }
+
+      // Load Twitter widgets script - simplified approach
+      if (document.querySelector('.twitter-tweet')) {
+        console.log('Found twitter-tweet elements, loading script...');
+
+        if (!document.getElementById('twitter-wjs')) {
+          const script = document.createElement('script');
+          script.id = 'twitter-wjs';
+          script.src = 'https://platform.twitter.com/widgets.js';
+          script.async = true;
+          script.onload = function() {
+            console.log('Twitter script loaded successfully');
+            if (window.twttr && window.twttr.widgets) {
+              window.twttr.widgets.load();
+            }
+          };
+          script.onerror = function() {
+            console.error('Failed to load Twitter script');
+          };
+          document.head.appendChild(script);
+        } else if (window.twttr && window.twttr.widgets) {
+          console.log('Twitter script already loaded, calling widgets.load()');
+          window.twttr.widgets.load();
+        }
+      }
+    }
+  }
+
+  // Run immediately and also on DOM ready
+  processEmbeds();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', processEmbeds);
+  }
+</script>
+
+<style>
+  .content-with-embeds {
+    /* Ensure proper spacing between content and embeds */
+  }
+
+  .detected-embeds {
+    margin-top: var(--space-2xl);
+  }
+
+  .detected-embeds > * {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .detected-embeds > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .content-with-embeds :global(.standalone-url) {
+    margin: var(--space-xl) 0;
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,34 @@
+.sheet{max-width:42rem;margin:0 auto;padding:4.5rem 1.5rem 6rem}
+.sheet .kicker{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+  text-transform:uppercase;color:var(--red);margin-bottom:1.2rem}
+.sheet>h1{font-family:var(--display);font-size:var(--t-3xl);font-weight:600;line-height:1.05}
+.sheet .strap{font-family:var(--body);font-size:var(--t-lg);font-style:italic;line-height:1.5;
+  color:var(--ink-soft);margin:1.2rem 0 3.5rem}
+.sheet .section{display:grid;grid-template-columns:7rem minmax(0,1fr);gap:1.7rem;
+  padding:2.3rem 0;border-top:1px solid var(--rule)}
+.sheet .section-label{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+  text-transform:uppercase;color:var(--muted)}
+.sheet .copy{font-size:var(--t-body);line-height:1.72}
+.sheet .copy p+p{margin-top:1.1rem}
+.sheet .copy a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-soft)}
+.about-quote{margin:0;padding-left:1.25rem;border-left:2px solid var(--red)}
+.about-quote p{font-family:var(--display);font-size:var(--t-md);font-style:italic;
+  line-height:1.5;color:var(--ink)}
+.about-quote cite{display:block;margin-top:1rem;color:var(--red);font-family:var(--mono);
+  font-size:var(--l-md);font-style:normal;letter-spacing:var(--tr-label)}
+.about-quote cite::before{content:"— "}
+.ink-key{list-style:none;margin-top:1.5rem}
+.ink-key li{display:grid;grid-template-columns:1rem 4rem 1fr;gap:.7rem;align-items:baseline;
+  padding:.55rem 0;border-top:1px solid var(--rule)}
+.ink-key .swatch{width:.65rem;height:.65rem;border-radius:50%}
+.ink-key strong{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+  text-transform:uppercase}
+.contact-list{list-style:none}
+.contact-list a{display:flex;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid var(--rule)}
+@media(max-width:600px){
+  .sheet{padding:3rem 1.05rem 4rem}
+  .sheet>h1{font-size:clamp(2.4rem,13vw,var(--t-3xl))}
+  .sheet .section{display:block}
+  .sheet .section-label{margin-bottom:1rem;color:var(--red)}
+  .sheet .strap{font-size:var(--t-md);margin-bottom:2.5rem}
+}

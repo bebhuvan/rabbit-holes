@@ -1,0 +1,179 @@
+  .lamp:hover{color:var(--red)}
+
+  /* ============ ENTRY SHELL ============ */
+  .folio{max-width:var(--maxw);margin:0 auto;display:grid;
+    grid-template-columns:190px minmax(0,640px) 260px;gap:0 3rem;
+    padding:0 2.6rem;align-items:start}
+
+  /* ---- left: the standing meta rail ---- */
+  .folio-rail{position:sticky;top:2.2rem;padding-top:4.2rem;text-align:right}
+  .folio-rail .back{display:block;font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);text-decoration:none;margin-bottom:2.6rem;transition:color .18s}
+  .folio-rail .back:hover{color:var(--red)}
+  .folio-num{font-family:var(--display);font-weight:600;font-size:var(--t-4xl);line-height:.82;
+    letter-spacing:var(--tr-display);color:var(--c-verse);font-variant-numeric:lining-nums;display:block}
+  .folio-word{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);display:block;margin-top:.7rem}
+  .folio-rail dl{margin-top:2.4rem;font-family:var(--mono);font-size:var(--l-md);line-height:1.55}
+  .folio-rail dt{color:var(--muted);font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;margin-top:1.3rem}
+  .folio-rail dd{color:var(--ink-soft);margin-top:.3rem}
+  .folio-rail dd a{color:var(--red);text-decoration:none}
+  .folio-rail dd a:hover{text-decoration:underline;text-underline-offset:3px}
+
+  /* ---- centre: the leaf ---- */
+  .leaf{padding:4rem 0 2rem;min-width:0}
+
+  .attrib{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase;
+    color:var(--muted);margin-bottom:1.1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.08;
+    letter-spacing:var(--tr-display);margin-bottom:.4rem}
+  .byline{font-family:var(--body);font-style:italic;font-size:var(--t-md);color:var(--ink-soft);margin-bottom:2.8rem}
+
+  /* ---- THE HAND — rubricated, and monumental when terse ----
+     Real notes in this corpus are often a single word ("Beautiful.").
+     A small grey sidenote would read as a missing field. Set at
+     display scale in red, one word becomes a considered response. */
+  .hand{margin:0 0 2.9rem;position:relative;padding-left:1.6rem}
+  .hand::before{content:"";position:absolute;left:0;top:.34em;bottom:.34em;width:2px;background:var(--red)}
+  .hand .label{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red-soft);margin-bottom:.55rem}
+  .hand .say{font-family:var(--display);font-style:italic;font-weight:500;color:var(--red);
+    font-size:var(--t-2xl);line-height:1.24;letter-spacing:var(--tr-display)}
+  /* when the note runs long, it steps down to reading size automatically */
+  .hand.long .say{font-family:var(--body);font-style:italic;font-size:var(--t-md);line-height:1.62}
+
+  /* ---- the source ----
+     A resolved editorial object: more generous than a utility link, quieter
+     than a preview card, and independent of third-party metadata. */
+  .source-card{display:grid;grid-template-columns:8rem minmax(0,1fr);gap:1.3rem;
+    align-items:center;margin:1.8rem 0 2.4rem;padding:1rem 0;
+    border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+    text-decoration:none}
+  .source-card-label{font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted)}
+  .source-card-main{display:flex;align-items:baseline;justify-content:space-between;gap:1.2rem;min-width:0}
+  .source-card-domain{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font-family:var(--body);font-size:var(--t-md);font-style:italic;color:var(--ink)}
+  .source-card-action{flex:none;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--red)}
+  .source-card:hover{border-color:var(--red-soft)}
+  .source-card:hover .source-card-action{text-decoration:underline;text-underline-offset:4px}
+
+  /* Verse: every line flush; ONLY over-long lines that wrap are indented.
+     (An earlier hanging-indent via text-indent hung line 1 alone and
+     indented all the rest — it read as a typesetting error.) */
+  .verse{font-family:var(--body);font-size:var(--t-lg);line-height:1.82;color:var(--ink)}
+  .verse p{margin-bottom:1.5rem}
+  /* each line is its own block, so the hanging indent applies per line:
+     lines sit flush, and only a line too long for the measure turns over. */
+  .verse .l{display:block;padding-left:1.5rem;text-indent:-1.5rem}
+
+  .prose p{margin-bottom:1.35rem}
+  .prose a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--rule-strong);
+    text-underline-offset:3px;text-decoration-thickness:1px}
+  .prose a:hover{text-decoration-color:var(--ink)}
+  .prose blockquote{margin:1.9rem 0;padding-left:1.4rem;border-left:2px solid var(--rule-strong);
+    font-size:var(--t-body);line-height:1.72;color:var(--ink)}
+
+  .leaf-mark{text-align:center;color:var(--red-soft);font-family:var(--flourish);
+    font-size:var(--t-lg);line-height:1;margin:2.4rem 0 0}
+
+  /* ---- dive deeper ---- */
+  .deeper{margin-top:2.6rem;border-top:1px solid var(--rule);padding-top:1.6rem}
+  .deeper .h{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);margin-bottom:1.1rem}
+  .deeper ul{list-style:none}
+  .deeper li{margin-bottom:.85rem;display:flex;gap:.7rem;align-items:baseline}
+  .deeper .n{font-family:var(--mono);font-size:var(--l-md);color:var(--muted);flex:none}
+  .deeper a{font-family:var(--body);font-size:var(--t-body);color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  .deeper a:hover{text-decoration-color:var(--ink)}
+  .deeper .dsc{display:block;font-size:var(--t-base);font-style:italic;color:var(--ink-soft);margin-top:.15rem}
+
+  /* ---- threads: connective tissue, derived from shared heads ----
+     Spans the reading column AND the margin. The page deliberately
+     opens out here: narrow while you read, wide when you leave. */
+  .threads{grid-column:2 / 4;margin-top:1rem;border-top:2px solid var(--red);
+    padding:1.5rem 0 0}
+  .threads .h{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--red);margin-bottom:.4rem;display:flex;align-items:baseline;gap:.55rem}
+  .threads .h .mani{font-family:var(--flourish);font-size:var(--t-base);line-height:1}
+  .threads .hsub{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--ink-soft);margin-bottom:1.7rem}
+  .thread-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 3rem}
+  .thread{display:grid;grid-template-columns:3.2rem 1fr;gap:.9rem;align-items:baseline;
+    padding:.85rem 0;border-top:1px solid var(--rule);text-decoration:none;transition:padding-left .2s}
+  .thread:hover{padding-left:.4rem}
+  .thread .tn{font-family:var(--display);font-weight:600;font-size:var(--t-lg);color:var(--c-verse);font-variant-numeric:lining-nums;line-height:1}
+  .thread .tt{font-family:var(--body);font-size:var(--t-body);color:var(--ink);line-height:1.35}
+  .thread:hover .tt{color:var(--red)}
+  .thread .tr{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    color:var(--muted);margin-top:.28rem}
+  .threads .all{display:inline-block;margin-top:1.5rem;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
+  .threads .all:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* ---- right margin: sidenotes ---- */
+  .margin{padding:12.4rem 0 0 1.25rem;position:relative;
+    border-left:1px solid var(--rule)}
+  .sidenote{margin-bottom:2.1rem;font-size:var(--t-base);line-height:1.58}
+  .sidenote .sl{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
+  .sidenote .sb{font-family:var(--body);color:var(--ink-soft);font-style:italic}
+  .sidenote a{color:var(--red);text-decoration:none}
+  .sidenote a:hover{text-decoration:underline;text-underline-offset:3px}
+  .heads a{display:block;font-family:var(--body);font-size:var(--t-base);font-style:italic;
+    color:var(--ink-soft);text-decoration:none;border-top:1px solid var(--rule);
+    padding:.34rem 0;transition:color .18s}
+  .heads a::before{content:"·";color:var(--red);margin-right:.45rem}
+  .heads a:hover{color:var(--red)}
+
+  .prose{font-size:var(--t-body);line-height:1.72}
+  .prose h2,.prose h3{font-family:var(--display);font-weight:600;line-height:1.18;
+    letter-spacing:var(--tr-display);margin:2.2rem 0 1rem}
+  .prose h2{font-size:var(--t-xl)}
+  .prose h3{font-size:var(--t-lg)}
+  .prose ul,.prose ol{margin:1rem 0 1.4rem;padding-left:1.4rem}
+  .prose li{margin-bottom:.45rem}
+  .prose img{max-width:min(100%,54rem);height:auto;margin:1.8rem auto;border:1px solid var(--rule)}
+  .prose pre{max-width:100%;overflow:auto;padding:1rem;background:var(--red-wash);
+    border:1px solid var(--rule);font-family:var(--mono);font-size:.78rem;line-height:1.55}
+  .prose code{font-family:var(--mono);font-size:.82em}
+  .prose iframe{max-width:100%}
+  .post-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+  .post-actions button,.post-actions a{background:transparent;border:0;padding:.3rem 0;color:var(--muted);
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);text-decoration:none;cursor:pointer}
+  .post-actions button:hover,.post-actions a:hover{color:var(--red)}
+
+  @media (max-width:1050px){
+    .folio{grid-template-columns:145px minmax(0,1fr) 210px;gap:0 2rem;padding:0 1.5rem}
+    .folio-num{font-size:var(--t-3xl)}
+  }
+
+  @media (max-width:820px){
+    .folio{grid-template-columns:110px minmax(0,1fr);gap:0 1.5rem}
+    .margin{display:none}
+    .threads{grid-column:2}
+  }
+
+  @media (max-width:620px){
+    .folio{display:block;padding:0 1.1rem}
+    .folio-rail{position:relative;top:auto;text-align:left;padding:2rem 0 0;
+      display:grid;grid-template-columns:auto 1fr;column-gap:1rem;align-items:end}
+    .folio-rail .back{grid-column:1/-1;margin-bottom:1.4rem}
+    .folio-num{font-size:var(--t-2xl)}
+    .folio-word{display:none}
+    .folio-rail dl{margin:0;display:flex;gap:.35rem;flex-wrap:wrap;align-items:baseline}
+    .folio-rail dt{display:none}
+    .folio-rail dd{margin:0}
+    .folio-rail dd:not(:last-child)::after{content:" ·";color:var(--rule-strong)}
+    .leaf{padding:2rem 0 1rem}
+    .attrib{display:none}
+    .leaf h1{font-size:clamp(2.2rem,12vw,var(--t-3xl));margin-bottom:.6rem}
+    .byline{margin-bottom:1.8rem}
+    .source-card{grid-template-columns:1fr;gap:.45rem;margin:1.4rem 0 2rem}
+    .source-card-main{align-items:center}
+    .hand{margin-bottom:2rem}
+    .hand .say{font-size:var(--t-xl)}
+    .threads{margin-top:2rem}
+    .thread-grid{grid-template-columns:1fr}
+  }

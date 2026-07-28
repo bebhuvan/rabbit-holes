@@ -1,0 +1,447 @@
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. See 11-folio-entry.html. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    /* one colour per REAL type in config.ts — musings is the plurality (87)
+       and had no treatment at all in mockup 10 */
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;
+    --maxw:1240px;--rail-w:272px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+      --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+      --c-verse:#82C29A;--c-practical:#D89A80;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+    --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+    --c-verse:#82C29A;--c-practical:#D89A80;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;}
+
+  /* Display optical size pinned — Bodoni's display cut has hairlines too
+     fine to survive at these sizes, especially on dark. */
+  .brand .mark,.thesis h1,.folio-big,.entry h2,.hand-say{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+
+  /* ==========================================================
+     THE TWO-INK RULE  — this is a system, not a colour choice.
+     ----------------------------------------------------------
+     RED marks WHOSE VOICE IT IS, never where a link goes.
+
+       red  = the collector. His reaction (the hand), the heads he
+              chose, the ways he offers you deeper into his garden.
+       black= everyone else. Quoted text, other people's titles,
+              outbound destinations, dates, counts, machinery.
+
+     The consequence worth stating: when the hand carries an
+     outbound link ("[True dat](ft.com)"), it stays RED — the
+     voice wins over the destination. The domain beside it is
+     muted, because the domain is the world, not him.
+
+     Corollary: if red is doing nothing on a folio, that folio
+     has no hand yet, and it must still look finished. Red is
+     never structural.
+     ========================================================== */
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;font-kerning:normal;font-synthesis:none;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ============ MASTHEAD ============
+     Reads as the head of a book, not a web nav bar:
+     - the strapline is italic serif, not tracked-out caps. Nine words of
+       uppercase mono read as texture; the same words in italic read as a
+       sentence, which is what they are.
+     - the theme control is separated from navigation by a rule. It was
+       previously spaced identically to the links, so it read as a sixth
+       destination rather than a control.
+     - active item is marked with a hairline under the word itself, not a
+       floating tab bar.
+     - a double rule closes the head — a book device rather than a border. */
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    font-style:normal;margin:0 .25rem}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
+    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+  .lamp:hover{color:var(--red)}
+
+  .shell{max-width:var(--maxw);margin:0 auto;display:grid;
+    grid-template-columns:var(--rail-w) 1fr;align-items:start;position:relative}
+  /* The rail's rule lives on the shell, not on .rail. .rail is sticky, so a
+     border-right on it is only as tall as its own content — the left wall
+     stopped a fifth of the way down and the page lost its spine. Invisible
+     while the stream is short; glaring the moment it isn't. */
+  .shell::before{content:"";position:absolute;top:0;bottom:0;
+    left:var(--rail-w);width:1px;background:var(--rule)}
+
+  /* ============ THE INDEX RAIL ============
+     Heads are HAND-PROMOTED, not auto-derived. There are 143 tags but only
+     ~8 with enough weight to navigate by; the rest are a long tail of 2s
+     and 3s. The rail shows the curated set and says so. */
+  /* The rail is deliberately not sticky. Its full editorial stack is taller
+     than a typical laptop viewport; pinning it clipped the Study Notes block
+     and made the column snap on the first scroll. The shell keeps the book
+     spine running after the rail itself has passed. */
+  .rail{padding:3rem 2rem;position:relative}
+  .rail-label{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem}
+  /* the fleuron marks the rail's PRIMARY heading only — repeating it on
+     every label turns a flourish into wallpaper */
+  .rail-label.flr::after{content:"\2766";color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-base);letter-spacing:0}
+  .rail-note{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--muted);
+    line-height:1.45;margin-bottom:1.4rem}
+  .index{list-style:none;font-family:var(--mono);font-size:var(--l-lg)}
+  .index a{display:flex;align-items:baseline;gap:.5rem;padding:.32rem .3rem;
+    text-decoration:none;color:var(--ink-soft)}
+  /* head names never wrap — a wrapped name loses its dotted leader and
+     breaks the ledger rhythm the whole rail depends on */
+  .index a>span:first-child{white-space:nowrap}
+  .index a:hover{color:var(--red)}
+  .index .dots{flex:1;border-bottom:1px dotted var(--rule-strong);transform:translateY(-.2em);margin:0 .15rem}
+  .index .n{color:var(--muted);font-size:var(--l-lg);font-variant-numeric:lining-nums tabular-nums}
+  .index a:hover .n{color:var(--red)}
+  .index-more{display:inline-block;margin:1rem .3rem 0;font-family:var(--mono);
+    font-size:var(--l-md);color:var(--muted);text-decoration:none}
+  .index-more:hover{color:var(--red)}
+
+  .rail-rule{border:none;border-top:1px solid var(--rule);margin:1.7rem 0}
+  /* the asterism marks ONE seam in the rail, not every seam */
+  .rail-rule.ast{text-align:center;overflow:visible}
+  .rail-rule.ast::after{content:"\2042";display:inline-block;transform:translateY(-.72em);
+    background:var(--paper);padding:0 .7rem;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base)}
+
+  /* THE WAY IN — promoted to the top of the rail. It is the highest-value
+     link for a first-time reader and it was previously below ten heads,
+     five kinds and two dividers. Red-ruled, because under the ink rule an
+     offer of passage into the garden is the collector speaking. */
+  .wayin{display:block;text-decoration:none;padding-left:1rem;
+    border-left:2px solid var(--red);margin-bottom:1.9rem}
+  .wayin .t{display:block;font-family:var(--body);font-style:italic;
+    font-size:var(--t-md);line-height:1.35;color:var(--ink)}
+  .wayin:hover .t{color:var(--red)}
+  .wayin .mani{color:var(--red);font-style:normal;font-family:var(--flourish);
+    font-size:var(--t-base);margin-right:.3rem}
+  .wayin .s{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+  /* the key — makes the tinted numerals legible as a system rather than
+     an unexplained decoration. Counts are real. */
+  .kinds{margin-top:.2rem;list-style:none;font-family:var(--mono);font-size:var(--l-md)}
+  .kinds li{color:var(--ink-soft)}
+  .kinds a{display:flex;align-items:baseline;gap:.55rem;padding:.24rem .3rem;
+    color:inherit;text-decoration:none}
+  .kinds a:hover{color:var(--red)}
+  .kinds .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+    font-variant-numeric:lining-nums;line-height:1;min-width:2.1rem}
+  .kinds .kn{flex:1}
+  .kinds .kc{color:var(--muted);font-size:var(--l-md);font-variant-numeric:tabular-nums}
+
+  .colophon{margin-top:2.2rem;font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.6;color:var(--ink-soft)}
+  .colophon .kept{display:block;margin-top:.85rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+
+  .study-note-callout{display:block;margin-top:1.9rem;padding:1.15rem 1rem 1.1rem;
+    border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+    background:linear-gradient(90deg,var(--red-wash),transparent);text-decoration:none}
+  .study-note-callout .rail-label{color:var(--red);margin-bottom:.55rem}
+  .study-note-copy{display:block;font-size:var(--t-base);font-style:italic;line-height:1.45;
+    color:var(--ink-soft)}
+  .study-note-link{display:block;margin-top:.65rem;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);color:var(--red)}
+  .study-note-callout:hover .study-note-link{text-decoration:underline;text-underline-offset:4px}
+  .rail-follow{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:1.25rem;
+    font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);color:var(--muted)}
+  .rail-follow a{text-decoration:none}
+  .rail-follow a:hover{color:var(--red)}
+
+  /* ============ STREAM ============ */
+  .stream{min-width:0}
+  .thesis{padding:4rem 3.2rem 2.8rem;border-bottom:1px solid var(--rule)}
+  .thesis .kicker{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+  .thesis .kicker b{color:var(--red);font-weight:600}
+  .thesis h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.05;
+    letter-spacing:var(--tr-display);margin-bottom:1.1rem}
+  .thesis h1 span{display:block}
+  .thesis .lede{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);max-width:34em}
+  .thesis .lede a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-soft)}
+  .thesis-links{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.5rem}
+  .thesis-links a{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule-strong);
+    padding-bottom:.18rem}
+  .thesis-links a:hover{color:var(--red);border-bottom-color:var(--red)}
+
+  .eyebrow{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);padding:2rem 3.2rem .4rem;display:flex;align-items:center;gap:.6rem}
+  .eyebrow .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-base)}
+
+  /* ---- the folio ---- */
+  .entry{padding:2.2rem 3.2rem 2.4rem;border-bottom:1px solid var(--rule)}
+  .runhead{display:flex;align-items:baseline;gap:1rem;margin-bottom:.7rem}
+  .folio-big{font-family:var(--display);font-weight:600;font-size:var(--t-2xl);line-height:1;
+    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display)}
+  .runhead .meta{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);display:flex;gap:.9rem}
+  .entry h2{font-family:var(--display);font-weight:600;font-size:var(--t-xl);line-height:1.18;
+    letter-spacing:var(--tr-display);margin-bottom:.75rem}
+  .entry h2 a{text-decoration:none}
+  .entry h2 a:hover{color:var(--red)}
+
+  /* THE HAND — 2 to 5 words, in red, and usually carrying the source link.
+     This is the single most common shape in the corpus. */
+  .hand-line{margin-bottom:.9rem;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
+  .hand-say{font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-lg);line-height:1.2;color:var(--red)}
+  .hand-say a{text-decoration:none;border-bottom:1px solid var(--red-soft)}
+  .hand-src{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);color:var(--muted)}
+
+  blockquote{margin:0 0 .9rem;padding-left:1.3rem;border-left:2px solid var(--rule-strong);
+    font-size:var(--t-body);line-height:1.66;color:var(--ink)}
+  blockquote p+p{margin-top:.75rem}
+  blockquote cite{display:block;margin-top:.6rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+
+  .entry p.say{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);margin-bottom:.8rem}
+  .entry p.say a{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+
+  /* verse */
+  .verse{font-size:var(--t-body);line-height:1.75}
+  .verse .l{display:block;padding-left:1.4rem;text-indent:-1.4rem}
+
+  /* a long entry is truncated, and says how long it is */
+  .more{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--red);
+    text-decoration:none;display:inline-block;margin-top:.3rem}
+  .more:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* embed placeholder */
+  /* embeds sit at the measure of the text, not the width of the column —
+     a full-bleed 16:9 player swamps every other folio in the stream */
+  .embed{border:1px solid var(--rule-strong);aspect-ratio:16/9;max-width:26rem;
+    display:flex;align-items:center;justify-content:center;margin-bottom:.9rem;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted)}
+
+  /* footer of the entry: heads + threads, quiet */
+  .entry-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.9rem;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
+  .entry-foot .head{color:var(--red);text-decoration:none;border:1px solid var(--rule-strong);
+    border-radius:2px;padding:.14rem .45rem}
+  .entry-foot .head:hover{border-color:var(--red)}
+  .entry-foot .thr{color:var(--muted);text-decoration:none;margin-left:auto}
+  .entry-foot .thr:hover{color:var(--red)}
+
+  /* ---- pulled from the stacks: serendipity as a first-class module.
+     The stream is reverse-chron and therefore always shows you the
+     newest things; this is the door to the other 188. It is the whole
+     thesis of the site expressed as one component. ---- */
+  .stacks{padding:2.4rem 3.2rem;border-bottom:1px solid var(--rule);
+    background:var(--red-wash,transparent)}
+  .stacks-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.3rem}
+  .stacks-head .ast{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-md)}
+  .stacks-head .t{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted)}
+  .stacks-sub{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    color:var(--ink-soft);margin-bottom:1.4rem}
+  .stacks .again{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    color:var(--red);text-decoration:none;margin-left:auto}
+  .stacks .again:hover{text-decoration:underline;text-underline-offset:4px}
+
+  .stream-end{display:flex;align-items:center;gap:1rem;padding:2.1rem 3.2rem 2.6rem;
+    color:var(--muted);font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
+  .stream-end .flr{font-family:var(--flourish);font-size:var(--t-md);color:var(--red-soft)}
+  .stream-end a{margin-left:auto;color:var(--red);text-decoration:none}
+  .stream-end a:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* Shared production additions */
+  html{background:var(--paper);scroll-behavior:smooth;scrollbar-gutter:stable}
+  body{min-width:0}
+  img{display:block;max-width:100%;height:auto}
+  button,input,select,textarea{font:inherit}
+  .skip-link{position:fixed;left:1rem;top:1rem;z-index:1000;padding:.6rem .9rem;
+    background:var(--paper);border:1px solid var(--red);color:var(--red);
+    font-family:var(--mono);font-size:var(--l-md);transform:translateY(-180%)}
+  .skip-link:focus{transform:none}
+  .nav-toggle{display:none;background:none;border:0;color:var(--ink);font-family:var(--mono);
+    font-size:var(--l-lg);letter-spacing:var(--tr-label);text-transform:uppercase;padding:.5rem 0}
+  .page-shell{max-width:var(--maxw);margin:0 auto;padding:var(--s-8) 2.6rem var(--s-10)}
+  .page-kicker{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red);margin-bottom:var(--s-4)}
+  .page-title{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);
+    line-height:1.05;letter-spacing:var(--tr-display)}
+  .page-intro{max-width:38em;margin-top:var(--s-4);font-size:var(--t-body);
+    line-height:1.65;color:var(--ink-soft)}
+  .folio-media{margin:.8rem 0 1rem;max-width:var(--measure);max-height:28rem;
+    object-fit:contain;border:1px solid var(--rule)}
+  .source-chip{display:inline-flex;gap:.5rem;align-items:center;margin:.15rem 0 .9rem;
+    color:var(--ink-soft);font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);text-decoration:none}
+  .source-chip:hover{color:var(--red)}
+  /* Standalone URLs become quiet editorial cards. Metadata is an enhancement:
+     the domain, inferred title, and real link are useful before it arrives and
+     remain so when a publisher blocks preview requests. */
+  .link-preview{margin:2rem 0;border-top:1px solid var(--rule-strong);
+    border-bottom:1px solid var(--rule-strong);background:var(--red-wash)}
+  .link-preview[data-link-preview]>a{display:grid;grid-template-columns:minmax(0,1fr) auto auto;
+    gap:1rem;align-items:center;padding:1rem 1.1rem;color:var(--ink);text-decoration:none}
+  .link-preview-copy{display:block;min-width:0}
+  .link-preview-domain{display:block;margin-bottom:.35rem;color:var(--red);
+    font-family:var(--mono);font-size:var(--l-sm);font-style:normal;
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase}
+  .link-preview strong{display:block;font-family:var(--display);font-size:var(--t-md);
+    font-weight:600;line-height:1.2;letter-spacing:var(--tr-display)}
+  .link-preview-description{display:-webkit-box;margin-top:.35rem;overflow:hidden;
+    -webkit-box-orient:vertical;-webkit-line-clamp:2;color:var(--ink-soft);
+    font-family:var(--body);font-size:var(--t-base);font-style:normal;line-height:1.38}
+  .link-preview-image{width:7.5rem;height:5rem;overflow:hidden;padding:.35rem;
+    border-left:1px solid var(--rule);background:var(--paper)}
+  .link-preview-image img{width:100%;height:100%;margin:0;border:0;object-fit:contain;
+    object-position:center}
+  .link-preview-arrow{color:var(--red);font-family:var(--mono);font-size:var(--l-lg)}
+  .link-preview:hover{border-color:var(--red-soft)}
+  .link-preview:hover strong{color:var(--red)}
+  .twitter-embed{min-height:3.5rem;margin:2rem 0}
+  [data-tweet-embed] .twitter-tweet{margin:0;padding:1rem;border:1px solid var(--rule);
+    color:var(--ink-soft);font-style:italic}
+  .empty-state{padding:var(--s-9) 0;text-align:center;color:var(--ink-soft);
+    font-style:italic;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;
+    padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
+    white-space:nowrap!important;border:0!important}
+
+  @media (max-width:900px){
+    :root{--rail-w:220px}
+    .masthead-inner{padding:1.5rem 1.5rem 1.2rem}
+    .masthead nav{gap:1rem}
+    .rail{padding:2.3rem 1.3rem}
+    .thesis,.entry,.stacks{padding-left:2rem;padding-right:2rem}
+    .eyebrow{padding-left:2rem;padding-right:2rem}
+  }
+
+  @media (max-width:720px){
+    body{font-size:18px}
+    .masthead-inner{align-items:center;position:relative}
+    .brand .mark{font-size:var(--t-lg)}
+    .brand .sub{font-size:var(--t-xs)}
+    .nav-toggle{display:block}
+    .masthead nav{display:none;position:absolute;z-index:50;left:0;right:0;top:100%;
+      padding:1rem 1.5rem 1.25rem;background:var(--paper);border-bottom:3px double var(--rule-strong);
+      flex-direction:column;align-items:stretch;gap:0}
+    .masthead nav[data-open="true"]{display:flex}
+    .masthead nav a{padding:.65rem 0;font-size:var(--l-lg)}
+    .lamp{border-left:0;border-top:1px solid var(--rule);margin:.4rem 0 0;padding:.9rem 0 0;text-align:left}
+    .shell{display:block}
+    .shell::before{display:none}
+    .rail{position:relative;padding:1.5rem;border-bottom:1px solid var(--rule)}
+    .rail .rail-index,.rail .rail-kinds,.rail .rail-colophon,.rail .rail-rule,
+    .rail .study-note-callout,.rail .rail-follow{display:none}
+    .wayin{margin:0}
+    .thesis{padding:2.7rem 1.35rem 2.2rem}
+    .thesis h1{font-size:clamp(2.15rem,9vw,2.6rem);line-height:1.04}
+    .page-title{font-size:clamp(2.25rem,12vw,var(--t-3xl))}
+    .eyebrow{padding:1.5rem 1.35rem .25rem}
+    .entry{padding:1.65rem 1.35rem 1.8rem}
+    .folio-big{font-size:var(--t-xl)}
+    .entry h2{font-size:var(--t-lg)}
+    .runhead{gap:.75rem;align-items:center}
+    .runhead .meta{gap:.55rem;flex-wrap:wrap}
+    .entry-foot .thr{width:100%;margin:.3rem 0 0}
+    .stacks{padding:1.8rem 0 0}
+    .stacks>.stacks-head,.stacks>.stacks-sub{margin-left:1.35rem;margin-right:1.35rem}
+    .stacks .entry{padding-left:1.35rem;padding-right:1.35rem}
+    .stacks-head{flex-wrap:wrap}
+    .stacks .again{margin-left:0;width:100%}
+    .stream-end{padding:2rem 1.35rem 2.5rem;flex-wrap:wrap}
+    .stream-end a{width:100%;margin-left:0}
+    .page-shell{padding:2.7rem 1.35rem 4rem}
+    .link-preview[data-link-preview]>a{gap:.75rem;padding:.9rem}
+    .link-preview-image{width:5.5rem;height:4.5rem}
+    .link-preview-description{-webkit-line-clamp:1}
+  }
+
+  @media (max-width:420px){
+    body{font-size:17px}
+    .masthead-inner{padding:1.15rem 1rem}
+    .brand .sub{max-width:15rem}
+    .thesis,.entry{padding-left:1rem;padding-right:1rem}
+    .folio-big{min-width:2.7rem}
+    .hand-say{font-size:var(--t-md)}
+    blockquote{padding-left:.9rem}
+  }
+
+  /* ============ SITE FOOTER ============
+     A colophon, not a second navigation bar. Generous white space and a
+     double rule do the work; no contrasting panel or decorative texture. */
+  .site-footer{border-top:3px double var(--rule-strong);margin-top:2rem}
+  .site-footer-inner{max-width:var(--maxw);margin:0 auto;padding:3.4rem 2.6rem 3rem;
+    display:grid;grid-template-columns:minmax(0,1.7fr) minmax(9rem,.65fr) minmax(9rem,.65fr);
+    gap:4rem}
+  .footer-mark{display:inline-block;font-family:var(--display);font-size:var(--t-xl);
+    font-weight:600;line-height:1;letter-spacing:var(--tr-display);text-decoration:none}
+  .footer-about p{max-width:29rem;margin-top:1rem;color:var(--ink-soft);font-size:var(--t-md);
+    font-style:italic;line-height:1.5}
+  .footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:.4rem}
+  .footer-label{margin-bottom:.55rem;color:var(--muted);font-family:var(--mono);
+    font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase}
+  .footer-links a{color:var(--ink-soft);font-size:var(--t-base);text-decoration:none;
+    text-decoration-thickness:1px;text-underline-offset:4px}
+  .footer-links a:hover{color:var(--red);text-decoration:underline}
+  .site-footer-base{max-width:var(--maxw);margin:0 auto;padding:1.25rem 2.6rem 2.5rem;
+    border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:2rem;
+    color:var(--muted);font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label)}
+  .site-footer-base a{color:var(--red);text-decoration:none}
+
+  @media(max-width:760px){
+    .site-footer{margin-top:0}
+    .site-footer-inner{padding:2.6rem 1.35rem 2.2rem;grid-template-columns:1fr 1fr;gap:2.5rem 2rem}
+    .footer-about{grid-column:1/-1}
+    .footer-about p{font-size:var(--t-base)}
+    .site-footer-base{padding:1.2rem 1.35rem 2.2rem;display:block}
+    .site-footer-base span{display:block}
+    .site-footer-base span+span{margin-top:.5rem}
+  }
+
+  @media(max-width:420px){
+    .site-footer-inner{grid-template-columns:1fr}
+    .footer-about{grid-column:auto}
+  }

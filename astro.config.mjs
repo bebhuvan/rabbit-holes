@@ -7,14 +7,18 @@ import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
 export default defineConfig({
   site: 'https://www.rabbitholes.garden',
   output: 'server',
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/noop'
+    }
+  },
   adapter: cloudflare({
     platformProxy: {
       enabled: true
     }
   }),
   build: {
-    inlineStylesheets: 'always',
-    assetsInlineLimit: 8192,
+    inlineStylesheets: 'auto',
   },
   compressHTML: true,
   prefetch: {
@@ -25,37 +29,14 @@ export default defineConfig({
     contentIntellisense: true
   },
   markdown: {
-    remarkPlugins: [remarkLinkEmbed],
-    extendDefaultPlugins: true
+    remarkPlugins: [remarkLinkEmbed]
   },
   vite: {
     build: {
-      cssMinify: true,
-      assetsInlineLimit: 8192,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['astro']
-          },
-          assetFileNames: (assetInfo) => {
-            // Inline small CSS files
-            if (assetInfo.name?.endsWith('.css') && assetInfo.source?.length < 8192) {
-              return 'assets/inline-[hash][extname]';
-            }
-            return 'assets/[name]-[hash][extname]';
-          }
-        }
-      }
+      cssMinify: true
     },
     define: {
       __BUILD_TIME__: JSON.stringify(new Date().toISOString())
-    },
-    css: {
-      preprocessorOptions: {
-        css: {
-          charset: false
-        }
-      }
     }
   }
 });

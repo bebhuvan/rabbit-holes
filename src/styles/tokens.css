@@ -1,0 +1,163 @@
+/* =============================================================
+   RABBIT HOLES — design tokens
+   The single source of truth for the commonplace book and the
+   gloss shelf. This file is written to be lifted wholesale into
+   Base.astro at port time; nothing here is mockup-specific.
+
+   Audit that produced it (2026-07-20): the three mockups had
+   accumulated 41 distinct font sizes and 16 letter-spacing
+   values. Sizes like .95/.96/.97/.98/1.02rem are imperceptibly
+   different — evidence of drift, not intent. Snapped to a major
+   third (1.25) scale, which the design was already close to.
+   ============================================================= */
+
+:root{
+  /* ---- type scale · major third (1.25), base 1rem = 20px ---- */
+  --t-2xs : 0.64rem;
+  --t-xs  : 0.8rem;
+  --t-base: 1rem;
+  --t-body: 1.125rem;      /* reading size. Deliberately off the strict
+                              scale: a major third leaves no step between
+                              1 and 1.25rem, and 25px body copy is a wall. */
+  --t-md  : 1.25rem;
+  --t-lg  : 1.5625rem;
+  --t-xl  : 1.953rem;
+  --t-2xl : 2.441rem;
+  --t-3xl : 3.052rem;
+  --t-4xl : 4.768rem;      /* the standing folio numeral only */
+
+  /* ---- label scale · mono runs on its own three sizes.
+         Display type and UI labels are different systems; forcing
+         them onto one scale is what makes editorial sites feel
+         like dashboards. ---- */
+  --l-sm  : 0.58rem;
+  --l-md  : 0.66rem;
+  --l-lg  : 0.78rem;
+
+  /* ---- tracking · three values, no more ---- */
+  --tr-display : -0.015em;   /* large Bodoni, optically tightened */
+  --tr-label   :  0.16em;    /* mono nav + meta */
+  --tr-eyebrow :  0.24em;    /* small caps section marks */
+
+  /* ---- spacing ---- */
+  --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;  --s-4: 1rem;
+  --s-5: 1.5rem;   --s-6: 2rem;     --s-7: 2.5rem;   --s-8: 3rem;
+  --s-9: 4rem;     --s-10: 5rem;
+
+  /* ---- measure · 33em of Newsreader ≈ 66 characters.
+         Reading columns were running to ~80ch, which is past the
+         point where the eye loses the line return. ---- */
+  --measure: 33em;
+
+  /* ---- colour by kind · one tint per real `type` in config.ts ----
+     Hoisted here 2026-07-20: these were duplicated in eight pages' :root
+     blocks and had already drifted — 11-folio-entry called it --c-reflect
+     where 12-home called it --c-reflections, and --red-wash disagreed in
+     both themes. Pages may still override, but new pages should inherit. */
+  --c-musings:#8E76B8; --c-links:#4E7EC2; --c-reflections:#C58A2E;
+  --c-verse:#5F9E79;   --c-practical:#B0705A;
+  --red-wash:#FDFBFA;
+
+  /* ---- motion ---- */
+  --dur : 180ms;
+  --ease: cubic-bezier(.2,.6,.2,1);
+}
+
+/* =============================================================
+   DISPLAY OPTICAL SIZE — hoisted here 2026-07-20.
+   Each page had been re-declaring this with its own selector list
+   (12-home: .brand .mark,.thesis h1,.folio-big,.entry h2,.hand-say —
+   13-gloss: .brand .mark,h1,.gloss-num,.note-say), so every new page
+   had to remember to extend it and forgetting failed silently, with
+   hairlines quietly going fragile. Covers the common cases plus an
+   opt-in hook for anything else set in --display.
+
+   Why: Bodoni Moda has an opsz axis (6..96) and font-optical-sizing:auto
+   asks for the DISPLAY cut as size grows — the thinnest drawing, worst
+   on dark. Pin low, carry emphasis with weight. Reading text is
+   Newsreader and keeps its own optical sizing.
+   ============================================================= */
+h1,h2,h3,.brand .mark,.display,[data-display]{
+  font-optical-sizing:none;
+  font-variation-settings:'opsz' 11;
+}
+
+/* =============================================================
+   GLOBAL GRACES — applied everywhere, cost nothing, and are most
+   of the difference between "clean" and "considered".
+   ============================================================= */
+
+/* Headings set their own line breaks so no heading ends on a
+   one-word orphan line. The hero previously broke as
+   "A commonplace book, kept in the / open." */
+h1,h2,h3,.balance{text-wrap:balance}
+
+/* Body copy avoids orphans and ragged last lines where supported. */
+p,li,blockquote{text-wrap:pretty}
+
+/* Quotation marks hang into the margin so the quoted text stays
+   optically flush with the paragraph above it. */
+blockquote{hanging-punctuation:first last}
+
+/* Keyboard focus is visible and takes the collector's ink —
+   it is the reader being somewhere, which is passage.
+   Form controls are in the selector deliberately: the original list was
+   a,button,[tabindex] only, so the first page with an <input> on it (the
+   search page) silently lost the ring to the browser default. */
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{
+  outline:2px solid var(--red);
+  outline-offset:3px;
+  border-radius:1px;
+}
+
+/* Motion is opt-out, not opt-in. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+  }
+}
+
+/* =============================================================
+   THE RUBRICATED DROP CAP
+   An authentic commonplace-book device, and until now unused in
+   this design despite being named in the brief. Reserved for
+   long-form entries — a drop cap on a two-line folio is costume,
+   not typography.
+   ============================================================= */
+.rubric::first-letter{
+  float:left;
+  font-family:var(--display);
+  font-weight:600;
+  font-size:3.4em;
+  line-height:.82;
+  margin:.06em .12em 0 0;
+  color:var(--red);
+  font-optical-sizing:none;
+  font-variation-settings:'opsz' 11;
+}
+/* the opening words carry small caps out of the drop cap, the way
+   a printed page eases you back to reading size */
+.rubric-lead{
+  font-variant-caps:all-small-caps;
+  letter-spacing:.06em;
+}
+
+/* kind tints and the red wash, lamplight */
+@media (prefers-color-scheme:dark){
+  :root{
+    --c-musings:#B6A2E0; --c-links:#84AAE4; --c-reflections:#E2B267;
+    --c-verse:#82C29A;   --c-practical:#D89A80;
+    --red-wash:#1E1A18;
+  }
+}
+:root[data-theme="dark"]{
+  --c-musings:#B6A2E0; --c-links:#84AAE4; --c-reflections:#E2B267;
+  --c-verse:#82C29A;   --c-practical:#D89A80;
+  --red-wash:#1E1A18;
+}
+:root[data-theme="light"]{
+  --c-musings:#8E76B8; --c-links:#4E7EC2; --c-reflections:#C58A2E;
+  --c-verse:#5F9E79;   --c-practical:#B0705A;
+  --red-wash:#FDFBFA;
+}

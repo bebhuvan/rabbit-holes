@@ -1,0 +1,64 @@
+---
+import type { Post } from '../utils/content';
+import { headCounts, postKinds } from '../utils/content';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const curatedHeads = headCounts(posts).filter((head) => head.count > 0);
+const kindCounts = Object.fromEntries(
+  Object.keys(postKinds).map((kind) => [kind, posts.filter((post) => post.data.type === kind).length])
+);
+---
+
+<aside class="rail" aria-label="Browse Rabbit Holes">
+  <a class="wayin" href="/collections">
+    <span class="t"><span class="mani">☞</span>Start here — five to fall into first.</span>
+    <span class="s">a hand-picked way in</span>
+  </a>
+
+  <div class="rail-index">
+    <div class="rail-label flr">Browse by subject</div>
+    <p class="rail-note">{curatedHeads.length} paths through the book, chosen by hand.</p>
+    <ul class="index">
+      {curatedHeads.map((head) => (
+        <li>
+          <a href={`/heads/${head.slug}`}>
+            <span>{head.title}</span><span class="dots"></span><span class="n">{head.count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a href="/tags" class="index-more">the long tail →</a>
+  </div>
+
+  <hr class="rail-rule" />
+
+  <div class="rail-kinds">
+    <div class="rail-label" style="margin-bottom:.75rem">Browse by form</div>
+    <ul class="kinds">
+      {Object.entries(postKinds).map(([kind, details]) => (
+        <li>
+          <a href={`/types/${kind}`}>
+            <span class="sw" style={`color:${details.color}`}>{kindCounts[kind] || 0}</span>
+            <span class="kn">{details.plural}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <a class="study-note-callout" href="/glosses">
+    <span class="rail-label">Study notes</span>
+    <span class="study-note-copy">AI-assisted briefs and conversations made after I read, watch, or listen.</span>
+    <span class="study-note-link">Open the notebook →</span>
+  </a>
+
+  <div class="rail-follow">
+    <a href="/rss.xml">Follow by RSS</a>
+    <span>·</span>
+    <a href="/about">About this book</a>
+  </div>
+</aside>

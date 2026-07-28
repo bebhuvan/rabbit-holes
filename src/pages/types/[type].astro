@@ -3,316 +3,35 @@ export const prerender = true;
 
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import PostCard from '../../components/PostCard.astro';
+import FolioPreview from '../../components/FolioPreview.astro';
+import '../../styles/ledger.css';
+import { buildFolioNumbers, newestFirst, postKinds, relatedPosts } from '../../utils/content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => {
-    return data.published !== false;
-  });
-  
-  // Get all unique post types
-  const types = [...new Set(posts.map(post => post.data.type))];
-  
-  return types.map(type => ({
-    params: { type },
-    props: { type, posts: posts.filter(post => post.data.type === type) }
-  }));
+  return Object.keys(postKinds).map((type) => ({ params: { type } }));
 }
 
-const { type, posts } = Astro.props;
-
-// Category metadata
-const categoryMeta = {
-  'musings': {
-    emoji: '💭',
-    label: 'Musings',
-    description: 'Brief observations, quotes, and spontaneous ideas. Short-form content capturing fleeting insights and immediate reactions.',
-    color: 'var(--color-type-musings)'
-  },
-  'links': {
-    emoji: '🔗',
-    label: 'Links',
-    description: 'Curated links and resources from around the web. Interesting finds with commentary and context.',
-    color: 'var(--color-type-links)'
-  },
-  'reflections': {
-    emoji: '🧠',
-    label: 'Reflections',
-    description: 'Longer personal essays and explorations. Thoughtful contemplations on life, ideas, and learning.',
-    color: 'var(--color-type-reflections)'
-  },
-  'verse': {
-    emoji: '✨',
-    label: 'Verse',
-    description: 'Poetry discoveries and sharing. Beautiful words from poets past and present.',
-    color: 'var(--color-type-verse)'
-  },
-  'practical': {
-    emoji: '🎯',
-    label: 'Practical',
-    description: 'How-tos and actionable guides. Hands-on instructions for getting things done.',
-    color: 'var(--color-type-practical)'
-  }
-};
-
-const meta = categoryMeta[type] || { 
-  emoji: '📝', 
-  label: type, 
-  description: `Posts categorized as ${type}`,
-  color: 'var(--color-accent)'
-};
-
-// Sort posts by date (newest first)
-const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-
-// Get related categories (types that share tags with posts in this category)
-const allPosts = await getCollection('posts', ({ data }) => data.published !== false);
-const currentTags = new Set(posts.flatMap(post => post.data.tags || []));
-const relatedTypes = [...new Set(
-  allPosts
-    .filter(post => post.data.type !== type && post.data.tags?.some(tag => currentTags.has(tag)))
-    .map(post => post.data.type)
-)].slice(0, 3);
+const type = Astro.params.type as keyof typeof postKinds;
+const kind = postKinds[type];
+const posts = newestFirst(await getCollection('posts'));
+const folioNumbers = buildFolioNumbers(posts);
+const kindPosts = posts.filter((post) => post.data.type === type);
 ---
 
-<Base 
-  title={`${meta.label} - Categories`} 
-  description={`${meta.description} Browse all ${posts.length} posts in the ${meta.label} category.`}
->
-  <div class="container">
-    <div class="category-page">
-      
-      <!-- Header -->
-      <div class="category-header">
-        <div class="category-title-section">
-          <span class="category-emoji" style={`background: ${meta.color}20; color: ${meta.color}`}>
-            {meta.emoji}
-          </span>
-          <div class="category-title-info">
-            <h1>{meta.label}</h1>
-            <p class="category-count">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
-          </div>
-        </div>
-        <p class="category-description">{meta.description}</p>
-      </div>
-
-      <!-- Posts -->
-      <div class="category-posts">
-        {sortedPosts.length > 0 ? (
-          <div class="posts-grid">
-            {sortedPosts.map(post => (
-              <PostCard post={post} />
-            ))}
-          </div>
-        ) : (
-          <div class="empty-state">
-            <p>No posts found in this category yet.</p>
-          </div>
-        )}
-      </div>
-
-      <!-- Related Categories -->
-      {relatedTypes.length > 0 && (
-        <div class="related-categories">
-          <h3>Related Categories</h3>
-          <div class="related-types">
-            {relatedTypes.map(relatedType => {
-              const relatedMeta = categoryMeta[relatedType];
-              const relatedCount = allPosts.filter(p => p.data.type === relatedType).length;
-              return (
-                <a href={`/types/${relatedType}`} class="related-type">
-                  <span class="related-emoji">{relatedMeta?.emoji || '📝'}</span>
-                  <span class="related-label">{relatedMeta?.label || relatedType}</span>
-                  <span class="related-count">({relatedCount})</span>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      <!-- Navigation -->
-      <div class="category-navigation">
-        <a href="/types" class="nav-link">← All Categories</a>
-        <a href="/archive" class="nav-link">View Archive →</a>
-      </div>
-
-    </div>
-  </div>
-
-  <style>
-    .category-page {
-      padding: var(--space-4xl) 0;
-    }
-
-    .category-header {
-      margin-bottom: var(--space-3xl);
-    }
-
-    .category-title-section {
-      display: flex;
-      align-items: center;
-      gap: var(--space-lg);
-      margin-bottom: var(--space-lg);
-    }
-
-    .category-emoji {
-      font-size: var(--text-4xl);
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-lg);
-      line-height: 1;
-    }
-
-    .category-title-info h1 {
-      font-size: var(--text-4xl);
-      font-weight: 700;
-      margin: 0 0 var(--space-xs) 0;
-      color: var(--color-text-primary);
-    }
-
-    .category-count {
-      color: var(--color-text-secondary);
-      font-size: var(--text-lg);
-      font-weight: 500;
-      margin: 0;
-    }
-
-    .category-description {
-      font-size: var(--text-lg);
-      color: var(--color-text-secondary);
-      line-height: var(--leading-relaxed);
-      margin: 0;
-      max-width: 700px;
-    }
-
-    .category-posts {
-      margin-bottom: var(--space-3xl);
-    }
-
-    .posts-grid {
-      display: grid;
-      gap: var(--space-xl);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: var(--space-3xl);
-      color: var(--color-text-secondary);
-    }
-
-    .related-categories {
-      margin-bottom: var(--space-2xl);
-      padding: var(--space-xl);
-      background: var(--color-surface);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-    }
-
-    .related-categories h3 {
-      margin: 0 0 var(--space-lg) 0;
-      font-size: var(--text-xl);
-      font-weight: 600;
-      color: var(--color-text-primary);
-    }
-
-    .related-types {
-      display: flex;
-      gap: var(--space-md);
-      flex-wrap: wrap;
-    }
-
-    .related-type {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-md);
-      background: var(--color-bg-primary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      color: var(--color-text-secondary);
-      transition: all 0.2s ease;
-      font-size: var(--text-sm);
-    }
-
-    .related-type:hover {
-      background: var(--color-accent);
-      color: white;
-      transform: translateY(-1px);
-    }
-
-    .related-emoji {
-      font-size: var(--text-base);
-    }
-
-    .related-label {
-      font-weight: 500;
-    }
-
-    .related-count {
-      opacity: 0.7;
-      font-size: var(--text-xs);
-    }
-
-    .category-navigation {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: var(--space-2xl);
-      border-top: 1px solid var(--color-border);
-    }
-
-    .nav-link {
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .nav-link:hover {
-      color: var(--color-text-primary);
-    }
-
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-      .category-page {
-        padding: var(--space-2xl) 0;
-      }
-
-      .category-title-section {
-        flex-direction: column;
-        text-align: center;
-        gap: var(--space-md);
-      }
-
-      .category-emoji {
-        width: 60px;
-        height: 60px;
-        font-size: var(--text-3xl);
-      }
-
-      .category-title-info h1 {
-        font-size: var(--text-3xl);
-      }
-
-      .category-navigation {
-        flex-direction: column;
-        gap: var(--space-md);
-        text-align: center;
-      }
-
-      .related-types {
-        gap: var(--space-sm);
-      }
-
-      .related-type {
-        font-size: var(--text-xs);
-        padding: var(--space-xs) var(--space-sm);
-      }
-    }
-  </style>
+<Base title={kind.plural} description={`${kindPosts.length} ${kind.plural.toLowerCase()} in the commonplace book.`} active="index">
+  <main class="page-shell head-stream" style="max-width:52rem">
+    <header class="ledger-head">
+      <div class="ledger-kicker">Kind · {kindPosts.length} folios</div>
+      <h1>{kind.plural}</h1>
+      <p>A shelf organized by form. For recurring ideas, browse the <a href="/heads">subjects</a>.</p>
+    </header>
+    {kindPosts.map((post) => (
+      <FolioPreview
+        post={post}
+        number={folioNumbers.get(post.slug) || 0}
+        total={posts.length}
+        relatedCount={relatedPosts(post, posts).length}
+      />
+    ))}
+  </main>
 </Base>
