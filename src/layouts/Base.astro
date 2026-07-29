@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import '../styles/commonplace.css';
+import { ClientRouter } from 'astro:transitions';
 import Masthead from '../components/Masthead.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
@@ -39,11 +40,19 @@ const socialImage = image ? new URL(image, canonical).href : undefined;
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="Rabbit Holes RSS" href="/rss.xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap"
+      rel="preload"
+      href="/fonts/newsreader-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/bodoni-moda-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     <meta property="og:type" content="website" />
@@ -67,6 +76,7 @@ const socialImage = image ? new URL(image, canonical).href : undefined;
         } catch {}
       })();
     </script>
+    <ClientRouter fallback="swap" />
     <slot name="head" />
   </head>
   <body>
@@ -78,47 +88,13 @@ const socialImage = image ? new URL(image, canonical).href : undefined;
     <SiteFooter />
 
     <script>
-      const root = document.documentElement;
-      const lamp = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
-      const navToggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
-      const nav = document.querySelector<HTMLElement>('[data-site-nav]');
-
-      lamp?.addEventListener('click', () => {
-        const rendered = root.dataset.theme ||
-          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        const next = rendered === 'dark' ? 'light' : 'dark';
-        root.dataset.theme = next;
-        try { localStorage.setItem('rabbit-holes-theme', next); } catch {}
-        lamp.setAttribute('aria-label', `Use ${rendered} theme`);
-      });
-
-      navToggle?.addEventListener('click', () => {
-        const open = nav?.dataset.open === 'true';
-        if (nav) nav.dataset.open = String(!open);
-        navToggle.setAttribute('aria-expanded', String(!open));
-      });
-
-      nav?.addEventListener('click', (event) => {
-        if ((event.target as HTMLElement).closest('a')) {
-          nav.dataset.open = 'false';
-          navToggle?.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && nav?.dataset.open === 'true') {
-          nav.dataset.open = 'false';
-          navToggle?.setAttribute('aria-expanded', 'false');
-          navToggle?.focus();
-        }
-      });
-
-      const previews = Array.from(document.querySelectorAll<HTMLElement>('[data-link-preview]'));
       const previewRequests = new Map<string, Promise<{
         title?: string;
         description?: string;
         image?: string | null;
       }>>();
+      let pageController: AbortController | undefined;
+      let previewObserver: IntersectionObserver | undefined;
 
       const loadPreview = async (card: HTMLElement) => {
         const url = card.dataset.previewUrl;
@@ -158,36 +134,87 @@ const socialImage = image ? new URL(image, canonical).href : undefined;
         }
       };
 
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            observer.unobserve(entry.target);
-            void loadPreview(entry.target as HTMLElement);
+      const setupPage = () => {
+        pageController?.abort();
+        previewObserver?.disconnect();
+
+        pageController = new AbortController();
+        const { signal } = pageController;
+        const root = document.documentElement;
+        const lamp = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+        const navToggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+        const nav = document.querySelector<HTMLElement>('[data-site-nav]');
+
+        lamp?.addEventListener('click', () => {
+          const rendered = root.dataset.theme ||
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          const next = rendered === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try { localStorage.setItem('rabbit-holes-theme', next); } catch {}
+          lamp.setAttribute('aria-label', `Use ${rendered} theme`);
+        }, { signal });
+
+        navToggle?.addEventListener('click', () => {
+          const open = nav?.dataset.open === 'true';
+          if (nav) nav.dataset.open = String(!open);
+          navToggle.setAttribute('aria-expanded', String(!open));
+        }, { signal });
+
+        nav?.addEventListener('click', (event) => {
+          if ((event.target as HTMLElement).closest('a')) {
+            nav.dataset.open = 'false';
+            navToggle?.setAttribute('aria-expanded', 'false');
           }
-        }, { rootMargin: '600px 0px' });
-        previews.forEach((preview) => observer.observe(preview));
-      } else {
-        previews.forEach((preview) => { void loadPreview(preview); });
-      }
+        }, { signal });
 
-      const tweetEmbeds = document.querySelectorAll<HTMLElement>('[data-tweet-embed]');
-      if (tweetEmbeds.length) {
-        const theme = root.dataset.theme ||
-          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        tweetEmbeds.forEach((embed) => {
-          const tweet = embed.querySelector<HTMLElement>('.twitter-tweet');
-          if (tweet) tweet.dataset.theme = theme;
-        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && nav?.dataset.open === 'true') {
+            nav.dataset.open = 'false';
+            navToggle?.setAttribute('aria-expanded', 'false');
+            navToggle?.focus();
+          }
+        }, { signal });
 
-        if (!document.querySelector('#twitter-widgets')) {
-          const script = document.createElement('script');
-          script.id = 'twitter-widgets';
-          script.src = 'https://platform.twitter.com/widgets.js';
-          script.async = true;
-          document.head.append(script);
+        const previews = Array.from(document.querySelectorAll<HTMLElement>('[data-link-preview]'));
+        if ('IntersectionObserver' in window) {
+          previewObserver = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              previewObserver?.unobserve(entry.target);
+              void loadPreview(entry.target as HTMLElement);
+            }
+          }, { rootMargin: '600px 0px' });
+          previews.forEach((preview) => previewObserver?.observe(preview));
+        } else {
+          previews.forEach((preview) => { void loadPreview(preview); });
         }
-      }
+
+        const tweetEmbeds = document.querySelectorAll<HTMLElement>('[data-tweet-embed]');
+        if (tweetEmbeds.length) {
+          const theme = root.dataset.theme ||
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          tweetEmbeds.forEach((embed) => {
+            const tweet = embed.querySelector<HTMLElement>('.twitter-tweet');
+            if (tweet) tweet.dataset.theme = theme;
+          });
+
+          if (!document.querySelector('#twitter-widgets')) {
+            const script = document.createElement('script');
+            script.id = 'twitter-widgets';
+            script.src = 'https://platform.twitter.com/widgets.js';
+            script.async = true;
+            document.head.append(script);
+          }
+        }
+      };
+
+      document.addEventListener('astro:before-swap', (event) => {
+        const theme = document.documentElement.dataset.theme;
+        if (!theme) return;
+        const swapEvent = event as Event & { newDocument: Document };
+        swapEvent.newDocument.documentElement.dataset.theme = theme;
+      });
+      document.addEventListener('astro:page-load', setupPage);
     </script>
   </body>
 </html>

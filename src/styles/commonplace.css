@@ -1,9 +1,60 @@
+  /* Local Latin font files remove the Google Fonts stylesheet and its
+     cross-origin request chain from the first render. */
+  @font-face{
+    font-family:'Bodoni Moda';
+    src:url('/fonts/bodoni-moda-latin.woff2') format('woff2');
+    font-weight:400 700;font-style:normal;font-display:swap;
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
+      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
+      U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Bodoni Moda';
+    src:url('/fonts/bodoni-moda-italic-latin.woff2') format('woff2');
+    font-weight:500;font-style:italic;font-display:swap;
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
+      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
+      U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Newsreader';
+    src:url('/fonts/newsreader-latin.woff2') format('woff2');
+    font-weight:400;font-style:normal;font-display:swap;
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
+      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
+      U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Newsreader';
+    src:url('/fonts/newsreader-600-latin.woff2') format('woff2');
+    font-weight:600;font-style:normal;font-display:swap;
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
+      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
+      U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Newsreader';
+    src:url('/fonts/newsreader-italic-latin.woff2') format('woff2');
+    font-weight:400;font-style:italic;font-display:swap;
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
+      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
+      U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Spline Sans Mono';
+    src:url('/fonts/spline-sans-mono-latin.woff2') format('woff2');
+    font-weight:400 600;font-style:normal;font-display:swap;
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
+      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
+      U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
   /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
-     glyph, which suppresses fallback. See 11-folio-entry.html. */
+     glyph, which suppresses fallback. */
   @font-face{
     font-family:'DisplayPunct';
-    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
-    font-weight:300 600;font-style:normal;font-display:swap;
+    src:url('/fonts/newsreader-latin.woff2') format('woff2');
+    font-weight:400;font-style:normal;font-display:swap;
     unicode-range:U+2010-2015;
   }
 
@@ -294,6 +345,7 @@
 
   /* Shared production additions */
   html{background:var(--paper);scroll-behavior:smooth;scrollbar-gutter:stable}
+  ::view-transition-old(root),::view-transition-new(root){animation:none}
   body{min-width:0}
   img{display:block;max-width:100%;height:auto}
   button,input,select,textarea{font:inherit}
