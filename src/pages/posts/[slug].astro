@@ -83,15 +83,24 @@ const structuredData = {
         </section>
       )}
 
-      {post.data.url && (
-        <a class="source-card" href={post.data.url} target="_blank" rel="noopener noreferrer">
+    {post.data.url && (
+      <a
+        class="source-card"
+        href={post.data.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Visit the original source on ${sourceDomain}`}
+      >
+        <span class="source-card-copy">
           <span class="source-card-label">Original source</span>
-          <span class="source-card-main">
-            <span class="source-card-domain">{sourceDomain}</span>
-            <span class="source-card-action">Visit the source <span aria-hidden="true">↗</span></span>
-          </span>
-        </a>
-      )}
+          <span class="source-card-domain">{sourceDomain}</span>
+        </span>
+        <span class="source-card-action">
+          <span class="source-card-action-text">Visit the source</span>
+          <span class="source-card-arrow" aria-hidden="true">↗</span>
+        </span>
+      </a>
+    )}
 
       <div class:list={['prose', { verse: post.data.type === 'verse' }]}>
         <Content />

@@ -45,19 +45,26 @@
   /* ---- the source ----
      A resolved editorial object: more generous than a utility link, quieter
      than a preview card, and independent of third-party metadata. */
-  .source-card{display:grid;grid-template-columns:8rem minmax(0,1fr);gap:1.3rem;
-    align-items:center;margin:1.8rem 0 2.4rem;padding:1rem 0;
-    border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);
-    text-decoration:none}
-  .source-card-label{font-family:var(--mono);font-size:var(--l-sm);
-    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted)}
-  .source-card-main{display:flex;align-items:baseline;justify-content:space-between;gap:1.2rem;min-width:0}
-  .source-card-domain{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-    font-family:var(--body);font-size:var(--t-md);font-style:italic;color:var(--ink)}
-  .source-card-action{flex:none;font-family:var(--mono);font-size:var(--l-sm);
-    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--red)}
+  .source-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;
+    gap:1.5rem;align-items:center;margin:1.8rem 0 2.4rem;padding:1.2rem 1.25rem 1.15rem 1.55rem;
+    border:1px solid var(--rule-strong);
+    background:linear-gradient(100deg,var(--red-wash),transparent 68%);
+    text-decoration:none;overflow:hidden}
+  .source-card::before{content:"";position:absolute;inset:.7rem auto .7rem 0;width:2px;background:var(--red)}
+  .source-card-copy{display:block;min-width:0}
+  .source-card-label{display:block;margin-bottom:.35rem;font-family:var(--mono);
+    font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted)}
+  .source-card-domain{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font-family:var(--display);font-size:var(--t-lg);font-weight:500;font-style:italic;
+    line-height:1.12;color:var(--ink)}
+  .source-card-action{display:inline-flex;align-items:center;gap:.8rem;flex:none;
+    font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--red)}
+  .source-card-arrow{display:grid;place-items:center;width:2.1rem;aspect-ratio:1;
+    border:1px solid var(--red-soft);font-size:var(--t-sm);line-height:1}
   .source-card:hover{border-color:var(--red-soft)}
-  .source-card:hover .source-card-action{text-decoration:underline;text-underline-offset:4px}
+  .source-card:hover .source-card-action-text{text-decoration:underline;text-underline-offset:4px}
+  .source-card:hover .source-card-arrow{border-color:var(--red);background:var(--red);color:var(--paper)}
 
   /* Verse: every line flush; ONLY over-long lines that wrap are indented.
      (An earlier hanging-indent via text-indent hung line 1 alone and
@@ -170,8 +177,8 @@
     .attrib{display:none}
     .leaf h1{font-size:clamp(2.2rem,12vw,var(--t-3xl));margin-bottom:.6rem}
     .byline{margin-bottom:1.8rem}
-    .source-card{grid-template-columns:1fr;gap:.45rem;margin:1.4rem 0 2rem}
-    .source-card-main{align-items:center}
+    .source-card{gap:1rem;margin:1.4rem 0 2rem;padding:1rem .9rem 1rem 1.2rem}
+    .source-card-action-text{display:none}
     .hand{margin-bottom:2rem}
     .hand .say{font-size:var(--t-xl)}
     .threads{margin-top:2rem}
