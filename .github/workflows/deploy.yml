@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
       
       - name: Clear npm cache
@@ -39,43 +39,23 @@ jobs:
             }
           done
       
-      - name: Build with error handling
+      - name: Upload Worker version
         run: |
-          # Try build with standard settings
-          npm run build || {
-            echo "Build failed, trying with relaxed settings..."
-            # Try build with NODE_OPTIONS for more memory
-            NODE_OPTIONS="--max-old-space-size=4096" npm run build || {
-              echo "Build still failing, attempting minimal build..."
-              # Last resort: build with minimal settings
-              NODE_ENV=production npm run build || exit 1
-            }
-          }
-      
-      - name: Deploy to Cloudflare Workers
-        id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN_NEW }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --config wrangler.ci.toml
-        continue-on-error: true
-      
-      - name: Retry deployment if failed
-        if: steps.deploy.outcome == 'failure'
-        run: |
-          echo "First deployment attempt failed, retrying..."
-          sleep 10
-          npx wrangler deploy --config wrangler.ci.toml
+          npx wrangler versions upload \
+            --config wrangler.ci.toml \
+            --tag "$GITHUB_SHA" \
+            --message "GitHub $GITHUB_SHA"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_NEW }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      
-      - name: Create deployment status
-        if: always()
+
+      - name: Promote Worker version
         run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "✅ Deployment successful!"
-          else
-            echo "⚠️ Deployment had issues but site may still be accessible"
-          fi
+          npx wrangler versions deploy \
+            --config wrangler.ci.toml \
+            --version-tag "$GITHUB_SHA" \
+            --yes \
+            --message "Deploy $GITHUB_SHA"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_NEW }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
