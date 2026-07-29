@@ -37,9 +37,11 @@ He points at the auto trade, where Europe's balance has swung into a deficit of 
 
 Worth knowing there's an institutional backdrop here. Three documents from this spring. A G7 economists' memo in March, written by Gopinath and Rey with Chong-En Bai and Axel Weber for the French G7 presidency. An IMF policy paper in April was called *[Understanding Global Imbalances](https://www.imf.org/en/publications/policy-papers/issues/2026/04/06/understanding-global-imbalances-575234)*. And the [CEPR-Bruegel Paris Report](https://cepr.org/publications/books-and-reports/paris-report-4-new-global-imbalances), four hundred odd pages, edited by Rey with Beatrice Weder di Mauro and Jeromin Zettelmeyer. Setser turns up in the G7 memo's own bibliography for a 2025 piece with Mark Sobel arguing it's time for the renminbi to appreciate sharply. So this isn't a drive-by disagreement. It's a live argument running through the same set of documents.
 
-[https://x.com/SanderTordoir/status/2082212172663329112?s=20](https://x.com/SanderTordoir/status/2082212172663329112?s=20)
-
 This is literature I've only followed superficially, and I don't have a settled view. But it's a real disagreement between serious people, which is rarer than it should be.
+
+Also read [this thread](https://x.com/SanderTordoir/status/2082212172663329112?s=20) by the brilliant Sander Tordoir: 
+
+[https://x.com/SanderTordoir/status/2082212172663329112?s=20](https://x.com/SanderTordoir/status/2082212172663329112?s=20)
 
 Make of this what you will:
 
