@@ -1,37 +1,43 @@
 # Rabbit Holes
 
-A public commonplace book built with Astro and deployed on Cloudflare.
+A public commonplace book built with Astro, edited through PagesCMS, and
+deployed to Cloudflare Workers.
 
 The atomic unit is a numbered folio: a link, quotation, poem, image, or thought
 that was worth keeping. Folios are organized by five kinds and a smaller set
 of hand-curated heads.
 
-## Development
+## Local development
 
 ```sh
 npm install
 npm run dev
 ```
 
-Useful checks:
+The development server defaults to `http://localhost:4321`. Before pushing a
+code or content change, run:
 
 ```sh
+npm run validate
 npm run check
 npm run build
-npm run validate
 ```
 
-## Content
+## Publishing
 
-Posts live in `src/content/posts/`. Folio numbers are derived at build time
-from published posts, oldest first, with the slug as the same-day tie-breaker.
-Do not author folio numbers in frontmatter.
+PagesCMS is the normal editing interface. Its schema lives in `.pages.yml`;
+posts are stored in `src/content/posts/`, and study notes in
+`src/content/glosses/`.
+
+For a link post, `url` must contain exactly one complete URL. Put commentary
+and any additional links in the body.
 
 ```yaml
 ---
 title: "A title"
 date: 2026-07-28
-type: "musings"
+type: "links"
+url: "https://example.com/"
 description: "An optional short summary."
 note: "Why this struck me."
 tags:
@@ -41,6 +47,8 @@ featured: false
 ---
 ```
 
+Folio numbers are derived at build time from published posts, oldest first,
+with the slug as the same-day tie-breaker. Do not add them to frontmatter.
 Tags are trimmed and normalized when read. Curated subjects—the internal
 content model calls them heads—and their aliases are defined in
 `src/data/heads.ts`.
@@ -48,21 +56,6 @@ content model calls them heads—and their aliases are defined in
 Related posts are deterministic: manual `related_posts` entries win, otherwise
 shared normalized tags, post kind, and chronological proximity are scored
 locally. Builds do not call an AI provider.
-
-## Design
-
-The production design is ported from `mockups/system/`.
-
-- `src/styles/tokens.css` contains the shared type, spacing, color, and motion
-  tokens.
-- `src/styles/commonplace.css` contains the masthead, index, and folio stream.
-- Page-specific structure lives in `folio.css`, `ledger.css`, `sheet.css`, and
-  `gloss.css`.
-- `src/components/Masthead.astro`, `IndexRail.astro`, and
-  `FolioPreview.astro` are the principal shared pieces.
-
-The previous visual design is preserved as an MIT-licensed starter in
-`themes/rabbit-holes-classic/`.
 
 ## Study notes
 
@@ -73,6 +66,33 @@ from the human-written commonplace book.
 
 ## Deployment
 
-The current project uses Astro’s Cloudflare adapter and prerenders all
-reader-facing pages. Dynamic publishing endpoints are separate from the
-reader-facing theme. No deployment is performed as part of local design work.
+Every push to `master`, including a PagesCMS edit, runs
+`.github/workflows/deploy.yml`. The workflow builds the site and deploys the
+existing `rabbit-holes` Worker with `wrangler.ci.toml`. Production routes are
+declared separately in `wrangler.toml`.
+
+For a manual deployment from an authenticated machine:
+
+```sh
+npm run workers:deploy
+```
+
+Deployment history is available in the repository’s GitHub Actions tab.
+
+## Maintenance
+
+Images larger than 50 KB can be resized and compressed with FFmpeg:
+
+```sh
+npm run optimize-images:dry
+npm run optimize-images
+```
+
+The optional image pre-commit hook is enabled with:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+The previous visual design is preserved as an MIT-licensed standalone starter
+in `themes/rabbit-holes-classic/`.
