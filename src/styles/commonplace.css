@@ -2,7 +2,7 @@
      cross-origin request chain from the first render. */
   @font-face{
     font-family:'Bodoni Moda';
-    src:url('/fonts/bodoni-moda-latin.woff2') format('woff2');
+    src:url('/fonts/bodoni-moda-latin.c032219e.woff2') format('woff2');
     font-weight:400 700;font-style:normal;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
@@ -10,7 +10,7 @@
   }
   @font-face{
     font-family:'Bodoni Moda';
-    src:url('/fonts/bodoni-moda-italic-latin.woff2') format('woff2');
+    src:url('/fonts/bodoni-moda-italic-latin.fed2cd80.woff2') format('woff2');
     font-weight:500;font-style:italic;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
@@ -18,7 +18,7 @@
   }
   @font-face{
     font-family:'Newsreader';
-    src:url('/fonts/newsreader-latin.woff2') format('woff2');
+    src:url('/fonts/newsreader-latin.6078fc14.woff2') format('woff2');
     font-weight:400;font-style:normal;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
@@ -26,7 +26,7 @@
   }
   @font-face{
     font-family:'Newsreader';
-    src:url('/fonts/newsreader-600-latin.woff2') format('woff2');
+    src:url('/fonts/newsreader-600-latin.d9c885ab.woff2') format('woff2');
     font-weight:600;font-style:normal;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
@@ -34,7 +34,7 @@
   }
   @font-face{
     font-family:'Newsreader';
-    src:url('/fonts/newsreader-italic-latin.woff2') format('woff2');
+    src:url('/fonts/newsreader-italic-latin.b8d22045.woff2') format('woff2');
     font-weight:400;font-style:italic;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
@@ -42,7 +42,7 @@
   }
   @font-face{
     font-family:'Spline Sans Mono';
-    src:url('/fonts/spline-sans-mono-latin.woff2') format('woff2');
+    src:url('/fonts/spline-sans-mono-latin.46b7dcaf.woff2') format('woff2');
     font-weight:400 600;font-style:normal;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
@@ -53,7 +53,7 @@
      glyph, which suppresses fallback. */
   @font-face{
     font-family:'DisplayPunct';
-    src:url('/fonts/newsreader-latin.woff2') format('woff2');
+    src:url('/fonts/newsreader-latin.6078fc14.woff2') format('woff2');
     font-weight:400;font-style:normal;font-display:swap;
     unicode-range:U+2010-2015;
   }
