@@ -67,10 +67,6 @@
   .source-card-domain{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     font-family:var(--body);font-size:var(--t-base);font-weight:600;color:var(--ink-soft);
     transition:color var(--dur) var(--ease)}
-  /* The address stays visible beside the name. Naming a publication is a
-     courtesy; hiding where an outbound link actually goes is not. */
-  .source-card-host{flex:none;font-family:var(--mono);font-size:var(--l-sm);
-    letter-spacing:var(--tr-label);color:var(--muted)}
   .source-card-arrow{margin-left:auto;flex:none;color:var(--red);font-family:var(--mono);
     font-size:var(--l-lg);line-height:1;transition:color var(--dur) var(--ease)}
   .source-card:hover .source-card-domain{color:var(--red)}

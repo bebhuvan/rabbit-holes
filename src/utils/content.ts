@@ -86,6 +86,13 @@ const MD_DEST = String.raw`\(\s*(?:<[^>]*>|[^()]*(?:\([^()]*\)[^()]*)*)\s*\)`;
 
 export function excerpt(body: string, maximum = 220): string {
   const cleaned = body
+    // Zero-width and BOM characters, which arrive with text pasted out of
+    // other editors. They are invisible in the source and mostly harmless in
+    // a sentence, but ::first-letter matches the first character rather than
+    // the first LETTER, so a leading U+200B took the rubricated drop cap: a
+    // 67px floated box, containing nothing, that the next two lines wrapped
+    // around. The paragraph looked mis-indented for no visible reason.
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, '')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/~~~[\s\S]*?~~~/g, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')

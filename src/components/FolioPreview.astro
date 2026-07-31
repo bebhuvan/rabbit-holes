@@ -33,6 +33,10 @@ const quoteLines = body.match(/(?:^>\s?.+(?:\n|$))+/m)?.[0]
   .filter(Boolean)
   .join(' ');
 const summary = post.data.description || excerpt(quoteLines || body, 320);
+// tokens.css: "a drop cap on a two-line folio is costume, not typography".
+// The stream handed it to whatever happened to be newest, so a one-line link
+// post could get one. It needs enough text beneath it to sit against.
+const showRubric = rubric && summary.length >= 240;
 const verseLines = post.data.type === 'verse'
   ? body
       .replace(/^---[\s\S]*?---/, '')
@@ -65,9 +69,13 @@ const verseLines = post.data.type === 'verse'
 
     {!post.data.note && post.data.url && (
       <a class="source-chip" href={post.data.url} target="_blank" rel="noopener noreferrer">
+        {/* The name alone. Printing "YouTube youtu.be" says the same thing
+            twice, and for nearly every publication the host is just the name
+            with a dot in it. Where the name is NOT derivable — an unmapped
+            domain — sourceName falls back to the host, so the address still
+            shows exactly when it is the only thing we know. */}
         <span class="source-chip-label">source</span>
         <span class="source-chip-name">{sourceLabel}</span>
-        {sourceLabel !== sourceDomain && <span class="source-chip-host">{sourceDomain}</span>}
         <span aria-hidden="true">↗</span>
       </a>
     )}
@@ -81,7 +89,7 @@ const verseLines = post.data.type === 'verse'
     ) : quoteLines ? (
       <blockquote><p>{excerpt(quoteLines, 430)}</p></blockquote>
     ) : summary ? (
-      <p class:list={['say', { rubric }]}>{summary}</p>
+      <p class:list={['say', { rubric: showRubric }]}>{summary}</p>
     ) : null}
 
     <a class="more" href={`/posts/${post.slug}`}>

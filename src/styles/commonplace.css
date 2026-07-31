@@ -505,7 +505,6 @@
      name; the machinery around it is what the mono is for. */
   .source-chip-name{font-family:var(--body);font-size:var(--t-base);
     letter-spacing:0;color:var(--ink-soft)}
-  .source-chip-host{color:var(--muted);font-size:var(--l-sm)}
   .source-chip:hover{color:var(--red)}
   .source-chip:hover .source-chip-name{color:var(--red)}
   /* Standalone URLs become quiet editorial cards. Metadata is an enhancement:
