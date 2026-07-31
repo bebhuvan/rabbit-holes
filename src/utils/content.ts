@@ -63,15 +63,49 @@ export function readingTime(body: string): number {
   return Math.max(1, Math.ceil(words / 220));
 }
 
+/**
+ * Prose from markdown, for the stream preview and the search index.
+ *
+ * Two things this has to survive, both of which it used to get wrong and both
+ * of which were visible on the home page:
+ *
+ *  1. A destination containing parentheses. `![](</images/chart (1).png>)` is
+ *     legal markdown — Pages CMS writes it whenever a filename has a bracket —
+ *     and the old `\([^)]*\)` stopped dead at the `(1)`, leaving `.png>)`
+ *     sitting in the middle of the preview.
+ *  2. A bare URL on its own line. Those are the embed syntax this site uses
+ *     (see remarkLinkEmbed), so on the page they render as a tweet or a video
+ *     card — but the excerpt read the raw source and printed the URL as if it
+ *     were a sentence.
+ *
+ * A destination is therefore matched as either an angle-bracketed run or a
+ * parenthesised run that tolerates ONE level of nesting, which covers every
+ * real filename without needing a parser.
+ */
+const MD_DEST = String.raw`\(\s*(?:<[^>]*>|[^()]*(?:\([^()]*\)[^()]*)*)\s*\)`;
+
 export function excerpt(body: string, maximum = 220): string {
   const cleaned = body
     .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/~~~[\s\S]*?~~~/g, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    // images go entirely; links keep their text. Images first — otherwise the
+    // link rule eats the `[...](...)` and orphans the leading `!`.
+    .replace(new RegExp(String.raw`!\[[^\]]*\]${MD_DEST}`, 'g'), ' ')
+    .replace(new RegExp(String.raw`\[([^\]]*)\]${MD_DEST}`, 'g'), '$1')
     .replace(/<[^>]+>/g, ' ')
+    // a bare URL is an embed on the page and noise in a sentence
+    .replace(/<?\bhttps?:\/\/\S+?>?(?=[\s)]|$)/g, ' ')
     .replace(/^#{1,6}\s+/gm, '')
-    .replace(/^>\s?/gm, '')
+    .replace(/^\s*>\s?/gm, '')
+    .replace(/^\s*(?:[-*+]|\d+[.)])\s+/gm, '')
+    .replace(/^\s*(?:[-*_]\s*){3,}$/gm, ' ')
     .replace(/[*_`~]/g, '')
+    // brackets left empty by a stripped image or link
+    .replace(/\(\s*\)|\[\s*\]/g, ' ')
+    .replace(/\s+([,.;:!?])/g, '$1')
+    // a colon or dash that introduced something now removed
+    .replace(/[:—–-]\s*$/, '')
     .replace(/\s+/g, ' ')
     .trim();
 

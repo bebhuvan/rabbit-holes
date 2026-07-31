@@ -1,0 +1,125 @@
+{
+  "source": {
+    "title": "Nanomedicine, Volume I — Table 3-1: Elemental composition of the human body",
+    "url": "https://www.nanomedicine.com/NMI/3.1.htm",
+    "author": "Robert A. Freitas Jr.",
+    "year": 1999,
+    "retrieved": "2026-07-29",
+    "note": "Mass fractions are the measured quantity and are stored here as given; atom-count fractions are DERIVED in the figure from mass ÷ atomic weight, so the two orderings cannot disagree. Composition varies by a few per cent between individuals — chiefly with body fat and hydration — so these are representative, not exact. Origins follow Johnson 2019."
+  },
+  "epistemic": "settled",
+  "units": {
+    "massPercent": "per cent of total body mass",
+    "atomicWeight": "standard atomic weight, u"
+  },
+  "rows": [
+    {
+      "symbol": "O",
+      "name": "Oxygen",
+      "massPercent": 65.0,
+      "atomicWeight": 15.999,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "Mostly in water. Forged by fusion in massive stars and released when they explode."
+    },
+    {
+      "symbol": "C",
+      "name": "Carbon",
+      "massPercent": 18.5,
+      "atomicWeight": 12.011,
+      "origin": "lowmass",
+      "epistemic": "settled",
+      "where": "The backbone of every organic molecule in you. Made by helium fusion, mostly in dying low-mass stars."
+    },
+    {
+      "symbol": "H",
+      "name": "Hydrogen",
+      "massPercent": 9.5,
+      "atomicWeight": 1.008,
+      "origin": "bigbang",
+      "epistemic": "settled",
+      "where": "Made in the first microsecond. No star has ever made a hydrogen nucleus — stars destroy them."
+    },
+    {
+      "symbol": "N",
+      "name": "Nitrogen",
+      "massPercent": 3.2,
+      "atomicWeight": 14.007,
+      "origin": "lowmass",
+      "epistemic": "contested",
+      "where": "In every amino acid. Returned by the CNO cycle in dying stars, though the split between low-mass and massive sources is still argued about."
+    },
+    {
+      "symbol": "Ca",
+      "name": "Calcium",
+      "massPercent": 1.5,
+      "atomicWeight": 40.078,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "Bone and teeth, and the signal that fires every one of your neurons."
+    },
+    {
+      "symbol": "P",
+      "name": "Phosphorus",
+      "massPercent": 1.0,
+      "atomicWeight": 30.974,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "The backbone of DNA, and the energy currency of every cell."
+    },
+    {
+      "symbol": "K",
+      "name": "Potassium",
+      "massPercent": 0.4,
+      "atomicWeight": 39.098,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "Nerve conduction. A small fraction is potassium-40, which is radioactive — you are very slightly so."
+    },
+    {
+      "symbol": "S",
+      "name": "Sulphur",
+      "massPercent": 0.3,
+      "atomicWeight": 32.06,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "The cross-links that hold protein structures in shape."
+    },
+    {
+      "symbol": "Na",
+      "name": "Sodium",
+      "massPercent": 0.2,
+      "atomicWeight": 22.99,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "The other half of every nerve impulse."
+    },
+    {
+      "symbol": "Cl",
+      "name": "Chlorine",
+      "massPercent": 0.2,
+      "atomicWeight": 35.45,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "Stomach acid, and the balance of fluid inside and outside your cells."
+    },
+    {
+      "symbol": "Mg",
+      "name": "Magnesium",
+      "massPercent": 0.1,
+      "atomicWeight": 24.305,
+      "origin": "massive",
+      "epistemic": "settled",
+      "where": "Sits at the centre of hundreds of enzymes."
+    },
+    {
+      "symbol": "Fe",
+      "name": "Iron",
+      "massPercent": 0.006,
+      "atomicWeight": 55.845,
+      "origin": "whitedwarf",
+      "epistemic": "settled",
+      "where": "Four grams. It carries every breath you take, and it sits at the exact point where fusion stops paying."
+    }
+  ]
+}

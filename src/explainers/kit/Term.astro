@@ -1,0 +1,50 @@
+---
+/**
+ * A term glossed from Wikipedia, shown in place.
+ *
+ * Written as: <Term k="r-process">the rapid process</Term>
+ *
+ * The gloss is fetched at build time by scripts/fetch-wikipedia.mjs and checked
+ * into the repo, so the site stays static, the CSP is untouched, and the text a
+ * reader sees is the text that was reviewed rather than whatever the article
+ * says today.
+ *
+ * LICENCE: Wikipedia prose is CC BY-SA 4.0. The card carries the article link
+ * and the licence, because reusing the text without them is a violation, not a
+ * discourtesy.
+ *
+ * An unknown key fails the build. A term that silently renders as plain text is
+ * exactly the kind of quiet rot this document is built to avoid.
+ */
+import wikipedia from '../data/wikipedia.json';
+
+interface Props {
+  /** Key into src/explainers/data/wikipedia.json */
+  k: string;
+}
+
+const { k } = Astro.props;
+const entry = (wikipedia.terms as Record<string, { title: string; gloss: string; url: string; fetched: string }>)[k];
+
+if (!entry) {
+  throw new Error(
+    `[explainers] <Term k="${k}"> has no gloss.\n` +
+      `  Add "${k}" to TERMS in scripts/fetch-wikipedia.mjs and run: npm run wiki\n` +
+      `  known keys: ${Object.keys(wikipedia.terms).sort().join(', ')}`
+  );
+}
+---
+
+<span class="ex-term"><button
+    class="ex-term-trigger"
+    type="button"
+    aria-expanded="false"
+    aria-describedby={`gloss-${k}`}
+    data-term={k}><slot /></button><span class="ex-term-card" id={`gloss-${k}`} role="tooltip">
+    <span class="ex-term-title">{entry.title}</span>
+    <span class="ex-term-gloss">{entry.gloss}</span>
+    <span class="ex-term-foot">
+      <a href={entry.url} target="_blank" rel="noopener noreferrer">Wikipedia</a>
+      <span class="ex-term-licence">CC BY-SA · read {entry.fetched}</span>
+    </span>
+  </span></span>

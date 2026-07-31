@@ -1,0 +1,55 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { newestFirst, lastTouched } from '../../utils/explainers';
+import { formatPostDate } from '../../utils/content';
+import '../../styles/explainer.css';
+
+const explainers = newestFirst(await getCollection('explainers'));
+---
+
+<Base
+  title="Explainers"
+  description="Visual explainers on fundamental questions — built to be comprehensive, honest about their own uncertainty, and kept up to date."
+  active="explainers"
+>
+  <div class="ex-shelf">
+    <header class="ex-shelf-head">
+      <h1>Explainers</h1>
+      <p class="deck">
+        Long answers to questions worth asking properly. Each one is visual first, argued in
+        full, and marked throughout with how well we actually know what it says — settled,
+        contested, or genuinely open. They are living documents; they change when the
+        evidence does.
+      </p>
+    </header>
+
+    {
+      explainers.length === 0 ? (
+        <p class="ex-empty">
+          Nothing here yet. The first one is being built — an honest answer to whether the
+          atoms in your body really did come from stars.
+        </p>
+      ) : (
+        explainers.map((explainer) => (
+          <a class="ex-card" href={`/explainers/${explainer.slug}`}>
+            <div>
+              <h2 class="question">{explainer.data.question}</h2>
+              {/* standfirst carries markup — the folio page renders it with
+                  set:html, and printing it as text here showed readers the
+                  literal <strong> tags. */}
+              <p class="standfirst" set:html={explainer.data.standfirst} />
+            </div>
+            <div class="meta">
+              {explainer.data.status === 'living' && <span class="ex-living">Living</span>}
+              <span>{explainer.data.chapters.length} chapters</span>
+              <span>Updated {formatPostDate(lastTouched(explainer))}</span>
+            </div>
+          </a>
+        ))
+      )
+    }
+  </div>
+</Base>

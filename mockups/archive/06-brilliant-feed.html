@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes — Brilliant Feed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --flame: #D94E1F;
+            --blue: #1B5BD6;
+            --plum: #7B35B8;
+            --green: #18774A;
+            --ink: #111;
+            --warm-white: #FEFAF3;
+            --cream: #F5F0E5;
+            --mist: #AAA49A;
+        }
+
+        body {
+            background: var(--warm-white);
+            color: var(--ink);
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--flame);
+            color: #fff;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* === HEADER === */
+        .header {
+            padding: 1.25rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E0DBD0;
+        }
+
+        .header-logo {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 20px;
+            font-weight: 700;
+            font-optical-sizing: auto;
+        }
+
+        .header nav {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .header nav a { color: #999; }
+        .header nav a:hover { color: var(--ink); }
+
+        /* === BIG OPEN === */
+        .open {
+            padding: 5rem 0 3rem;
+        }
+
+        .open-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(3.5rem, 9vw, 6.5rem);
+            font-weight: 900;
+            line-height: 0.88;
+            letter-spacing: -0.04em;
+        }
+
+        .open-title .word-holes {
+            color: var(--flame);
+            font-style: italic;
+        }
+
+        .open-tagline {
+            margin-top: 1.25rem;
+            font-family: 'Fraunces', Georgia, serif;
+            font-style: italic;
+            font-size: 19px;
+            font-weight: 400;
+            color: #888;
+            max-width: 480px;
+            line-height: 1.5;
+        }
+
+        /* Colored bar below open */
+        .color-bar {
+            display: flex;
+            height: 4px;
+            margin-top: 2.5rem;
+        }
+        .color-bar span {
+            flex: 1;
+        }
+
+        /* === LATEST ENTRY (enormous) === */
+        .latest {
+            padding: 3rem 0;
+            border-bottom: 2px solid var(--ink);
+        }
+
+        .latest-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--flame);
+            margin-bottom: 1rem;
+        }
+
+        .latest-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(2rem, 4.5vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.25rem;
+        }
+
+        .latest-title a:hover {
+            color: var(--flame);
+        }
+
+        .latest-body {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 1.75;
+            color: #444;
+            max-width: 660px;
+        }
+
+        .latest-body p + p {
+            margin-top: 1rem;
+        }
+
+        .latest-meta {
+            margin-top: 1.25rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--mist);
+        }
+
+        .latest-related {
+            margin-top: 0.75rem;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .latest-related a {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .latest-related a:hover {
+            color: var(--ink);
+            border-color: var(--ink);
+        }
+
+        /* === VERSE INTERRUPT === */
+        .verse-break {
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid #E0DBD0;
+        }
+
+        .verse-break blockquote {
+            font-family: 'Fraunces', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 400;
+            line-height: 1.65;
+            color: #555;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .verse-break cite {
+            display: block;
+            margin-top: 0.75rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-style: normal;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            color: var(--mist);
+        }
+
+        /* === LINK PACK (dense cluster of links) === */
+        .link-pack {
+            padding: 2rem 0;
+            border-bottom: 1px solid #E0DBD0;
+        }
+
+        .link-pack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+        }
+
+        .link-pack-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--blue);
+        }
+
+        .link-pack-count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--mist);
+        }
+
+        .link-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #EEEAE2;
+            gap: 1rem;
+        }
+
+        .link-row:last-child {
+            border-bottom: none;
+        }
+
+        .link-name {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .link-name a:hover {
+            color: var(--blue);
+        }
+
+        .link-topic {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--mist);
+            white-space: nowrap;
+        }
+
+        /* === MUSINGS SECTION === */
+        .musings-section {
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--ink);
+        }
+
+        .section-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label.flame { color: var(--flame); }
+        .section-label.plum { color: var(--plum); }
+
+        .musing-entry {
+            padding: 1.5rem 0;
+            border-top: 1px solid #E0DBD0;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .musing-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.4rem;
+        }
+
+        .musing-title a:hover {
+            color: var(--flame);
+        }
+
+        .musing-snippet {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #666;
+            max-width: 580px;
+        }
+
+        .musing-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--mist);
+            white-space: nowrap;
+            padding-top: 0.3rem;
+        }
+
+        /* === DEEP HOLES (feature section) === */
+        .deep-holes {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid #E0DBD0;
+        }
+
+        .deep-label {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .deep-entry {
+            padding: 1.25rem 0;
+            border-top: 1px solid #E0DBD0;
+        }
+
+        .deep-entry-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+        }
+
+        .deep-entry-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .deep-entry-title a:hover {
+            color: var(--flame);
+        }
+
+        .deep-entry-time {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--flame);
+            white-space: nowrap;
+        }
+
+        .deep-entry-snippet {
+            margin-top: 0.3rem;
+            font-size: 15px;
+            color: #777;
+            line-height: 1.55;
+        }
+
+        .deep-entry-tags {
+            margin-top: 0.3rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--mist);
+        }
+
+        .deep-entry-tags a:hover { color: var(--ink); }
+
+        /* === TOPICS SECTION === */
+        .topics-section {
+            padding: 2rem 0;
+            border-bottom: 1px solid #E0DBD0;
+        }
+
+        .topics-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0;
+        }
+
+        .topic-pill {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 0.3rem 0;
+            margin-right: 1.5rem;
+            color: #888;
+        }
+
+        .topic-pill:hover { color: var(--ink); }
+
+        .topic-pill .count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--mist);
+            margin-left: 0.15rem;
+        }
+
+        /* === BIG NUMBER === */
+        .big-number-section {
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 2px solid var(--ink);
+        }
+
+        .big-number {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(5rem, 12vw, 10rem);
+            font-weight: 900;
+            line-height: 0.85;
+            color: var(--cream);
+            letter-spacing: -0.04em;
+        }
+
+        .big-number-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            color: var(--mist);
+            margin-top: 0.5rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* === FOOTER === */
+        .footer {
+            padding: 2rem 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .footer-left {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .footer nav {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 13px;
+        }
+
+        .footer nav a { color: #bbb; }
+        .footer nav a:hover { color: var(--ink); }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .container { padding: 0 1.25rem; }
+            .musing-entry { grid-template-columns: 1fr; gap: 0.25rem; }
+            .link-row { flex-direction: column; gap: 0; }
+            .deep-entry-top { flex-direction: column; gap: 0.15rem; }
+            .footer { flex-direction: column; gap: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-logo"><a href="#">Rabbit Holes</a></div>
+            <nav>
+                <a href="#">Collections</a>
+                <a href="#">Archive</a>
+                <a href="#">Topics</a>
+                <a href="#">About</a>
+                <a href="#">RSS</a>
+            </nav>
+        </div>
+
+        <!-- BIG OPEN -->
+        <div class="open">
+            <h1 class="open-title">Rabbit<br><span class="word-holes">Holes</span></h1>
+            <p class="open-tagline">Quotes, links, and ideas that made me stop and think. Collected daily. Connected over time.</p>
+            <div class="color-bar">
+                <span style="background: var(--flame);"></span>
+                <span style="background: var(--blue);"></span>
+                <span style="background: var(--plum);"></span>
+                <span style="background: var(--green);"></span>
+                <span style="background: var(--ink);"></span>
+            </div>
+        </div>
+
+        <!-- LATEST (enormous) -->
+        <div class="latest">
+            <div class="latest-label">Latest &middot; January 19, 2026</div>
+            <h2 class="latest-title"><a href="#">We are living in wild times</a></h2>
+            <div class="latest-body">
+                <p>There's something almost surreal about the moment we're in. A few years ago, the idea of talking to a computer and having it build you a website, write you a poem, or help you think through a thorny philosophical question was science fiction. Now it's Tuesday.</p>
+                <p>I recently built this entire blog by talking to an AI. Not writing code — talking. Describing what I wanted, arguing with it, watching it conjure things from plain English. We really are living in wild times.</p>
+            </div>
+            <div class="latest-meta">Musings &middot; AI, Vibecoding, Personal software</div>
+            <div class="latest-related">See also: <a href="#">Code is now content</a> &middot; <a href="#">The Bullshit job apocalypse</a></div>
+        </div>
+
+        <!-- VERSE INTERRUPT -->
+        <div class="verse-break">
+            <blockquote>
+                I dwell in Possibility &mdash;<br>
+                A fairer House than Prose &mdash;<br>
+                More numerous of Windows &mdash;<br>
+                Superior &mdash; for Doors &mdash;
+            </blockquote>
+            <cite>Emily Dickinson</cite>
+        </div>
+
+        <!-- LINK PACK -->
+        <div class="link-pack">
+            <div class="link-pack-header">
+                <div class="link-pack-title">Links</div>
+                <div class="link-pack-count">57 total</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">What drives us</a></div>
+                <div class="link-topic">Psychology</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">Using Obsidian with an AI assistant</a></div>
+                <div class="link-topic">PKM</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">The whole is not the sum of its parts</a></div>
+                <div class="link-topic">Neuroscience</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">China derangement syndrome</a></div>
+                <div class="link-topic">Geopolitics</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">On AI coding</a></div>
+                <div class="link-topic">AI</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">Influentists</a></div>
+                <div class="link-topic">Social media</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">The future of AI and automation</a></div>
+                <div class="link-topic">AI</div>
+            </div>
+            <div class="link-row">
+                <div class="link-name"><a href="#">Ben Thompson makes an optimistic case for AI</a></div>
+                <div class="link-topic">AI</div>
+            </div>
+        </div>
+
+        <!-- MUSINGS -->
+        <div class="musings-section">
+            <div class="section-label flame">Musings</div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">The Bullshit job apocalypse</a></div>
+                    <div class="musing-snippet">David Graeber's thesis is being tested at scale. If AI can do your job, was it ever a real job? The uncomfortable answer is forcing a reckoning.</div>
+                </div>
+                <div class="musing-date">Jan 13</div>
+            </div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">Small tyrannies</a></div>
+                    <div class="musing-snippet">The tiny coercions of everyday life that we accept without question. How collective passivity shapes societies in ways we barely notice.</div>
+                </div>
+                <div class="musing-date">Jan 13</div>
+            </div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">You don&rsquo;t know much</a></div>
+                    <div class="musing-snippet">The illusion of knowledge is more dangerous than ignorance. In an age of infinite information, we confuse access with understanding.</div>
+                </div>
+                <div class="musing-date">Jan 16</div>
+            </div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">Code is now content</a></div>
+                    <div class="musing-snippet">When anyone can conjure software by describing what they want, the line between writing and programming dissolves.</div>
+                </div>
+                <div class="musing-date">Jan 5</div>
+            </div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">On AI regulations</a></div>
+                    <div class="musing-snippet">The regulatory landscape is catching up — slowly, unevenly, and with the usual political theater.</div>
+                </div>
+                <div class="musing-date">Jan 15</div>
+            </div>
+        </div>
+
+        <!-- BIG NUMBER -->
+        <div class="big-number-section">
+            <div class="big-number">193</div>
+            <div class="big-number-label">rabbit holes and counting</div>
+        </div>
+
+        <!-- DEEP HOLES -->
+        <div class="deep-holes">
+            <div class="deep-label">Deep Holes</div>
+
+            <div class="deep-entry">
+                <div class="deep-entry-top">
+                    <div class="deep-entry-title"><a href="#">The world won&rsquo;t end with a bang but with a shrug of indifference</a></div>
+                    <div class="deep-entry-time">8 min</div>
+                </div>
+                <div class="deep-entry-snippet">The always-excellent John Burn-Murdoch has published a revealing piece showing young people are becoming less conscientious, less outgoing, and less trustworthy.</div>
+                <div class="deep-entry-tags"><a href="#">Technology</a> &middot; <a href="#">Smartphones</a> &middot; <a href="#">Society</a></div>
+            </div>
+
+            <div class="deep-entry">
+                <div class="deep-entry-top">
+                    <div class="deep-entry-title"><a href="#">Why read?</a></div>
+                    <div class="deep-entry-time">6 min</div>
+                </div>
+                <div class="deep-entry-snippet">In a world of infinite content and shrinking attention spans, the case for deep reading has never been stronger.</div>
+                <div class="deep-entry-tags"><a href="#">Reading</a> &middot; <a href="#">Books</a> &middot; <a href="#">Literature</a></div>
+            </div>
+
+            <div class="deep-entry">
+                <div class="deep-entry-top">
+                    <div class="deep-entry-title"><a href="#">Zero sum thinking is ruining the world</a></div>
+                    <div class="deep-entry-time">5 min</div>
+                </div>
+                <div class="deep-entry-snippet">The belief that one person's gain must be another's loss is the most destructive idea in human psychology.</div>
+                <div class="deep-entry-tags"><a href="#">Psychology</a> &middot; <a href="#">Society</a></div>
+            </div>
+
+            <div class="deep-entry">
+                <div class="deep-entry-top">
+                    <div class="deep-entry-title"><a href="#">The weight of telling stories</a></div>
+                    <div class="deep-entry-time">7 min</div>
+                </div>
+                <div class="deep-entry-snippet">What happens to the people who make us laugh, cry, and think? The hidden toll of creative work.</div>
+                <div class="deep-entry-tags"><a href="#">Art</a> &middot; <a href="#">Comedy</a> &middot; <a href="#">TV Shows</a></div>
+            </div>
+        </div>
+
+        <!-- TOPICS -->
+        <div class="topics-section">
+            <div class="section-label" style="color: var(--mist);">All Topics</div>
+            <div class="topics-grid">
+                <a href="#" class="topic-pill">AI <span class="count">56</span></a>
+                <a href="#" class="topic-pill">Poetry <span class="count">9</span></a>
+                <a href="#" class="topic-pill">Philosophy <span class="count">6</span></a>
+                <a href="#" class="topic-pill">Writing <span class="count">6</span></a>
+                <a href="#" class="topic-pill">Psychology <span class="count">5</span></a>
+                <a href="#" class="topic-pill">Work <span class="count">5</span></a>
+                <a href="#" class="topic-pill">China <span class="count">5</span></a>
+                <a href="#" class="topic-pill">Books <span class="count">5</span></a>
+                <a href="#" class="topic-pill">Technology <span class="count">3</span></a>
+                <a href="#" class="topic-pill">Money <span class="count">3</span></a>
+                <a href="#" class="topic-pill">Society <span class="count">3</span></a>
+                <a href="#" class="topic-pill">Reading <span class="count">3</span></a>
+                <a href="#" class="topic-pill">Life <span class="count">3</span></a>
+                <a href="#" class="topic-pill">Habits <span class="count">2</span></a>
+                <a href="#" class="topic-pill">Evolution <span class="count">2</span></a>
+                <a href="#" class="topic-pill">Literature <span class="count">2</span></a>
+            </div>
+        </div>
+
+        <!-- REFLECTIONS TEASER -->
+        <div class="musings-section" style="border-bottom: 1px solid #E0DBD0;">
+            <div class="section-label plum">Reflections</div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">The past is the present</a></div>
+                    <div class="musing-snippet">Every generation believes it has invented a new problem, only to discover it is a very old one wearing new clothes.</div>
+                </div>
+                <div class="musing-date">Jan 17</div>
+            </div>
+
+            <div class="musing-entry">
+                <div>
+                    <div class="musing-title"><a href="#">We are borrowed stardust</a></div>
+                    <div class="musing-snippet">On the strange miracle of being conscious matter that knows it's conscious.</div>
+                </div>
+                <div class="musing-date">Sep 14, 2025</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-left">Rabbit Holes &middot; by Bhuvan</div>
+            <nav>
+                <a href="#">RSS</a>
+                <a href="#">About</a>
+                <a href="#">Archive</a>
+                <a href="#">@bebhuvan</a>
+            </nav>
+        </div>
+    </div>
+
+</body>
+</html>

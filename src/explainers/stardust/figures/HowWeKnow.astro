@@ -1,0 +1,162 @@
+---
+/**
+ * FIG 7 — The chain of inference.
+ *
+ * See ../SPECS.md. Not a picture of instruments — a diagram of INFERENCE.
+ * Nobody watched a carbon atom being made. Every claim in this document is the
+ * end of a chain, and the chains are short enough to check, which is the only
+ * reason any of it should be believed.
+ *
+ * Held at the measure deliberately: after two full-bleed spreads the reader
+ * needs the column back, and this chapter's subject is argumentative rather
+ * than spatial.
+ *
+ * Static.
+ */
+interface Props {
+  /** Chapter ids to link each chain to, so a reader can walk backwards. */
+  links?: Record<string, string>;
+}
+const { links = {} } = Astro.props;
+
+const chains = [
+  {
+    key: 'spectra',
+    observation: 'Starlight, split into its colours',
+    instrument: 'Spectrographs',
+    constrains: 'Which elements a star’s surface contains, and in what proportion',
+    supports: 'the forge',
+    supportsLabel: 'The forge',
+    strength: 'settled' as const,
+    note: 'Cecilia Payne, 1925. The measurement was sound and the conclusion — stars are mostly hydrogen — was so unexpected she was pressured to disown it in her own thesis.',
+  },
+  {
+    key: 'meteorites',
+    observation: 'Grains inside meteorites older than the Sun',
+    instrument: 'Mass spectrometry',
+    constrains: 'Isotope ratios, which fingerprint the individual star a grain condensed around',
+    supports: 'making-the-heavy-things',
+    supportsLabel: 'Making the heavy things',
+    strength: 'settled' as const,
+    note: 'These are physical samples of other stars, sitting in laboratories. They predate the solar system.',
+  },
+  {
+    key: 'gw',
+    observation: 'Two neutron stars colliding, 130 million light years away',
+    instrument: 'LIGO and Virgo, then every optical telescope available',
+    constrains: 'How much heavy material a merger throws out, and of what kind',
+    supports: 'making-the-heavy-things',
+    supportsLabel: 'Making the heavy things',
+    strength: 'contested' as const,
+    note: 'The weakest link in this document. One event, well observed — and one event cannot establish a rate.',
+  },
+  {
+    key: 'accelerators',
+    observation: 'Nuclei fired at each other at known energies',
+    instrument: 'Particle accelerators',
+    constrains: 'Reaction rates, which are what stellar models actually run on',
+    supports: 'how-a-star-burns',
+    supportsLabel: 'How a star burns',
+    strength: 'settled' as const,
+    note: 'Measured at energies far above stellar ones, then extrapolated down — which is itself a modelled step, and the main source of uncertainty in stellar reaction rates.',
+  },
+];
+
+const stages = ['We observe', 'With', 'Which pins down', 'Which supports'];
+---
+
+<div class="chains">
+  <ol class="chain-list">
+    {
+      chains.map((chain) => (
+        <li class="chain" data-epistemic={chain.strength}>
+          <div class="chain-rail" aria-hidden="true" />
+          <div class="chain-body">
+            <p class="stage">
+              <span class="stage-lbl">{stages[0]}</span>
+              {chain.observation}
+            </p>
+            <p class="stage">
+              <span class="stage-lbl">{stages[1]}</span>
+              {chain.instrument}
+            </p>
+            <p class="stage">
+              <span class="stage-lbl">{stages[2]}</span>
+              {chain.constrains}
+            </p>
+            <p class="stage supports">
+              <span class="stage-lbl">{stages[3]}</span>
+              <a href={links[chain.key] ?? `#${chain.supports}`}>{chain.supportsLabel}</a>
+            </p>
+            <p class="chain-note">{chain.note}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .chain-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-6);
+  }
+  .chain {
+    display: grid;
+    grid-template-columns: 3px minmax(0, 1fr);
+    gap: var(--s-5);
+  }
+  /* The rail carries the epistemic state of the whole chain — a chain is only
+     as good as its weakest link, and the GW chain has one. */
+  .chain-rail {
+    background: var(--ink-soft);
+  }
+  .chain[data-epistemic='contested'] .chain-rail {
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--red) 0 6px,
+      transparent 6px 12px
+    );
+  }
+  .chain-body {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .stage {
+    margin: 0;
+    font-size: var(--t-base);
+    line-height: 1.5;
+  }
+  .stage-lbl {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    letter-spacing: var(--tr-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .stage.supports a {
+    font-family: var(--display);
+    font-size: var(--t-md);
+    color: var(--red);
+    text-decoration: none;
+    border-bottom: 1px solid var(--red-soft);
+  }
+  .stage.supports a:hover {
+    border-bottom-color: var(--red);
+  }
+  .chain-note {
+    margin: var(--s-2) 0 0;
+    font-size: var(--t-xs);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-style: italic;
+    max-width: 34em;
+  }
+  .chain[data-epistemic='contested'] .chain-note {
+    color: var(--red);
+  }
+</style>

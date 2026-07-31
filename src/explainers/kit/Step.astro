@@ -1,0 +1,33 @@
+---
+/**
+ * One beat of a scrollytelling sequence.
+ *
+ * A step is a unit of ARGUMENT, not a unit of animation. If a step does not
+ * change what the reader understands, it should not exist — the figure can hold
+ * still for two paragraphs perfectly well.
+ *
+ * Steps carry their own number visibly because the sequence is a sequence: a
+ * reader who lands mid-way from a search result needs to know they are at 3 of
+ * 6, not adrift in the middle of something.
+ */
+interface Props {
+  /** Position in the sequence, 1-based. */
+  n?: number;
+  /** Total, so a mid-sequence arrival can orient. */
+  of?: number;
+}
+
+const { n, of: total } = Astro.props;
+---
+
+<div class="ex-step" data-ex-step data-active="false">
+  {
+    n !== undefined && (
+      <span class="ex-step-num">
+        {String(n).padStart(2, '0')}
+        {total !== undefined && ` / ${String(total).padStart(2, '0')}`}
+      </span>
+    )
+  }
+  <slot />
+</div>

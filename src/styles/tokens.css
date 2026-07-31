@@ -12,11 +12,19 @@
    ============================================================= */
 
 :root{
-  /* ---- type scale · major third (1.25), base 1rem = 20px ---- */
+  /* ---- type scale · major third (1.25) ----
+     NB 1rem is 16px, not 20px: html sets no font-size, so every --t-* here
+     resolves against the browser default. The old note in this file claimed a
+     20px base, which is why the rendered scale has always come out a fifth
+     smaller than the numbers suggest. Left as-is rather than rebased, because
+     the design was tuned against what actually renders. */
   --t-2xs : 0.64rem;
   --t-xs  : 0.8rem;
-  --t-base: 1rem;
-  --t-body: 1.125rem;      /* reading size. Deliberately off the strict
+  /* The two READING sizes carry an x-height compensation the display steps do
+     not. Body copy is EB Garamond, whose x-height is ~12% shorter than the
+     Newsreader it replaced; display type is still Bodoni and is unchanged. */
+  --t-base: 1.08rem;
+  --t-body: 1.24rem;       /* reading size. Deliberately off the strict
                               scale: a major third leaves no step between
                               1 and 1.25rem, and 25px body copy is a wall. */
   --t-md  : 1.25rem;
@@ -26,11 +34,21 @@
   --t-3xl : 3.052rem;
   --t-4xl : 4.768rem;      /* the standing folio numeral only */
 
+  /* ---- the label voice · ONE size, ONE tracking, ONE weight ----
+     Structural labels are small caps of the reading face. They had drifted to
+     three sizes (.95rem, --t-base, --t-md), three trackings (.05/.055/.07em)
+     and two weights across three files, which is why a page carrying six of
+     them read as noise instead of as a system. A label's job is to be found
+     when looked for and ignored otherwise, so this is set to whisper. */
+  --t-label   : 0.95rem;
+  --tr-label-sc: 0.05em;
+  --w-label   : 500;
+
   /* ---- label scale · mono runs on its own three sizes.
          Display type and UI labels are different systems; forcing
          them onto one scale is what makes editorial sites feel
          like dashboards. ---- */
-  --l-sm  : 0.58rem;
+  --l-sm  : 0.64rem;
   --l-md  : 0.66rem;
   --l-lg  : 0.78rem;
 
@@ -44,10 +62,29 @@
   --s-5: 1.5rem;   --s-6: 2rem;     --s-7: 2.5rem;   --s-8: 3rem;
   --s-9: 4rem;     --s-10: 5rem;
 
-  /* ---- measure · 33em of Newsreader ≈ 66 characters.
-         Reading columns were running to ~80ch, which is past the
-         point where the eye loses the line return. ---- */
-  --measure: 33em;
+  /* ---- measure · 35rem = 65 characters of EB Garamond ----
+     Averaged over every long paragraph on a folio page, not sampled from one
+     first line, which is what misled the earlier pass into 31.5rem. ----
+     Stated in rem, not em, on purpose. As `33em` this resolved against
+     whatever element it landed on — 660px on body copy, 422px on a mono
+     eyebrow — so it silently meant different things in different places and
+     needed a second rem-valued twin to do box arithmetic with. One value now.
+
+     Re-derived for the face rather than inherited: Garamond sets about 2.6
+     characters to the em where Newsreader set 2, so the old 33em came out at
+     78–85 characters. Measured in the browser, not estimated.
+
+     Widened from 31.5rem after seeing it in place. Two reasons, and the
+     second is the load-bearing one:
+
+       · 31.5rem measured 58 characters averaged across a page, not the 66
+         a single first line suggested. Genuinely tight.
+       · A syndicated X embed is a FIXED 550px. At a 504px column the embeds
+         stood proud of the text on every side, which is the one thing a
+         measure must never do — the column stops looking chosen. 35rem is
+         560px, so the widest object on the page now sits inside the text
+         block instead of breaking out of it. */
+  --measure: 35rem;
 
   /* ---- colour by kind · one tint per real `type` in config.ts ----
      Hoisted here 2026-07-20: these were duplicated in eight pages' :root
@@ -61,6 +98,25 @@
   /* ---- motion ---- */
   --dur : 180ms;
   --ease: cubic-bezier(.2,.6,.2,1);
+
+  /* ---- display optical size · one value, see the note below ---- */
+  --opsz-display: 20;
+
+  /* ---- underlines ----
+     One rule for every underline in the book. They had drifted to five
+     different offsets across three files — 3px, 4px, .16em, .28em, .62em —
+     some in px, so they stopped scaling the moment the type size changed.
+
+     Set LOW and FINE. At the old 3px the rule ran through the descenders of
+     "Understanding Global Imbalances" and the skip-ink gaps closed up into a
+     dotted mess; at .24em it passes cleanly beneath them. Thickness is in em
+     so it holds its proportion from a caption to a headline, and the colour
+     is mixed from the ink so it follows the theme instead of borrowing
+     --rule-strong, which is a border colour and read as one. */
+  --ul-offset: .24em;
+  --ul-thick : .045em;
+  --ul-ink   : color-mix(in srgb, var(--ink) 38%, transparent);
+  --ul-red   : color-mix(in srgb, var(--red) 45%, transparent);
 }
 
 /* =============================================================
@@ -75,11 +131,26 @@
    Why: Bodoni Moda has an opsz axis (6..96) and font-optical-sizing:auto
    asks for the DISPLAY cut as size grows — the thinnest drawing, worst
    on dark. Pin low, carry emphasis with weight. Reading text is
-   Newsreader and keeps its own optical sizing.
+   EB Garamond and keeps its own optical sizing.
+
+   Revised 2026-07-31, from 11 to 20. Pinning at 11 asks for the 11px cut
+   and then draws it at 31–61px, where Bodoni's ascender serifs come out as
+   heavy flat slabs: "Shifting", "Plight" and "The" all read as though the
+   tops of the letters had been sliced off. 20 keeps the serifs sturdy
+   enough to survive on dark — the reason for pinning at all — without the
+   chopped look. Checked at every display size in both themes.
    ============================================================= */
 h1,h2,h3,.brand .mark,.display,[data-display]{
   font-optical-sizing:none;
-  font-variation-settings:'opsz' 11;
+  font-variation-settings:'opsz' var(--opsz-display);
+}
+
+/* Body copy runs oldstyle figures, which is right in a sentence and wrong in
+   a headline: "China Shock 2.0" set the 2 below the baseline and the 0 at
+   x-height, and a numbered subhead opened with a "1" that read as a capital
+   I. Display type takes lining figures — the folio numerals already did. */
+h1,h2,h3,.brand .mark,.display,[data-display]{
+  font-variant-numeric:lining-nums;
 }
 
 /* =============================================================
@@ -134,7 +205,7 @@ blockquote{hanging-punctuation:first last}
   margin:.06em .12em 0 0;
   color:var(--red);
   font-optical-sizing:none;
-  font-variation-settings:'opsz' 11;
+  font-variation-settings:'opsz' var(--opsz-display);
 }
 /* the opening words carry small caps out of the drop cap, the way
    a printed page eases you back to reading size */

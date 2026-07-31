@@ -1,0 +1,235 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Revisions from '../../explainers/kit/Revisions.astro';
+import StardustHero from '../../explainers/stardust/StardustHero.astro';
+import {
+  assertChaptersMatchHeadings,
+  sourceMap,
+  citeLabel,
+  lastTouched,
+  revisionsByChapter,
+  stripMarkup,
+} from '../../utils/explainers';
+import {
+  assertCitationsResolve,
+  assertExplainersAreWellFormed,
+  citedIds,
+} from '../../utils/provenance';
+import { publishCiteNumbers } from '../../explainers/kit/citeRegistry';
+import { formatPostDate, readingTime } from '../../utils/content';
+import '../../styles/explainer.css';
+
+export async function getStaticPaths() {
+  const explainers = await getCollection('explainers', ({ data }) => data.published !== false);
+  return explainers.map((explainer) => ({
+    params: { slug: explainer.slug },
+    props: { explainer },
+  }));
+}
+
+const { explainer } = Astro.props;
+const { Content, headings } = await explainer.render();
+
+// Build-time guardrails. Each of these is a silent failure if left to
+// discipline, and a loud one here.
+assertChaptersMatchHeadings(explainer, headings);
+const sources = sourceMap(explainer);
+assertCitationsResolve(explainer, sources);
+assertExplainersAreWellFormed(explainer);
+
+const revised = revisionsByChapter(explainer);
+const minutes = readingTime(explainer.body);
+
+// Sources are listed in order of FIRST CITATION, not frontmatter order, so the
+// numbers a reader meets in the prose ascend as they read. Anything declared
+// but never cited (legitimate further reading) follows at the end.
+const cited = citedIds(explainer.body);
+const sourceList = [
+  ...cited.map((id) => sources.get(id)!),
+  ...explainer.data.sources.filter((source) => !cited.includes(source.id)),
+];
+
+// Published before <Content /> renders, so every <Cite> can find its number.
+publishCiteNumbers(
+  explainer.slug,
+  sourceList.map((source) => source.id)
+);
+---
+
+<Base
+  title={explainer.data.title}
+  description={explainer.data.description ?? stripMarkup(explainer.data.standfirst)}
+  image={explainer.data.image}
+  active="explainers"
+>
+  <Fragment slot="head">
+    <meta property="og:type" content="article" />
+    <meta property="article:published_time" content={explainer.data.date.toISOString()} />
+    <meta property="article:modified_time" content={lastTouched(explainer).toISOString()} />
+  </Fragment>
+
+  {/* The depth rail. Ticks indent as the material deepens, so the navigation
+      draws the descent rather than measuring what is left. */}
+  {
+    explainer.data.chapters.length > 0 && (
+      <nav class="ex-rail" aria-label="Chapters" data-ex-rail>
+        {explainer.data.chapters.map((chapter) => {
+          // Newest revision touching this chapter, so the client can compare it
+          // against when this reader was last here.
+          const touched = revised.get(chapter.id) ?? [];
+          const newest = touched.reduce(
+            (latest, revision) => Math.max(latest, revision.date.getTime()),
+            0
+          );
+          return (
+            <a
+              class="ex-rail-item"
+              href={`#${chapter.id}`}
+              style={`--depth:${chapter.depth}`}
+              data-chapter={chapter.id}
+              data-revised={newest ? 'true' : 'false'}
+              data-revised-at={newest || undefined}
+            >
+              <span class="ex-rail-tick" />
+              <span class="ex-rail-label">{chapter.title}</span>
+            </a>
+          );
+        })}
+      </nav>
+    )
+  }
+
+  <article class:list={{ 'ex-light-only': explainer.slug === 'stardust' }}>
+    <header class="ex-open">
+      <div class="ex-open-inner">
+        <div class="ex-eyebrow">
+          <span>Explainer</span>
+          <span>{minutes} min</span>
+          <span>Updated {formatPostDate(lastTouched(explainer), true)}</span>
+          {explainer.data.status === 'living' && <span class="ex-living">Living document</span>}
+        </div>
+        <h1>{explainer.data.question}</h1>
+        <p class="ex-standfirst" set:html={explainer.data.standfirst} />
+      </div>
+      {explainer.slug === 'stardust' && <StardustHero />}
+    </header>
+
+    <div class="ex-body">
+      <Content />
+    </div>
+
+    <div class="ex-body">
+      <Revisions explainer={explainer} />
+
+      {
+        sourceList.length > 0 && (
+          <section class="ex-sources" aria-labelledby="sources-heading">
+            <h2 id="sources-heading">Sources</h2>
+            {sourceList.map((source, index) => (
+              <div class="ex-source" id={`src-${source.id}`}>
+                <div class="n">{String(index + 1).padStart(2, '0')}</div>
+                <div>
+                  <div class="title">
+                    <a href={source.url} target="_blank" rel="noopener noreferrer">
+                      {source.title}
+                    </a>
+                    {(source.author || source.year) && (
+                      <span class="by"> — {citeLabel(source)}</span>
+                    )}
+                  </div>
+                  {source.note && <p class="note">{source.note}</p>}
+                </div>
+              </div>
+            ))}
+          </section>
+        )
+      }
+
+      {/* CC BY-SA obliges attribution and a licence notice wherever the text is
+          reused. Glosses are Wikipedia prose, so this is a condition of use,
+          not a courtesy. */}
+      <p class="ex-licence">
+        Hover-glosses on technical terms are summaries from{' '}
+        <a href="https://en.wikipedia.org" target="_blank" rel="noopener noreferrer">Wikipedia</a>,
+        used under{' '}
+        <a
+          href="https://creativecommons.org/licenses/by-sa/4.0/"
+          target="_blank"
+          rel="noopener noreferrer">CC BY-SA 4.0</a
+        >. Each card links to the article it came from and records the date it was read.
+      </p>
+    </div>
+  </article>
+</Base>
+
+<script>
+  // The rail. Two jobs, both cheap:
+  //   1. mark the chapter the reader is actually in
+  //   2. mark chapters revised since this reader last visited
+  //
+  // No framework, no dependency, matching every other script on this site.
+  (() => {
+    const rail = document.querySelector<HTMLElement>('[data-ex-rail]');
+    if (!rail) return;
+
+    const items = Array.from(rail.querySelectorAll<HTMLAnchorElement>('[data-chapter]'));
+    const headings = items
+      .map((item) => document.getElementById(item.dataset.chapter ?? ''))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    // --- current chapter -------------------------------------------------
+    const setCurrent = () => {
+      const line = window.innerHeight * 0.35;
+      let active = 0;
+      headings.forEach((heading, index) => {
+        if (heading.getBoundingClientRect().top <= line) active = index;
+      });
+      items.forEach((item, index) =>
+        item.setAttribute('aria-current', index === active ? 'true' : 'false')
+      );
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setCurrent();
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    setCurrent();
+
+    // --- revised since last visit ----------------------------------------
+    // localStorage only, matching the existing rabbit-holes-theme convention.
+    // No accounts, no beacons, nothing leaves the browser.
+    const key = `rabbit-holes-read:${location.pathname}`;
+    let lastVisit = 0;
+    try {
+      lastVisit = Number(localStorage.getItem(key) ?? 0);
+    } catch {
+      /* private mode — the dots simply never show */
+    }
+
+    if (lastVisit) {
+      items.forEach((item) => {
+        const stamp = Number(item.dataset.revisedAt ?? 0);
+        if (!stamp || stamp <= lastVisit) item.dataset.revised = 'false';
+      });
+    } else {
+      // A first-time reader is not "returning", so nothing is new to them.
+      items.forEach((item) => (item.dataset.revised = 'false'));
+    }
+
+    try {
+      localStorage.setItem(key, String(Date.now()));
+    } catch {
+      /* nothing to do */
+    }
+  })();
+</script>

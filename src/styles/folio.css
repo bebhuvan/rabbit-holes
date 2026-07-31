@@ -1,8 +1,11 @@
   .lamp:hover{color:var(--red)}
 
   /* ============ ENTRY SHELL ============ */
+  /* The reading column is the measure, not a hard-coded 640px. It was the one
+     place the --measure token never reached, so re-deriving the measure for a
+     new reading face silently left the folio page alone. */
   .folio{max-width:var(--maxw);margin:0 auto;display:grid;
-    grid-template-columns:190px minmax(0,640px) 260px;gap:0 3rem;
+    grid-template-columns:190px minmax(0,var(--measure)) 260px;gap:0 3rem;
     padding:0 2.6rem;align-items:start}
 
   /* ---- left: the standing meta rail ---- */
@@ -18,15 +21,22 @@
   .folio-rail dt{color:var(--muted);font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;margin-top:1.3rem}
   .folio-rail dd{color:var(--ink-soft);margin-top:.3rem}
   .folio-rail dd a{color:var(--red);text-decoration:none}
-  .folio-rail dd a:hover{text-decoration:underline;text-underline-offset:3px}
+  .folio-rail dd a:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
 
   /* ---- centre: the leaf ---- */
   .leaf{padding:4rem 0 2rem;min-width:0}
 
   .attrib{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase;
     color:var(--muted);margin-bottom:1.1rem}
-  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.08;
-    letter-spacing:var(--tr-display);margin-bottom:.4rem}
+  /* line-height 1.08 at 48.8px gives a 52.7px line box, but Bodoni's ink runs
+     ~128px over two lines against a 105px box — the type overflows its own
+     block by about 10px top and bottom. Nothing clips it (no ancestor sets
+     overflow), so it renders in full, but at the old .4rem margin the source
+     rule underneath landed within a pixel of the descender of "global", which
+     reads exactly like a chopped-off heading. Loosened a little and given
+     real space beneath. */
+  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.13;
+    letter-spacing:var(--tr-display);margin-bottom:1.1rem}
   .byline{font-family:var(--body);font-style:italic;font-size:var(--t-md);color:var(--ink-soft);margin-bottom:2.8rem}
 
   /* ---- THE HAND — rubricated, and monumental when terse ----
@@ -45,16 +55,24 @@
   /* ---- the source ----
      The compact attribution strip from the classic theme, translated into
      the new type and colour system without its external favicon request. */
-  .source-card{display:flex;align-items:center;gap:.7rem;margin:1.25rem 0 2.15rem;
-    padding:.68rem .85rem;background:var(--red-wash);border-top:1px solid var(--rule);
+  /* An attribution line, not a panel. The tinted fill made this the only
+     filled box on a page built from hairlines, and it read as a widget
+     dropped into a book. Two rules and the type carry it. */
+  .source-card{display:flex;align-items:baseline;gap:.7rem;margin:1.25rem 0 2.4rem;
+    padding:.62rem 0;border-top:1px solid var(--rule);
     border-bottom:1px solid var(--rule);color:var(--ink-soft);text-decoration:none}
   .source-card-label{flex:none;font-family:var(--mono);font-size:var(--l-sm);
     letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted)}
   .source-card-label::after{content:"·";margin-left:.7rem;color:var(--red-soft)}
   .source-card-domain{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-    font-family:var(--body);font-size:var(--t-base);font-weight:600;color:var(--ink-soft)}
+    font-family:var(--body);font-size:var(--t-base);font-weight:600;color:var(--ink-soft);
+    transition:color var(--dur) var(--ease)}
+  /* The address stays visible beside the name. Naming a publication is a
+     courtesy; hiding where an outbound link actually goes is not. */
+  .source-card-host{flex:none;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);color:var(--muted)}
   .source-card-arrow{margin-left:auto;flex:none;color:var(--red);font-family:var(--mono);
-    font-size:var(--l-lg);line-height:1}
+    font-size:var(--l-lg);line-height:1;transition:color var(--dur) var(--ease)}
   .source-card:hover .source-card-domain{color:var(--red)}
   .source-card:hover .source-card-arrow{color:var(--ink)}
 
@@ -68,8 +86,9 @@
   .verse .l{display:block;padding-left:1.5rem;text-indent:-1.5rem}
 
   .prose p{margin-bottom:1.35rem}
-  .prose a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--rule-strong);
-    text-underline-offset:3px;text-decoration-thickness:1px}
+  .prose a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--ul-ink);
+    text-underline-offset:var(--ul-offset);text-decoration-thickness:var(--ul-thick);
+    text-decoration-skip-ink:auto;transition:text-decoration-color var(--dur) var(--ease)}
   .prose a:hover{text-decoration-color:var(--ink)}
   .prose blockquote{margin:1.9rem 0;padding-left:1.4rem;border-left:2px solid var(--rule-strong);
     font-size:var(--t-body);line-height:1.72;color:var(--ink)}
@@ -85,7 +104,7 @@
   .deeper li{margin-bottom:.85rem;display:flex;gap:.7rem;align-items:baseline}
   .deeper .n{font-family:var(--mono);font-size:var(--l-md);color:var(--muted);flex:none}
   .deeper a{font-family:var(--body);font-size:var(--t-body);color:var(--ink);text-decoration:underline;
-    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+    text-decoration-color:var(--rule-strong);text-underline-offset:var(--ul-offset)}
   .deeper a:hover{text-decoration-color:var(--ink)}
   .deeper .dsc{display:block;font-size:var(--t-base);font-style:italic;color:var(--ink-soft);margin-top:.15rem}
 
@@ -109,17 +128,26 @@
     color:var(--muted);margin-top:.28rem}
   .threads .all{display:inline-block;margin-top:1.5rem;font-family:var(--mono);font-size:var(--l-md);
     letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
-  .threads .all:hover{text-decoration:underline;text-underline-offset:4px}
+  .threads .all:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
 
-  /* ---- right margin: sidenotes ---- */
-  .margin{padding:12.4rem 0 0 1.25rem;position:relative;
+  /* ---- right margin: sidenotes ----
+     align-self:stretch is load-bearing. .folio aligns its items to start, so
+     the margin was only as tall as the two or three sidenotes in it and its
+     rule quit a third of the way down a long leaf — the same failure the
+     home shell's spine was written around. Stretched, the rule runs the
+     height of the leaf and the page keeps both its walls. */
+  .margin{padding:12.4rem 0 2rem 1.25rem;position:relative;align-self:stretch;
     border-left:1px solid var(--rule)}
+  /* The rule belongs to the column and runs the height of the leaf; the notes
+     inside it are sticky, so the page keeps both walls AND the reader keeps
+     the subjects and the neighbouring folios in view the whole way down. */
+  .margin-notes{position:sticky;top:2.2rem}
   .sidenote{margin-bottom:2.1rem;font-size:var(--t-base);line-height:1.58}
   .sidenote .sl{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
     text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
   .sidenote .sb{font-family:var(--body);color:var(--ink-soft);font-style:italic}
   .sidenote a{color:var(--red);text-decoration:none}
-  .sidenote a:hover{text-decoration:underline;text-underline-offset:3px}
+  .sidenote a:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
   .heads a{display:block;font-family:var(--body);font-size:var(--t-base);font-style:italic;
     color:var(--ink-soft);text-decoration:none;border-top:1px solid var(--rule);
     padding:.34rem 0;transition:color .18s}
@@ -131,8 +159,30 @@
     letter-spacing:var(--tr-display);margin:2.2rem 0 1rem}
   .prose h2{font-size:var(--t-xl)}
   .prose h3{font-size:var(--t-lg)}
-  .prose ul,.prose ol{margin:1rem 0 1.4rem;padding-left:1.4rem}
-  .prose li{margin-bottom:.45rem}
+  /* ---- APPARATUS ----
+     A folio usually ends in a source list, and markdown gives it default
+     discs at full reading size, so a bibliography came out looking exactly
+     like the argument above it. Set a step down, with the red mark the rest
+     of the book uses for a reference and a hanging indent so turned lines
+     align under the entry rather than under the marker. */
+  .prose ul,.prose ol{margin:1rem 0 1.5rem;padding-left:0;list-style:none}
+  .prose ol{counter-reset:prose-item}
+  .prose li{margin-bottom:.6rem;padding-left:1.25rem;text-indent:-1.25rem;
+    font-size:var(--t-base);line-height:1.52}
+  .prose ul>li::before{content:"·";display:inline-block;width:1.25rem;
+    text-indent:0;color:var(--red-soft)}
+  .prose ol>li{counter-increment:prose-item}
+  .prose ol>li::before{content:counter(prose-item)".";display:inline-block;width:1.25rem;
+    text-indent:0;font-family:var(--mono);font-size:var(--l-sm);color:var(--muted)}
+  .prose li>ul,.prose li>ol{margin:.5rem 0 0;text-indent:0}
+
+  /* A paragraph whose whole content is bold is a subheading the author wrote
+     without a heading level — "**The exchange**" over a list of sources.
+     Setting it as one stops it reading as a shouted sentence. */
+  .prose p>strong:only-child{display:block;font-family:var(--mono);font-weight:400;
+    font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted)}
+  .prose p:has(>strong:only-child){margin:1.9rem 0 .8rem}
   .prose img{max-width:min(100%,54rem);height:auto;margin:1.8rem auto;border:1px solid var(--rule)}
   .prose pre{max-width:100%;overflow:auto;padding:1rem;background:var(--red-wash);
     border:1px solid var(--rule);font-family:var(--mono);font-size:.78rem;line-height:1.55}
@@ -142,6 +192,27 @@
   .post-actions button,.post-actions a{background:transparent;border:0;padding:.3rem 0;color:var(--muted);
     font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);text-decoration:none;cursor:pointer}
   .post-actions button:hover,.post-actions a:hover{color:var(--red)}
+
+  /* The label voice on the folio page. Same split as the stream: names in
+     small caps, measurements in mono. So the left rail reads
+     "Kᴇᴘᴛ / 29 July 2026" — the label in the book's face, the date in mono. */
+  .attrib,
+  .folio-word,
+  .folio-rail dt,
+  .hand .label,
+  .sidenote .sl,
+  .deeper .h,
+  .threads .h,
+  .source-card-label{
+    font-family:var(--sc);
+    font-size:var(--t-label);
+    font-variant-caps:all-small-caps;
+    font-weight:var(--w-label);
+    letter-spacing:var(--tr-label-sc);
+    text-transform:none;
+  }
+  /* the threads head opens a whole section, so it alone steps up */
+  .threads .h{font-size:var(--t-md)}
 
   @media (max-width:1050px){
     .folio{grid-template-columns:145px minmax(0,1fr) 210px;gap:0 2rem;padding:0 1.5rem}

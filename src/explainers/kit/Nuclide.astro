@@ -1,0 +1,35 @@
+---
+/**
+ * Isotope notation: ⁵⁶₂₆Fe.
+ *
+ * Browser-default <sup>/<sub> cannot set this. The mass number and the atomic
+ * number must share a left edge, sit tight against the symbol, and not push the
+ * line height around — three things stacked sup/sub gets wrong. A flex column
+ * with a negative vertical-align does all three.
+ *
+ * `z` is optional because in running prose the atomic number is usually
+ * redundant — the symbol already tells you the element. Include it when the
+ * point being made is about proton count.
+ */
+interface Props {
+  /** Mass number — protons + neutrons. */
+  a: number | string;
+  /** Atomic number — protons. Optional; the symbol implies it. */
+  z?: number | string;
+  /** Element symbol, e.g. "Fe". */
+  symbol: string;
+  /** Screen-reader text, when the default reading would be wrong. */
+  say?: string;
+}
+
+const { a, z, symbol, say } = Astro.props;
+const spoken = say ?? `${symbol}-${a}`;
+---
+
+{/* No whitespace between these spans, deliberately: the stack must sit tight
+    against the symbol, and compressHTML turns a newline into a real space. */}
+<span
+  class="ex-nuclide"
+  data-solo={z === undefined ? 'true' : 'false'}
+  role="img"
+  aria-label={spoken}><span class="n-stack" aria-hidden="true"><span class="n-a">{a}</span>{z !== undefined && <span class="n-z">{z}</span>}</span><span class="n-sym" aria-hidden="true">{symbol}</span></span>

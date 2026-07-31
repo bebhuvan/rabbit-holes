@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes — The Broadsheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #FDFAF5;
+            color: #1a1a1a;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 17px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: #c44d18;
+            color: #fff;
+        }
+
+        a { color: inherit; }
+
+        /* === MASTHEAD === */
+        .masthead {
+            text-align: center;
+            padding: 2.5rem 2rem 0;
+            border-bottom: 2px solid #1a1a1a;
+            margin: 0 2rem;
+        }
+
+        .masthead-date {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .masthead-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .masthead-subtitle {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-style: italic;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .masthead-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 0.75rem 0;
+            border-top: 1px solid #ddd;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .masthead-nav a {
+            text-decoration: none;
+            color: #555;
+        }
+
+        .masthead-nav a:hover {
+            color: #1a1a1a;
+        }
+
+        /* === THE BROADSHEET GRID === */
+        .broadsheet {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            margin: 0 2rem;
+            min-height: 80vh;
+        }
+
+        .col {
+            padding: 1.5rem 1.5rem;
+            border-right: 1px solid #d5d0c8;
+        }
+
+        .col:last-child {
+            border-right: none;
+        }
+
+        .col-center {
+            border-right: 1px solid #d5d0c8;
+            padding: 1.5rem 2rem;
+        }
+
+        /* === HEADLINE ITEM (center column lead) === */
+        .lead-story {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #d5d0c8;
+        }
+
+        .lead-story .headline {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .lead-story .headline a {
+            text-decoration: none;
+        }
+
+        .lead-story .headline a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1.5px;
+            text-underline-offset: 3px;
+        }
+
+        .lead-story .byline {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 0.75rem;
+        }
+
+        .lead-story .excerpt {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .lead-story .excerpt::first-letter {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3.5em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.08em;
+            margin-top: 0.05em;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* === SECONDARY STORIES === */
+        .story {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e8e4dd;
+        }
+
+        .story:last-child {
+            border-bottom: none;
+        }
+
+        .story .headline {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.25;
+            margin-bottom: 0.4rem;
+        }
+
+        .story .headline a {
+            text-decoration: none;
+        }
+
+        .story .headline a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+        }
+
+        .story .meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 0.4rem;
+        }
+
+        .story .snippet {
+            font-size: 15px;
+            line-height: 1.55;
+            color: #4a4a4a;
+        }
+
+        /* === SIDEBAR ITEMS === */
+        .sidebar-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e8e4dd;
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid #d5d0c8;
+        }
+
+        .sidebar-link {
+            display: block;
+            margin-bottom: 0.9rem;
+        }
+
+        .sidebar-link a {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.3;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+
+        .sidebar-link a:hover {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .sidebar-link .sidebar-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: #b0b0b0;
+            margin-top: 0.15rem;
+        }
+
+        /* === VERSE INSET === */
+        .verse-inset {
+            padding: 1.25rem 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e8e4dd;
+        }
+
+        .verse-inset blockquote {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #3a3a3a;
+            margin-bottom: 0.5rem;
+        }
+
+        .verse-inset cite {
+            font-family: 'Inter', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-style: normal;
+            color: #aaa;
+        }
+
+        /* === BOTTOM STRIP (below the fold) === */
+        .below-fold {
+            margin: 0 2rem;
+            border-top: 2px solid #1a1a1a;
+            padding: 1.5rem 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+        }
+
+        .below-fold .fold-item {
+            padding: 0 1.5rem;
+            border-right: 1px solid #d5d0c8;
+        }
+
+        .below-fold .fold-item:first-child {
+            padding-left: 0;
+        }
+
+        .below-fold .fold-item:last-child {
+            border-right: none;
+        }
+
+        .fold-item .headline {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.3rem;
+        }
+
+        .fold-item .headline a {
+            text-decoration: none;
+        }
+
+        .fold-item .headline a:hover {
+            text-decoration: underline;
+        }
+
+        .fold-item .meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 0.3rem;
+        }
+
+        .fold-item .snippet {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* === TOPICS STRIP === */
+        .topics-strip {
+            margin: 0 2rem;
+            padding: 1.25rem 0;
+            border-top: 1px solid #d5d0c8;
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .topics-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .topics-strip a {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 14px;
+            text-decoration: none;
+            color: #555;
+        }
+
+        .topics-strip a:hover {
+            color: #1a1a1a;
+            text-decoration: underline;
+        }
+
+        .topics-strip .sep {
+            color: #d5d0c8;
+            font-size: 12px;
+        }
+
+        /* === FOOTER === */
+        footer {
+            margin: 0 2rem;
+            padding: 2rem 0;
+            border-top: 2px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        footer .colophon {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #aaa;
+            letter-spacing: 0.02em;
+        }
+
+        footer nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        footer nav a {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #999;
+            text-decoration: none;
+            letter-spacing: 0.04em;
+        }
+
+        footer nav a:hover {
+            color: #1a1a1a;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 900px) {
+            .broadsheet {
+                grid-template-columns: 1fr;
+            }
+
+            .col, .col-center {
+                border-right: none;
+                border-bottom: 1px solid #d5d0c8;
+                padding: 1.5rem 0;
+            }
+
+            .col:last-child {
+                border-bottom: none;
+            }
+
+            .below-fold {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .below-fold .fold-item {
+                padding: 1rem 1rem;
+            }
+
+            .below-fold .fold-item:nth-child(2) {
+                border-right: none;
+            }
+
+            .below-fold .fold-item:nth-child(3),
+            .below-fold .fold-item:nth-child(4) {
+                border-top: 1px solid #e8e4dd;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .masthead { margin: 0 1rem; padding: 1.5rem 1rem 0; }
+            .broadsheet { margin: 0 1rem; }
+            .below-fold { margin: 0 1rem; grid-template-columns: 1fr; }
+            .below-fold .fold-item { border-right: none; border-bottom: 1px solid #e8e4dd; padding: 1rem 0; }
+            .below-fold .fold-item:last-child { border-bottom: none; }
+            .topics-strip { margin: 0 1rem; }
+            footer { margin: 0 1rem; flex-direction: column; gap: 1rem; }
+            .masthead-nav { gap: 1.5rem; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="masthead">
+        <div class="masthead-date">Sunday, January 19, 2026 &middot; Issue No. 193</div>
+        <h1 class="masthead-title">Rabbit Holes</h1>
+        <p class="masthead-subtitle">Quotes, links, and ideas that made me stop and think</p>
+        <nav class="masthead-nav">
+            <a href="#">Collections</a>
+            <a href="#">Archive</a>
+            <a href="#">Topics</a>
+            <a href="#">Blogroll</a>
+            <a href="#">Search</a>
+            <a href="#">About</a>
+            <a href="#">RSS</a>
+        </nav>
+    </div>
+
+    <div class="broadsheet">
+        <!-- LEFT COLUMN -->
+        <div class="col">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Verse</div>
+                <div class="verse-inset">
+                    <blockquote>
+                        I dwell in Possibility &mdash;<br>
+                        A fairer House than Prose &mdash;<br>
+                        More numerous of Windows &mdash;<br>
+                        Superior &mdash; for Doors &mdash;
+                    </blockquote>
+                    <cite>Emily Dickinson</cite>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Deep Holes</div>
+                <div class="sidebar-link">
+                    <a href="#">The world won&rsquo;t end with a bang but with a shrug of indifference</a>
+                    <div class="sidebar-meta">Musings &middot; 8 min read</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">Why read?</a>
+                    <div class="sidebar-meta">Reflections &middot; 6 min read</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">Zero sum thinking is ruining the world</a>
+                    <div class="sidebar-meta">Musings &middot; 5 min read</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">The weight of telling stories</a>
+                    <div class="sidebar-meta">Musings &middot; 7 min read</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Topics</div>
+                <div class="sidebar-link"><a href="#">AI</a> <span class="sidebar-meta">56 posts</span></div>
+                <div class="sidebar-link"><a href="#">Poetry</a> <span class="sidebar-meta">9 posts</span></div>
+                <div class="sidebar-link"><a href="#">Philosophy</a> <span class="sidebar-meta">6 posts</span></div>
+                <div class="sidebar-link"><a href="#">Writing</a> <span class="sidebar-meta">6 posts</span></div>
+                <div class="sidebar-link"><a href="#">Psychology</a> <span class="sidebar-meta">5 posts</span></div>
+                <div class="sidebar-link"><a href="#">Work</a> <span class="sidebar-meta">5 posts</span></div>
+                <div class="sidebar-link"><a href="#">Books</a> <span class="sidebar-meta">5 posts</span></div>
+            </div>
+        </div>
+
+        <!-- CENTER COLUMN -->
+        <div class="col-center">
+            <div class="lead-story">
+                <div class="byline">Musings &middot; January 19, 2026</div>
+                <h2 class="headline"><a href="#">We are living in wild times</a></h2>
+                <p class="excerpt">There's something almost surreal about the moment we're in. A few years ago, the idea of talking to a computer and having it build you a website, write you a poem, or help you think through a thorny philosophical question was science fiction. Now it's Tuesday. I recently built this entire blog by talking to an AI. Not writing code — talking. Describing what I wanted, arguing with it, watching it conjure things from plain English. We really are living in wild times.</p>
+            </div>
+
+            <div class="story">
+                <div class="meta">Musings &middot; January 13</div>
+                <h3 class="headline"><a href="#">The Bullshit job apocalypse</a></h3>
+                <p class="snippet">David Graeber's thesis is being tested at scale. If AI can do your job, was it ever a real job? The uncomfortable answer is forcing a reckoning with what we mean by meaningful work.</p>
+            </div>
+
+            <div class="story">
+                <div class="meta">Musings &middot; January 13</div>
+                <h3 class="headline"><a href="#">Small tyrannies</a></h3>
+                <p class="snippet">The tiny coercions of everyday life that we accept without question. How collective passivity in the face of minor impositions shapes societies in ways we barely notice.</p>
+            </div>
+
+            <div class="story">
+                <div class="meta">Musings &middot; January 16</div>
+                <h3 class="headline"><a href="#">You don&rsquo;t know much</a></h3>
+                <p class="snippet">The illusion of knowledge is more dangerous than ignorance. In an age of infinite information, we confuse access with understanding.</p>
+            </div>
+
+            <div class="story">
+                <div class="meta">Reflections &middot; January 17</div>
+                <h3 class="headline"><a href="#">The past is the present</a></h3>
+                <p class="snippet">History doesn't repeat itself, but it rhymes — and the rhymes are getting louder.</p>
+            </div>
+
+            <div class="story">
+                <div class="meta">Musings &middot; January 5</div>
+                <h3 class="headline"><a href="#">Code is now content</a></h3>
+                <p class="snippet">When anyone can conjure software by describing what they want, the line between writing and programming dissolves. What matters isn't syntax — it's taste, judgment, and knowing what to build.</p>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="col">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Links</div>
+                <div class="sidebar-link">
+                    <a href="#">Using Obsidian with an AI assistant</a>
+                    <div class="sidebar-meta">Personal knowledge management</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">What drives us</a>
+                    <div class="sidebar-meta">Psychology &middot; Evolution</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">On AI coding</a>
+                    <div class="sidebar-meta">AI &middot; Software</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">The future of AI and automation</a>
+                    <div class="sidebar-meta">AI &middot; Automation</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">China derangement syndrome</a>
+                    <div class="sidebar-meta">Geopolitics &middot; China</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">Influentists</a>
+                    <div class="sidebar-meta">Social media</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">The whole is not the sum of its parts</a>
+                    <div class="sidebar-meta">Neuroscience &middot; Brain</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">Ben Thompson makes an optimistic case for AI</a>
+                    <div class="sidebar-meta">AI</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Practical</div>
+                <div class="sidebar-link">
+                    <a href="#">Dhwani: A directory for Indian public domain works</a>
+                    <div class="sidebar-meta">Culture &middot; Literature</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Worth revisiting</div>
+                <div class="sidebar-link">
+                    <a href="#">We are borrowed stardust</a>
+                    <div class="sidebar-meta">Philosophy</div>
+                </div>
+                <div class="sidebar-link">
+                    <a href="#">All habits are hard work</a>
+                    <div class="sidebar-meta">Habits &middot; Behavior</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BELOW THE FOLD -->
+    <div class="below-fold">
+        <div class="fold-item">
+            <div class="meta">Links &middot; Jan 15</div>
+            <h3 class="headline"><a href="#">On AI regulations</a></h3>
+            <p class="snippet">The regulatory landscape is catching up — slowly, unevenly, and with the usual political theater.</p>
+        </div>
+        <div class="fold-item">
+            <div class="meta">Links &middot; Jan 8</div>
+            <h3 class="headline"><a href="#">AI is killing software jobs</a></h3>
+            <p class="snippet">The software industry's reckoning has arrived faster than most expected.</p>
+        </div>
+        <div class="fold-item">
+            <div class="meta">Links &middot; Jan 13</div>
+            <h3 class="headline"><a href="#">Yeah, sure, AI is useless</a></h3>
+            <p class="snippet">A legal team just used AI to process what would have taken months. But sure, it's just a toy.</p>
+        </div>
+        <div class="fold-item">
+            <div class="meta">Links &middot; Jan 13</div>
+            <h3 class="headline"><a href="#">The virtual co-workers are here?</a></h3>
+            <p class="snippet">AI agents are entering the workplace. The question isn't whether — it's how we adapt.</p>
+        </div>
+    </div>
+
+    <div class="topics-strip">
+        <span class="topics-label">Explore</span>
+        <a href="#">AI</a> <span class="sep">/</span>
+        <a href="#">Philosophy</a> <span class="sep">/</span>
+        <a href="#">Poetry</a> <span class="sep">/</span>
+        <a href="#">Psychology</a> <span class="sep">/</span>
+        <a href="#">Work</a> <span class="sep">/</span>
+        <a href="#">Technology</a> <span class="sep">/</span>
+        <a href="#">Books</a> <span class="sep">/</span>
+        <a href="#">Writing</a> <span class="sep">/</span>
+        <a href="#">China</a> <span class="sep">/</span>
+        <a href="#">Society</a> <span class="sep">/</span>
+        <a href="#">Reading</a> <span class="sep">/</span>
+        <a href="#">Money</a>
+    </div>
+
+    <footer>
+        <div class="colophon">Rabbit Holes &middot; 193 posts &middot; By Bhuvan</div>
+        <nav>
+            <a href="#">RSS</a>
+            <a href="#">About</a>
+            <a href="#">Archive</a>
+            <a href="#">@bebhuvan</a>
+        </nav>
+    </footer>
+
+</body>
+</html>

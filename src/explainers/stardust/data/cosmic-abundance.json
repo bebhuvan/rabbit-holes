@@ -1,0 +1,97 @@
+{
+  "source": {
+    "title": "Big Bang Nucleosynthesis: Present Status",
+    "url": "https://arxiv.org/abs/1505.01076",
+    "author": "Cyburt, Fields, Olive & Yeh",
+    "year": 2016,
+    "retrieved": "2026-07-29",
+    "note": "Primordial helium mass fraction Yp = 0.247. Present-day metallicity ~2% by mass from solar abundance tables; the value is a reasonable figure for the local interstellar medium rather than a universal constant. The quark-to-nucleon transition is pinned at t = 1e-6 s so the composition strip agrees with the \"Protons form\" row rather than lagging one step behind it."
+  },
+  "epistemic": "settled",
+  "units": {
+    "t": "seconds after the Big Bang",
+    "fractions": "fraction of baryonic mass"
+  },
+  "rows": [
+    {
+      "t": 1e-43,
+      "quarks": 1.0,
+      "protons": 0,
+      "neutrons": 0,
+      "helium": 0,
+      "metals": 0
+    },
+    {
+      "t": 9e-07,
+      "quarks": 1.0,
+      "protons": 0,
+      "neutrons": 0,
+      "helium": 0,
+      "metals": 0
+    },
+    {
+      "t": 1e-06,
+      "quarks": 0,
+      "protons": 0.5,
+      "neutrons": 0.5,
+      "helium": 0,
+      "metals": 0
+    },
+    {
+      "t": 1,
+      "quarks": 0,
+      "protons": 0.86,
+      "neutrons": 0.14,
+      "helium": 0,
+      "metals": 0
+    },
+    {
+      "t": 180,
+      "quarks": 0,
+      "protons": 0.87,
+      "neutrons": 0.13,
+      "helium": 0,
+      "metals": 0
+    },
+    {
+      "t": 1200,
+      "quarks": 0,
+      "protons": 0.753,
+      "neutrons": 0,
+      "helium": 0.247,
+      "metals": 0
+    },
+    {
+      "t": 12000000000000.0,
+      "quarks": 0,
+      "protons": 0.753,
+      "neutrons": 0,
+      "helium": 0.247,
+      "metals": 0
+    },
+    {
+      "t": 6300000000000000.0,
+      "quarks": 0,
+      "protons": 0.753,
+      "neutrons": 0,
+      "helium": 0.247,
+      "metals": 0.0
+    },
+    {
+      "t": 1.45e+17,
+      "quarks": 0,
+      "protons": 0.74,
+      "neutrons": 0,
+      "helium": 0.245,
+      "metals": 0.015
+    },
+    {
+      "t": 4.35e+17,
+      "quarks": 0,
+      "protons": 0.74,
+      "neutrons": 0,
+      "helium": 0.24,
+      "metals": 0.02
+    }
+  ]
+}

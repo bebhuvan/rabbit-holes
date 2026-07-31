@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes — The Index</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #FFFFF8;
+            color: #111;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 19px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: #111;
+            color: #FFFFF8;
+        }
+
+        a { color: inherit; }
+
+        .wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+        }
+
+        /* === HEADER === */
+        .header {
+            padding: 3rem 0 1.5rem;
+            border-bottom: 2px solid #111;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.75rem;
+        }
+
+        .site-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1;
+        }
+
+        .site-title a {
+            text-decoration: none;
+        }
+
+        .header-count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .header-desc {
+            font-style: italic;
+            font-size: 17px;
+            color: #777;
+            margin-bottom: 1rem;
+        }
+
+        .header nav {
+            display: flex;
+            gap: 1.75rem;
+            font-size: 15px;
+        }
+
+        .header nav a {
+            text-decoration: none;
+            color: #777;
+        }
+
+        .header nav a:hover {
+            color: #111;
+        }
+
+        /* === DATE GROUPS === */
+        .date-group {
+            border-bottom: 1px solid #e5e2da;
+        }
+
+        .date-heading {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            color: #aaa;
+            padding: 1.5rem 0 0.5rem;
+            position: sticky;
+            top: 0;
+            background: #FFFFF8;
+            z-index: 10;
+        }
+
+        /* === POST ENTRIES === */
+        .post {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 0;
+            padding: 0.65rem 0;
+            border-top: 1px solid #f0ede6;
+            text-decoration: none;
+            transition: background 0.1s;
+        }
+
+        .post:first-child {
+            border-top: none;
+        }
+
+        .post:hover {
+            background: #F8F6F0;
+        }
+
+        .post-type {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: #bbb;
+            padding-top: 0.25rem;
+        }
+
+        .post-content {
+            /* nothing special, just the container */
+        }
+
+        .post-title {
+            font-size: 19px;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .post-title a {
+            text-decoration: none;
+        }
+
+        .post-title a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .post-excerpt {
+            font-size: 16px;
+            color: #777;
+            line-height: 1.5;
+            margin-top: 0.2rem;
+        }
+
+        .post-tags {
+            margin-top: 0.25rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: #ccc;
+        }
+
+        .post-tags a {
+            text-decoration: none;
+            color: #bbb;
+        }
+
+        .post-tags a:hover {
+            color: #111;
+        }
+
+        /* Expanded entry (for the lead/featured) */
+        .post.expanded {
+            grid-template-columns: 1fr;
+            padding: 1.5rem 0;
+        }
+
+        .post.expanded .post-type {
+            margin-bottom: 0.25rem;
+        }
+
+        .post.expanded .post-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .post.expanded .post-excerpt {
+            font-size: 18px;
+            color: #555;
+            max-width: 640px;
+            margin-top: 0.5rem;
+        }
+
+        .post.expanded .post-links {
+            margin-top: 0.6rem;
+            font-size: 15px;
+        }
+
+        .post.expanded .post-links a {
+            color: #888;
+            text-decoration: none;
+            margin-right: 1.25rem;
+        }
+
+        .post.expanded .post-links a:hover {
+            color: #111;
+        }
+
+        .post.expanded .post-links a::before {
+            content: '\2192 ';
+            color: #ccc;
+        }
+
+        /* Verse entry */
+        .post-verse {
+            font-style: italic;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #555;
+            margin-top: 0.3rem;
+            padding-left: 1rem;
+            border-left: 2px solid #e5e2da;
+        }
+
+        .post-verse cite {
+            display: block;
+            font-style: normal;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: #bbb;
+            margin-top: 0.3rem;
+        }
+
+        /* === THREADS SECTION === */
+        .threads {
+            padding: 2rem 0;
+            border-top: 2px solid #111;
+            border-bottom: 1px solid #e5e2da;
+        }
+
+        .threads-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+
+        .thread-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .thread {
+            /* a single thread */
+        }
+
+        .thread-name {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .thread-name a {
+            text-decoration: none;
+        }
+
+        .thread-name a:hover {
+            text-decoration: underline;
+        }
+
+        .thread-count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: #bbb;
+            margin-bottom: 0.4rem;
+        }
+
+        .thread-recent {
+            font-size: 14.5px;
+            color: #888;
+            line-height: 1.4;
+        }
+
+        .thread-recent a {
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .thread-recent a:hover {
+            color: #111;
+        }
+
+        /* === COLLECTIONS === */
+        .collections {
+            padding: 2rem 0;
+            border-bottom: 1px solid #e5e2da;
+        }
+
+        .collections-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+
+        .collection-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 2rem;
+        }
+
+        .collection-item {
+            font-size: 17px;
+        }
+
+        .collection-item a {
+            text-decoration: none;
+            color: #555;
+        }
+
+        .collection-item a:hover {
+            color: #111;
+            text-decoration: underline;
+        }
+
+        /* === FOOTER === */
+        .footer {
+            padding: 2rem 0 3rem;
+            border-top: 2px solid #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .footer-left {
+            font-size: 15px;
+            color: #999;
+        }
+
+        .footer-left a {
+            color: #999;
+            text-decoration: none;
+        }
+
+        .footer-left a:hover {
+            color: #111;
+        }
+
+        .footer nav {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 14px;
+        }
+
+        .footer nav a {
+            color: #999;
+            text-decoration: none;
+        }
+
+        .footer nav a:hover {
+            color: #111;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 700px) {
+            .wrap { padding: 0 1.25rem; }
+
+            .post {
+                grid-template-columns: 1fr;
+            }
+
+            .post-type {
+                margin-bottom: 0;
+            }
+
+            .thread-list {
+                grid-template-columns: 1fr;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .collection-list {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+        <div class="header">
+            <div class="header-top">
+                <h1 class="site-title"><a href="#">Rabbit Holes</a></h1>
+                <span class="header-count">193 entries</span>
+            </div>
+            <p class="header-desc">Quotes, links, and ideas that made me stop and think.</p>
+            <nav>
+                <a href="#">Collections</a>
+                <a href="#">Archive</a>
+                <a href="#">Topics</a>
+                <a href="#">Search</a>
+                <a href="#">About</a>
+                <a href="#">RSS</a>
+            </nav>
+        </div>
+
+        <!-- THREADS (topics as navigable threads) -->
+        <div class="threads">
+            <div class="threads-title">Threads running through this site</div>
+            <div class="thread-list">
+                <div class="thread">
+                    <div class="thread-name"><a href="#">AI</a></div>
+                    <div class="thread-count">56 posts</div>
+                    <div class="thread-recent">
+                        <a href="#">We are living in wild times</a>
+                        <a href="#">The Bullshit job apocalypse</a>
+                        <a href="#">Code is now content</a>
+                    </div>
+                </div>
+                <div class="thread">
+                    <div class="thread-name"><a href="#">Philosophy</a></div>
+                    <div class="thread-count">6 posts</div>
+                    <div class="thread-recent">
+                        <a href="#">We are borrowed stardust</a>
+                        <a href="#">You don't know much</a>
+                        <a href="#">The past is the present</a>
+                    </div>
+                </div>
+                <div class="thread">
+                    <div class="thread-name"><a href="#">Psychology</a></div>
+                    <div class="thread-count">5 posts</div>
+                    <div class="thread-recent">
+                        <a href="#">What drives us</a>
+                        <a href="#">All habits are hard work</a>
+                        <a href="#">Small tyrannies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODAY'S ENTRIES -->
+        <div class="date-group">
+            <div class="date-heading">January 19, 2026</div>
+
+            <div class="post expanded">
+                <div class="post-content">
+                    <div class="post-type">musings</div>
+                    <h2 class="post-title"><a href="#">We are living in wild times</a></h2>
+                    <div class="post-excerpt">There's something almost surreal about the moment we're in. I recently built this entire blog by talking to an AI. Not writing code — talking. Describing what I wanted, arguing with it, watching it conjure things from plain English.</div>
+                    <div class="post-links">
+                        <a href="#">Code is now content</a>
+                        <a href="#">The Bullshit job apocalypse</a>
+                    </div>
+                    <div class="post-tags">ai, vibecoding, personal software</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">What drives us</a></div>
+                    <div class="post-excerpt">On the permanent drivers of humanity: pride, greed, lust, envy — unchanged since 50,000 BC.</div>
+                    <div class="post-tags">psychology, evolution</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">Using Obsidian with an AI assistant</a></div>
+                    <div class="post-tags">personal knowledge management</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EARLIER ENTRIES -->
+        <div class="date-group">
+            <div class="date-heading">January 18, 2026</div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">The whole is not the sum of its parts</a></div>
+                    <div class="post-excerpt">On how the brain creates meaning that transcends individual neural components.</div>
+                    <div class="post-tags">neuroscience, brain</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-group">
+            <div class="date-heading">January 17, 2026</div>
+
+            <div class="post">
+                <div class="post-type">reflect</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">The past is the present</a></div>
+                    <div class="post-excerpt">Every generation believes it has invented a new problem, only to discover it is a very old one wearing new clothes.</div>
+                    <div class="post-tags">quotes</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">China derangement syndrome</a></div>
+                    <div class="post-tags">geopolitics, china, trump</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">Influentists</a></div>
+                    <div class="post-tags">social media</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-group">
+            <div class="date-heading">January 16, 2026</div>
+
+            <div class="post">
+                <div class="post-type">musings</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">You don&rsquo;t know much</a></div>
+                    <div class="post-excerpt">The illusion of knowledge is more dangerous than ignorance. We confuse access with understanding.</div>
+                    <div class="post-tags">knowledge, reading</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">The future of AI and automation</a></div>
+                    <div class="post-tags">ai, automation, economic growth</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-group">
+            <div class="date-heading">January 15, 2026</div>
+
+            <div class="post">
+                <div class="post-type">musings</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">On AI regulations</a></div>
+                    <div class="post-excerpt">The regulatory landscape is catching up — slowly, unevenly, and with the usual political theater.</div>
+                    <div class="post-tags">ai</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-group">
+            <div class="date-heading">January 13, 2026</div>
+
+            <div class="post expanded">
+                <div class="post-content">
+                    <div class="post-type">musings</div>
+                    <h2 class="post-title"><a href="#">The Bullshit job apocalypse</a></h2>
+                    <div class="post-excerpt">David Graeber's thesis is being tested at scale. If AI can do your job, was it ever a real job? The uncomfortable answer is forcing a reckoning with what we mean by meaningful work.</div>
+                    <div class="post-links">
+                        <a href="#">The virtual co-workers are here?</a>
+                        <a href="#">On AI and job automation</a>
+                    </div>
+                    <div class="post-tags">ai, work</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">musings</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">Small tyrannies</a></div>
+                    <div class="post-excerpt">The tiny coercions of everyday life that we accept without question.</div>
+                    <div class="post-tags">society, collective action, behaviour</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">Yeah, sure, AI is useless</a></div>
+                    <div class="post-tags">ai, legal</div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">links</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">The virtual co-workers are here?</a></div>
+                    <div class="post-tags">ai, work</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-group">
+            <div class="date-heading">January 5, 2026</div>
+
+            <div class="post">
+                <div class="post-type">verse</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">I dwell in possibility</a></div>
+                    <div class="post-verse">
+                        I dwell in Possibility &mdash;<br>
+                        A fairer House than Prose &mdash;<br>
+                        More numerous of Windows &mdash;<br>
+                        Superior &mdash; for Doors &mdash;
+                        <cite>Emily Dickinson</cite>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-type">musings</div>
+                <div class="post-content">
+                    <div class="post-title"><a href="#">Code is now content</a></div>
+                    <div class="post-excerpt">When anyone can conjure software by describing what they want, the line between writing and programming dissolves.</div>
+                    <div class="post-tags">ai, content</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLLECTIONS -->
+        <div class="collections">
+            <div class="collections-title">Collections</div>
+            <div class="collection-list">
+                <div class="collection-item"><a href="#">Start Here</a></div>
+                <div class="collection-item"><a href="#">Deep Thoughts</a></div>
+                <div class="collection-item"><a href="#">Quick Hits</a></div>
+                <div class="collection-item"><a href="#">Link Safari</a></div>
+                <div class="collection-item"><a href="#">Life & Philosophy</a></div>
+                <div class="collection-item"><a href="#">Tech & AI</a></div>
+                <div class="collection-item"><a href="#">Money & Markets</a></div>
+                <div class="collection-item"><a href="#">Art & Creativity</a></div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-left">
+                <a href="#">Rabbit Holes</a> &middot; by <a href="#">Bhuvan</a>
+            </div>
+            <nav>
+                <a href="#">RSS</a>
+                <a href="#">About</a>
+                <a href="#">Archive</a>
+                <a href="#">@bebhuvan</a>
+            </nav>
+        </div>
+    </div>
+
+</body>
+</html>

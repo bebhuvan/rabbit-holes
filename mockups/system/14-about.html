@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. See 11-folio-entry.html. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;
+    --maxw:1240px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+      --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+      --c-verse:#82C29A;--c-practical:#D89A80;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+    --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+    --c-verse:#82C29A;--c-practical:#D89A80;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;}
+
+  /* Display optical size pinned — Bodoni's display cut has hairlines too
+     fine to survive at these sizes, especially on dark. */
+  .brand .mark,h1,h2,.hand-say,.folio-num,.spec-num,.face-nm{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+
+  /* ==========================================================
+     THE TWO-INK RULE  — this is a system, not a colour choice.
+     ----------------------------------------------------------
+     RED marks WHOSE VOICE IT IS, never where a link goes.
+     black = the world. red = the collector.
+
+     This page is the one place the rule is stated in prose, so
+     it has to obey itself while doing it. Consequence: the long
+     autobiographical prose below is NOT red. Red is never
+     structural and never decorative; if a page is entirely his
+     voice, colouring all of it red would make red mean nothing.
+     Red here is reserved for exactly three things:
+       1. the hand — his reactions, set in display italic;
+       2. passage deeper into the garden (folio 016, the index);
+       3. the rules that mark his own sections.
+     Everything quoted (Bacon, Einstein) and every outbound
+     destination (paperlanterns, substack, astro) stays black.
+     ========================================================== */
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ============ MASTHEAD — shared, not per-page ============ */
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    font-style:normal;margin:0 .25rem}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
+    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+  .lamp:hover{color:var(--red)}
+
+  /* ============ THE SHEET ============
+     A single centred column, like the gloss — not the home rail-and-stream.
+     This is a letter from the collector, not a shelf of other people's
+     things, so it gets the room a letter gets. ~34rem holds the measure. */
+  .sheet{max-width:40rem;margin:0 auto;padding:3.6rem 2.6rem 0}
+
+  .kicker{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
+
+  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.06;
+    letter-spacing:var(--tr-display);margin-bottom:.9rem}
+  .strap{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    line-height:1.45;color:var(--ink-soft);max-width:26em;margin-bottom:2.6rem}
+
+  /* long-form prose. The drop cap is allowed here — this is the one page
+     on the site that is genuinely long-form and genuinely his. */
+  .prose p{font-size:var(--t-body);line-height:1.68;color:var(--ink-soft);margin-bottom:1.15rem;
+    max-width:var(--measure)}
+  .prose p:last-child{margin-bottom:0}
+  .prose em{font-style:italic}
+
+  /* section head: his own sections, so the rule above them is red.
+     Red as division of his own text is voice, not structure-for-its-own-sake. */
+  h2{font-family:var(--display);font-weight:600;font-size:var(--t-lg);line-height:1.22;
+    letter-spacing:var(--tr-display);margin-bottom:1rem}
+  .sec{margin-top:3.2rem;border-top:2px solid var(--red);padding-top:1.4rem}
+  .sec>.l{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red);margin-bottom:.85rem}
+
+  /* ---- quoted matter. Other people's words: black, ruled in black. ---- */
+  /* quoted matter is the world's, so it is ruled in the world's ink —
+     but at full --ink the rule burns a bright bar into the dark theme,
+     so it takes the soft step down. Still unmistakably not red. */
+  blockquote{margin:1.6rem 0;padding-left:1.3rem;border-left:2px solid var(--ink-soft);
+    font-size:var(--t-body);line-height:1.62;color:var(--ink);max-width:var(--measure)}
+  blockquote.plain{border-left-color:var(--rule-strong)}
+  blockquote cite{display:block;margin-top:.75rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+  blockquote cite a{color:var(--ink-soft);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  blockquote cite a:hover{text-decoration-color:var(--ink)}
+
+  /* ---- passage: the offer to go deeper into his garden. Always red. ---- */
+  .passage{display:grid;grid-template-columns:3.6rem 1fr;gap:.9rem;align-items:baseline;
+    text-decoration:none;padding:.9rem 0 0;margin-top:.4rem;
+    border-top:1px solid var(--rule)}
+  .folio-num{font-family:var(--display);font-weight:600;font-size:var(--t-lg);line-height:1;
+    font-variant-numeric:lining-nums;color:var(--c-musings)}
+  .passage .pt{display:block;font-family:var(--body);font-style:italic;
+    font-size:var(--t-md);line-height:1.35;color:var(--red)}
+  .passage:hover .pt{text-decoration:underline;text-underline-offset:4px}
+  .passage .pr{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);color:var(--muted);margin-top:.35rem}
+  /* the manicule needs real size — below ~1rem these OS symbol glyphs
+     collapse into a speck, and at 1rem this one still reads as lint */
+  .passage .mani{font-family:var(--flourish);font-size:var(--t-md);font-style:normal;
+    color:var(--red);margin-right:.4rem;line-height:1;position:relative;top:.08em}
+
+  /* ---- THE HAND, quoted from folio 016. His voice, so red. ---- */
+  .hand-say{font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-lg);line-height:1.25;color:var(--red);display:block;
+    margin:1.5rem 0 .5rem;max-width:26em;text-wrap:balance}
+
+  /* ============ THE SPECIMEN ============
+     The rule explained by doing it rather than by describing it. A real
+     folio fragment, with the ink of each part named beside it in mono.
+     Deliberately shown at folio scale — shrunk, it would read as a
+     diagram of the design rather than as the thing itself. */
+  .specimen{margin:1.8rem 0 .4rem;border:1px solid var(--rule-strong);
+    background:var(--red-wash);padding:1.5rem 1.6rem 1.3rem}
+  .spec-run{display:flex;align-items:baseline;gap:.8rem;margin-bottom:.6rem}
+  .spec-num{font-family:var(--display);font-weight:600;font-size:var(--t-xl);line-height:1;
+    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display);color:var(--c-links)}
+  .spec-run .m{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);display:flex;gap:.9rem}
+  .spec-t{font-family:var(--display);font-weight:600;font-size:var(--t-md);line-height:1.2;
+    letter-spacing:var(--tr-display);margin-bottom:.7rem}
+  .spec-hand{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;margin-bottom:.8rem}
+  .spec-hand .say{font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-lg);line-height:1.2;color:var(--red);
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+    border-bottom:1px solid var(--red-soft)}
+  .spec-hand .src{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    color:var(--muted)}
+  .specimen blockquote{margin:0;font-size:var(--t-base);line-height:1.6;
+    border-left-color:var(--rule-strong)}
+
+  /* the key beneath the specimen — two rows, each naming one ink */
+  .key{list-style:none;margin-top:1.4rem;border-top:1px solid var(--rule);padding-top:1rem}
+  .key li{display:grid;grid-template-columns:1.1rem 1fr;gap:.75rem;align-items:baseline;
+    font-family:var(--body);font-size:var(--t-base);line-height:1.5;color:var(--ink-soft);
+    margin-bottom:.6rem}
+  .key li:last-child{margin-bottom:0}
+  .key .sw{display:block;height:.36rem;border-radius:1px;transform:translateY(-.28em)}
+  .key b{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;font-weight:500;margin-right:.5rem}
+  .key .k-world b{color:var(--muted)}
+  .key .k-mine b{color:var(--red)}
+
+  /* ============ the ledger — real counts, no inflation ============ */
+  .ledger{list-style:none;margin-top:1.4rem;display:grid;
+    grid-template-columns:repeat(3,1fr);gap:1.4rem;border-top:1px solid var(--rule);
+    padding-top:1.3rem}
+  .ledger .n{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-2xl);
+    line-height:1;letter-spacing:var(--tr-display);font-variant-numeric:lining-nums;
+    font-optical-sizing:none;font-variation-settings:'opsz' 11}
+  .ledger .d{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);line-height:1.4;color:var(--ink-soft)}
+
+  /* ============ correspondence — the world, so black ============ */
+  .post{list-style:none;margin-top:.4rem}
+  .post li{border-bottom:1px solid var(--rule)}
+  .post a{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+    padding:.72rem .1rem;text-decoration:none}
+  .post .w{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted)}
+  .post .h{font-family:var(--body);font-size:var(--t-base);color:var(--ink);
+    text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  .post a:hover .h{text-decoration-color:var(--ink)}
+
+  /* ============ colophon ============ */
+  .faces{list-style:none;margin:.4rem 0 1.4rem}
+  .faces li{display:grid;grid-template-columns:9.5rem 1fr;gap:1.2rem;align-items:baseline;
+    padding:.85rem 0;border-bottom:1px solid var(--rule)}
+  .face-nm{font-size:var(--t-md);line-height:1.15;letter-spacing:var(--tr-display)}
+  .face-nm.d{font-family:var(--display);font-weight:600}
+  .face-nm.b{font-family:var(--body);font-weight:400}
+  .face-nm.m{font-family:var(--mono);font-size:var(--l-lg);letter-spacing:var(--tr-label)}
+  .faces .why{font-family:var(--body);font-size:var(--t-base);line-height:1.5;color:var(--ink-soft)}
+  .faces .why em{font-style:italic}
+  .colo-p{font-size:var(--t-base);line-height:1.6;color:var(--ink-soft);max-width:var(--measure)}
+  .colo-p a{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  .colo-p a:hover{text-decoration-color:var(--ink)}
+
+  /* ============ close ============ */
+  .close{max-width:40rem;margin:0 auto;padding:3.4rem 2.6rem 4.4rem;text-align:center}
+  .close .ast{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-2xl);
+    display:block;margin-bottom:.9rem;line-height:1}
+  .close .line{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    line-height:1.4;color:var(--ink-soft);margin-bottom:.7rem}
+  .close .meta{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    color:var(--muted)}
+  .close .meta a{color:var(--red);text-decoration:none}
+  .close .meta a:hover{text-decoration:underline;text-underline-offset:4px}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#">Index</a>
+        <a href="#">Heads</a>
+        <a href="#">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#" class="on">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="sheet">
+
+    <div class="kicker">About &nbsp;&#183;&nbsp; who keeps this, and why</div>
+    <h1>Hi, I&#8217;m Bhuvan.</h1>
+    <p class="strap">I like tumbling down weird and wonderful rabbit holes. I like knowing random things, and I think there&#8217;s a certain joy in being a dilettante.</p>
+
+    <div class="prose">
+      <p>It&#8217;s not just me &#8212; everyone likes discovering new things, but for whatever reason, most people lose that ability to experience awe and wonder. It&#8217;s tempting to blame social media apps and smartphones for this pathology, but that&#8217;s too simplistic &#8212; they&#8217;re not the only reason people seem to have become incurious and, perhaps more tragically, okay with being so.</p>
+
+      <p>This blog is an attempt for me to continue slipping into weird rabbit holes and share them. The hope here is that whatever I share might trip fellow travellers on the internet and send them sliding down a rabbit hole.</p>
+
+      <p>The goal isn&#8217;t to be an expert on everything, but to maintain a sense of wonder about the world. Sometimes the most interesting insights come from wandering without a destination in mind.</p>
+    </div>
+
+    <!-- ============================================================
+         THE THESIS. Quoted matter is black; the passage back into
+         the garden at the foot of it is red.
+         ============================================================ -->
+    <section class="sec">
+      <div class="l">Why a commonplace book</div>
+      <!-- broken by hand at the full stop: balance alone put the turn after
+           "The", which splits the second sentence in the worst place -->
+      <h2>They were private.<br>The famous ones got published.</h2>
+      <div class="prose">
+        <p class="rubric">For a few hundred years, a reading person kept a commonplace book: a blank volume for the lines worth keeping. Not a diary &#8212; a diary is about your day. A commonplace book is about everything else. You copied out what struck you, filed it under a <em>head</em> you chose yourself, and came back to it.</p>
+        <p>Almost all of them were private, and almost all of them are gone. The ones we still read &#8212; Milton&#8217;s, Locke&#8217;s, Jefferson&#8217;s, Auden&#8217;s &#8212; survived because somebody eventually digitised them and let the rest of us in. Reading another person&#8217;s is a peculiar pleasure: not their argument, just the shape of their attention.</p>
+        <p>So this one starts public. If a commonplace book is where you keep the things that strike your fancy, keeping it in the open is the only part that costs nothing and changes everything: it lets somebody else fall down the same holes.</p>
+      </div>
+
+      <blockquote>
+        <p>Lastly, I confess that I have as vast contemplative ends, as I have moderate civil ends: for I have taken all knowledge to be my province.</p>
+        <cite>Francis Bacon to Lord Burghley, 1592 &#183; <a href="https://paperlanterns.ink/letter/bacon-burghley-1592/">paperlanterns.ink</a></cite>
+      </blockquote>
+
+      <span class="hand-say">What an absolute banger of a line to say, &#8216;I&#8217;m curious.&#8217;</span>
+
+      <a class="passage" href="#">
+        <span class="folio-num">016</span>
+        <span><span class="pt"><span class="mani">&#9758;</span>All knowledge is my province</span>
+        <span class="pr">the folio where I kept it &#183; musing &#183; 21 Aug 2025</span></span>
+      </a>
+    </section>
+
+    <!-- ============================================================
+         THE TWO INKS — stated in prose, then demonstrated. The
+         specimen is a real folio (189, "China derangement syndrome"),
+         not an invented example.
+         ============================================================ -->
+    <section class="sec">
+      <div class="l">How to read this book</div>
+      <h2>Two inks, and only one of them is me.</h2>
+      <div class="prose">
+        <p>Every folio here is layered: somebody else&#8217;s words, and then my reaction to them. The page keeps those two things apart with colour, and the rule is narrower than it looks &#8212; <em>red marks whose voice it is, never where a link goes.</em></p>
+        <p>Black is the world: the quote, the poem, the other person&#8217;s title, the domain it came from, the date, the count. Red is me: my reaction, the heads I chose to file things under, and every offer to go further into the garden. Which means a link in my own voice stays red even when it leaves for somebody else&#8217;s site &#8212; the voice wins over the destination.</p>
+      </div>
+
+      <div class="specimen">
+        <div class="spec-run">
+          <span class="spec-num">189</span>
+          <span class="m"><span>Link</span><span>17 Jan 2026</span></span>
+        </div>
+        <p class="spec-t">China derangement syndrome</p>
+        <div class="spec-hand">
+          <span class="say">True dat</span>
+          <span class="src">ft.com</span>
+        </div>
+        <blockquote class="plain">The reason could be that when you are powerful, people take note only when that power falters. The world was hardly impressed when Trump went on his tariff rampage; what struck people was when China successfully fought back.</blockquote>
+      </div>
+
+      <ul class="key">
+        <!-- named by meaning, not by colour: in lamplight the "black" ink is
+             cream, and a swatch labelled BLACK beside a cream dash is a lie -->
+        <li class="k-world"><span class="sw" style="background:var(--ink)"></span>
+          <span><b>The world</b>the headline, the quote, the date, the domain. None of it is mine; I only carried it here.</span></li>
+        <li class="k-mine"><span class="sw" style="background:var(--red)"></span>
+          <span><b>The collector</b>&#8220;True dat&#8221; &#8212; two words, and the whole reason the folio exists. It carries the link out to the <em>FT</em> and stays red anyway.</span></li>
+      </ul>
+
+      <div class="prose" style="margin-top:1.5rem">
+        <p>Most folios are like that one: terse. The hand is usually two to five words, sometimes one. And plenty of folios have no hand at all &#8212; something was worth keeping, and there was nothing to add. On those pages red simply does not appear, which is the point. It never holds the layout up.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         THE LEDGER — real counts only. 190 published folios (193 files on disk;
+         three are drafts), five kinds,
+         143 tags of which ~10 are hand-promoted to heads.
+         ============================================================ -->
+    <section class="sec">
+      <div class="l">What is in here</div>
+      <h2>Kept since August 2025.</h2>
+      <ul class="ledger">
+        <li><span class="n" style="color:var(--ink)">190</span>
+          <span class="d">folios, oldest first &#8212; the numbering never resets</span></li>
+        <li><span class="n" style="color:var(--c-musings)">5</span>
+          <span class="d">kinds: musings, links, reflections, verse, practical</span></li>
+        <li><span class="n" style="color:var(--red)">10</span>
+          <span class="d">heads, promoted by hand from 143 tags</span></li>
+      </ul>
+      <div class="prose" style="margin-top:1.6rem">
+        <p>The heads are chosen, not counted. A tag is what I typed in a hurry; a head is a decision that a subject is worth navigating by, and there are only about ten of those. That is how heads worked in the old books too &#8212; the index was an editorial act, not an inventory.</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="l">The nearest thing to a creed</div>
+      <blockquote>
+        <p>The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvelous structure of reality. It is enough if one tries merely to comprehend a little of this mystery each day.</p>
+        <cite>Albert Einstein</cite>
+      </blockquote>
+    </section>
+
+    <!-- ============================================================
+         CORRESPONDENCE — outbound, therefore black. Red here would
+         say these places are mine to give you, and they aren't:
+         they're just where I am.
+         ============================================================ -->
+    <section class="sec">
+      <div class="l">Write to me</div>
+      <h2>Tell me what I&#8217;ve missed.</h2>
+      <ul class="post">
+        <li><a href="mailto:bhuvan@bebhuvan.com"><span class="w">Email</span><span class="h">bhuvan@bebhuvan.com</span></a></li>
+        <li><a href="https://twitter.com/bebhuvan"><span class="w">Twitter</span><span class="h">twitter.com/bebhuvan</span></a></li>
+        <li><a href="https://bhuvan.substack.com"><span class="w">Substack</span><span class="h">bhuvan.substack.com</span></a></li>
+        <li><a href="https://www.linkedin.com/in/bebhuvan/"><span class="w">LinkedIn</span><span class="h">linkedin.com/in/bebhuvan</span></a></li>
+      </ul>
+    </section>
+
+    <!-- ============================================================
+         COLOPHON — each face set in itself, which is the only honest
+         way to list a typeface.
+         ============================================================ -->
+    <section class="sec">
+      <div class="l">Colophon</div>
+      <h2>Three faces, doing three jobs.</h2>
+      <ul class="faces">
+        <li><span class="face-nm d">Bodoni Moda</span>
+          <span class="why">The display hand: titles, folio numerals, and my own reactions. A didone is severe and a little theatrical, which is right for a book that is mostly other people&#8217;s best lines. Its optical size is pinned low so the hairlines survive the dark.</span></li>
+        <li><span class="face-nm b">Newsreader</span>
+          <span class="why">Everything you actually read. Warm, slightly narrow, built for screens, and its italic is good enough to carry a whole strapline &#8212; which is why the sentence under the title is a sentence and not tracked-out capitals.</span></li>
+        <li><span class="face-nm m">Spline Sans Mono</span>
+          <span class="why">Labels, dates, counts, the index. Machinery should look like machinery. It runs on its own three sizes &#8212; forcing UI labels onto the display scale is what makes an editorial page feel like a dashboard.</span></li>
+      </ul>
+      <p class="colo-p">Built with <a href="https://astro.build">Astro</a>, served from <a href="https://pages.cloudflare.com">Cloudflare</a>, written with a good deal of help from Claude. No analytics, no newsletter modal, no cookie banner. The flourishes &#8212; the fleuron, the manicule, the asterism &#8212; are the devices the old commonplace books used, and they are here for the same reason: to mark a seam without drawing a box.</p>
+    </section>
+
+  </main>
+
+  <footer class="close">
+    <span class="ast">&#8258;</span>
+    <p class="line">That&#8217;s all of it. The rest is just the book.</p>
+    <p class="meta">190 folios &#183; kept by Bhuvanesh since Aug 2025 &nbsp;&#183;&nbsp; <a href="#">start here &#8594;</a></p>
+  </footer>
+
+<script>
+  // Theme override on top of prefers-color-scheme. Reads the *rendered*
+  // scheme first so the first click always flips what you can actually see.
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

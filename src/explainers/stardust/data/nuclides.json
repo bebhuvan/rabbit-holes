@@ -1,0 +1,2689 @@
+{
+ "source": {
+  "title": "NUBASE2020 and AME2020, via the IAEA Nuclear Data Services live chart",
+  "url": "https://nds.iaea.org/relnsd/vcharthtml/VChartHTML.html",
+  "author": "Kondev, Wang, Huang, Naimi & Audi; IAEA Nuclear Data Section",
+  "year": 2021,
+  "retrieved": "2026-07-29",
+  "note": "Ground-state properties of every nuclide in the evaluated table, fetched by scripts/fetch-nuclides.mjs. \"natural\" is the set with a measured terrestrial abundance — 288 nuclides — which is an observation rather than a classification, and so avoids the definitional argument about which long-lived nuclides count as stable. \"stable\" is NUBASE's own designation, for reference. \"edgeSn\" is the neutron separation energy of the most neutron-rich nuclide the table carries for that element, in keV; where it is flagged extrapolated the mass is from systematics rather than measurement. Of the 67 elements from iron to uranium, 57 have a table that ends while the separation energy is still above the 2500 keV that marks an r-process waiting point — that is, the rapid path lies beyond the evaluated table for those elements. Shell closures are the textbook magic numbers and are not part of this download."
+ },
+ "epistemic": "settled",
+ "units": {
+  "z": "protons",
+  "n": "neutrons",
+  "edgeSn": "keV",
+  "waitingPoint": "keV"
+ },
+ "waitingPointKeV": 2500,
+ "totals": {
+  "known": 3383,
+  "natural": 288,
+  "stable": 244,
+  "heavyElements": 67,
+  "heavyElementsBeyondTable": 57
+ },
+ "rows": [
+  {
+   "z": 1,
+   "symbol": "H",
+   "known": [
+    [
+     0,
+     6
+    ]
+   ],
+   "natural": [
+    0,
+    1
+   ],
+   "stable": [
+    0,
+    1
+   ],
+   "edgeN": 6,
+   "edgeSn": 812,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 2,
+   "symbol": "He",
+   "known": [
+    [
+     1,
+     8
+    ]
+   ],
+   "natural": [
+    1,
+    2
+   ],
+   "stable": [
+    1,
+    2
+   ],
+   "edgeN": 8,
+   "edgeSn": -190.0023,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 3,
+   "symbol": "Li",
+   "known": [
+    [
+     1,
+     9
+    ]
+   ],
+   "natural": [
+    3,
+    4
+   ],
+   "stable": [
+    3,
+    4
+   ],
+   "edgeN": 9,
+   "edgeSn": -210,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 4,
+   "symbol": "Be",
+   "known": [
+    [
+     2,
+     12
+    ]
+   ],
+   "natural": [
+    5
+   ],
+   "stable": [
+    5
+   ],
+   "edgeN": 12,
+   "edgeSn": 450,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 5,
+   "symbol": "B",
+   "known": [
+    [
+     2,
+     16
+    ]
+   ],
+   "natural": [
+    5,
+    6
+   ],
+   "stable": [
+    5,
+    6
+   ],
+   "edgeN": 16,
+   "edgeSn": -910,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 6,
+   "symbol": "C",
+   "known": [
+    [
+     2,
+     14
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "natural": [
+    6,
+    7
+   ],
+   "stable": [
+    6,
+    7
+   ],
+   "edgeN": 16,
+   "edgeSn": 103,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 7,
+   "symbol": "N",
+   "known": [
+    [
+     3,
+     17
+    ]
+   ],
+   "natural": [
+    7,
+    8
+   ],
+   "stable": [
+    7,
+    8
+   ],
+   "edgeN": 17,
+   "edgeSn": -2146,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 8,
+   "symbol": "O",
+   "known": [
+    [
+     3,
+     18
+    ]
+   ],
+   "natural": [
+    8,
+    9,
+    10
+   ],
+   "stable": [
+    8,
+    9,
+    10
+   ],
+   "edgeN": 18,
+   "edgeSn": 739.3077,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 9,
+   "symbol": "F",
+   "known": [
+    [
+     4,
+     22
+    ]
+   ],
+   "natural": [
+    10
+   ],
+   "stable": [
+    10
+   ],
+   "edgeN": 22,
+   "edgeSn": 189,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 10,
+   "symbol": "Ne",
+   "known": [
+    [
+     5,
+     24
+    ]
+   ],
+   "natural": [
+    10,
+    11,
+    12
+   ],
+   "stable": [
+    10,
+    11,
+    12
+   ],
+   "edgeN": 24,
+   "edgeSn": 1360,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 11,
+   "symbol": "Na",
+   "known": [
+    [
+     6,
+     26
+    ]
+   ],
+   "natural": [
+    12
+   ],
+   "stable": [
+    12
+   ],
+   "edgeN": 26,
+   "edgeSn": 840,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 12,
+   "symbol": "Mg",
+   "known": [
+    [
+     6,
+     28
+    ]
+   ],
+   "natural": [
+    12,
+    13,
+    14
+   ],
+   "stable": [
+    12,
+    13,
+    14
+   ],
+   "edgeN": 28,
+   "edgeSn": 1297,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 13,
+   "symbol": "Al",
+   "known": [
+    [
+     8,
+     30
+    ]
+   ],
+   "natural": [
+    14
+   ],
+   "stable": [
+    14
+   ],
+   "edgeN": 30,
+   "edgeSn": 1791,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 14,
+   "symbol": "Si",
+   "known": [
+    [
+     8,
+     30
+    ]
+   ],
+   "natural": [
+    14,
+    15,
+    16
+   ],
+   "stable": [
+    14,
+    15,
+    16
+   ],
+   "edgeN": 30,
+   "edgeSn": 3091,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 15,
+   "symbol": "P",
+   "known": [
+    [
+     10,
+     31
+    ]
+   ],
+   "natural": [
+    16
+   ],
+   "stable": [
+    16
+   ],
+   "edgeN": 31,
+   "edgeSn": 1191,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 16,
+   "symbol": "S",
+   "known": [
+    [
+     10,
+     30
+    ],
+    [
+     32,
+     32
+    ]
+   ],
+   "natural": [
+    16,
+    17,
+    18,
+    20
+   ],
+   "stable": [
+    16,
+    17,
+    18,
+    20
+   ],
+   "edgeN": 32,
+   "edgeSn": 2882,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 17,
+   "symbol": "Cl",
+   "known": [
+    [
+     12,
+     35
+    ]
+   ],
+   "natural": [
+    18,
+    20
+   ],
+   "stable": [
+    18,
+    20
+   ],
+   "edgeN": 35,
+   "edgeSn": 2,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 18,
+   "symbol": "Ar",
+   "known": [
+    [
+     12,
+     35
+    ]
+   ],
+   "natural": [
+    18,
+    20,
+    22
+   ],
+   "stable": [
+    18,
+    20,
+    22
+   ],
+   "edgeN": 35,
+   "edgeSn": -99,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 19,
+   "symbol": "K",
+   "known": [
+    [
+     12,
+     12
+    ],
+    [
+     14,
+     37
+    ]
+   ],
+   "natural": [
+    20,
+    21,
+    22
+   ],
+   "stable": [
+    20,
+    22
+   ],
+   "edgeN": 37,
+   "edgeSn": 562,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 20,
+   "symbol": "Ca",
+   "known": [
+    [
+     14,
+     38
+    ]
+   ],
+   "natural": [
+    20,
+    22,
+    23,
+    24,
+    26,
+    28
+   ],
+   "stable": [
+    20,
+    22,
+    23,
+    24,
+    26
+   ],
+   "edgeN": 38,
+   "edgeSn": 3042,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 21,
+   "symbol": "Sc",
+   "known": [
+    [
+     17,
+     38
+    ],
+    [
+     40,
+     40
+    ]
+   ],
+   "natural": [
+    24
+   ],
+   "stable": [
+    24
+   ],
+   "edgeN": 40,
+   "edgeSn": 3021,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 22,
+   "symbol": "Ti",
+   "known": [
+    [
+     16,
+     42
+    ]
+   ],
+   "natural": [
+    24,
+    25,
+    26,
+    27,
+    28
+   ],
+   "stable": [
+    24,
+    25,
+    26,
+    27,
+    28
+   ],
+   "edgeN": 42,
+   "edgeSn": 3691,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 23,
+   "symbol": "V",
+   "known": [
+    [
+     19,
+     44
+    ]
+   ],
+   "natural": [
+    27,
+    28
+   ],
+   "stable": [
+    28
+   ],
+   "edgeN": 44,
+   "edgeSn": 3515,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 24,
+   "symbol": "Cr",
+   "known": [
+    [
+     18,
+     46
+    ]
+   ],
+   "natural": [
+    26,
+    28,
+    29,
+    30
+   ],
+   "stable": [
+    28,
+    29,
+    30
+   ],
+   "edgeN": 46,
+   "edgeSn": 4082,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 25,
+   "symbol": "Mn",
+   "known": [
+    [
+     19,
+     45
+    ],
+    [
+     47,
+     48
+    ]
+   ],
+   "natural": [
+    30
+   ],
+   "stable": [
+    30
+   ],
+   "edgeN": 48,
+   "edgeSn": 3602,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 26,
+   "symbol": "Fe",
+   "known": [
+    [
+     19,
+     50
+    ]
+   ],
+   "natural": [
+    28,
+    30,
+    31,
+    32
+   ],
+   "stable": [
+    28,
+    30,
+    31,
+    32
+   ],
+   "edgeN": 50,
+   "edgeSn": 3962,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 27,
+   "symbol": "Co",
+   "known": [
+    [
+     21,
+     21
+    ],
+    [
+     23,
+     51
+    ]
+   ],
+   "natural": [
+    32
+   ],
+   "stable": [
+    32
+   ],
+   "edgeN": 51,
+   "edgeSn": 1482,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 28,
+   "symbol": "Ni",
+   "known": [
+    [
+     20,
+     54
+    ]
+   ],
+   "natural": [
+    30,
+    32,
+    33,
+    34,
+    36
+   ],
+   "stable": [
+    30,
+    32,
+    33,
+    34,
+    36
+   ],
+   "edgeN": 54,
+   "edgeSn": 2701,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 29,
+   "symbol": "Cu",
+   "known": [
+    [
+     24,
+     54
+    ]
+   ],
+   "natural": [
+    34,
+    36
+   ],
+   "stable": [
+    34,
+    36
+   ],
+   "edgeN": 54,
+   "edgeSn": 2732,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 30,
+   "symbol": "Zn",
+   "known": [
+    [
+     24,
+     55
+    ]
+   ],
+   "natural": [
+    34,
+    36,
+    37,
+    38,
+    40
+   ],
+   "stable": [
+    34,
+    36,
+    37,
+    38
+   ],
+   "edgeN": 55,
+   "edgeSn": 1341,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 31,
+   "symbol": "Ga",
+   "known": [
+    [
+     28,
+     56
+    ]
+   ],
+   "natural": [
+    38,
+    40
+   ],
+   "stable": [
+    38,
+    40
+   ],
+   "edgeN": 56,
+   "edgeSn": 3181,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 32,
+   "symbol": "Ge",
+   "known": [
+    [
+     27,
+     58
+    ]
+   ],
+   "natural": [
+    38,
+    40,
+    41,
+    42,
+    44
+   ],
+   "stable": [
+    38,
+    40,
+    41,
+    42,
+    44
+   ],
+   "edgeN": 58,
+   "edgeSn": 3501,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 33,
+   "symbol": "As",
+   "known": [
+    [
+     30,
+     59
+    ]
+   ],
+   "natural": [
+    42
+   ],
+   "stable": [
+    42
+   ],
+   "edgeN": 59,
+   "edgeSn": 1951,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 34,
+   "symbol": "Se",
+   "known": [
+    [
+     29,
+     61
+    ]
+   ],
+   "natural": [
+    40,
+    42,
+    43,
+    44,
+    46,
+    48
+   ],
+   "stable": [
+    40,
+    42,
+    43,
+    44,
+    46
+   ],
+   "edgeN": 61,
+   "edgeSn": 1728,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 35,
+   "symbol": "Br",
+   "known": [
+    [
+     32,
+     63
+    ],
+    [
+     66,
+     66
+    ]
+   ],
+   "natural": [
+    44,
+    46
+   ],
+   "stable": [
+    44,
+    46
+   ],
+   "edgeN": 66,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 36,
+   "symbol": "Kr",
+   "known": [
+    [
+     31,
+     66
+    ]
+   ],
+   "natural": [
+    42,
+    44,
+    46,
+    47,
+    48,
+    50
+   ],
+   "stable": [
+    42,
+    44,
+    46,
+    47,
+    48,
+    50
+   ],
+   "edgeN": 66,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 37,
+   "symbol": "Rb",
+   "known": [
+    [
+     35,
+     69
+    ]
+   ],
+   "natural": [
+    48,
+    50
+   ],
+   "stable": [
+    48
+   ],
+   "edgeN": 69,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 38,
+   "symbol": "Sr",
+   "known": [
+    [
+     35,
+     70
+    ]
+   ],
+   "natural": [
+    46,
+    48,
+    49,
+    50
+   ],
+   "stable": [
+    46,
+    48,
+    49,
+    50
+   ],
+   "edgeN": 70,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 39,
+   "symbol": "Y",
+   "known": [
+    [
+     37,
+     72
+    ]
+   ],
+   "natural": [
+    50
+   ],
+   "stable": [
+    50
+   ],
+   "edgeN": 72,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 40,
+   "symbol": "Zr",
+   "known": [
+    [
+     37,
+     74
+    ]
+   ],
+   "natural": [
+    50,
+    51,
+    52,
+    54,
+    56
+   ],
+   "stable": [
+    50,
+    51,
+    52,
+    54
+   ],
+   "edgeN": 74,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 41,
+   "symbol": "Nb",
+   "known": [
+    [
+     40,
+     76
+    ]
+   ],
+   "natural": [
+    52
+   ],
+   "stable": [
+    52
+   ],
+   "edgeN": 76,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 42,
+   "symbol": "Mo",
+   "known": [
+    [
+     39,
+     77
+    ]
+   ],
+   "natural": [
+    50,
+    52,
+    53,
+    54,
+    55,
+    56,
+    58
+   ],
+   "stable": [
+    50,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "edgeN": 77,
+   "edgeSn": 2281,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 43,
+   "symbol": "Tc",
+   "known": [
+    [
+     42,
+     79
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 79,
+   "edgeSn": 2836,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 44,
+   "symbol": "Ru",
+   "known": [
+    [
+     41,
+     81
+    ]
+   ],
+   "natural": [
+    52,
+    54,
+    55,
+    56,
+    57,
+    58,
+    60
+   ],
+   "stable": [
+    52,
+    54,
+    55,
+    56,
+    57,
+    58,
+    60
+   ],
+   "edgeN": 81,
+   "edgeSn": 2851,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 45,
+   "symbol": "Rh",
+   "known": [
+    [
+     44,
+     83
+    ]
+   ],
+   "natural": [
+    58
+   ],
+   "stable": [
+    58
+   ],
+   "edgeN": 83,
+   "edgeSn": 1681,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 46,
+   "symbol": "Pd",
+   "known": [
+    [
+     44,
+     85
+    ]
+   ],
+   "natural": [
+    56,
+    58,
+    59,
+    60,
+    62,
+    64
+   ],
+   "stable": [
+    56,
+    58,
+    59,
+    60,
+    62,
+    64
+   ],
+   "edgeN": 85,
+   "edgeSn": 1081,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 47,
+   "symbol": "Ag",
+   "known": [
+    [
+     45,
+     85
+    ]
+   ],
+   "natural": [
+    60,
+    62
+   ],
+   "stable": [
+    60,
+    62
+   ],
+   "edgeN": 85,
+   "edgeSn": 1721,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 48,
+   "symbol": "Cd",
+   "known": [
+    [
+     46,
+     86
+    ]
+   ],
+   "natural": [
+    58,
+    60,
+    62,
+    63,
+    64,
+    65,
+    66,
+    68
+   ],
+   "stable": [
+    58,
+    60,
+    62,
+    63,
+    64,
+    66
+   ],
+   "edgeN": 86,
+   "edgeSn": 3391,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 49,
+   "symbol": "In",
+   "known": [
+    [
+     47,
+     88
+    ]
+   ],
+   "natural": [
+    64,
+    66
+   ],
+   "stable": [
+    64
+   ],
+   "edgeN": 88,
+   "edgeSn": 2931,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 50,
+   "symbol": "Sn",
+   "known": [
+    [
+     49,
+     90
+    ]
+   ],
+   "natural": [
+    62,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    72,
+    74
+   ],
+   "stable": [
+    62,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    72,
+    74
+   ],
+   "edgeN": 90,
+   "edgeSn": 3252,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 51,
+   "symbol": "Sb",
+   "known": [
+    [
+     52,
+     91
+    ]
+   ],
+   "natural": [
+    70,
+    72
+   ],
+   "stable": [
+    70,
+    72
+   ],
+   "edgeN": 91,
+   "edgeSn": 2141,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 52,
+   "symbol": "Te",
+   "known": [
+    [
+     52,
+     93
+    ]
+   ],
+   "natural": [
+    68,
+    70,
+    71,
+    72,
+    73,
+    74,
+    76,
+    78
+   ],
+   "stable": [
+    68,
+    70,
+    72,
+    73,
+    74
+   ],
+   "edgeN": 93,
+   "edgeSn": 1861,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 53,
+   "symbol": "I",
+   "known": [
+    [
+     55,
+     94
+    ]
+   ],
+   "natural": [
+    74
+   ],
+   "stable": [
+    74
+   ],
+   "edgeN": 94,
+   "edgeSn": 3731,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 54,
+   "symbol": "Xe",
+   "known": [
+    [
+     54,
+     96
+    ]
+   ],
+   "natural": [
+    70,
+    72,
+    74,
+    75,
+    76,
+    77,
+    78,
+    80,
+    82
+   ],
+   "stable": [
+    72,
+    74,
+    75,
+    76,
+    77,
+    78
+   ],
+   "edgeN": 96,
+   "edgeSn": 4061,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 55,
+   "symbol": "Cs",
+   "known": [
+    [
+     57,
+     97
+    ]
+   ],
+   "natural": [
+    78
+   ],
+   "stable": [
+    78
+   ],
+   "edgeN": 97,
+   "edgeSn": 2921,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 56,
+   "symbol": "Ba",
+   "known": [
+    [
+     58,
+     98
+    ]
+   ],
+   "natural": [
+    74,
+    76,
+    78,
+    79,
+    80,
+    81,
+    82
+   ],
+   "stable": [
+    74,
+    78,
+    79,
+    80,
+    81,
+    82
+   ],
+   "edgeN": 98,
+   "edgeSn": 4521,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 57,
+   "symbol": "La",
+   "known": [
+    [
+     60,
+     60
+    ],
+    [
+     63,
+     100
+    ]
+   ],
+   "natural": [
+    81,
+    82
+   ],
+   "stable": [
+    82
+   ],
+   "edgeN": 100,
+   "edgeSn": 4091,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 58,
+   "symbol": "Ce",
+   "known": [
+    [
+     63,
+     100
+    ]
+   ],
+   "natural": [
+    78,
+    80,
+    82,
+    84
+   ],
+   "stable": [
+    78,
+    82
+   ],
+   "edgeN": 100,
+   "edgeSn": 4681,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 59,
+   "symbol": "Pr",
+   "known": [
+    [
+     62,
+     62
+    ],
+    [
+     65,
+     102
+    ]
+   ],
+   "natural": [
+    82
+   ],
+   "stable": [
+    82
+   ],
+   "edgeN": 102,
+   "edgeSn": 4361,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 60,
+   "symbol": "Nd",
+   "known": [
+    [
+     65,
+     103
+    ]
+   ],
+   "natural": [
+    82,
+    83,
+    84,
+    85,
+    86,
+    88,
+    90
+   ],
+   "stable": [
+    82,
+    83,
+    85,
+    86,
+    88
+   ],
+   "edgeN": 103,
+   "edgeSn": 3141,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 61,
+   "symbol": "Pm",
+   "known": [
+    [
+     67,
+     104
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 104,
+   "edgeSn": 4382,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 62,
+   "symbol": "Sm",
+   "known": [
+    [
+     67,
+     106
+    ]
+   ],
+   "natural": [
+    82,
+    85,
+    86,
+    87,
+    88,
+    90,
+    92
+   ],
+   "stable": [
+    82,
+    87,
+    88,
+    90,
+    92
+   ],
+   "edgeN": 106,
+   "edgeSn": 4382,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 63,
+   "symbol": "Eu",
+   "known": [
+    [
+     67,
+     69
+    ],
+    [
+     71,
+     106
+    ]
+   ],
+   "natural": [
+    88,
+    90
+   ],
+   "stable": [
+    90
+   ],
+   "edgeN": 106,
+   "edgeSn": 4481,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 64,
+   "symbol": "Gd",
+   "known": [
+    [
+     70,
+     108
+    ]
+   ],
+   "natural": [
+    88,
+    90,
+    91,
+    92,
+    93,
+    94,
+    96
+   ],
+   "stable": [
+    90,
+    91,
+    92,
+    93,
+    94,
+    96
+   ],
+   "edgeN": 108,
+   "edgeSn": 4832,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 65,
+   "symbol": "Tb",
+   "known": [
+    [
+     70,
+     70
+    ],
+    [
+     73,
+     109
+    ]
+   ],
+   "natural": [
+    94
+   ],
+   "stable": [
+    94
+   ],
+   "edgeN": 109,
+   "edgeSn": 3531,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 66,
+   "symbol": "Dy",
+   "known": [
+    [
+     73,
+     110
+    ]
+   ],
+   "natural": [
+    90,
+    92,
+    94,
+    95,
+    96,
+    97,
+    98
+   ],
+   "stable": [
+    90,
+    92,
+    94,
+    95,
+    96,
+    97,
+    98
+   ],
+   "edgeN": 110,
+   "edgeSn": 4952,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 67,
+   "symbol": "Ho",
+   "known": [
+    [
+     73,
+     111
+    ]
+   ],
+   "natural": [
+    98
+   ],
+   "stable": [
+    98
+   ],
+   "edgeN": 111,
+   "edgeSn": 3922,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 68,
+   "symbol": "Er",
+   "known": [
+    [
+     75,
+     112
+    ]
+   ],
+   "natural": [
+    94,
+    96,
+    98,
+    99,
+    100,
+    102
+   ],
+   "stable": [
+    94,
+    96,
+    98,
+    99,
+    100,
+    102
+   ],
+   "edgeN": 112,
+   "edgeSn": 5172,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 69,
+   "symbol": "Tm",
+   "known": [
+    [
+     75,
+     112
+    ]
+   ],
+   "natural": [
+    100
+   ],
+   "stable": [
+    100
+   ],
+   "edgeN": 112,
+   "edgeSn": 5341,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 70,
+   "symbol": "Yb",
+   "known": [
+    [
+     79,
+     115
+    ]
+   ],
+   "natural": [
+    98,
+    100,
+    101,
+    102,
+    103,
+    104,
+    106
+   ],
+   "stable": [
+    98,
+    100,
+    101,
+    102,
+    103,
+    104,
+    106
+   ],
+   "edgeN": 115,
+   "edgeSn": 3951,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 71,
+   "symbol": "Lu",
+   "known": [
+    [
+     78,
+     117
+    ]
+   ],
+   "natural": [
+    104,
+    105
+   ],
+   "stable": [
+    104
+   ],
+   "edgeN": 117,
+   "edgeSn": 4122,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 72,
+   "symbol": "Hf",
+   "known": [
+    [
+     79,
+     79
+    ],
+    [
+     81,
+     118
+    ]
+   ],
+   "natural": [
+    102,
+    104,
+    105,
+    106,
+    107,
+    108
+   ],
+   "stable": [
+    104,
+    105,
+    106,
+    107,
+    108
+   ],
+   "edgeN": 118,
+   "edgeSn": 5721,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 73,
+   "symbol": "Ta",
+   "known": [
+    [
+     82,
+     121
+    ]
+   ],
+   "natural": [
+    108
+   ],
+   "stable": [
+    108
+   ],
+   "edgeN": 121,
+   "edgeSn": 4392,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 74,
+   "symbol": "W",
+   "known": [
+    [
+     83,
+     123
+    ]
+   ],
+   "natural": [
+    106,
+    108,
+    109,
+    110,
+    112
+   ],
+   "stable": [
+    108,
+    110,
+    112
+   ],
+   "edgeN": 123,
+   "edgeSn": 4202,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 75,
+   "symbol": "Re",
+   "known": [
+    [
+     84,
+     124
+    ]
+   ],
+   "natural": [
+    110,
+    112
+   ],
+   "stable": [
+    110
+   ],
+   "edgeN": 124,
+   "edgeSn": 5811,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 76,
+   "symbol": "Os",
+   "known": [
+    [
+     85,
+     127
+    ]
+   ],
+   "natural": [
+    108,
+    110,
+    111,
+    112,
+    113,
+    114,
+    116
+   ],
+   "stable": [
+    111,
+    112,
+    113,
+    114,
+    116
+   ],
+   "edgeN": 127,
+   "edgeSn": 2811,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 77,
+   "symbol": "Ir",
+   "known": [
+    [
+     87,
+     128
+    ]
+   ],
+   "natural": [
+    114,
+    116
+   ],
+   "stable": [
+    114,
+    116
+   ],
+   "edgeN": 128,
+   "edgeSn": 4101,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 78,
+   "symbol": "Pt",
+   "known": [
+    [
+     87,
+     130
+    ]
+   ],
+   "natural": [
+    112,
+    114,
+    116,
+    117,
+    118,
+    120
+   ],
+   "stable": [
+    114,
+    116,
+    117,
+    118,
+    120
+   ],
+   "edgeN": 130,
+   "edgeSn": 4432,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 79,
+   "symbol": "Au",
+   "known": [
+    [
+     91,
+     131
+    ]
+   ],
+   "natural": [
+    118
+   ],
+   "stable": [
+    118
+   ],
+   "edgeN": 131,
+   "edgeSn": 3161,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 80,
+   "symbol": "Hg",
+   "known": [
+    [
+     90,
+     136
+    ]
+   ],
+   "natural": [
+    116,
+    118,
+    119,
+    120,
+    121,
+    122,
+    124
+   ],
+   "stable": [
+    116,
+    118,
+    119,
+    120,
+    121,
+    122,
+    124
+   ],
+   "edgeN": 136,
+   "edgeSn": 4261,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 81,
+   "symbol": "Tl",
+   "known": [
+    [
+     95,
+     136
+    ]
+   ],
+   "natural": [
+    122,
+    124
+   ],
+   "stable": [
+    122,
+    124
+   ],
+   "edgeN": 136,
+   "edgeSn": 4282,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 82,
+   "symbol": "Pb",
+   "known": [
+    [
+     96,
+     138
+    ]
+   ],
+   "natural": [
+    122,
+    124,
+    125,
+    126
+   ],
+   "stable": [
+    124,
+    125,
+    126
+   ],
+   "edgeN": 138,
+   "edgeSn": 4561,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 83,
+   "symbol": "Bi",
+   "known": [
+    [
+     101,
+     141
+    ]
+   ],
+   "natural": [
+    126
+   ],
+   "stable": [],
+   "edgeN": 141,
+   "edgeSn": 3242,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 84,
+   "symbol": "Po",
+   "known": [
+    [
+     102,
+     143
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 143,
+   "edgeSn": 3339,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 85,
+   "symbol": "At",
+   "known": [
+    [
+     106,
+     144
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 144,
+   "edgeSn": 5062,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 86,
+   "symbol": "Rn",
+   "known": [
+    [
+     107,
+     145
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 145,
+   "edgeSn": 3691,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 87,
+   "symbol": "Fr",
+   "known": [
+    [
+     110,
+     146
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 146,
+   "edgeSn": 5224.1,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 88,
+   "symbol": "Ra",
+   "known": [
+    [
+     113,
+     146
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 146,
+   "edgeSn": 5474.7506,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 89,
+   "symbol": "Ac",
+   "known": [
+    [
+     116,
+     147
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 147,
+   "edgeSn": 4207.4805,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 90,
+   "symbol": "Th",
+   "known": [
+    [
+     117,
+     148
+    ]
+   ],
+   "natural": [
+    140,
+    142
+   ],
+   "stable": [],
+   "edgeN": 148,
+   "edgeSn": 5501,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 91,
+   "symbol": "Pa",
+   "known": [
+    [
+     120,
+     148
+    ]
+   ],
+   "natural": [
+    140
+   ],
+   "stable": [],
+   "edgeN": 148,
+   "edgeSn": 5628,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 92,
+   "symbol": "U",
+   "known": [
+    [
+     122,
+     127
+    ],
+    [
+     129,
+     159
+    ],
+    [
+     161,
+     163
+    ]
+   ],
+   "natural": [
+    142,
+    143,
+    146
+   ],
+   "stable": [],
+   "edgeN": 163,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 93,
+   "symbol": "Np",
+   "known": [
+    [
+     126,
+     127
+    ],
+    [
+     129,
+     151
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 151,
+   "edgeSn": 4637,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 94,
+   "symbol": "Pu",
+   "known": [
+    [
+     134,
+     153
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 153,
+   "edgeSn": 4256,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 95,
+   "symbol": "Am",
+   "known": [
+    [
+     128,
+     128
+    ],
+    [
+     134,
+     135
+    ],
+    [
+     137,
+     153
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 153,
+   "edgeSn": 4662,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 96,
+   "symbol": "Cm",
+   "known": [
+    [
+     137,
+     155
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 155,
+   "edgeSn": 4412.9244,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 97,
+   "symbol": "Bk",
+   "known": [
+    [
+     136,
+     137
+    ],
+    [
+     139,
+     139
+    ],
+    [
+     141,
+     154
+    ],
+    [
+     156,
+     156
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 156,
+   "edgeSn": 5677,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 98,
+   "symbol": "Cf",
+   "known": [
+    [
+     138,
+     158
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 158,
+   "edgeSn": 5840,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 99,
+   "symbol": "Es",
+   "known": [
+    [
+     141,
+     158
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 158,
+   "edgeSn": 5853,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 100,
+   "symbol": "Fm",
+   "known": [
+    [
+     141,
+     159
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 159,
+   "edgeSn": 4793,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 101,
+   "symbol": "Md",
+   "known": [
+    [
+     143,
+     159
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 159,
+   "edgeSn": 5086,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 102,
+   "symbol": "No",
+   "known": [
+    [
+     146,
+     158
+    ],
+    [
+     160,
+     160
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 160,
+   "edgeSn": 6425,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 103,
+   "symbol": "Lr",
+   "known": [
+    [
+     149,
+     159
+    ],
+    [
+     161,
+     161
+    ],
+    [
+     163,
+     163
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 163,
+   "edgeSn": 4643,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 104,
+   "symbol": "Rf",
+   "known": [
+    [
+     149,
+     159
+    ],
+    [
+     161,
+     161
+    ],
+    [
+     163,
+     163
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 163,
+   "edgeSn": 4763,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 105,
+   "symbol": "Db",
+   "known": [
+    [
+     150,
+     158
+    ],
+    [
+     161,
+     163
+    ],
+    [
+     165,
+     165
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 165,
+   "edgeSn": 4823,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 106,
+   "symbol": "Sg",
+   "known": [
+    [
+     152,
+     161
+    ],
+    [
+     163,
+     163
+    ],
+    [
+     165,
+     165
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 165,
+   "edgeSn": 4885,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 107,
+   "symbol": "Bh",
+   "known": [
+    [
+     153,
+     160
+    ],
+    [
+     163,
+     165
+    ],
+    [
+     167,
+     167
+    ],
+    [
+     171,
+     171
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 171,
+   "edgeSn": 4801,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 108,
+   "symbol": "Hs",
+   "known": [
+    [
+     155,
+     163
+    ],
+    [
+     165,
+     165
+    ],
+    [
+     167,
+     167
+    ],
+    [
+     169,
+     170
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 170,
+   "edgeSn": 6226,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 109,
+   "symbol": "Mt",
+   "known": [
+    [
+     157,
+     157
+    ],
+    [
+     159,
+     159
+    ],
+    [
+     161,
+     161
+    ],
+    [
+     165,
+     169
+    ],
+    [
+     173,
+     173
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 173,
+   "edgeSn": 5016,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 110,
+   "symbol": "Ds",
+   "known": [
+    [
+     157,
+     157
+    ],
+    [
+     159,
+     161
+    ],
+    [
+     163,
+     163
+    ],
+    [
+     167,
+     167
+    ],
+    [
+     169,
+     172
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 172,
+   "edgeSn": 6554,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 111,
+   "symbol": "Rg",
+   "known": [
+    [
+     161,
+     161
+    ],
+    [
+     163,
+     163
+    ],
+    [
+     167,
+     171
+    ],
+    [
+     175,
+     175
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 175,
+   "edgeSn": 5291,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 112,
+   "symbol": "Cn",
+   "known": [
+    [
+     165,
+     165
+    ],
+    [
+     169,
+     174
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 174,
+   "edgeSn": 6708,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 113,
+   "symbol": "Nh",
+   "known": [
+    [
+     165,
+     165
+    ],
+    [
+     169,
+     173
+    ],
+    [
+     177,
+     177
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 177,
+   "edgeSn": 5306,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 114,
+   "symbol": "Fl",
+   "known": [
+    [
+     170,
+     176
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 176,
+   "edgeSn": 6806,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 115,
+   "symbol": "Mc",
+   "known": [
+    [
+     172,
+     175
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 175,
+   "edgeSn": 5963,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 116,
+   "symbol": "Lv",
+   "known": [
+    [
+     174,
+     178
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 178,
+   "edgeSn": null,
+   "edgeExtrapolated": false
+  },
+  {
+   "z": 117,
+   "symbol": "Ts",
+   "known": [
+    [
+     176,
+     177
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 177,
+   "edgeSn": 6103,
+   "edgeExtrapolated": true
+  },
+  {
+   "z": 118,
+   "symbol": "Og",
+   "known": [
+    [
+     176,
+     176
+    ]
+   ],
+   "natural": [],
+   "stable": [],
+   "edgeN": 176,
+   "edgeSn": 7553,
+   "edgeExtrapolated": true
+  }
+ ]
+}

@@ -1,0 +1,309 @@
+---
+/**
+ * FIG 6 — The periodic table, by origin.
+ *
+ * See ../SPECS.md. Two layers on one table:
+ *   fill    — where the element is principally made
+ *   hatch   — how well that attribution is known
+ *
+ * The second layer is the one nobody else draws, and it is why this figure sits
+ * this late in the piece: by chapter 6 the reader has met all three epistemic
+ * treatments in context, and here they see them across all 118 elements at once.
+ * This figure IS the legend for the whole document.
+ *
+ * Elements present in the human body are outlined in the author's red, tying
+ * back to chapter 0 without repeating it.
+ *
+ * Static.
+ */
+import { dataset, rows } from '../../../utils/provenance';
+import originsRaw from '../data/element-origins.json';
+import bodyRaw from '../data/body-composition.json';
+
+type El = { z: number; s: string; o: string; e: 'settled' | 'contested' | 'open' };
+
+const elements = rows<El>(dataset('element-origins', originsRaw));
+const inBody = new Set(
+  rows<{ symbol: string }>(dataset('body-composition', bodyRaw)).map((r) => r.symbol)
+);
+
+/**
+ * Position on the standard 18-column table, with the f-block pulled out below
+ * where it conventionally sits.
+ */
+function place(z: number): { col: number; row: number } {
+  if (z === 1) return { col: 1, row: 1 };
+  if (z === 2) return { col: 18, row: 1 };
+  if (z <= 4) return { col: z - 2, row: 2 };
+  if (z <= 10) return { col: z + 8, row: 2 };
+  if (z <= 12) return { col: z - 10, row: 3 };
+  if (z <= 18) return { col: z, row: 3 };
+  if (z <= 36) return { col: z - 18, row: 4 };
+  if (z <= 54) return { col: z - 36, row: 5 };
+  // period 6: La–Lu drop to the f-block row
+  if (z <= 56) return { col: z - 54, row: 6 };
+  if (z <= 71) return { col: z - 54, row: 9 };
+  if (z <= 86) return { col: z - 68, row: 6 };
+  if (z <= 88) return { col: z - 86, row: 7 };
+  if (z <= 103) return { col: z - 86, row: 10 };
+  return { col: z - 100, row: 7 };
+}
+
+/* Drawn at very nearly the width it renders at (`full`, ~1344px), so the
+   symbols arrive at the size they were set rather than being scaled up 1.6×
+   from an 826-unit viewBox — which is what made this table look soft. */
+const CELL = 66;
+const GAP = 5;
+const PAD_X = 30;
+const PAD_Y = 116;
+const W = PAD_X * 2 + 18 * (CELL + GAP);
+const H = PAD_Y + 10 * (CELL + GAP) + 74;
+
+const originFill: Record<string, string> = {
+  bigbang: 'var(--c-links)',
+  cosmicray: 'var(--c-musings)',
+  lowmass: 'var(--c-verse)',
+  massive: 'var(--c-reflections)',
+  merging: 'var(--c-practical)',
+  whitedwarf: 'var(--red-soft)',
+  decay: 'var(--rule-strong)',
+  manmade: 'var(--muted)',
+};
+
+const originLabel: Record<string, string> = {
+  bigbang: 'the Big Bang',
+  cosmicray: 'cosmic rays hitting gas',
+  lowmass: 'dying low-mass stars',
+  massive: 'exploding massive stars',
+  merging: 'merging neutron stars',
+  whitedwarf: 'exploding white dwarfs',
+  decay: 'decay of heavier elements',
+  manmade: 'made by people',
+};
+
+const cells = elements.map((element) => {
+  const { col, row } = place(element.z);
+  return {
+    ...element,
+    x: PAD_X + (col - 1) * (CELL + GAP),
+    y: PAD_Y + (row - 1) * (CELL + GAP),
+    body: inBody.has(element.s),
+  };
+});
+
+/* A key is a failure of layout, so this one is made to earn its place: the
+   origins are ranked by how much of the table each accounts for, and carry the
+   count. That turns a lookup into a summary — the reader learns the shape of
+   the answer without having to cross-reference anything. */
+const legendKeys = Object.keys(originLabel)
+  .map((key) => ({ key, n: elements.filter((e) => e.o === key).length }))
+  .filter((entry) => entry.n > 0)
+  .sort((a, b) => b.n - a.n);
+const legendY = PAD_Y + 10 * (CELL + GAP) + 30;
+const legendW = (W - PAD_X * 2) / 4;
+const contestedCount = elements.filter((e) => e.e === 'contested').length;
+---
+
+<div class="ptable">
+  <svg viewBox={`0 0 ${W} ${H}`} role="presentation">
+    <defs>
+      <!-- Hatch in ink, fine and low-contrast. White hatching over a saturated
+           fill fought the element symbols and won. -->
+      <pattern
+        id="hatch-contested"
+        width="5"
+        height="5"
+        patternTransform="rotate(45)"
+        patternUnits="userSpaceOnUse"
+      >
+        <line x1="0" y1="0" x2="0" y2="5" stroke="var(--ink)" stroke-width="0.6" opacity="0.34" />
+      </pattern>
+    </defs>
+
+    <text class="lbl title" x={PAD_X} y={40}>Where every element is principally made</text>
+    <text class="lbl sub" x={PAD_X} y={68}>
+      hatched = the attribution is contested · {contestedCount} of {elements.length} elements
+    </text>
+    <text class="lbl sub red" x={PAD_X} y={90}>
+      outlined = present in your body
+    </text>
+
+    {
+      cells.map((cell) => (
+        <g class="cell" data-epistemic={cell.e}>
+          <rect
+            class="cell-bg"
+            x={cell.x}
+            y={cell.y}
+            width={CELL}
+            height={CELL}
+            fill={originFill[cell.o]}
+          />
+          {cell.e !== 'settled' && (
+            <rect
+              class="cell-hatch"
+              x={cell.x}
+              y={cell.y}
+              width={CELL}
+              height={CELL}
+              fill="url(#hatch-contested)"
+            />
+          )}
+          {cell.body && (
+            <rect
+              class="cell-body"
+              x={cell.x + 1}
+              y={cell.y + 1}
+              width={CELL - 2}
+              height={CELL - 2}
+            />
+          )}
+          <text class="cell-sym" x={cell.x + CELL / 2} y={cell.y + CELL / 2 + 9} text-anchor="middle">
+            {cell.s}
+          </text>
+          <text class="cell-z" x={cell.x + 6} y={cell.y + 16}>
+            {cell.z}
+          </text>
+        </g>
+      ))
+    }
+
+    <!-- Lithium is the one element on this table nobody can place.
+         The note sits in the empty d-block gap — the rectangle between groups 2
+         and 13 in periods 2 and 3, which every periodic table leaves blank.
+         Previously it ran straight across fifteen tiles. -->
+    <g class="li-note">
+      <path
+        class="anno-line s-hair"
+        d={`M${PAD_X + CELL + 6} ${PAD_Y + (CELL + GAP) + CELL / 2} L${PAD_X + 2 * (CELL + GAP) + 8} ${PAD_Y + (CELL + GAP) + CELL / 2}`}
+      />
+      <text class="anno" x={PAD_X + 2 * (CELL + GAP) + 14} y={PAD_Y + (CELL + GAP) + 24}>
+        lithium: we predict three times
+      </text>
+      <text class="anno" x={PAD_X + 2 * (CELL + GAP) + 14} y={PAD_Y + (CELL + GAP) + 48}>
+        more than we observe. Forty years,
+      </text>
+      <text class="anno" x={PAD_X + 2 * (CELL + GAP) + 14} y={PAD_Y + (CELL + GAP) + 72}>
+        still unresolved.
+      </text>
+    </g>
+
+    <!-- Origins, laid out directly under the table -->
+    {
+      legendKeys.map((entry, i) => (
+        <g>
+          <rect
+            x={PAD_X + (i % 4) * legendW}
+            y={legendY + Math.floor(i / 4) * 26 - 12}
+            width="14"
+            height="14"
+            fill={originFill[entry.key]}
+            fill-opacity="0.62"
+            stroke="var(--rule-strong)"
+            stroke-width="0.5"
+          />
+          <text
+            class="lbl legend"
+            x={PAD_X + (i % 4) * legendW + 22}
+            y={legendY + Math.floor(i / 4) * 26}>
+            {originLabel[entry.key]}
+            <tspan class="legend-n"> {entry.n}</tspan>
+          </text>
+        </g>
+      ))
+    }
+  </svg>
+
+  <div class="ex-fig-data" tabindex="0">
+    <table>
+      <caption>Principal production site of each element, with confidence</caption>
+      <thead>
+        <tr>
+          <th scope="col">Z</th>
+          <th scope="col">Element</th>
+          <th scope="col">Principal origin</th>
+          <th scope="col">Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          elements.map((element) => (
+            <tr>
+              <td>{element.z}</td>
+              <th scope="row">{element.s}</th>
+              <td>{originLabel[element.o]}</td>
+              <td>{element.e}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .ptable .title {
+    font-family: var(--display);
+    font-size: var(--t-2xl);
+    letter-spacing: 0;
+    text-transform: none;
+    fill: var(--ink);
+  }
+  .ptable .sub {
+    fill: var(--muted);
+  }
+  .ptable .sub.red {
+    fill: var(--red);
+  }
+  .ptable .legend {
+    fill: var(--ink-soft);
+  }
+  .ptable .legend-n {
+    fill: var(--ink);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  /* Tinted, not saturated. Solid blocks of colour with reversed-out white type
+     read as a chemistry poster; this is a commonplace book. The hue still
+     encodes origin, at a weight the page can carry. */
+  .ptable .cell-bg {
+    stroke: var(--paper);
+    stroke-width: 1;
+    /* Was 0.3, which on a large cell reads as a smudge rather than a category.
+       Still tinted rather than saturated — the symbols have to survive on top
+       of it — but now the eight origins are separable at a glance, which is
+       the entire job of this figure. */
+    fill-opacity: 0.62;
+  }
+  .ptable .cell-body {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1.5;
+  }
+  .ptable .cell-sym {
+    font-family: var(--display);
+    font-size: var(--t-lg);
+    font-weight: 600;
+    fill: var(--ink);
+  }
+  .ptable .cell-z {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    fill: var(--ink-soft);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  /* the open case: lithium. Not hatched — voided, in the author's ink. */
+  .ptable .cell[data-epistemic='open'] .cell-bg {
+    fill: var(--paper);
+    stroke: var(--red);
+    stroke-width: 1.5;
+    stroke-dasharray: 2 3;
+  }
+  .ptable .cell[data-epistemic='open'] .cell-sym,
+  .ptable .cell[data-epistemic='open'] .cell-z {
+    fill: var(--red);
+  }
+  .ptable .anno-line {
+    stroke: var(--red);
+    fill: none;
+  }
+</style>

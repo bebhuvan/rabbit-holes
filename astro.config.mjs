@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
+import mdx from '@astrojs/mdx';
 import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
 
 // https://astro.build/config
@@ -17,6 +18,9 @@ export default defineConfig({
       enabled: true
     }
   }),
+  // MDX carries the explainers only. Folios stay plain markdown, authored
+  // through Pages CMS, and are unaffected by this.
+  integrations: [mdx()],
   build: {
     inlineStylesheets: 'auto',
   },

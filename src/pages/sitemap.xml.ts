@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { heads } from '../data/heads';
 import { canonicalTags, newestFirst } from '../utils/content';
+import { newestFirst as explainersNewestFirst, lastTouched } from '../utils/explainers';
 
 export const prerender = true;
 
@@ -9,6 +10,7 @@ export const GET: APIRoute = async ({ site }) => {
   const sortedPosts = newestFirst(await getCollection('posts'));
   const allTags = canonicalTags(sortedPosts);
   const glosses = await getCollection('glosses', ({ data }) => data.published !== false);
+  const explainers = explainersNewestFirst(await getCollection('explainers'));
 
   const siteUrl = site || 'https://www.rabbitholes.garden/';
 
@@ -56,6 +58,20 @@ export const GET: APIRoute = async ({ site }) => {
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>${siteUrl}explainers</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Explainers. lastmod is the revision date, not first publication —
+       these are living documents and that is the date that matters. -->
+  ${explainers.map(explainer => `  <url>
+    <loc>${siteUrl}explainers/${explainer.slug}</loc>
+    <lastmod>${lastTouched(explainer).toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>`).join('\n')}
 
   <!-- Individual tag pages -->
   ${allTags.map(tag => `  <url>

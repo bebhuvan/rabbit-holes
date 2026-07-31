@@ -1,0 +1,28 @@
+---
+/**
+ * The digression.
+ *
+ * The brief asks for comprehensive AND without filler, which sounds like a
+ * contradiction and is not: the resolution is that depth must never tax the
+ * first read. Everything a reader can skip and still be correctly informed
+ * lives in here, closed, opening in place.
+ *
+ * <details> rather than a JS disclosure, so it works with no JavaScript, is
+ * keyboard-operable for free, and is searchable by the browser's own find.
+ */
+interface Props {
+  /** What the reader gets by opening it. Written as a promise, not a label. */
+  title: string;
+  /** Open on load — for a digression the argument actually depends on. */
+  open?: boolean;
+}
+
+const { title, open = false } = Astro.props;
+---
+
+<details class="ex-aside" open={open}>
+  <summary>{title}</summary>
+  <div class="ex-aside-body">
+    <slot />
+  </div>
+</details>

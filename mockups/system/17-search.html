@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search &#8212; Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. See 11-folio-entry.html. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    /* one colour per REAL type in config.ts — musings is the plurality (87)
+       and had no treatment at all in mockup 10 */
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;
+    --maxw:1240px;--rail-w:272px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+      --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+      --c-verse:#82C29A;--c-practical:#D89A80;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+    --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+    --c-verse:#82C29A;--c-practical:#D89A80;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;}
+
+  /* Display optical size pinned — Bodoni's display cut has hairlines too
+     fine to survive at these sizes, especially on dark. */
+  .brand .mark,.thesis h1,.folio-big,.entry h2,.hand-say{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+  /* same rule, this page's display elements. The query line is the largest
+     Bodoni on the page and so needs it most. */
+  .q-input,.res h3,.nil-say,.kinds .sw{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+
+  /* ==========================================================
+     THE TWO-INK RULE  — this is a system, not a colour choice.
+     ----------------------------------------------------------
+     RED marks WHOSE VOICE IT IS, never where a link goes.
+
+       red  = the collector. His reaction (the hand), the heads he
+              chose, the ways he offers you deeper into his garden.
+       black= everyone else. Quoted text, other people's titles,
+              outbound destinations, dates, counts, machinery.
+
+     ON THIS PAGE the rule does real work rather than decorating:
+     a search hit landed either in HIS HAND or in the SOURCE he
+     copied out, and that is a genuinely useful distinction in a
+     commonplace book. So the snippet takes the ink of whoever
+     said it — red rule + soft ink for his prose, black rule +
+     full ink for quoted matter, exactly as on the folio.
+
+     Search itself is passage deeper into the garden, so the
+     query line is ruled in the collector's ink. The matched term
+     is rubricated — underscored in red the way a reader marks a
+     book — not painted with a highlighter.
+     ========================================================== */
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ============ MASTHEAD ============
+     Reads as the head of a book, not a web nav bar:
+     - the strapline is italic serif, not tracked-out caps. Nine words of
+       uppercase mono read as texture; the same words in italic read as a
+       sentence, which is what they are.
+     - the theme control is separated from navigation by a rule. It was
+       previously spaced identically to the links, so it read as a sixth
+       destination rather than a control.
+     - active item is marked with a hairline under the word itself, not a
+       floating tab bar.
+     - a double rule closes the head — a book device rather than a border. */
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    font-style:normal;margin:0 .25rem}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
+    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+  .lamp:hover{color:var(--red)}
+
+  /* ============ THE ROOM ============
+     Search gets its own architecture, as the gloss does: one centred
+     column, no index rail. The rail is a list of heads and kinds — and
+     on this page that same material IS the empty state, so repeating it
+     down the left edge would be the page arguing with itself. */
+  .leaf{max-width:47rem;margin:0 auto;padding:0 2.6rem}
+
+  /* ============ THE QUERY LINE ============
+     Not a boxed form field. A ruled line in a ledger with a manicule at
+     the head of it and the query written out in display italic — the
+     reader consulting the index in his own hand. */
+  .consult{padding:1.9rem 0 0}
+  .consult-eyebrow{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted);
+    margin-bottom:1rem}
+  /* the padding below is sized so the focus ring has somewhere to land —
+     at .55rem the ring's bottom edge sat directly on the red rule and the
+     two red lines read as one thick smudge */
+  .q-line{display:flex;align-items:baseline;gap:.9rem;
+    border-bottom:2px solid var(--red);padding-bottom:.95rem}
+  .q-line .mani{color:var(--red);font-family:var(--flourish);
+    font-size:var(--t-md);line-height:1;flex:none}
+  .q-input{flex:1;min-width:0;background:none;border:none;padding:0;
+    color:var(--ink);appearance:none;-webkit-appearance:none;
+    font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-2xl);line-height:1.24;letter-spacing:var(--tr-display)}
+  .q-input::placeholder{color:var(--muted);opacity:1;font-style:italic}
+  .q-input::-webkit-search-cancel-button{-webkit-appearance:none}
+  /* The focus ring is NOT suppressed. _tokens.css rings a,button,[tabindex]
+     in red; a bare <input> matches none of those, so the same ring is
+     restated here rather than lost. Offset is larger because the ring has
+     to clear 30px of Bodoni descender. */
+  .q-input:focus-visible{outline:2px solid var(--red);outline-offset:7px;border-radius:1px}
+  .q-scope{margin-top:.7rem;display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;
+    font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted)}
+  .q-scope .clear{background:none;border:none;cursor:pointer;padding:0;margin-left:auto;
+    font:inherit;letter-spacing:var(--tr-label);color:var(--red)}
+  .q-scope .clear:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* ============ EMPTY STATE ============
+     §7.5 — the empty state is designed first. Before you type, the page
+     is not a void with a box in it; it is the book's index, offered. */
+  .ways{display:grid;grid-template-columns:1fr 1fr;gap:2.6rem 3.4rem;
+    padding:3rem 0 2.6rem}
+  .rail-label{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.65rem;
+    margin-bottom:.4rem}
+  /* the fleuron marks ONE heading in this context, not both */
+  .rail-label.flr::after{content:"\2766";color:var(--red-soft);font-family:var(--flourish);
+    font-size:var(--t-base);letter-spacing:0}
+  .rail-note{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    color:var(--muted);line-height:1.45;margin-bottom:1.2rem}
+  .index{list-style:none;font-family:var(--mono);font-size:var(--l-lg)}
+  .index a{display:flex;align-items:baseline;gap:.5rem;padding:.32rem .3rem;
+    text-decoration:none;color:var(--ink-soft)}
+  /* head names never wrap — a wrapped name loses its dotted leader and
+     breaks the ledger rhythm the whole index depends on */
+  .index a>span:first-child{white-space:nowrap}
+  .index a:hover{color:var(--red)}
+  .index .dots{flex:1;border-bottom:1px dotted var(--rule-strong);transform:translateY(-.2em);margin:0 .15rem}
+  .index .n{color:var(--muted);font-size:var(--l-lg);font-variant-numeric:lining-nums tabular-nums}
+  .index a:hover .n{color:var(--red)}
+  .index-more{display:inline-block;margin:1rem .3rem 0;font-family:var(--mono);
+    font-size:var(--l-md);color:var(--muted);text-decoration:none}
+  .index-more:hover{color:var(--red)}
+
+  .kinds{list-style:none;font-family:var(--mono);font-size:var(--l-md)}
+  .kinds li{display:flex;align-items:baseline;gap:.55rem;padding:.22rem .3rem;color:var(--ink-soft)}
+  .kinds .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    font-variant-numeric:lining-nums;line-height:1;min-width:2.1rem}
+  .kinds .kn{flex:1}
+
+  .rail-rule{border:none;border-top:1px solid var(--rule);margin:1.7rem 0}
+
+  /* passage into the garden is the collector speaking — red-ruled */
+  .wayin{display:block;text-decoration:none;padding-left:1rem;
+    border-left:2px solid var(--red)}
+  .wayin .t{display:block;font-family:var(--body);font-style:italic;
+    font-size:var(--t-md);line-height:1.35;color:var(--ink)}
+  .wayin:hover .t{color:var(--red)}
+  .wayin .mani{color:var(--red);font-style:normal;font-family:var(--flourish);
+    font-size:var(--t-base);margin-right:.3rem}
+  .wayin .s{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+  /* serendipity, the same component the home page uses */
+  .stacks{padding:1.8rem 2rem;border:1px solid var(--rule-strong);
+    background:var(--red-wash);display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap}
+  .stacks .ast{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-md);flex:none}
+  .stacks .t{font-family:var(--body);font-style:italic;font-size:var(--t-md);color:var(--ink)}
+  .stacks .s{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted);margin-top:.35rem}
+  .stacks .again{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    color:var(--red);text-decoration:none;margin-left:auto;white-space:nowrap}
+  .stacks .again:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* ============ RESULTS ============ */
+  .res-head{display:flex;align-items:baseline;gap:1.2rem;flex-wrap:wrap;
+    padding:2.6rem 0 .2rem;border-bottom:1px solid var(--rule)}
+  .res-count{font-family:var(--body);font-size:var(--t-md);color:var(--ink-soft)}
+  .res-count b{font-family:var(--display);font-weight:600;font-variant-numeric:lining-nums;
+    color:var(--ink);font-optical-sizing:none;font-variation-settings:'opsz' 11}
+  .res-count em{font-style:italic;color:var(--ink)}
+  /* WHERE DID IT LAND — the one filter worth having in a commonplace book,
+     and the only one that could not exist on an ordinary site. Machinery,
+     so mono and muted; the active state takes the same hairline the nav
+     uses, not a pill. */
+  .where-filter{display:flex;align-items:baseline;gap:1.1rem;margin-left:auto;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;padding-bottom:.9rem}
+  .where-filter button{background:none;border:none;padding:0;cursor:pointer;
+    font:inherit;letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+  .where-filter button:hover{color:var(--ink)}
+  .where-filter button.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+
+  .res{padding:1.7rem 0 1.6rem;border-bottom:1px solid var(--rule)}
+  .runhead{display:flex;align-items:baseline;gap:1rem;margin-bottom:.5rem}
+  .folio-big{font-family:var(--display);font-weight:600;font-size:var(--t-xl);line-height:1;
+    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display)}
+  .runhead .meta{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);display:flex;gap:.9rem}
+  /* the two inks, doing the actual work of the page */
+  .where{margin-left:auto;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;white-space:nowrap}
+  .where.hand{color:var(--red)}
+  .where.source{color:var(--muted)}
+  .res h3{font-family:var(--display);font-weight:600;font-size:var(--t-md);line-height:1.2;
+    letter-spacing:var(--tr-display);margin-bottom:.6rem}
+  .res h3 a{text-decoration:none}
+  .res h3 a:hover{color:var(--red)}
+
+  /* Snippet takes the ink of whoever said it, and the same rule weight the
+     folio page uses: quoted matter sits behind a black rule at full ink;
+     his own prose sits behind a red rule at reading ink. */
+  .snip{max-width:var(--measure);font-size:var(--t-body);line-height:1.62;
+    padding-left:1.2rem;border-left:2px solid var(--rule-strong);color:var(--ink)}
+  .snip.hand{border-left-color:var(--red);color:var(--ink-soft)}
+  .snip cite{display:block;margin-top:.5rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+  /* Rubrication, not a highlighter pen. A yellow block is a browser
+     default; a red underscore is how a reader actually marks a book. */
+  mark{background:none;color:inherit;
+    border-bottom:2px solid var(--red);padding-bottom:.05em}
+
+  .res-more{padding:1.6rem 0 0;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none;display:inline-block}
+  .res-more:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* ============ NOTHING FOUND ============ */
+  .nil{padding:3rem 0 2.4rem}
+  .nil-say{font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-lg);line-height:1.25;letter-spacing:var(--tr-display);color:var(--ink)}
+  /* the query echo stays in the world's ink, here and in .res-count. The
+     word being searched for is the reader's, not the collector's — red on
+     it would be the one place this page broke its own rule. */
+  .nil-say em{font-style:italic;color:var(--ink)}
+  .nil-note{margin-top:1rem;max-width:var(--measure);font-size:var(--t-body);
+    line-height:1.62;color:var(--ink-soft)}
+  /* lowercase, like .res-more and .index-more. Three tracked-out uppercase
+     red links in a row read as an alert bar, not as offers. */
+  .nil-outs{margin-top:1.8rem;display:flex;align-items:baseline;gap:1.4rem;flex-wrap:wrap;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
+  .nil-outs a{color:var(--red);text-decoration:none}
+  .nil-outs a:hover{text-decoration:underline;text-underline-offset:4px}
+  .nil-outs .sep{color:var(--rule-strong)}
+
+  /* ============ SPEC PLATE ============
+     Out-of-band. Marks the three states for the spec sheet only; nothing
+     here ships. Deliberately the ugliest thing on the page so it cannot
+     be mistaken for design. */
+  .plate{display:flex;align-items:center;gap:.9rem;margin:4.5rem 0 0;
+    font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted)}
+  .plate::after{content:"";flex:1;border-top:1px dashed var(--rule-strong)}
+  .plate .n{border:1px dashed var(--rule-strong);border-radius:2px;padding:.1rem .4rem}
+  .leaf>.plate:first-child{margin-top:2.6rem}
+
+  .foot{padding:3.4rem 0 4rem;text-align:center}
+  .foot .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-lg)}
+  .foot .meta{margin-top:.8rem;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--muted)}
+  .foot .meta a{color:var(--red);text-decoration:none}
+
+  @media (max-width:760px){
+    .ways{grid-template-columns:1fr}
+    .where-filter{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#">Index</a>
+        <a href="#">Heads</a>
+        <a href="#" class="on">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="leaf">
+
+    <!-- ==========================================================
+         STATE 1 — RESTING. Nothing typed yet.
+         The page offers the index rather than a blank field.
+         ========================================================== -->
+    <div class="plate"><span class="n">state 1</span><span>resting &#8212; nothing typed</span></div>
+
+    <form class="consult" role="search" onsubmit="return false">
+      <label class="consult-eyebrow" for="q1">Consult the index</label>
+      <div class="q-line">
+        <span class="mani">&#9758;</span>
+        <input class="q-input" id="q1" type="search" autocomplete="off" spellcheck="false"
+               placeholder="a word, a name, a thing">
+      </div>
+      <p class="q-scope"><span>190 folios</span><span>&#183;</span><span>his hand and the sources both</span></p>
+    </form>
+
+    <section class="ways">
+      <div>
+        <div class="rail-label flr">The heads he chose</div>
+        <p class="rail-note">Ten, promoted by hand &#8212; not counted.</p>
+        <ul class="index">
+          <li><a href="#"><span>Artificial Intelligence</span><span class="dots"></span><span class="n">62</span></a></li>
+          <li><a href="#"><span>Poetry</span><span class="dots"></span><span class="n">15</span></a></li>
+          <li><a href="#"><span>Reading</span><span class="dots"></span><span class="n">9</span></a></li>
+          <li><a href="#"><span>Writing</span><span class="dots"></span><span class="n">8</span></a></li>
+          <li><a href="#"><span>Philosophy</span><span class="dots"></span><span class="n">8</span></a></li>
+          <li><a href="#"><span>Literature</span><span class="dots"></span><span class="n">6</span></a></li>
+          <li><a href="#"><span>China</span><span class="dots"></span><span class="n">5</span></a></li>
+          <li><a href="#"><span>Work</span><span class="dots"></span><span class="n">5</span></a></li>
+          <li><a href="#"><span>Technology</span><span class="dots"></span><span class="n">5</span></a></li>
+          <li><a href="#"><span>Books</span><span class="dots"></span><span class="n">5</span></a></li>
+        </ul>
+        <a href="#" class="index-more">the long tail &#8212; 133 more &#8594;</a>
+      </div>
+
+      <div>
+        <div class="rail-label">Five kinds</div>
+        <p class="rail-note">Every folio is one of these.</p>
+        <ul class="kinds">
+          <li><span class="sw" style="color:var(--c-musings)">84</span><span class="kn">Musings</span></li>
+          <li><span class="sw" style="color:var(--c-links)">57</span><span class="kn">Links</span></li>
+          <li><span class="sw" style="color:var(--c-reflections)">23</span><span class="kn">Reflections</span></li>
+          <li><span class="sw" style="color:var(--c-verse)">16</span><span class="kn">Verse</span></li>
+          <li><span class="sw" style="color:var(--c-practical)">10</span><span class="kn">Practical</span></li>
+        </ul>
+
+        <hr class="rail-rule">
+
+        <a class="wayin" href="#">
+          <span class="t"><span class="mani">&#9758;</span>Start here &#8212; five to fall into first.</span>
+          <span class="s">a hand-picked way in</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="stacks">
+      <span class="ast">&#8258;</span>
+      <span>
+        <span class="t">Or don&#8217;t look for anything. Pull one at random.</span>
+        <span class="s">one of 190, chosen blind</span>
+      </span>
+      <a class="again" href="#">pull one &#8594;</a>
+    </div>
+
+
+    <!-- ==========================================================
+         STATE 2 — RESULTS. Query: "attention" (17 real folios).
+         The distinction that matters: did the word land in HIS HAND
+         or in the SOURCE he copied out? 6 and 11 respectively.
+         ========================================================== -->
+    <div class="plate"><span class="n">state 2</span><span>results</span></div>
+
+    <form class="consult" role="search" onsubmit="return false">
+      <label class="consult-eyebrow" for="q2">Consult the index</label>
+      <div class="q-line">
+        <span class="mani">&#9758;</span>
+        <input class="q-input" id="q2" type="search" autocomplete="off" spellcheck="false" value="attention">
+      </div>
+      <p class="q-scope"><span>190 folios</span><span>&#183;</span><span>his hand and the sources both</span>
+        <button type="button" class="clear">clear &#215;</button></p>
+    </form>
+
+    <div class="res-head">
+      <p class="res-count"><b>17</b> folios answer to <em>attention</em></p>
+      <div class="where-filter">
+        <button type="button" class="on">both</button>
+        <button type="button">his hand &#183; 6</button>
+        <button type="button">the source &#183; 11</button>
+      </div>
+    </div>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-musings)">180</span>
+        <span class="meta"><span>Musing</span><span>13 Jan 2026</span></span>
+        <span class="where hand">in his hand</span>
+      </div>
+      <h3><a href="#">The Bullshit job apocalypse</a></h3>
+      <p class="snip hand">&#8230; that confidence is starting to look misplaced. So yeah. Pay <mark>attention</mark> to the creaking noises and the sparks.</p>
+    </article>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-musings)">61</span>
+        <span class="meta"><span>Musing</span><span>3 Oct 2025</span></span>
+        <span class="where source">in the source</span>
+      </div>
+      <h3><a href="#">Henry Oliver on how to have good taste</a></h3>
+      <p class="snip">&#8230; when we misunderstand what we read, our feelings make us pay more <mark>attention</mark> to what is familiar in the writing than to what is unfamiliar.
+        <cite>The Common Reader &#183; commonreader.co.uk</cite></p>
+    </article>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-reflections)">13</span>
+        <span class="meta"><span>Reflection</span><span>17 Aug 2025</span></span>
+        <span class="where hand">in his hand</span>
+      </div>
+      <h3><a href="#">Why read?</a></h3>
+      <p class="snip hand">&#8230; that struck me. It reminded me of a Substack post by Adam Roberts where he wrote: <em>&#8220;<mark>Attention</mark> is the first philosophy.&#8221;</em></p>
+    </article>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-musings)">77</span>
+        <span class="meta"><span>Musing</span><span>20 Oct 2025</span></span>
+        <span class="where hand">in his hand</span>
+      </div>
+      <h3><a href="#">On ritual</a></h3>
+      <p class="snip hand">From this post that&#8217;s overflowing with potential rabbit holes. Also pay <mark>attention</mark> to the beautiful framing of things &#8212; brilliant writing.</p>
+    </article>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-musings)">38</span>
+        <span class="meta"><span>Musing</span><span>10 Sept 2025</span></span>
+        <span class="where source">in the source</span>
+      </div>
+      <h3><a href="#">Social media is a funhouse mirror</a></h3>
+      <p class="snip">Social media is destroying our civilization. Foreign trolls and malignant <mark>attention</mark>-seekers are ragebaiting us into extremism. We need a Great Firewall.
+        <cite>Noah Smith &#183; x.com</cite></p>
+    </article>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-reflections)">54</span>
+        <span class="meta"><span>Reflection</span><span>27 Sept 2025</span></span>
+        <span class="where hand">in his hand</span>
+      </div>
+      <h3><a href="#">The infinite pleasures of diving down rabbit holes</a></h3>
+      <p class="snip hand">When something catches my <mark>attention</mark> &#8212; a &#8220;ripple&#8221; &#8212; I follow it wherever it leads, even if it seems random or pointless.</p>
+    </article>
+
+    <article class="res">
+      <div class="runhead">
+        <span class="folio-big" style="color:var(--c-practical)">132</span>
+        <span class="meta"><span>Practical</span><span>21 Dec 2025</span></span>
+        <span class="where hand">in his hand</span>
+      </div>
+      <h3><a href="#">Blogging is good for your soul!</a></h3>
+      <p class="snip hand">While there&#8217;s always an urge to be performative with one&#8217;s blog and to seek <mark>attention</mark>, there&#8217;s an immense amount of fun to be had if you can resist that urge.</p>
+    </article>
+
+    <a class="res-more" href="#">ten more &#8212; keep reading down &#8594;</a>
+
+
+    <!-- ==========================================================
+         STATE 3 — NOTHING FOUND. Query: "sourdough" (genuinely 0
+         of 190). The gaps in a commonplace book are personal, so
+         the copy says so rather than apologising.
+         ========================================================== -->
+    <div class="plate"><span class="n">state 3</span><span>nothing found</span></div>
+
+    <form class="consult" role="search" onsubmit="return false">
+      <label class="consult-eyebrow" for="q3">Consult the index</label>
+      <div class="q-line">
+        <span class="mani">&#9758;</span>
+        <input class="q-input" id="q3" type="search" autocomplete="off" spellcheck="false" value="sourdough">
+      </div>
+      <p class="q-scope"><span>190 folios</span><span>&#183;</span><span>his hand and the sources both</span>
+        <button type="button" class="clear">clear &#215;</button></p>
+    </form>
+
+    <div class="nil">
+      <p class="nil-say">Nothing in the book answers to <em>sourdough</em>.</p>
+      <p class="nil-note">Which is only to say he never fell down that hole. A commonplace book is one person&#8217;s attention over time, so its gaps are as particular as its contents &#8212; 190 folios, and no bread among them.</p>
+      <div class="nil-outs">
+        <a href="#">browse the ten heads &#8594;</a>
+        <span class="sep">&#183;</span>
+        <a href="#">the long tail &#8212; 133 more &#8594;</a>
+        <span class="sep">&#183;</span>
+        <a href="#">pull one at random &#8594;</a>
+      </div>
+    </div>
+
+    <footer class="foot">
+      <span class="flr">&#10086;</span>
+      <p class="meta">190 folios &#183; 10 heads &#183; 5 kinds &nbsp;&#183;&nbsp; <a href="#">the full index &#8594;</a></p>
+    </footer>
+
+  </div>
+
+<script>
+  // Theme override on top of prefers-color-scheme. Reads the *rendered*
+  // scheme first so the first click always flips what you can actually see.
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

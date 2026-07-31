@@ -1,0 +1,72 @@
+---
+/**
+ * The changelog, which is the whole claim of a "living document".
+ *
+ * A revision list that only says "updated" is theatre. Each entry here says
+ * what changed and why, names the chapters it touched, and — the interesting
+ * case — flags when a revision moved a claim between settled, contested and
+ * open. That last kind is the most honest thing this page can show: not that
+ * the text was edited, but that the state of knowledge moved.
+ */
+import type { Explainer } from '../../utils/explainers';
+import { newestRevisionsFirst } from '../../utils/explainers';
+import { formatPostDate } from '../../utils/content';
+
+interface Props {
+  explainer: Explainer;
+}
+
+const { explainer } = Astro.props;
+const revisions = newestRevisionsFirst(explainer);
+const chapterTitles = new Map(explainer.data.chapters.map((c) => [c.id, c.title]));
+const first = explainer.data.date;
+---
+
+<section class="ex-revisions" aria-labelledby="revisions-heading">
+  <h2 id="revisions-heading">This document is alive</h2>
+  <p class="intro">
+    {
+      explainer.data.status === 'living'
+        ? 'This is not finished, and is not meant to be. It changes when a measurement improves, when I get something wrong, or when I change my mind. Everything that has changed since it was first published is below.'
+        : 'This piece has settled. It is kept accurate, but no longer actively extended.'
+    }
+  </p>
+
+  {
+    revisions.length === 0 ? (
+      <div class="ex-rev">
+        <div class="when">{formatPostDate(first)}</div>
+        <div>
+          <p class="what">First published. Nothing has changed yet.</p>
+        </div>
+      </div>
+    ) : (
+      revisions.map((revision) => (
+        <div class="ex-rev">
+          <div class="when">{formatPostDate(revision.date)}</div>
+          <div>
+            <p class="what">{revision.note}</p>
+            {revision.chapters.length > 0 && (
+              <p class="where">
+                {revision.chapters
+                  .map((id) => chapterTitles.get(id) ?? id)
+                  .join(' · ')}
+              </p>
+            )}
+          </div>
+        </div>
+      ))
+    )
+  }
+
+  {
+    revisions.length > 0 && (
+      <div class="ex-rev">
+        <div class="when">{formatPostDate(first)}</div>
+        <div>
+          <p class="what">First published.</p>
+        </div>
+      </div>
+    )
+  }
+</section>

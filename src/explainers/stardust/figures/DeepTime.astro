@@ -1,0 +1,1334 @@
+---
+/**
+ * FIG 1 — Deep time. Third build, and the first one that draws its own subject.
+ *
+ * The two that failed, and why:
+ *
+ *   1. A bare log axis with eleven point labels. Sixty decades of empty rule
+ *      with the events crushed into the right-hand quarter. Correct, and
+ *      sixty per cent of the drawing was nothing.
+ *
+ *   2. A vertical ledger, one row per moment. Better information design — rows
+ *      cannot collide — but it printed "rows are evenly spaced, the vertical
+ *      gaps are not to scale" on a figure whose entire subject IS scale, and
+ *      then rendered at 528px inside a scrolly column, so its display type
+ *      arrived at 0.59× the size it was drawn at.
+ *
+ * What both missed: the axis is not the figure. The COMPOSITION is the figure.
+ * Drawn as a stacked band against log time, there is no empty space anywhere by
+ * construction — every column of the plot is full, floor to ceiling, of
+ * whatever matter was at that instant. The sixty per cent that read as "empty"
+ * in build 1 is now a single undifferentiated grey block, which is the honest
+ * and rather startling fact that for the first three-fifths of this figure
+ * there was nothing you could call an atom.
+ *
+ * Two devices carry the scale that a linear reading would lose:
+ *
+ *   - The event labels stack into tiers with leaders. The four that pile up in
+ *     the last five per cent of the width are not a labelling problem to be
+ *     solved; that staircase is the shape of the fact.
+ *   - The metals fraction is 2% at the right-hand edge — a hairline three
+ *     pixels tall. So it is redrawn beneath at ten times the vertical scale
+ *     over the last five and a half decades, which is where all of it happens.
+ *
+ * Interpolation is linear in log t between the sampled epochs. That is a
+ * rendering choice, it is stated on the figure, and it means every band is an
+ * exact polygon through the source rows rather than a resampled approximation —
+ * no invented intermediate values anywhere.
+ *
+ * Motion: the scrub line is a pure function of (step + progress-within-step),
+ * mapped through a table of six named instants. Same scroll position, same
+ * line, same readout, from either direction.
+ */
+import { dataset, rows } from '../../../utils/provenance';
+import momentsRaw from '../data/cosmic-moments.json';
+import abundanceRaw from '../data/cosmic-abundance.json';
+
+type Moment = {
+  t: number;
+  label: string;
+  tick: string;
+  note: string;
+  display: string;
+  short: string;
+  epistemic: 'settled' | 'contested' | 'open';
+};
+type Abundance = {
+  t: number;
+  quarks: number;
+  protons: number;
+  neutrons: number;
+  helium: number;
+  metals: number;
+};
+
+const moments = rows<Moment>(dataset('cosmic-moments', momentsRaw));
+const abundance = rows<Abundance>(dataset('cosmic-abundance', abundanceRaw));
+
+/* ---- frame ------------------------------------------------------------
+   Drawn at very close to the size it renders, so a label set at
+   var(--l-md) arrives on screen at var(--l-md). This is the thing the
+   previous build got wrong: a 900-unit viewBox in a 528px column silently
+   scales every glyph in the figure by 0.59. */
+const W = 1400;
+/* Tuned against the pinned layout rather than picked. At `full` the column is
+   1264px and the height cap is 60vh; anything taller than a 2.34 aspect gets
+   capped and the figure renders NARROWER than the space it was given, which is
+   the exact failure this whole rebuild started from. */
+const H = 598;
+const PL = 56; // plot left
+const PR = 1376; // plot right
+const PW = PR - PL;
+
+/* The band is the figure, and it was not being treated like one: 172px of a
+   510px drawing, so a third of the figure was data and two thirds was
+   apparatus around it. It now takes half the height, and every label that was
+   competing with it has been moved, merged or demoted. */
+const BAND_T = 112;
+const BAND_B = 376;
+const BAND_H = BAND_B - BAND_T; // 264px = 100% of mass
+
+const TIER_H = 30;
+const TIER_0 = 84; // baseline of the name on the tier nearest the band
+
+/** The window the detail panel magnifies, bracketed under the main axis. */
+const BRACKET_Y = 408;
+
+const DET_T = 442;
+const DET_B = 508;
+const DET_H = DET_B - DET_T; // 66px, which is exactly ×10 of the band above
+const DET_MAX = 0.025; // 2.5% full scale
+/** 280px per unit above, 2800px per unit here. Stated on the figure. */
+const DET_MAG = Math.round(DET_H / DET_MAX / (BAND_H / 1));
+
+/* ---- time axis --------------------------------------------------------
+   The domain starts at the Planck time and ends now. Nothing is drawn to
+   the left of the first, because there is nothing honest to draw there —
+   which is step one of the prose, and the axis says it without a caption. */
+const T0 = moments[0].t;
+const T1 = moments[moments.length - 1].t;
+const L0 = Math.log10(T0);
+const L1 = Math.log10(T1);
+const LSPAN = L1 - L0;
+const DECADES = Math.round(LSPAN);
+
+const x = (t: number) => PL + ((Math.log10(t) - L0) / LSPAN) * PW;
+
+const SUP: Record<string, string> = {
+  '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
+  5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹',
+};
+const sup = (n: number) =>
+  String(n)
+    .split('')
+    .map((c) => SUP[c] ?? c)
+    .join('');
+
+/** Decade ticks, sparse enough to read across sixty-one of them. */
+const decadeTicks: number[] = [];
+for (let e = -40; e <= Math.floor(L1); e += 10) decadeTicks.push(e);
+
+/* ---- the bands --------------------------------------------------------
+   Every band is a polygon through the sampled rows, not a resampling of
+   them. Ten vertices along the top, ten back along the bottom. */
+/* Helium was green, and that was not a taste problem — it was wrong.
+   `--c-verse` means "dying low-mass stars" in the periodic table and in the body
+   census, and helium is a Big Bang product in both (element-origins.json says
+   so). A reader who had learned the colour code from those two figures would
+   arrive here and read this one as claiming helium came out of stars. Hydrogen
+   and helium are now two tints of the same Big Bang blue, which is what they
+   are, and it leaves the amber sliver as the only other hue in the drawing —
+   so the moment something appears that the Big Bang did not make is the one
+   colour change in sixty-one decades.
+
+   Ink carries the two states that are not really substances. Two hues total,
+   down from four; five saturated fills read as a chemistry poster, and the
+   loudest of them was the block carrying the least information. */
+const SPECIES = [
+  { key: 'quarks', fill: 'var(--ink)', op: 0.13 },
+  { key: 'protons', fill: 'var(--c-links)', op: 0.85 },
+  { key: 'neutrons', fill: 'var(--ink)', op: 0.45 },
+  { key: 'helium', fill: 'var(--c-links)', op: 0.4 },
+  { key: 'metals', fill: 'var(--c-reflections)', op: 0.95 },
+] as const;
+
+const at = (row: Abundance, key: string) =>
+  (row as unknown as Record<string, number>)[key] ?? 0;
+
+const round = (n: number) => Number(n.toFixed(2));
+
+/** Cumulative fraction up to and including `key`, bottom of the stack first. */
+function stackTop(row: Abundance, upTo: number): number {
+  let total = 0;
+  for (let i = 0; i <= upTo; i++) total += at(row, SPECIES[i].key);
+  return total;
+}
+
+const yOf = (fraction: number) => BAND_B - fraction * BAND_H;
+
+// The first sample sits a fraction of a decade inside the domain; hold its
+// composition back to the left edge rather than leaving a notch.
+const samples = abundance.map((row) => ({ row, px: Math.max(PL, x(row.t)) }));
+
+const bands = SPECIES.map((species, index) => {
+  const top = samples.map((s) => [s.px, yOf(stackTop(s.row, index))] as const);
+  const bottom = samples
+    .map((s) => [s.px, yOf(stackTop(s.row, index - 1))] as const)
+    .reverse();
+
+  const anyInk = samples.some((s) => at(s.row, species.key) > 0);
+  if (!anyInk) return { ...species, d: '' };
+
+  const d =
+    top.map(([px, py], i) => `${i ? 'L' : 'M'}${round(px)} ${round(py)}`).join('') +
+    bottom.map(([px, py]) => `L${round(px)} ${round(py)}`).join('') +
+    'Z';
+
+  return { ...species, d };
+}).filter((band) => band.d);
+
+/* ---- labels on the drawing, not in a legend ---------------------------
+   Sized by what they are worth. The composition the universe settled on and
+   has held ever since is the answer this whole figure exists to deliver, so it
+   is set at display size inside the bands it describes rather than as an
+   eleven-pixel mono tag. The plateau is 316px wide, which is room enough. */
+/* Centred on the stretch where the composition is genuinely flat — after
+   nucleosynthesis ends and before the first stars add anything — so the two
+   numbers on the drawing are the numbers that hold across it. Centring on the
+   whole right-hand half instead would have put "75%" over a region where it has
+   already drifted to 74, which is the kind of small dishonesty that costs a
+   reader their trust in everything else on the page. */
+const FLAT_FROM = 1200;
+const FLAT_TO = moments.find((m) => m.label === 'First stars')!.t;
+const plateau = (x(FLAT_FROM) + x(FLAT_TO)) / 2;
+const share = abundance.find((row) => row.t === FLAT_FROM) ?? abundance[abundance.length - 1];
+const inBand = [
+  {
+    // Left-anchored at the era's leading edge, not centred in it. Centred and
+    // set at the size of the answer, it read as a poster slogan; a region label
+    // belongs at the region's start, at the size of a region label.
+    text: 'nothing is bound to anything',
+    sub: 'no nuclei · no atoms · and it lasts for sixty-one per cent of this figure',
+    px: PL + 24,
+    py: BAND_T + BAND_H * 0.46,
+    size: 'mid' as const,
+    tone: 'dim' as const,
+    anchor: 'start' as const,
+  },
+  {
+    text: `${Math.round(share.protons * 100)}% hydrogen`,
+    sub: 'made at a millionth of a second · unchanged since',
+    px: plateau,
+    py: BAND_B - BAND_H * 0.36,
+    anchor: 'middle' as const,
+    size: 'big' as const,
+    tone: 'reverse' as const,
+  },
+  {
+    text: `${Math.round(share.helium * 100)}% helium`,
+    sub: '',
+    px: plateau,
+    py: BAND_B - BAND_H * 0.86,
+    anchor: 'middle' as const,
+    size: 'mid' as const,
+    tone: 'ink' as const,
+  },
+  {
+    text: 'free neutrons',
+    sub: '',
+    px: x(1e-3),
+    py: 158,
+    size: 'small' as const,
+    tone: 'ink' as const,
+    anchor: 'middle' as const,
+  },
+];
+
+/* ---- event labels, packed into tiers ----------------------------------
+   Greedy: take the events left to right and drop each into the lowest tier
+   whose last label has already ended. The four that need four separate tiers
+   at the right-hand edge are not a failure of the packer — they are the last
+   0.5% of elapsed time, and the staircase is the information. */
+const NAME_CH = 7.2; // display at var(--t-xs)
+const TIME_CH = 7.0; // mono at var(--l-md)
+const GUTTER = 12;
+
+type Placed = Moment & {
+  px: number;
+  tier: number;
+  anchor: 'start' | 'end';
+  nameY: number;
+  timeY: number;
+  /** the three-to-twenty-minute window, drawn as one bracketed event */
+  merged: boolean;
+};
+
+/* The four moments after nucleosynthesis — first atoms, first stars, the Sun,
+   now — used to pile into the last five per cent of the width and needed four
+   separate tiers of their own. They are all inside the detail panel's window,
+   and the panel has room to spare, so they are named down there instead. The
+   thicket disappears and nothing is lost.
+
+   The two that remain adjacent, deuterium at three minutes and the end at
+   twenty, are eighteen pixels apart on this axis. They are also one event —
+   the window in which every helium nucleus in the universe was made — so they
+   are drawn as one, bracketed across both ticks. */
+const LATE = new Set(['First atoms', 'First stars', 'The Sun forms', 'Now']);
+const nucleoStart = moments.find((m) => m.label === 'The deuterium bottleneck breaks')!;
+const nucleoEnd = moments.find((m) => m.label === 'It is over')!;
+
+const labelled = moments.filter((m) => !LATE.has(m.label) && m.label !== 'It is over');
+const lateTicks = moments.filter((m) => LATE.has(m.label));
+
+const tierEnds: number[] = [];
+const placed: Placed[] = labelled.map((moment) => {
+  const px = x(moment.t);
+  const isMerged = moment.label === nucleoStart.label;
+  const width = isMerged
+    ? 250
+    : Math.max(moment.tick.length * NAME_CH, moment.display.length * TIME_CH);
+  // Past the right edge a start-anchored label would overhang the plot, so it
+  // hangs off its own tick instead.
+  const anchor: 'start' | 'end' = px + width > PR ? 'end' : 'start';
+  const left = anchor === 'start' ? px : px - width;
+
+  let tier = 0;
+  while (tierEnds[tier] !== undefined && tierEnds[tier] + GUTTER > left) tier++;
+  tierEnds[tier] = left + width;
+
+  const nameY = TIER_0 - tier * TIER_H;
+  return { ...moment, px, tier, anchor, nameY, timeY: nameY + 14, merged: isMerged };
+});
+
+const tierCount = tierEnds.length;
+
+/* ---- the detail panel -------------------------------------------------
+   The metals fraction reaches 2% — three pixels of the band above, which is
+   the honest height and an unreadable one. Redrawn here over the last 5.6
+   decades at ten times the vertical scale, which is the only stretch where
+   any of it happens. */
+const DET_T0 = 1e12;
+const DL0 = Math.log10(DET_T0);
+const DLSPAN = Math.log10(T1) - DL0;
+const dx = (t: number) => PL + ((Math.log10(t) - DL0) / DLSPAN) * PW;
+
+/** Metals fraction at an arbitrary time, interpolated linearly in log t. */
+function metalsAt(t: number): number {
+  const lt = Math.log10(t);
+  let previous = abundance[0];
+  for (const row of abundance) {
+    if (Math.log10(row.t) <= lt) previous = row;
+    else {
+      const a = Math.log10(previous.t);
+      const b = Math.log10(row.t);
+      const f = b === a ? 0 : (lt - a) / (b - a);
+      return previous.metals + f * (row.metals - previous.metals);
+    }
+  }
+  return previous.metals;
+}
+
+const detailRows = [
+  { t: DET_T0, metals: metalsAt(DET_T0) },
+  ...abundance.filter((row) => row.t > DET_T0).map((row) => ({ t: row.t, metals: row.metals })),
+];
+const detailTop = detailRows.map(
+  (row) => [dx(row.t), DET_B - (row.metals / DET_MAX) * DET_H] as const
+);
+const detailPath =
+  detailTop.map(([px, py], i) => `${i ? 'L' : 'M'}${round(px)} ${round(py)}`).join('') +
+  `L${round(PR)} ${DET_B}L${round(PL)} ${DET_B}Z`;
+
+/** The events that fall inside the detail window get their own ticks. */
+const detailEvents = moments.filter((moment) => moment.t >= DET_T0);
+
+
+/* ======================================================================
+   THE PORTRAIT LAYOUT — words in HTML, marks in SVG
+
+   The previous portrait build was hand-placed SVG like everything else, and it
+   had SEVEN different left edges in one drawing: 4, P_L, P_L−10, P_L+8 and
+   three fractions of the band. Nothing lined up with anything, because every
+   x was a number someone typed. A grid cannot misalign; that is the whole
+   reason to use one.
+
+   Positions here are percentages of the band, so they survive any width, and
+   every word is real HTML at a real rem size that does not scale with the
+   container. The audit had this layout's labels painting at 8.7px; they are
+   now whatever the type scale says they are, at every viewport.
+   ====================================================================== */
+
+/** Where a moment sits, as a percentage down the band. */
+const pT = (t: number) => ((Math.log10(t) - L0) / LSPAN) * 100;
+
+/** The bands, as polygons in a 100 × 100 box that is free to distort: these
+    are regions, not shapes, so non-uniform scaling costs them nothing. */
+const pBands = SPECIES.map((species, index) => {
+  if (!samples.some((s2) => at(s2.row, species.key) > 0)) return { ...species, points: '' };
+  const down = abundance.map(
+    (row) => `${round(stackTop(row, index) * 100)},${round(Math.max(0, pT(row.t)))}`
+  );
+  const up = [...abundance]
+    .reverse()
+    .map((row) => `${round(stackTop(row, index - 1) * 100)},${round(Math.max(0, pT(row.t)))}`);
+  return { ...species, points: [...down, ...up].join(' ') };
+}).filter((band) => band.points);
+
+/** Decade marks down the side, every ten powers of ten. */
+const pDecades: number[] = [];
+for (let e = -40; e <= Math.floor(L1); e += 10) pDecades.push(e);
+
+/** The six moments that carry the argument; the late four are listed beneath. */
+const pEvents = labelled.map((moment) => ({
+  ...moment,
+  top: pT(moment.t),
+  merged: moment.label === nucleoStart.label,
+}));
+
+/** Where the composition has settled, for the two large readings. */
+const pPlateau = (pT(FLAT_FROM) + pT(FLAT_TO)) / 2;
+
+/* ---- what the scrub line reads ---------------------------------------
+   Six instants, one per step. Everything between them is interpolated in
+   log t, so the line is a continuous, reversible function of scroll. */
+const TARGETS = [T0, 1e-6, 1, 180, 1200, T1];
+
+const bindings = {
+  pl: PL,
+  pr: PR,
+  l0: L0,
+  lspan: LSPAN,
+  bandTop: BAND_T,
+  bandBottom: BAND_B,
+  targets: TARGETS,
+  abundance: abundance.map((row) => [
+    Math.log10(row.t), row.quarks, row.protons, row.neutrons, row.helium, row.metals,
+  ]),
+};
+---
+
+<div class="dt" data-deeptime data-bind={JSON.stringify(bindings)}>
+  <svg class="dt-wide" viewBox={`0 0 ${W} ${H}`} role="presentation">
+    <!-- what the vertical axis is -->
+    <text class="lbl" x={PL} y={24}>what all ordinary matter is made of, by mass</text>
+    <text class="lbl dim" x={PR} y={24} text-anchor="end">
+      {DECADES} powers of ten, drawn to scale
+    </text>
+
+    <!-- ---- event labels, above the band, in tiers ---- -->
+    {
+      placed.map((moment) => {
+        const merged = moment.merged;
+        const endX = x(nucleoEnd.t);
+        return (
+          <g
+            class="ev"
+            data-epistemic={moment.epistemic}
+            data-event={moment.label}
+            data-at={Math.log10(moment.t)}
+          >
+            <line class="leader" x1={moment.px} y1={moment.timeY + 7} x2={moment.px} y2={BAND_T} />
+            {merged && (
+              <>
+                <line class="leader" x1={endX} y1={moment.timeY + 7} x2={endX} y2={BAND_T} />
+                <path
+                  class="ev-span"
+                  d={`M${moment.px} ${moment.timeY + 7}L${moment.px} ${moment.timeY + 3}L${endX} ${
+                    moment.timeY + 3
+                  }L${endX} ${moment.timeY + 7}`}
+                />
+              </>
+            )}
+            <text
+              class="ev-name"
+              x={moment.px}
+              y={moment.nameY}
+              text-anchor={moment.anchor}>{merged ? 'Every helium nucleus, made' : moment.tick}</text
+            >
+            <text
+              class="ev-time"
+              x={moment.px}
+              y={moment.timeY}
+              text-anchor={moment.anchor}>{merged ? '3 → 20 minutes' : moment.display}</text
+            >
+          </g>
+        );
+      })
+    }
+    {/* the late four: ticked here, named in the panel below */}
+    {
+      lateTicks.map((moment) => (
+        <line class="late-tick" x1={x(moment.t)} y1={BAND_T - 8} x2={x(moment.t)} y2={BAND_T} />
+      ))
+    }
+
+    <!-- ---- the band ---- -->
+    <g class="bands">
+      {
+        bands.map((band) => (
+          <path
+            class="seg"
+            d={band.d}
+            fill={band.fill}
+            fill-opacity={band.op}
+            data-species={band.key}
+          />
+        ))
+      }
+    </g>
+
+    {/* Every one of the sixty-one decades, ruled.
+        Drawn OVER the bands and very faint, so it vanishes under the saturated
+        fills and survives only where the band is pale — which is exactly the
+        stretch that needed it. Ruled emptiness reads as measured; blank
+        emptiness reads as forgotten, and that block is three-fifths of the
+        drawing. */}
+    <g class="decades">
+      {
+        Array.from({ length: 61 }, (_, i) => -43 + i).map((e) => (
+          <line x1={x(10 ** e)} y1={BAND_T} x2={x(10 ** e)} y2={BAND_B} />
+        ))
+      }
+    </g>
+
+    {/* Each moment continues through the band, so an event can be located in
+        the material rather than only above it. */}
+    {
+      placed.map((moment) => (
+        <line
+          class="leader-in"
+          data-epistemic={moment.epistemic}
+          x1={moment.px}
+          y1={BAND_T}
+          x2={moment.px}
+          y2={BAND_B}
+        />
+      ))
+    }
+
+    <!-- horizontal reference at a quarter and a half of all mass -->
+    {
+      [0.25, 0.5, 0.75].map((f) => (
+        <line class="ref" x1={PL} y1={yOf(f)} x2={PR} y2={yOf(f)} />
+      ))
+    }
+    <text class="lbl tiny" x={PL - 8} y={yOf(0.25) + 4} text-anchor="end">25%</text>
+    <text class="lbl tiny" x={PL - 8} y={yOf(0.5) + 4} text-anchor="end">50%</text>
+    <text class="lbl tiny" x={PL - 8} y={yOf(0.75) + 4} text-anchor="end">75%</text>
+
+    <!-- names sit on the material they name -->
+    {
+      inBand.map((label) => (
+        <>
+          <text
+            class={`on-band ob-${label.size} ob-${label.tone}`}
+            x={label.px}
+            y={label.py}
+            text-anchor={label.anchor}>{label.text}</text
+          >
+          {label.sub && (
+            <text
+              class={`on-band-sub ob-${label.tone}`}
+              x={label.px}
+              y={label.py + 20}
+              text-anchor={label.anchor}>{label.sub}</text
+            >
+          )}
+        </>
+      ))
+    }
+
+    <!-- ---- the scrub line: bound to scroll, drawn here for no-JS ---- -->
+    {/* The readout rides the line rather than sitting in a row of its own two
+        hundred pixels away, which is what made it read as a stray caption. */}
+    <g class="scrub" data-scrub>
+      <line class="scrub-line" x1={PR} y1={BAND_T - 14} x2={PR} y2={BAND_B + 8} />
+      <g data-scrub-plate>
+        <text class="scrub-when" x={PR - 10} y={BAND_T + 30} text-anchor="end" data-scrub-when>
+          13.8 billion yr
+        </text>
+        <text class="scrub-what" x={PR - 10} y={BAND_T + 52} text-anchor="end" data-scrub-what>
+          hydrogen 74% · helium 24% · heavier 2%
+        </text>
+      </g>
+    </g>
+
+    <!-- ---- time axis ---- -->
+    <line class="axis" x1={PL} y1={BAND_B} x2={PR} y2={BAND_B} />
+    {
+      decadeTicks.map((e) => (
+        <>
+          <line class="axis-tick" x1={x(10 ** e)} y1={BAND_B} x2={x(10 ** e)} y2={BAND_B + 5} />
+          <text class="lbl tick axis-x-lbl" x={x(10 ** e)} y={BAND_B + 18} text-anchor="middle">
+            {e === 0 ? '1 second' : `10${sup(e)} s`}
+          </text>
+        </>
+      ))
+    }
+
+    <!-- ---- the detail panel ----
+         A bracket rather than the usual pair of diagonals: the window being
+         magnified is the last 1.6% of the plot's width, so leader lines from
+         it to a full-width panel cross everything in between and read as a
+         mistake. The bracket sits on the axis where the window actually is. -->
+    <g class="zoom">
+      <path
+        class="zoom-bracket"
+        d={`M${x(DET_T0)} ${BRACKET_Y - 6}L${x(DET_T0)} ${BRACKET_Y}L${PR} ${BRACKET_Y}L${PR} ${BRACKET_Y - 6}`}
+      />
+      <text class="zoom-lbl" x={x(DET_T0) - 12} y={BRACKET_Y + 3} text-anchor="end">
+        this window ↓
+      </text>
+    </g>
+
+    <text class="det-head" x={PL} y={DET_T - 12}>
+      Everything heavier than helium — <tspan class="det-head-dim">the bracketed window above,
+        stretched to full width. Two per cent of all matter, so {DET_MAG} times the vertical
+        scale.</tspan>
+    </text>
+
+    <rect class="det-field" x={PL} y={DET_T} width={PW} height={DET_H} />
+    <path class="det-area" d={detailPath} />
+    <line class="axis" x1={PL} y1={DET_B} x2={PR} y2={DET_B} />
+    <text class="lbl tiny" x={PL - 8} y={DET_T + 5} text-anchor="end">2.5%</text>
+    <text class="lbl tiny" x={PL - 8} y={DET_B + 4} text-anchor="end">0</text>
+
+    {/* The four moments the main plot could not label without a thicket. Here
+        they have two hundred pixels each. */}
+    {
+      detailEvents.map((moment, i) => {
+        // The Sun and Now are 111px apart and their dates are 120px wide, so
+        // one of every crowded pair drops to a second row.
+        const previous = i > 0 ? dx(detailEvents[i - 1].t) : -Infinity;
+        const drop = dx(moment.t) - previous < 170 ? 30 : 0;
+        return (
+        <>
+          <line class="det-tick" x1={dx(moment.t)} y1={DET_T} x2={dx(moment.t)} y2={DET_B + 6 + drop} />
+          <text
+            class="det-name"
+            x={dx(moment.t)}
+            y={DET_B + 24 + drop}
+            text-anchor={dx(moment.t) > PR - 90 ? 'end' : 'middle'}>{moment.tick}</text
+          >
+          <text
+            class="det-when"
+            x={dx(moment.t)}
+            y={DET_B + 42 + drop}
+            text-anchor={dx(moment.t) > PR - 90 ? 'end' : 'middle'}>{moment.display}</text
+          >
+        </>
+        );
+      })
+    }
+
+    <text class="note" x={PL} y={H - 8}>
+      Interpolated linearly in log t between the sampled epochs; every band is a
+      polygon through the source values, not a fitted curve.
+    </text>
+  </svg>
+
+  <!-- ---- the same figure, drawn for a portrait screen ----
+       One grid, one left edge, and every word a real element. -->
+  <div class="dt-tall">
+    <div class="dt-tall-head">
+      <p class="dt-tall-title">What all ordinary matter is made of, by mass</p>
+      <p class="dt-tall-sub">{DECADES} powers of ten, drawn to scale · time runs down</p>
+    </div>
+
+    <div class="dt-tall-axis">
+      {
+        pDecades.map((e) => (
+          <span class="dt-axis-t" style={`top:${pT(10 ** e)}%`}>
+            {e === 0 ? '1 second' : `10${sup(e)} s`}
+          </span>
+        ))
+      }
+      <span class="dt-axis-now" data-scrub-when-tall style={`top:${pT(T0)}%`}>10{sup(-43)} s</span>
+    </div>
+
+    <div class="dt-tall-band">
+      <svg class="dt-tall-svg" viewBox="0 0 100 100" preserveAspectRatio="none" role="presentation">
+        {
+          pBands.map((band) => (
+            <polygon points={band.points} fill={band.fill} fill-opacity={band.op} />
+          ))
+        }
+      </svg>
+
+      {
+        pDecades.map((e) => <span class="dt-tall-decade" style={`top:${pT(10 ** e)}%`} />)
+      }
+
+      <span class="dt-tall-scale" style={`left:75%`}>75%</span>
+
+      <span class="dt-tall-era" style={`top:${pT(1e-24)}%`}>
+        nothing is bound<em>to anything, yet</em>
+      </span>
+
+      <span class="dt-tall-answer" style={`top:${pPlateau}%;left:37.5%`}>
+        75%<em>hydrogen</em>
+      </span>
+      <span class="dt-tall-answer sm" style={`top:${pPlateau}%;left:87.5%`}>
+        25%<em>helium</em>
+      </span>
+
+      {
+        pEvents.map((moment) => (
+          <span class="dt-tall-ev" data-epistemic={moment.epistemic} style={`top:${moment.top}%`}>
+            <b>{moment.merged ? 'All the helium, made' : moment.tick}</b>
+            <i>{moment.merged ? '3 → 20 minutes' : moment.display}</i>
+          </span>
+        ))
+      }
+      {
+        pEvents.filter((m) => m.merged).map(() => (
+          <span class="dt-tall-ev bare" style={`top:${pT(nucleoEnd.t)}%`} />
+        ))
+      }
+
+      <span class="dt-tall-scrub" data-scrub-line-tall style={`top:${pT(T0)}%`} />
+
+    </div>
+
+    <p class="dt-tall-metal">2% — everything heavier than helium, all of it after the first stars</p>
+
+    <dl class="dt-tall-list">
+      <dt class="dt-tall-list-head">And then, for thirteen billion years</dt>
+      {
+        detailEvents.map((moment) => (
+          <div class="dt-tall-row">
+            <dt>{moment.tick}</dt>
+            <dd>{moment.display}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  {/* The table equivalent. Absent until now, which every other figure in this
+      document has had from the start. */}
+  <div class="ex-fig-data" tabindex="0">
+    <table>
+      <caption>What all ordinary matter is made of, by mass, at each sampled epoch</caption>
+      <thead>
+        <tr>
+          <th scope="col">Elapsed</th>
+          <th scope="col">Quarks</th>
+          <th scope="col">Hydrogen</th>
+          <th scope="col">Free neutrons</th>
+          <th scope="col">Helium</th>
+          <th scope="col">Heavier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          abundance.map((row) => (
+            <tr>
+              <th scope="row">{row.t.toExponential(2)} s</th>
+              <td>{(row.quarks * 100).toFixed(1)}%</td>
+              <td>{(row.protons * 100).toFixed(1)}%</td>
+              <td>{(row.neutrons * 100).toFixed(1)}%</td>
+              <td>{(row.helium * 100).toFixed(1)}%</td>
+              <td>{(row.metals * 100).toFixed(1)}%</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .dt svg {
+    overflow: visible;
+  }
+  /* One figure, two drawings. The landscape one until there is no longer room
+     for landscape, then the portrait one — not the landscape one shrunk, and
+     not the landscape one truncated behind a horizontal scrollbar. */
+  .dt .dt-tall {
+    display: none;
+  }
+  @media (max-width: 1050px) {
+    .dt .dt-wide {
+      display: none;
+    }
+    .dt .dt-tall {
+      display: grid;
+      max-width: 620px;
+      margin-inline: auto;
+    }
+  }
+
+  /* ---- portrait ----
+     A two-column grid: a gutter for the time axis and the band. One left edge
+     for the headings and the list, one right edge for the axis labels, and the
+     band between them. Nothing here is positioned by a number anyone typed
+     except the percentages down the time axis, which are computed. */
+  .dt .dt-tall {
+    grid-template-columns: 4.4rem minmax(0, 1fr);
+    column-gap: var(--s-3);
+    row-gap: var(--s-5);
+    align-items: stretch;
+  }
+  .dt .dt-tall-head {
+    grid-column: 1 / -1;
+  }
+  .dt .dt-tall-title {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .dt .dt-tall-sub {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: var(--s-1);
+  }
+
+  .dt .dt-tall-axis {
+    position: relative;
+  }
+  .dt .dt-axis-t,
+  .dt .dt-axis-now {
+    position: absolute;
+    right: 0;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    color: var(--muted);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .dt .dt-axis-now {
+    font-size: var(--t-base);
+    color: var(--red);
+    background: var(--paper);
+    padding: 0.1em 0;
+  }
+
+  .dt .dt-tall-band {
+    position: relative;
+    height: clamp(42rem, 158vw, 64rem);
+  }
+  .dt .dt-tall-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    display: block;
+  }
+  .dt .dt-tall-decade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--ink);
+    opacity: 0.12;
+  }
+  .dt .dt-tall-scale {
+    position: absolute;
+    top: calc(-1 * var(--s-5));
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    color: var(--muted);
+  }
+
+  /* a moment: the rule, and its two words sitting on it */
+  .dt .dt-tall-ev {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1.5px solid var(--paper);
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-2);
+    padding: 0 0 0 var(--s-2);
+    white-space: nowrap;
+  }
+  .dt .dt-tall-ev b,
+  .dt .dt-tall-ev i {
+    position: relative;
+    top: -0.35em;
+    paint-order: stroke;
+  }
+  .dt .dt-tall-ev b {
+    font-family: var(--display);
+    font-size: var(--t-base);
+    font-weight: 600;
+    color: var(--ink);
+    text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper);
+  }
+  .dt .dt-tall-ev i {
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: var(--l-md);
+    color: var(--ink-soft);
+    text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper);
+  }
+  .dt .dt-tall-ev[data-epistemic='contested'] {
+    border-top-style: dashed;
+  }
+  .dt .dt-tall-ev[data-epistemic='open'] {
+    border-top-color: var(--red);
+  }
+  .dt .dt-tall-ev.bare {
+    border-top-color: var(--paper);
+  }
+
+  .dt .dt-tall-era,
+  .dt .dt-tall-answer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--display);
+    font-weight: 600;
+    line-height: 1.05;
+  }
+  .dt .dt-tall-era {
+    left: var(--s-3);
+    font-size: var(--t-lg);
+    color: var(--ink-soft);
+  }
+  .dt .dt-tall-era em {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 0.25em;
+  }
+  .dt .dt-tall-answer {
+    transform: translateX(-50%);
+    align-items: center;
+    font-size: var(--t-2xl);
+    color: var(--paper);
+    text-shadow: 0 0 4px rgb(0 0 0 / 0.22);
+  }
+  .dt .dt-tall-answer.sm {
+    font-size: var(--t-lg);
+    color: var(--ink);
+    text-shadow: 0 0 4px var(--paper);
+  }
+  .dt .dt-tall-answer em {
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-top: 0.35em;
+  }
+
+  .dt .dt-tall-scrub {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 2px solid var(--red);
+  }
+  .dt .dt-tall-metal {
+    grid-column: 2;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--c-reflections);
+    margin-top: calc(-1 * var(--s-3));
+  }
+
+  .dt .dt-tall-list {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .dt .dt-tall-list-head {
+    font-family: var(--display);
+    font-size: var(--t-md);
+    font-weight: 600;
+    margin-bottom: var(--s-2);
+  }
+  .dt .dt-tall-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-4);
+    border-top: 1px solid var(--rule);
+    padding: var(--s-2) 0;
+  }
+  .dt .dt-tall-row dt {
+    font-family: var(--display);
+    font-size: var(--t-base);
+  }
+  .dt .dt-tall-row dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    color: var(--muted);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .dt .dim {
+    fill: var(--muted);
+  }
+  .dt .tiny {
+    font-size: var(--l-sm);
+    fill: var(--muted);
+  }
+  .dt .tick {
+    fill: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  /* `s` is seconds. Uppercased it is siemens, which is a different quantity. */
+  .dt .axis-x-lbl {
+    text-transform: none;
+  }
+  .dt .det-lbl {
+    fill: var(--ink-soft);
+  }
+  .dt .note {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    fill: var(--muted);
+  }
+
+  /* ---- events ---- */
+  .dt .ev-name {
+    font-family: var(--display);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    fill: var(--ink);
+  }
+  .dt .ev-time {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: 0.04em;
+    fill: var(--ink-soft);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .dt .leader {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .dt .leader-in {
+    stroke: var(--paper);
+    stroke-width: 1;
+    opacity: 0.5;
+  }
+  .dt .leader-in[data-epistemic='contested'] {
+    stroke-dasharray: 5 3;
+  }
+  .dt .leader-in[data-epistemic='open'] {
+    stroke: var(--red);
+    stroke-dasharray: 2 4;
+    opacity: 0.8;
+  }
+  /* The epistemic register, doing work rather than decorating: the two moments
+     nobody can explain are drawn in the author's ink and their leaders never
+     reach the band, because the claim does not either. */
+  .dt .ev[data-epistemic='contested'] .leader {
+    stroke-dasharray: 5 3;
+  }
+  .dt .ev[data-epistemic='contested'] .ev-name {
+    fill: var(--ink-soft);
+  }
+  .dt .ev[data-epistemic='open'] .leader {
+    stroke: var(--red);
+    stroke-dasharray: 2 4;
+  }
+  .dt .ev[data-epistemic='open'] .ev-name,
+  .dt .ev[data-epistemic='open'] .ev-time {
+    fill: var(--red);
+  }
+  .dt .ev[data-active='true'] .ev-name {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ---- the band ----
+     Solid, not the 0.55 fill-opacity of the last build: four translucent fills
+     over each other is how you get grey mud exactly where the argument is. */
+  .dt .seg {
+    stroke: var(--paper);
+    stroke-width: 1.25;
+  }
+  .dt .decades line {
+    stroke: var(--ink);
+    stroke-width: 0.5;
+    opacity: 0.14;
+  }
+  .dt .ref {
+    stroke: var(--paper);
+    stroke-width: 1;
+    stroke-dasharray: 2 5;
+    opacity: 0.5;
+  }
+
+  /* ---- the things the figure is actually for ----
+     Set at the size of the claim they carry. Everything in this drawing used to
+     top out at 25px, so nothing in it could stop a reader. */
+  .dt .on-band {
+    font-family: var(--display);
+    font-weight: 600;
+    letter-spacing: var(--tr-display);
+    /* These sit on filled bands in both themes, and the neutron band in
+       particular lands close to the ink it is labelled in. A halo costs
+       nothing and means no label depends on which way the theme went. */
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3;
+  }
+  .dt .ob-big {
+    font-size: var(--t-2xl);
+  }
+  .dt .ob-mid {
+    font-size: var(--t-lg);
+  }
+  .dt .ob-small {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    font-weight: 400;
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+  }
+  .dt .on-band-sub {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 2.5;
+  }
+  /* Reversed-out labels sit on the strongest fills, where a paper halo would
+     eat the glyph rather than protect it. */
+  .dt .ob-reverse,
+  .dt .on-band-sub.ob-reverse {
+    stroke: rgb(0 0 0 / 0.18);
+  }
+  .dt .ob-dim,
+  .dt .on-band-sub.ob-dim {
+    fill: var(--ink-soft);
+  }
+  .dt .ob-ink,
+  .dt .on-band-sub.ob-ink {
+    fill: var(--ink);
+  }
+  .dt .ob-reverse,
+  .dt .on-band-sub.ob-reverse {
+    fill: var(--paper);
+  }
+
+  .dt .axis {
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .dt .axis-tick,
+  .dt .det-tick {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+
+  /* ---- detail panel ---- */
+  .dt .det-field {
+    fill: none;
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+  .dt .det-area {
+    fill: var(--c-reflections);
+    fill-opacity: 0.9;
+  }
+  .dt .zoom-bracket {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .dt .zoom-lbl {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    fill: var(--ink-soft);
+  }
+  .dt .axis-title {
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    fill: var(--muted);
+  }
+  .dt .det-head {
+    font-family: var(--display);
+    font-size: var(--t-md);
+    font-weight: 600;
+    fill: var(--ink);
+  }
+  .dt .det-head-dim {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    font-weight: 400;
+    fill: var(--ink-soft);
+  }
+  .dt .det-name {
+    font-family: var(--display);
+    font-size: var(--t-base);
+    font-weight: 600;
+    fill: var(--ink);
+  }
+  .dt .det-when {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    fill: var(--muted);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .dt .late-tick {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .dt .ev-span {
+    fill: none;
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+
+  /* ---- the scrub ---- */
+  .dt .scrub-line {
+    stroke: var(--red);
+    stroke-width: 1.5;
+  }
+  /* The one large thing in the figure, and it carries information: how far
+     into the history of everything the reader currently is. */
+  .dt .scrub-when {
+    font-family: var(--display);
+    font-size: var(--t-lg);
+    font-weight: 600;
+    fill: var(--red);
+    font-variant-numeric: lining-nums;
+  }
+  .dt .scrub-what {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: 0.04em;
+    fill: var(--ink-soft);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* On dark the band labels want the paper colour they already have, but the
+     halo has to invert or it eats the glyph. */
+  :root[data-theme='dark'] .dt .on-band {
+    stroke: rgb(0 0 0 / 0.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .dt .on-band {
+      stroke: rgb(0 0 0 / 0.35);
+    }
+  }
+
+  @media (max-width: 760px) {
+    .dt .note,
+    .dt .on-band-sub {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { onProgress } from '../../kit/scrolly.js';
+  import { scrubAt, scrubX, compositionAt, when, readout } from './deeptime.js';
+
+  type Bind = {
+    pl: number;
+    pr: number;
+    l0: number;
+    lspan: number;
+    bandTop: number;
+    bandBottom: number;
+    targets: number[];
+    /** [log10 t, quarks, protons, neutrons, helium, metals] */
+    abundance: number[][];
+  };
+
+  const setup = () => {
+    for (const figure of document.querySelectorAll<HTMLElement>('[data-deeptime]')) {
+      const scrolly = figure.closest<HTMLElement>('[data-ex-scrolly]');
+      const raw = figure.dataset.bind;
+      if (!scrolly || !raw) continue;
+
+      const bind: Bind = JSON.parse(raw);
+      const line = figure.querySelector<SVGLineElement>('.dt-wide .scrub-line');
+      // The portrait layout's words are HTML now, so its scrub is a percentage
+      // down a grid cell rather than a y in user units.
+      const tallLine = figure.querySelector<HTMLElement>('[data-scrub-line-tall]');
+      const tallWhen = figure.querySelector<HTMLElement>('[data-scrub-when-tall]');
+      const whenTexts = Array.from(
+        figure.querySelectorAll<SVGTextElement | HTMLElement>(
+          '[data-scrub-when], [data-scrub-when-tall]'
+        )
+      );
+      const whenText = whenTexts[0];
+      const whatText = figure.querySelector<SVGTextElement>('[data-scrub-what]');
+      const events = Array.from(figure.querySelectorAll<SVGGElement>('[data-event]'));
+      if (!line || !whenText || !whatText) continue;
+
+      const logTargets = bind.targets.map((t) => Math.log10(t));
+
+      /**
+       * A pure function of scroll position, and deliberately nothing more —
+       * every calculation it does lives in deeptime.js and is unit-tested for
+       * reversibility. Feed it 0.4 then 0.2 and it lands exactly where 0.2
+       * landed the first time.
+       */
+      const draw = (_overall: number, step: number, within: number) => {
+        const logT = scrubAt(step, within, logTargets);
+        const px = scrubX(logT, bind);
+
+        line.setAttribute('x1', String(px));
+        line.setAttribute('x2', String(px));
+
+        // The readout hangs off the line, and flips side rather than running
+        // off the plot.
+        const flip = px > bind.pr - 300;
+        const anchor = flip ? 'end' : 'start';
+        const textX = flip ? px - 8 : px + 8;
+        for (const node of [whenText, whatText]) {
+          node.setAttribute('x', String(textX));
+          node.setAttribute('text-anchor', anchor);
+        }
+
+        // Both drawings, one scroll position. The hidden one costs two attribute
+        // writes a frame and means the reader never sees a stale figure if the
+        // viewport changes under them.
+        if (tallLine) {
+          const pctDown = ((logT - bind.l0) / bind.lspan) * 100;
+          tallLine.style.top = `${pctDown}%`;
+          if (tallWhen) tallWhen.style.top = `${pctDown}%`;
+        }
+        for (const node of whenTexts) node.textContent = when(logT);
+        whatText.textContent = readout(compositionAt(logT, bind.abundance));
+
+        // Mark the moment the line has reached or passed most recently.
+        let reached = -1;
+        for (let i = 0; i < events.length; i++) {
+          const at = Number(events[i].dataset.at);
+          if (Number.isFinite(at) && at <= logT + 1e-9) reached = i;
+        }
+        for (let i = 0; i < events.length; i++) {
+          events[i].setAttribute('data-active', i === reached ? 'true' : 'false');
+        }
+      };
+
+      onProgress(scrolly, draw);
+      draw(0, 0, 0);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup, { once: true });
+  } else {
+    setup();
+  }
+  document.addEventListener('astro:page-load', setup);
+</script>

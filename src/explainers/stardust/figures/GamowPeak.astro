@@ -1,0 +1,731 @@
+---
+/**
+ * FIG 3 — Why the Sun should not burn.
+ *
+ * See ../SPECS.md. One of the two figures that prove the motion doctrine:
+ * core temperature is BOUND to scroll position, not triggered by it, so
+ * scrubbing back up returns the exact same curves.
+ *
+ * Ships as complete static SVG at the solar core temperature. The script only
+ * ever redraws paths that are already there — with JavaScript off, the figure
+ * still shows the Gamow peak and still makes its argument.
+ */
+import { curves, magnitude, GEOM, MAG, magY, plotX, plotY, T_SOLAR, COULOMB_BARRIER_KEV } from './gamow.js';
+import { niceTicks } from '../../kit/scale.js';
+
+const x = plotX();
+const y = plotY();
+const base = curves(T_SOLAR);
+
+const baseline = y(0);
+const ticks = niceTicks([0, GEOM.eMax], 6).filter((t) => t > 0);
+
+// The scrub runs UP from the Sun, not across an arbitrary range.
+//
+// Two reasons, both load-bearing. First, the static SSR state is the solar core
+// — so if the bound state started anywhere else, the figure would visibly jump
+// the moment JavaScript attached, and the no-JS rendering would disagree with
+// the initial JS rendering. Second, the peak only ever moves right from 6.1 keV,
+// which permanently frees the left of the plot for the Maxwell label.
+//
+// Temperature also holds at solar for the first three steps and only sweeps on
+// the fourth, because that is where the prose asks the reader to watch it.
+const T_MIN = T_SOLAR;
+const T_MAX = 40e6;
+const SWEEP_STEP = 3; // zero-based: the fourth step
+
+/* Portrait geometry. The curve paths stay in the same coordinate system as
+   the desktop drawing so the exact same pure draw function can update both
+   variants. Only the group transform changes. Words are redrawn at real phone
+   sizes outside that transform; scaling desktop labels down would turn them
+   into decoration. */
+const M = { left: 16, right: 344, top: 48, bottom: 252 };
+const mSx = (M.right - M.left) / (GEOM.width - GEOM.right - GEOM.left);
+const mSy = (M.bottom - M.top) / (GEOM.height - GEOM.bottom - GEOM.top);
+const mX = (originalX: number) => M.left + (originalX - GEOM.left) * mSx;
+const mMagY = (value: number) => {
+  const decades = value > 0 ? Math.min(MAG.decades, -Math.log10(value)) : MAG.decades;
+  return 58 + (decades / MAG.decades) * 166;
+};
+---
+
+<div
+  class="gamow"
+  data-gamow
+  data-t-min={T_MIN}
+  data-t-max={T_MAX}
+  data-t-solar={T_SOLAR}
+  data-sweep-step={SWEEP_STEP}
+>
+  <svg class="gamow-wide" viewBox={`0 0 ${GEOM.width} ${GEOM.height}`} role="presentation">
+    <!-- axes -->
+    <line
+      class="axis s-rule"
+      x1={GEOM.left}
+      y1={baseline}
+      x2={GEOM.width - GEOM.right}
+      y2={baseline}
+    />
+    {
+      ticks.map((tick) => (
+        <>
+          <line
+            class="grid s-hair"
+            x1={x(tick)}
+            y1={baseline}
+            x2={x(tick)}
+            y2={GEOM.top}
+          />
+          <text class="lbl" x={x(tick)} y={baseline + 20} text-anchor="middle">
+            {tick}
+          </text>
+        </>
+      ))
+    }
+    <text class="lbl" x={GEOM.left} y={baseline + 42}>Proton energy (keV)</text>
+
+    <!-- the three curves. Direct-labelled on the drawing; no legend. -->
+    <path class="curve maxwell s-rule" d={base.maxwellPath} data-maxwell />
+    <path class="curve tunnel s-rule" d={base.tunnelPath} data-tunnel />
+    <path class="peak-area" d={base.productArea} data-product-area />
+    <path class="curve product s-bold" d={base.productPath} data-product />
+
+    <!-- The Maxwell curve descends from the top-left corner, so its label goes
+         in the free strip directly above it. Anywhere inside the plot collided
+         with the peak, which is tall and wide and owns the middle. -->
+    <text class="lbl lbl-strong" x={GEOM.left} y={GEOM.top - 12}>
+      Thermal protons
+    </text>
+
+    <!-- Tunnelling label in the clear band between the fallen Maxwell curve
+         and the rising tunnelling curve. -->
+    <text class="lbl lbl-strong" x={x(20.5)} y={y(0.30)} text-anchor="end">
+      Chance of tunnelling
+    </text>
+    <text class="lbl" x={x(20.5)} y={y(0.30) + 13} text-anchor="end">
+      — rises with energy
+    </text>
+
+    <!-- the peak: the only thing in red, because it is the point -->
+    <g data-peak-group>
+      <line
+        class="anno-line s-rule"
+        data-peak-line
+        x1={base.peakX}
+        y1={y(1)}
+        x2={base.peakX}
+        y2={baseline}
+      />
+      <text class="anno" data-peak-lbl x={base.peakX + 14} y={y(1) - 8}>
+        Fusion happens here
+      </text>
+      <text class="val" data-peak-val x={base.peakX + 14} y={y(1) + 10}>
+        {base.peakE.toFixed(1)} keV
+      </text>
+    </g>
+
+    <!-- typical thermal energy, so the reader can see the peak is not typical -->
+    <line
+      class="grid s-hair kT"
+      data-kt-line
+      x1={base.kTx}
+      y1={baseline}
+      x2={base.kTx}
+      y2={y(0.86)}
+    />
+    <text class="lbl kT-lbl" data-kt-lbl x={base.kTx} y={y(0.9)} text-anchor="middle">
+      typical kT
+    </text>
+
+    <text class="lbl note" x={GEOM.left} y={GEOM.height - 12}>
+      each curve above is scaled to its own maximum, or two of them would be invisible
+    </text>
+
+    <!-- ---- the magnitude panel ----
+         The one fact in this figure that most needed drawing rather than
+         asserting. Eight decades down the right-hand side, with all three
+         curves' TRUE heights marked on it: the window the Sun burns in is a
+         millionth of either thing that makes it. -->
+    <g class="mag">
+      <text class="lbl mag-title" x={MAG.x - 46} y={GEOM.top - 26}>
+        the same three curves, true height
+      </text>
+      <line class="axis s-rule" x1={MAG.x} y1={MAG.top} x2={MAG.x} y2={MAG.bottom} />
+      {
+        Array.from({ length: MAG.decades + 1 }, (_, i) => (
+          <>
+            <line
+              class="grid s-hair"
+              x1={MAG.x - 5}
+              y1={magY(10 ** -i)}
+              x2={MAG.x + 5}
+              y2={magY(10 ** -i)}
+            />
+            <text class="lbl mag-tick" x={MAG.x - 10} y={magY(10 ** -i) + 4} text-anchor="end">
+              10<tspan class="sup" dy="-4">{i === 0 ? '' : `−${i}`}</tspan>
+            </text>
+          </>
+        ))
+      }
+
+      <line class="mag-rule" x1={MAG.x} y1={magY(1)} x2={MAG.x + 236} y2={magY(1)} />
+      <text class="lbl mag-lbl" x={MAG.x + 52} y={magY(1) - 8}>thermal protons</text>
+
+      <line
+        class="mag-rule"
+        data-mag-tunnel
+        x1={MAG.x}
+        y1={magY(base.tunnelMax)}
+        x2={MAG.x + 236}
+        y2={magY(base.tunnelMax)}
+      />
+      <text class="lbl mag-lbl" data-mag-tunnel-lbl x={MAG.x + 52} y={magY(base.tunnelMax) - 8}>
+        chance of tunnelling
+      </text>
+
+      <line
+        class="mag-rule mag-peak"
+        data-mag-peak
+        x1={MAG.x}
+        y1={magY(base.peakV)}
+        x2={MAG.x + 236}
+        y2={magY(base.peakV)}
+      />
+      <text class="anno" data-mag-peak-lbl x={MAG.x + 52} y={magY(base.peakV) - 10}>
+        where fusion happens
+      </text>
+
+      {/* the drop, as a span rather than a sentence */}
+      <path
+        class="mag-span"
+        data-mag-span
+        d={`M${MAG.x + 32} ${magY(1)}L${MAG.x + 40} ${magY(1)}L${MAG.x + 40} ${magY(
+          base.peakV
+        )}L${MAG.x + 32} ${magY(base.peakV)}`}
+      />
+      <text
+        class="anno mag-drop"
+        data-mag-drop
+        x={MAG.x + 130}
+        y={(magY(1) + magY(base.peakV)) / 2}
+        text-anchor="middle">a factor of 10<tspan
+          class="sup"
+          dy="-6"
+          data-mag-exp>−{magnitude(base.magnification)}</tspan
+        ></text
+      >
+    </g>
+
+    <!-- The barrier is 40× off the right edge. Drawn as an arrow rather than
+         silently cropped, because its absence from the plot IS the drama. -->
+    <g class="barrier">
+      <line
+        class="anno-line s-hair"
+        x1={GEOM.width - GEOM.right - 46}
+        y1={y(0.9)}
+        x2={GEOM.width - GEOM.right - 6}
+        y2={y(0.9)}
+      />
+      <path
+        class="anno-line s-hair"
+        d={`M${GEOM.width - GEOM.right - 6} ${y(0.9)} l-7 -4 M${GEOM.width - GEOM.right - 6} ${y(0.9)} l-7 4`}
+      />
+      <text class="anno" x={GEOM.width - GEOM.right - 50} y={y(0.9) - 8} text-anchor="end">
+        Coulomb barrier: {COULOMB_BARRIER_KEV} keV
+      </text>
+      <text class="lbl" x={GEOM.width - GEOM.right - 50} y={y(0.9) + 8} text-anchor="end">
+        — 40× beyond this edge
+      </text>
+    </g>
+
+    <!-- current temperature, updated by the scrub -->
+    <text class="val temp" data-temp x={GEOM.width - GEOM.right} y={GEOM.top - 12} text-anchor="end">
+      {(T_SOLAR / 1e6).toFixed(1)} MK — the Sun's core
+    </text>
+  </svg>
+
+  <div class="gamow-tall">
+    <svg class="gamow-tall-plot" viewBox="0 0 360 322" role="presentation">
+      <text class="mobile-kicker" x="16" y="18">Why the Sun burns at all</text>
+      <text class="mobile-temp" data-temp-tall x="344" y="18" text-anchor="end">
+        {(T_SOLAR / 1e6).toFixed(1)} MK
+      </text>
+
+      <g
+        class="mobile-curves"
+        transform={`translate(${M.left} ${M.top}) scale(${mSx} ${mSy}) translate(${-GEOM.left} ${-GEOM.top})`}
+      >
+        <path class="peak-area" d={base.productArea} data-product-area />
+        <path class="curve maxwell s-rule" d={base.maxwellPath} data-maxwell />
+        <path class="curve tunnel s-rule" d={base.tunnelPath} data-tunnel />
+        <path class="curve product s-bold" d={base.productPath} data-product />
+        <line
+          class="mobile-peak-line"
+          data-peak-line
+          x1={base.peakX}
+          y1={y(1)}
+          x2={base.peakX}
+          y2={baseline}
+        />
+        <line
+          class="mobile-kt-line"
+          data-kt-line
+          x1={base.kTx}
+          y1={baseline}
+          x2={base.kTx}
+          y2={y(0.86)}
+        />
+      </g>
+
+      <line class="mobile-axis" x1={M.left} y1={M.bottom} x2={M.right} y2={M.bottom} />
+      {
+        [0, 10, 20].map((tick) => (
+          <>
+            <line class="mobile-grid" x1={mX(x(tick))} y1={M.top} x2={mX(x(tick))} y2={M.bottom} />
+            <text class="mobile-tick" x={mX(x(tick))} y={M.bottom + 17} text-anchor="middle">
+              {tick}
+            </text>
+          </>
+        ))
+      }
+      <text class="mobile-axis-title" x={M.left} y={M.bottom + 36}>proton energy · keV</text>
+      <text class="mobile-curve-lbl" x="20" y="39">thermal protons fall</text>
+      <text class="mobile-curve-lbl" x="340" y="112" text-anchor="end">tunnelling rises</text>
+      <text
+        class="mobile-peak-lbl"
+        data-peak-lbl-tall
+        x={mX(base.peakX)}
+        y="76"
+        text-anchor="middle">fusion happens here</text
+      >
+      <text
+        class="mobile-peak-val"
+        data-peak-val-tall
+        x={mX(base.peakX)}
+        y="92"
+        text-anchor="middle">{base.peakE.toFixed(1)} keV</text
+      >
+      <text
+        class="mobile-kt-lbl"
+        data-kt-lbl-tall
+        x={mX(base.kTx)}
+        y={M.bottom - 8}
+        text-anchor="start">typical energy</text
+      >
+      <text class="mobile-barrier" x="16" y="302">Coulomb barrier: 1,000 keV</text>
+      <text class="mobile-barrier" x="344" y="316" text-anchor="end">
+        forty times beyond this edge →
+      </text>
+    </svg>
+
+    <svg class="gamow-tall-mag" viewBox="0 0 360 272" role="presentation">
+      <text class="mobile-mag-head" x="16" y="20">Now put the curves at their true heights</text>
+      <text class="mobile-mag-sub" x="16" y="38">the overlap almost disappears</text>
+
+      <line class="mobile-mag-axis" x1="42" y1="58" x2="42" y2="224" />
+      {
+        Array.from({ length: MAG.decades + 1 }, (_, i) => {
+          const py = 58 + (i / MAG.decades) * 166;
+          return (
+            <>
+              <line class="mobile-mag-grid" x1="42" y1={py} x2="344" y2={py} />
+              <text class="mobile-mag-tick" x="34" y={py + 4} text-anchor="end">
+                10{i ? `−${i}` : '⁰'}
+              </text>
+            </>
+          );
+        })
+      }
+
+      <line class="mobile-mag-rule" x1="42" y1="58" x2="344" y2="58" />
+      <text class="mobile-mag-lbl" x="54" y="53">thermal protons</text>
+      <line
+        class="mobile-mag-rule"
+        data-mobile-mag-tunnel
+        x1="42"
+        y1={mMagY(base.tunnelMax)}
+        x2="344"
+        y2={mMagY(base.tunnelMax)}
+      />
+      <text
+        class="mobile-mag-lbl"
+        data-mobile-mag-tunnel-lbl
+        x="54"
+        y={mMagY(base.tunnelMax) - 5}>chance of tunnelling</text
+      >
+      <line
+        class="mobile-mag-peak"
+        data-mobile-mag-peak
+        x1="42"
+        y1={mMagY(base.peakV)}
+        x2="344"
+        y2={mMagY(base.peakV)}
+      />
+      <text
+        class="mobile-mag-peak-lbl"
+        data-mobile-mag-peak-lbl
+        x="54"
+        y={mMagY(base.peakV) - 6}>the overlap where fusion happens</text
+      >
+      <path
+        class="mobile-mag-span"
+        data-mobile-mag-span
+        d={`M320 58L330 58L330 ${mMagY(base.peakV)}L320 ${mMagY(base.peakV)}`}
+      />
+      <text
+        class="mobile-mag-drop"
+        data-mobile-mag-drop
+        x="306"
+        y={(58 + mMagY(base.peakV)) / 2}
+        text-anchor="end">≈ one million times smaller</text
+      >
+      <text class="mobile-mag-note" x="16" y="258">
+        The tiny overlap is the Sun's entire energy budget.
+      </text>
+    </svg>
+  </div>
+</div>
+
+<style>
+  .gamow .gamow-tall {
+    display: none;
+  }
+  .gamow .curve {
+    fill: none;
+  }
+  .gamow .maxwell {
+    stroke: var(--ink-soft);
+  }
+  .gamow .tunnel {
+    stroke: var(--ink-soft);
+    stroke-dasharray: 5 3;
+  }
+  .gamow .product {
+    stroke: var(--ink);
+  }
+  .gamow .peak-area {
+    fill: var(--red-wash);
+    stroke: none;
+  }
+  .gamow .kT {
+    stroke: var(--rule-strong);
+    stroke-dasharray: 2 3;
+  }
+  .gamow .note,
+  .gamow .kT-lbl {
+    fill: var(--muted);
+  }
+  .gamow .sup {
+    font-size: 0.75em;
+  }
+  .gamow .temp {
+    fill: var(--red);
+  }
+  .gamow .mag-title,
+  .gamow .mag-tick {
+    fill: var(--muted);
+  }
+  .gamow .mag-lbl {
+    fill: var(--ink-soft);
+  }
+  .gamow .mag-rule {
+    stroke: var(--ink-soft);
+    stroke-width: 1;
+  }
+  .gamow .mag-peak {
+    stroke: var(--red);
+    stroke-width: 1.5;
+  }
+  .gamow .mag-span {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1;
+  }
+  .gamow .mag-drop {
+    font-size: var(--t-md);
+  }
+  .gamow .barrier .anno-line {
+    stroke: var(--muted);
+  }
+  .gamow .barrier .anno {
+    fill: var(--muted);
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 1050px) {
+    .gamow .gamow-wide {
+      display: none;
+    }
+    .gamow .gamow-tall {
+      display: block;
+      max-width: 620px;
+      margin-inline: auto;
+    }
+    .gamow .gamow-tall svg {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      overflow: visible;
+    }
+    .gamow .mobile-kicker,
+    .gamow .mobile-temp,
+    .gamow .mobile-tick,
+    .gamow .mobile-axis-title,
+    .gamow .mobile-curve-lbl,
+    .gamow .mobile-peak-val,
+    .gamow .mobile-kt-lbl,
+    .gamow .mobile-barrier,
+    .gamow .mobile-mag-sub,
+    .gamow .mobile-mag-tick,
+    .gamow .mobile-mag-lbl {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: var(--tr-label);
+      text-transform: uppercase;
+      fill: var(--ink-soft);
+    }
+    .gamow .mobile-kicker,
+    .gamow .mobile-temp {
+      font-weight: 600;
+      fill: var(--ink);
+    }
+    .gamow .mobile-temp,
+    .gamow .mobile-peak-lbl,
+    .gamow .mobile-mag-peak-lbl,
+    .gamow .mobile-mag-drop {
+      fill: var(--red);
+    }
+    .gamow .mobile-curves .curve {
+      vector-effect: non-scaling-stroke;
+    }
+    .gamow .mobile-axis,
+    .gamow .mobile-mag-axis {
+      stroke: var(--ink);
+      stroke-width: 1;
+    }
+    .gamow .mobile-grid,
+    .gamow .mobile-mag-grid {
+      stroke: var(--rule);
+      stroke-width: 1;
+    }
+    .gamow .mobile-peak-line {
+      stroke: var(--red);
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+    }
+    .gamow .mobile-kt-line {
+      stroke: var(--rule-strong);
+      stroke-width: 1;
+      stroke-dasharray: 3 4;
+      vector-effect: non-scaling-stroke;
+    }
+    .gamow .mobile-peak-lbl,
+    .gamow .mobile-mag-head,
+    .gamow .mobile-mag-peak-lbl,
+    .gamow .mobile-mag-drop,
+    .gamow .mobile-mag-note {
+      font-family: var(--display);
+      font-size: 15px;
+      font-style: italic;
+    }
+    .gamow .mobile-peak-lbl {
+      font-size: 14px;
+    }
+    .gamow .mobile-peak-val {
+      fill: var(--ink);
+    }
+    .gamow .mobile-barrier {
+      fill: var(--muted);
+    }
+    .gamow .gamow-tall-mag {
+      margin-top: var(--s-4);
+      border-top: 1px solid var(--rule);
+      padding-top: var(--s-3);
+    }
+    .gamow .mobile-mag-head {
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 600;
+      fill: var(--ink);
+    }
+    .gamow .mobile-mag-sub,
+    .gamow .mobile-mag-tick {
+      fill: var(--muted);
+    }
+    .gamow .mobile-mag-axis,
+    .gamow .mobile-mag-rule {
+      stroke: var(--ink-soft);
+      stroke-width: 1;
+    }
+    .gamow .mobile-mag-peak {
+      stroke: var(--red);
+      stroke-width: 2;
+    }
+    .gamow .mobile-mag-span {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 1;
+    }
+    .gamow .mobile-mag-peak-lbl {
+      font-size: 13px;
+    }
+    .gamow .mobile-mag-drop {
+      font-size: 13px;
+    }
+    .gamow .mobile-mag-note {
+      font-size: 13px;
+      fill: var(--ink-soft);
+    }
+  }
+</style>
+
+<script>
+  import { onProgress } from '../../kit/scrolly.js';
+  import { curves, magnitude, plotY, MAG, magY } from './gamow.js';
+
+  const setup = () => {
+    for (const figure of document.querySelectorAll<HTMLElement>('[data-gamow]')) {
+      const scrolly = figure.closest<HTMLElement>('[data-ex-scrolly]');
+      if (!scrolly) continue;
+
+      const tMin = Number(figure.dataset.tMin);
+      const tMax = Number(figure.dataset.tMax);
+      const sweepStep = Number(figure.dataset.sweepStep);
+      const y = plotY();
+
+      const q = <T extends Element>(sel: string) => figure.querySelector<T>(sel);
+      const qa = <T extends Element>(sel: string) =>
+        Array.from(figure.querySelectorAll<T>(sel));
+      const maxwell = qa<SVGPathElement>('[data-maxwell]');
+      const tunnel = qa<SVGPathElement>('[data-tunnel]');
+      const product = qa<SVGPathElement>('[data-product]');
+      const area = qa<SVGPathElement>('[data-product-area]');
+      const peakLine = qa<SVGLineElement>('[data-peak-line]');
+      const peakLbl = q<SVGTextElement>('[data-peak-lbl]');
+      const peakVal = q<SVGTextElement>('[data-peak-val]');
+      const ktLine = qa<SVGLineElement>('[data-kt-line]');
+      const ktLbl = q<SVGTextElement>('[data-kt-lbl]');
+      const magExp = q<SVGTSpanElement>('[data-mag-exp]');
+      const magTunnel = q<SVGLineElement>('[data-mag-tunnel]');
+      const magTunnelLbl = q<SVGTextElement>('[data-mag-tunnel-lbl]');
+      const magPeak = q<SVGLineElement>('[data-mag-peak]');
+      const magPeakLbl = q<SVGTextElement>('[data-mag-peak-lbl]');
+      const magSpan = q<SVGPathElement>('[data-mag-span]');
+      const magDrop = q<SVGTextElement>('[data-mag-drop]');
+      const temp = q<SVGTextElement>('[data-temp]');
+      const tallPeakLbl = q<SVGTextElement>('[data-peak-lbl-tall]');
+      const tallPeakVal = q<SVGTextElement>('[data-peak-val-tall]');
+      const tallKtLbl = q<SVGTextElement>('[data-kt-lbl-tall]');
+      const tallTemp = q<SVGTextElement>('[data-temp-tall]');
+      const mobileMagTunnel = q<SVGLineElement>('[data-mobile-mag-tunnel]');
+      const mobileMagTunnelLbl = q<SVGTextElement>('[data-mobile-mag-tunnel-lbl]');
+      const mobileMagPeak = q<SVGLineElement>('[data-mobile-mag-peak]');
+      const mobileMagPeakLbl = q<SVGTextElement>('[data-mobile-mag-peak-lbl]');
+      const mobileMagSpan = q<SVGPathElement>('[data-mobile-mag-span]');
+      const mobileMagDrop = q<SVGTextElement>('[data-mobile-mag-drop]');
+
+      const mobileX = (originalX: number) => {
+        const left = 16;
+        const right = 344;
+        const sourceLeft = 70;
+        const sourceRight = 1010;
+        return left + ((originalX - sourceLeft) / (sourceRight - sourceLeft)) * (right - left);
+      };
+      const mobileMagY = (value: number) => {
+        const decades = value > 0 ? Math.min(MAG.decades, -Math.log10(value)) : MAG.decades;
+        return 58 + (decades / MAG.decades) * 166;
+      };
+
+      // A pure function of (step, within). No accumulator, no eased carry-over,
+      // no played flag — scrub to step 3 at 40%, back to step 3 at 20%, and this
+      // produces byte-identical path data to the first time it saw that position.
+      //
+      // Temperature holds at the solar core until the step that actually asks
+      // the reader to watch it move, so the first three steps show the figure
+      // exactly as it was server-rendered.
+      const draw = (_overall: number, step: number, within: number) => {
+        const sweep = step >= sweepStep ? within : 0;
+        const T = tMin + sweep * (tMax - tMin);
+        const c = curves(T);
+
+        maxwell.forEach((path) => path.setAttribute('d', c.maxwellPath));
+        tunnel.forEach((path) => path.setAttribute('d', c.tunnelPath));
+        product.forEach((path) => path.setAttribute('d', c.productPath));
+        area.forEach((path) => path.setAttribute('d', c.productArea));
+
+        peakLine.forEach((line) => {
+          line.setAttribute('x1', String(c.peakX));
+          line.setAttribute('x2', String(c.peakX));
+        });
+        peakLbl?.setAttribute('x', String(c.peakX + 14));
+        if (peakVal) {
+          peakVal.setAttribute('x', String(c.peakX + 14));
+          peakVal.textContent = `${c.peakE.toFixed(1)} keV`;
+        }
+        ktLine.forEach((line) => {
+          line.setAttribute('x1', String(c.kTx));
+          line.setAttribute('x2', String(c.kTx));
+        });
+        ktLbl?.setAttribute('x', String(c.kTx));
+        tallPeakLbl?.setAttribute('x', String(mobileX(c.peakX)));
+        tallPeakVal?.setAttribute('x', String(mobileX(c.peakX)));
+        if (tallPeakVal) tallPeakVal.textContent = `${c.peakE.toFixed(1)} keV`;
+        tallKtLbl?.setAttribute('x', String(mobileX(c.kTx)));
+        if (magExp) magExp.textContent = `−${magnitude(c.magnification)}`;
+
+        // The magnitude panel is the same pure function of temperature: every
+        // mark on it is read off `c`, nothing is remembered between frames.
+        const yTunnel = magY(c.tunnelMax);
+        const yPeak = magY(c.peakV);
+        magTunnel?.setAttribute('y1', String(yTunnel));
+        magTunnel?.setAttribute('y2', String(yTunnel));
+        magTunnelLbl?.setAttribute('y', String(yTunnel - 8));
+        magPeak?.setAttribute('y1', String(yPeak));
+        magPeak?.setAttribute('y2', String(yPeak));
+        magPeakLbl?.setAttribute('y', String(yPeak - 10));
+        magSpan?.setAttribute(
+          'd',
+          `M${MAG.x + 32} ${magY(1)}L${MAG.x + 40} ${magY(1)}L${MAG.x + 40} ${yPeak}L${
+            MAG.x + 32
+          } ${yPeak}`
+        );
+        magDrop?.setAttribute('y', String((magY(1) + yPeak) / 2));
+        const mobileTunnelY = mobileMagY(c.tunnelMax);
+        const mobilePeakY = mobileMagY(c.peakV);
+        mobileMagTunnel?.setAttribute('y1', String(mobileTunnelY));
+        mobileMagTunnel?.setAttribute('y2', String(mobileTunnelY));
+        mobileMagTunnelLbl?.setAttribute('y', String(mobileTunnelY - 5));
+        mobileMagPeak?.setAttribute('y1', String(mobilePeakY));
+        mobileMagPeak?.setAttribute('y2', String(mobilePeakY));
+        mobileMagPeakLbl?.setAttribute('y', String(mobilePeakY - 6));
+        mobileMagSpan?.setAttribute(
+          'd',
+          `M320 58L330 58L330 ${mobilePeakY}L320 ${mobilePeakY}`
+        );
+        mobileMagDrop?.setAttribute('y', String((58 + mobilePeakY) / 2));
+        if (temp) {
+          const mk = T / 1e6;
+          const near = Math.abs(mk - 15.7) < 0.6;
+          temp.textContent = near
+            ? `${mk.toFixed(1)} MK — the Sun's core`
+            : `${mk.toFixed(1)} MK`;
+        }
+        if (tallTemp) tallTemp.textContent = `${(T / 1e6).toFixed(1)} MK`;
+        void y;
+      };
+
+      onProgress(scrolly, draw);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup, { once: true });
+  } else {
+    setup();
+  }
+  document.addEventListener('astro:page-load', setup);
+</script>

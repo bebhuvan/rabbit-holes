@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Gloss — Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. Non-negotiable on every page. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;
+    /* ---- THE THIRD INK — see 13-gloss.html ----------------------
+       black = the source (the world) · red = his hand ·
+       --gloss = the machine. Never red, never full black. */
+    --gloss:#8A6E45;--gloss-soft:#C8B48E;--gloss-wash:#FBF8F3;
+    --maxw:1240px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;
+      --gloss:#C9A96E;--gloss-soft:#8A7550;--gloss-wash:#1D1B15;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;
+    --gloss:#C9A96E;--gloss-soft:#8A7550;--gloss-wash:#1D1B15;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;
+    --gloss:#8A6E45;--gloss-soft:#C8B48E;--gloss-wash:#FBF8F3;}
+
+  /* Bodoni's display cut has hairlines too fine to survive at these sizes,
+     worst on dark. Pin opsz low on display elements only. */
+  .brand .mark,h1,.gnum,.note-say,.kind-h .n{font-optical-sizing:none;font-variation-settings:'opsz' 11}
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* masthead — identical to the commonplace book. Same building.
+     Active underline takes --gloss on this shelf (see 13-gloss.html). */
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft)}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);margin:0 .25rem;font-style:normal}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--gloss);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);padding:0 0 0 1.7rem;
+    border-left:1px solid var(--rule);line-height:1;transition:color var(--dur) var(--ease)}
+  .lamp:hover{color:var(--red)}
+
+  /* ---- the shelf band: says what this room is, once, plainly ---- */
+  .shelf{border-bottom:1px solid var(--rule);background:var(--gloss-wash)}
+  .shelf-in{max-width:var(--maxw);margin:0 auto;padding:1rem 2.6rem;
+    display:flex;align-items:baseline;gap:.85rem;flex-wrap:wrap}
+  .shelf .ast{color:var(--gloss-soft);font-family:var(--flourish);font-size:var(--t-base)}
+  .shelf .nm{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--gloss)}
+  .shelf .dsc{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--ink-soft)}
+  .shelf .back{margin-left:auto;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
+  .shelf .back:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* single centred column — the gloss shelf's architecture, not the
+     folio page's three-column grid. Wider than the reading sheet
+     because each row carries a meta column beside it. */
+  .sheet{max-width:47rem;margin:0 auto;padding:3.2rem 2.6rem 0}
+
+  /* ---- the head of the shelf ---- */
+  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.05;
+    letter-spacing:var(--tr-display);margin-bottom:1rem}
+  .lede{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);max-width:31em}
+  .lede a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-soft)}
+
+  /* ---- the honest note. This shelf is two months old. Say so, in the
+       machine's own ink, rather than dressing it up with a count. ---- */
+  .young{margin-top:1.5rem;border-left:2px solid var(--gloss);padding-left:1.05rem}
+  .young .l{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--gloss);margin-bottom:.45rem}
+  .young .b{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.55;color:var(--ink-soft)}
+
+  /* ---- THE INK KEY ------------------------------------------------
+     This is how disclosure survives at index density. Not a badge on
+     every row — a key at the head of the shelf plus the fact that
+     every machine-written line below is set in the machine's ink and
+     hung off a gloss rule. Read the shelf once and the brown means
+     "not him" for the rest of the page. ---- */
+  .key{margin:2.4rem 0 0;border-top:1px solid var(--rule);padding-top:1.1rem;
+    display:flex;flex-direction:column;gap:.34rem}
+  .key .kl{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+  .key .k{display:flex;align-items:baseline;gap:.55rem;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
+  .key .k .w8{display:inline-block;min-width:3.4rem}
+  .key .sw{width:1.5rem;height:0;border-top:2px solid currentColor;transform:translateY(-.28em)}
+  .key .k.w{color:var(--ink)} .key .k.g{color:var(--gloss)} .key .k.h{color:var(--red)}
+  .key .k em{font-family:var(--body);font-style:italic;letter-spacing:0;
+    font-size:var(--t-base);color:var(--ink-soft)}
+
+  /* ---- filter by what it was. "What did I listen to vs read" is the
+       natural way into this shelf, so kind is the primary sort and the
+       filter mirrors it. Kinds belong to the world, so they are black
+       and muted; the active mark takes gloss ink, as the nav does. ---- */
+  .filters{margin-top:1.9rem;padding:.9rem 0;border-top:1px solid var(--rule);
+    border-bottom:2px solid var(--ink);
+    display:flex;align-items:baseline;gap:1.5rem;flex-wrap:wrap;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase}
+  .filters a{color:var(--muted);text-decoration:none;display:flex;align-items:baseline;gap:.4rem}
+  .filters a:hover{color:var(--ink)}
+  .filters a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--gloss);text-decoration-thickness:1px;text-underline-offset:6px}
+  .filters .n{color:var(--muted);font-variant-numeric:lining-nums tabular-nums}
+  .filters a.on .n{color:var(--gloss)}
+  .filters .sortby{margin-left:auto;color:var(--muted);text-transform:none;
+    font-size:var(--l-sm);letter-spacing:var(--tr-label)}
+
+  /* ---- a group of one source kind ---- */
+  .kind{padding-top:2.3rem}
+  .kind-h{display:flex;align-items:baseline;gap:.8rem;margin-bottom:.2rem}
+  .kind-h .t{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--ink)}
+  .kind-h .n{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    color:var(--muted);font-variant-numeric:lining-nums;line-height:1}
+  .kind-sub{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    color:var(--muted);margin-bottom:1.1rem}
+
+  /* ---- ONE GLOSS ROW -----------------------------------------------
+       Three things must be legible at a glance:
+         1. what was consumed — kind, who made it, how long. BLACK.
+         2. that a machine wrote the gloss — the gloss line hangs off a
+            gloss-ink rule and is set in gloss ink. Same two devices as
+            .disclosure on the single gloss page.
+         3. whether he added a note — a red rule and red display italic,
+            the same device as .note. Absent on most rows, and the row
+            must look finished without it. ---- */
+  .row{display:grid;grid-template-columns:6.6rem 1fr;gap:1.4rem;
+    padding:1.15rem 0;border-top:1px solid var(--rule);align-items:start}
+  .kind .row:first-of-type{border-top:1px solid var(--rule-strong)}
+
+  /* the meta column: how long the thing was, and when he took it in.
+     Duration is the honest cost of the source, so it leads. */
+  .meta .dur{display:block;font-family:var(--mono);font-size:var(--l-lg);
+    letter-spacing:var(--tr-label);color:var(--ink-soft);
+    font-variant-numeric:lining-nums tabular-nums;line-height:1.3}
+  .meta .when{display:block;margin-top:.3rem;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+
+  /* the source — the world, so black */
+  .src{font-family:var(--body);font-size:var(--t-md);line-height:1.32;color:var(--ink)}
+  .src a{text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  .row:hover .src a{text-decoration-color:var(--ink)}
+  .by{margin-top:.2rem;font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    color:var(--ink-soft)}
+  .by .where{font-style:normal;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);color:var(--muted)}
+
+  /* the gloss — the machine's line. Gloss rule + gloss ink, every row,
+     no exceptions. This is the disclosure. */
+  .gl{margin-top:.6rem;border-left:2px solid var(--gloss-soft);padding-left:.9rem}
+  .gl a{display:block;text-decoration:none;font-family:var(--body);font-size:var(--t-base);
+    line-height:1.42;color:var(--gloss)}
+  .gl a:hover{text-decoration:underline;text-decoration-color:var(--gloss-soft);text-underline-offset:3px}
+  .gl .len{display:block;margin-top:.25rem;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+
+  /* his hand — red, and rare. 4 of the 14 rows carry one. */
+  .note{margin-top:.65rem;border-left:2px solid var(--red);padding-left:.9rem}
+  .note-say{font-family:var(--display);font-style:italic;font-weight:500;
+    color:var(--red);font-size:var(--t-md);line-height:1.3}
+
+  /* the shelf ends */
+  .end{max-width:47rem;margin:0 auto;padding:2.8rem 2.6rem 0;text-align:center}
+  .end .flr{color:var(--gloss-soft);font-family:var(--flourish);font-size:var(--t-lg)}
+  .end .line{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    color:var(--ink-soft);margin:.7rem 0 .4rem}
+  .end .m{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+  .end .m a{color:var(--red);text-decoration:none}
+
+  footer.foot{max-width:47rem;margin:2.6rem auto 0;padding:1.5rem 2.6rem 4rem;
+    border-top:1px solid var(--rule);font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--muted);display:flex;justify-content:space-between;gap:1.5rem}
+  footer.foot a{color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#">Index</a>
+        <a href="#">Heads</a>
+        <a href="#" class="on">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shelf">
+    <div class="shelf-in">
+      <span class="ast">&#8258;</span>
+      <span class="nm">The Gloss</span>
+      <span class="dsc">Machine-written explanations of things I read and listened to, kept so I remember them.</span>
+      <a class="back" href="#">&#8592; back to the commonplace book</a>
+    </div>
+  </div>
+
+  <main class="sheet">
+
+    <h1>The Gloss</h1>
+    <p class="lede">A gloss is commentary written around a source text, in a different hand than the author&#8217;s. These are written by a machine, at my request, from things I listened to or read &#8212; so that a fortnight later I still have the argument and not just the feeling of having heard it. Separate shelf, separate hand. Nothing here is numbered as a <a href="#">folio</a>.</p>
+
+    <div class="young">
+      <span class="l">This shelf is new</span>
+      <p class="b">Fourteen glosses, started in May 2026. It is two months old and deliberately small &#8212; I only ask for one when a thing was long enough that I would otherwise lose it. There is no backlog being uploaded.</p>
+    </div>
+
+    <div class="key">
+      <span class="kl">How to read this shelf</span>
+      <span class="k w"><span class="sw"></span><span class="w8">Black</span> <em>&#8212; what I consumed: the source, its maker, its length</em></span>
+      <span class="k g"><span class="sw"></span><span class="w8">Brown</span> <em>&#8212; what the machine wrote. Every brown line below it.</em></span>
+      <span class="k h"><span class="sw"></span><span class="w8">Red</span> <em>&#8212; where I said something myself. Four rows of fourteen.</em></span>
+    </div>
+
+    <nav class="filters">
+      <a href="#" class="on">All <span class="n">14</span></a>
+      <a href="#">Podcasts <span class="n">5</span></a>
+      <a href="#">Videos <span class="n">3</span></a>
+      <a href="#">Articles <span class="n">4</span></a>
+      <a href="#">Talks &amp; papers <span class="n">2</span></a>
+      <span class="sortby">newest first</span>
+    </nav>
+
+    <!-- ==================================================================
+         ILLUSTRATIVE PLACEHOLDERS.
+         The Gloss shelf has no real content yet: it is a new Astro
+         collection with nothing written into it. The fourteen entries
+         below are invented FOR THIS SHELF ONLY, so that density and
+         sorting can be judged. The sources are real, well-known
+         podcasts/videos/essays; the gloss titles, the durations, the
+         dates and the notes are made up and must be replaced before
+         this ships.
+
+         Nothing in the commonplace book itself is invented — that has
+         190 real folios and is not touched here.
+         ================================================================== -->
+
+    <section class="kind">
+      <div class="kind-h"><span class="t">Podcasts</span><span class="n">5</span></div>
+      <p class="kind-sub">The long ones. Listened to while walking, which is why I remember so little of them.</p>
+
+      <article class="row">
+        <div class="meta"><span class="dur">3h 09m</span><span class="when">12 Jul</span></div>
+        <div>
+          <p class="src"><a href="#">Nvidia Part III: The Dawn of the AI Era</a></p>
+          <p class="by">Acquired &#183; Ben Gilbert &amp; David Rosenthal <span class="where">acquired.fm</span></p>
+          <div class="gl"><a href="#">How one graphics-card company ended up owning the compute layer of an entire industry &#8212; and the three bets that got it there.<span class="len">gloss &#183; 1,600 words</span></a></div>
+          <div class="note"><p class="note-say">Three hours. Worth every minute.</p></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">2h 04m</span><span class="when">28 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">Satya Nadella on the future of compute</a></p>
+          <p class="by">Dwarkesh Podcast &#183; Dwarkesh Patel <span class="where">dwarkesh.com</span></p>
+          <div class="gl"><a href="#">What a hyperscaler actually worries about: not models, but power, land and the shape of the next depreciation schedule.<span class="len">gloss &#183; 1,400 words</span></a></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">1h 05m</span><span class="when">14 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">The Government Knows AGI Is Coming</a></p>
+          <p class="by">The Ezra Klein Show &#183; with Ben Buchanan <span class="where">nytimes.com</span></p>
+          <div class="gl"><a href="#">The case that state capacity, not capability, is now the binding constraint &#8212; and why the interviewer keeps refusing the frame.<span class="len">gloss &#183; 1,100 words</span></a></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">1h 02m</span><span class="when">31 May</span></div>
+        <div>
+          <p class="src"><a href="#">Jonathan Haidt on the anxious generation</a></p>
+          <p class="by">Conversations with Tyler &#183; Tyler Cowen <span class="where">mercatus.org</span></p>
+          <div class="gl"><a href="#">Four reforms, one contested dataset, and a host who spends the hour looking for the weakest link in the causal chain.<span class="len">gloss &#183; 950 words</span></a></div>
+          <div class="note"><p class="note-say">I wanted to believe this more than I do.</p></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">47m</span><span class="when">19 May</span></div>
+        <div>
+          <p class="src"><a href="#">Why the Copper Market Went Haywire</a></p>
+          <p class="by">Odd Lots &#183; Joe Weisenthal &amp; Tracy Alloway <span class="where">bloomberg.com</span></p>
+          <div class="gl"><a href="#">A tariff announcement, a physical squeeze, and the moment a futures curve stops describing the world and starts moving it.<span class="len">gloss &#183; 800 words</span></a></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="kind">
+      <div class="kind-h"><span class="t">Videos</span><span class="n">3</span></div>
+      <p class="kind-sub">Watched once, understood roughly, glossed so the second watch is optional.</p>
+
+      <article class="row">
+        <div class="meta"><span class="dur">1h 56m</span><span class="when">6 Jul</span></div>
+        <div>
+          <p class="src"><a href="#">Let&#8217;s build GPT: from scratch, in code, spelled out</a></p>
+          <p class="by">Andrej Karpathy <span class="where">youtube.com</span></p>
+          <div class="gl"><a href="#">Every line of a small transformer, in order, with the reason each one exists &#8212; attention arrives about halfway, and earns it.<span class="len">gloss &#183; 2,100 words</span></a></div>
+          <div class="note"><p class="note-say">I have started this four times.</p></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">19m</span><span class="when">21 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">But what is a neural network?</a></p>
+          <p class="by">3Blue1Brown &#183; Grant Sanderson <span class="where">youtube.com</span></p>
+          <div class="gl"><a href="#">Weights, biases and one stubborn geometric picture: the network as a stack of functions bending a space until digits separate.<span class="len">gloss &#183; 700 words</span></a></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">18m</span><span class="when">2 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">The Discovery That Transformed Pi</a></p>
+          <p class="by">Veritasium &#183; Derek Muller <span class="where">youtube.com</span></p>
+          <div class="gl"><a href="#">From polygons to infinite series &#8212; how Newton turned a two-thousand-year grind into a few lines of arithmetic.<span class="len">gloss &#183; 650 words</span></a></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="kind">
+      <div class="kind-h"><span class="t">Articles</span><span class="n">4</span></div>
+      <p class="kind-sub">Long ones. The short ones go straight into the book as folios.</p>
+
+      <article class="row">
+        <div class="meta"><span class="dur">12,300 wds</span><span class="when">9 Jul</span></div>
+        <div>
+          <p class="src"><a href="#">How to Do Great Work</a></p>
+          <p class="by">Paul Graham <span class="where">paulgraham.com</span></p>
+          <div class="gl"><a href="#">The essay compressed to its actual claims: choose by curiosity, work on the edge of your ability, and treat consistency as the whole method.<span class="len">gloss &#183; 1,500 words</span></a></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">4,200 wds</span><span class="when">27 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">A Brief History &amp; Ethos of the Digital Garden</a></p>
+          <p class="by">Maggie Appleton <span class="where">maggieappleton.com</span></p>
+          <div class="gl"><a href="#">Six patterns that separate a garden from a blog &#8212; topography over chronology, growth in public, and the permanent draft.<span class="len">gloss &#183; 1,000 words</span></a></div>
+          <div class="note"><p class="note-say">This is the shape I keep circling.</p></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">3,100 wds</span><span class="when">8 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">ChatGPT Is a Blurry JPEG of the Web</a></p>
+          <p class="by">Ted Chiang <span class="where">newyorker.com</span></p>
+          <div class="gl"><a href="#">The lossy-compression analogy, how far it carries, and the exact point at which it stops being an analogy and starts being a claim.<span class="len">gloss &#183; 900 words</span></a></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">6,800 wds</span><span class="when">24 May</span></div>
+        <div>
+          <p class="src"><a href="#">The Gervais Principle, Or The Office According to &#8220;The Office&#8221;</a></p>
+          <p class="by">Venkatesh Rao <span class="where">ribbonfarm.com</span></p>
+          <div class="gl"><a href="#">Sociopaths, clueless, losers &#8212; a three-caste model of the firm, and why every promotion is a change of language rather than of rank.<span class="len">gloss &#183; 1,300 words</span></a></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="kind">
+      <div class="kind-h"><span class="t">Talks &amp; papers</span><span class="n">2</span></div>
+      <p class="kind-sub">Two so far. Papers get glossed only when I have failed to read them twice.</p>
+
+      <article class="row">
+        <div class="meta"><span class="dur">1h 10m</span><span class="when">16 Jun</span></div>
+        <div>
+          <p class="src"><a href="#">You and Your Research</a></p>
+          <p class="by">Richard Hamming &#183; Bell Labs, 1986 <span class="where">talk</span></p>
+          <div class="gl"><a href="#">Why courage, open doors and the choice of problem beat raw ability &#8212; and the uncomfortable question he asks the room at the end.<span class="len">gloss &#183; 1,200 words</span></a></div>
+        </div>
+      </article>
+
+      <article class="row">
+        <div class="meta"><span class="dur">15 pp</span><span class="when">21 May</span></div>
+        <div>
+          <p class="src"><a href="#">Attention Is All You Need</a></p>
+          <p class="by">Vaswani et al. &#183; NeurIPS 2017 <span class="where">arxiv.org</span></p>
+          <div class="gl"><a href="#">What the architecture removed, not what it added: no recurrence, no convolution, and a training run that finally parallelises.<span class="len">gloss &#183; 1,150 words</span></a></div>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <div class="end">
+    <span class="flr">&#8258;</span>
+    <p class="line">That is the whole shelf. It grows slowly, on purpose.</p>
+    <p class="m">14 glosses &#183; since May 2026 &nbsp;&#183;&nbsp; <a href="#">the commonplace book &#8212; 190 folios &#8594;</a></p>
+  </div>
+
+  <footer class="foot">
+    <span>The Gloss &#183; kept by Bhuvanesh</span>
+    <span><a href="#">how these are made &#8594;</a></span>
+  </footer>
+
+<script>
+  // Theme override on top of prefers-color-scheme. Reads the *rendered*
+  // scheme first so the first click always flips what you can actually see.
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

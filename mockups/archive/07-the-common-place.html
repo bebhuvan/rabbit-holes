@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rabbit Holes — a commonplace book, kept in the open</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fraunces (display, wonky old-style), Newsreader (reading serif), Spline Sans Mono (the index / margin) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F5F1;        /* main ground — cool, restrained, "book stock" not "parchment" */
+    --rail:#ECEAE2;         /* the ledger margin, a shade deeper */
+    --ink:#22262E;          /* near-black with a blue undertone */
+    --ink-soft:#4B4E55;
+    --muted:#8F8C82;        /* hairline captions, secondary metadata */
+    --rule:#DAD7CD;         /* hairlines */
+    --rule-soft:#E4E1D8;
+    --red:#9E3B2E;          /* RUBRICATION — the collector's hand, used only for annotation */
+    --red-soft:#C57A6E;
+    --maxw:1180px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Newsreader',Georgia,serif;
+    font-size:19px;
+    line-height:1.65;
+    font-optical-sizing:auto;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  ::selection{background:var(--ink);color:var(--paper)}
+  a{color:inherit}
+
+  /* ============ MASTHEAD ============ */
+  .masthead{
+    border-bottom:1px solid var(--rule);
+    background:var(--paper);
+  }
+  .masthead-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:1.15rem 2.5rem;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:2rem;
+  }
+  .brand{display:flex;align-items:baseline;gap:.85rem;text-decoration:none}
+  .brand .mark{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.4rem;
+    letter-spacing:-.01em;
+    font-variation-settings:'SOFT' 40,'WONK' 1;
+  }
+  .brand .sub{
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.62rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .masthead nav{
+    display:flex;
+    gap:1.6rem;
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+  .masthead nav a{color:var(--muted);text-decoration:none;transition:color .18s}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink)}
+  .masthead nav a.rss{color:var(--red)}
+
+  /* ============ SHELL: index rail + stream ============ */
+  .shell{
+    max-width:var(--maxw);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:236px 1fr;
+    align-items:start;
+  }
+
+  /* ---- the INDEX rail (heads-first navigation) ---- */
+  .rail{
+    background:var(--rail);
+    border-right:1px solid var(--rule);
+    padding:2.4rem 1.7rem 3rem;
+    position:sticky;
+    top:0;
+    align-self:start;
+    min-height:100vh;
+  }
+  .rail-label{
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.6rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    margin-bottom:1.1rem;
+  }
+  .rail-label::after{content:"";flex:1;height:1px;background:var(--rule)}
+
+  .index{list-style:none;font-family:'Spline Sans Mono',monospace;font-size:.8rem}
+  .index li{margin-bottom:.15rem}
+  .index a{
+    text-decoration:none;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:.5rem;
+    padding:.28rem .4rem;
+    border-radius:3px;
+    color:var(--ink-soft);
+    transition:background .15s,color .15s;
+  }
+  .index a:hover{background:rgba(158,59,46,.07);color:var(--ink)}
+  .index .head-name{letter-spacing:.01em}
+  .index .head-count{color:var(--muted);font-size:.72rem;font-variant-numeric:tabular-nums}
+  .index a:hover .head-count{color:var(--red)}
+  /* the leader dots between name and count */
+  .index .dots{flex:1;border-bottom:1px dotted var(--rule);transform:translateY(-.18em);margin:0 .1rem}
+
+  .index-more{
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.06em;
+    color:var(--red);
+    text-decoration:none;
+    display:inline-block;
+    margin:.8rem .4rem 0;
+    border-bottom:1px solid transparent;
+    transition:border-color .18s;
+  }
+  .index-more:hover{border-color:var(--red-soft)}
+
+  /* the collector's statement — in the hand (red) */
+  .colophon{
+    margin-top:2.4rem;
+    padding-top:1.4rem;
+    border-top:1px solid var(--rule);
+    font-family:'Newsreader',serif;
+    font-style:italic;
+    font-size:.92rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .colophon .hand{color:var(--red);font-style:normal;font-family:'Spline Sans Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;display:block;margin-top:.7rem}
+
+  /* ============ STREAM ============ */
+  .stream{padding:0 0 5rem}
+
+  /* hero / thesis */
+  .thesis{
+    padding:3.4rem 3.2rem 2.6rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .thesis .kicker{
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.64rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--red);
+    margin-bottom:1.1rem;
+  }
+  .thesis h1{
+    font-family:'Fraunces',serif;
+    font-weight:400;
+    font-size:clamp(2.1rem,4.6vw,3.15rem);
+    line-height:1.08;
+    letter-spacing:-.015em;
+    font-variation-settings:'SOFT' 50,'WONK' 1,'opsz' 144;
+    max-width:16ch;
+  }
+  .thesis h1 em{font-style:italic;color:var(--ink)}
+  .thesis .lede{
+    margin-top:1.4rem;
+    font-size:1.12rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+    max-width:46ch;
+  }
+  .thesis .lede a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-soft)}
+
+  /* ---- an ENTRY (folio) ---- */
+  .entry{
+    display:grid;
+    grid-template-columns:1fr 208px;
+    column-gap:2.2rem;
+    padding:2.6rem 3.2rem;
+    border-bottom:1px solid var(--rule-soft);
+    position:relative;
+  }
+  .entry:hover{background:rgba(255,255,255,.35)}
+
+  .entry-body{grid-column:1;min-width:0}
+
+  /* the folio number + type — running head of each entry */
+  .runhead{
+    display:flex;
+    align-items:baseline;
+    gap:.8rem;
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.66rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:1rem;
+  }
+  .runhead .folio{color:var(--red);font-weight:600}
+  .runhead .type{
+    padding:.12rem .5rem;
+    border:1px solid var(--rule);
+    border-radius:100px;
+    letter-spacing:.13em;
+  }
+  .runhead .date{margin-left:auto;color:var(--muted)}
+
+  .entry h2{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:1.62rem;
+    line-height:1.18;
+    letter-spacing:-.01em;
+    font-variation-settings:'SOFT' 30,'WONK' 0,'opsz' 60;
+    margin-bottom:.7rem;
+  }
+  .entry h2 a{text-decoration:none;background-image:linear-gradient(var(--red),var(--red));background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .3s}
+  .entry h2 a:hover{background-size:100% 1px}
+
+  .entry p{margin-bottom:.9rem;color:var(--ink)}
+  .entry p:last-child{margin-bottom:0}
+
+  .source-line{
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.7rem;
+    letter-spacing:.03em;
+    color:var(--muted);
+    margin-bottom:.9rem;
+  }
+  .source-line a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .source-line a:hover{color:var(--red);border-color:var(--red-soft)}
+
+  /* verse gets centered, airy treatment */
+  .entry.verse .entry-body{text-align:center}
+  .entry.verse .runhead{justify-content:center}
+  .entry.verse .runhead .date{margin-left:0}
+  .verse blockquote{
+    font-family:'Newsreader',serif;
+    font-size:1.16rem;
+    font-style:italic;
+    line-height:1.85;
+    color:var(--ink);
+    max-width:34ch;
+    margin:.4rem auto .2rem;
+  }
+
+  /* quote / reflection gets a hanging rule and larger type */
+  .pull{
+    font-family:'Fraunces',serif;
+    font-weight:400;
+    font-size:1.35rem;
+    line-height:1.5;
+    font-variation-settings:'SOFT' 40,'opsz' 90;
+    color:var(--ink);
+    border-left:2px solid var(--red);
+    padding-left:1.3rem;
+    margin:.3rem 0 1rem;
+  }
+
+  /* image / curiosity */
+  .plate{
+    border:1px solid var(--rule);
+    background:#fff;
+    padding:.55rem;
+    margin-bottom:1rem;
+  }
+  .plate .frame{
+    aspect-ratio:16/10;
+    background:
+      repeating-linear-gradient(135deg,#efece4 0 12px,#eae6dc 12px 24px);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Spline Sans Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  }
+  .plate .cap{
+    font-family:'Spline Sans Mono',monospace;font-size:.62rem;letter-spacing:.05em;color:var(--muted);
+    padding:.5rem .2rem .1rem;text-align:left;
+  }
+
+  /* ---- the MARGIN: sidenotes in the collector's hand ---- */
+  .margin{
+    grid-column:2;
+    padding-top:2.35rem; /* aligns under the runhead */
+    border-left:1px solid var(--rule-soft);
+    padding-left:1.4rem;
+  }
+  .sidenote{margin-bottom:1.3rem}
+  .sidenote .sn-label{
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);display:block;margin-bottom:.3rem;
+  }
+  .sidenote.note .sn-body{
+    font-family:'Newsreader',serif;font-style:italic;font-size:.9rem;line-height:1.5;
+    color:var(--red);   /* the hand */
+  }
+  .sidenote .sn-body{font-size:.82rem;line-height:1.5;color:var(--ink-soft)}
+  .sidenote .sn-body a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .sidenote .sn-body a:hover{color:var(--red);border-color:var(--red-soft)}
+
+  /* cross-references — the connective tissue / graph made visible */
+  .threads{margin-top:.2rem}
+  .threads .sn-label{color:var(--red)}
+  .thread{
+    display:block;text-decoration:none;
+    font-family:'Newsreader',serif;font-size:.86rem;line-height:1.35;
+    padding:.35rem 0;border-bottom:1px dotted var(--rule);
+    color:var(--ink-soft);
+  }
+  .thread:last-child{border-bottom:none}
+  .thread .arw{color:var(--red);font-family:'Spline Sans Mono',monospace;margin-right:.4rem}
+  .thread .ref{font-family:'Spline Sans Mono',monospace;font-size:.6rem;color:var(--muted);display:block;margin-top:.1rem;letter-spacing:.05em}
+  .thread:hover{color:var(--ink)}
+  .thread:hover .ref{color:var(--red)}
+
+  /* footer of the stream */
+  .stream-foot{
+    padding:2.4rem 3.2rem;
+    font-family:'Spline Sans Mono',monospace;
+    font-size:.7rem;letter-spacing:.06em;color:var(--muted);
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;
+  }
+  .stream-foot a{color:var(--red);text-decoration:none}
+  .stream-foot .count{color:var(--ink-soft)}
+
+  /* ============ MOTION ============ */
+  @keyframes settle{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .thesis,.entry{animation:settle .6s cubic-bezier(.2,.7,.3,1) both}
+  .entry:nth-of-type(2){animation-delay:.06s}
+  .entry:nth-of-type(3){animation-delay:.12s}
+  .entry:nth-of-type(4){animation-delay:.18s}
+  .entry:nth-of-type(5){animation-delay:.24s}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:940px){
+    .shell{grid-template-columns:1fr}
+    .rail{
+      position:static;min-height:0;border-right:none;border-bottom:1px solid var(--rule);
+      padding:1.8rem 2.5rem 2rem;
+    }
+    .index{columns:2;column-gap:2rem}
+    .colophon{margin-top:1.6rem}
+    .entry{grid-template-columns:1fr;column-gap:0}
+    .margin{
+      grid-column:1;border-left:none;padding-left:0;padding-top:1.4rem;margin-top:1.4rem;
+      border-top:1px solid var(--rule-soft);
+      display:grid;grid-template-columns:1fr 1fr;gap:1.2rem 1.6rem;
+    }
+    .thesis,.entry,.stream-foot{padding-left:2.5rem;padding-right:2.5rem}
+  }
+  @media (max-width:600px){
+    body{font-size:18px}
+    .masthead-inner{flex-direction:column;gap:.7rem;padding:1rem 1.4rem}
+    .masthead nav{gap:1.1rem;flex-wrap:wrap}
+    .index{columns:1}
+    .rail,.thesis,.entry,.stream-foot{padding-left:1.4rem;padding-right:1.4rem}
+    .margin{grid-template-columns:1fr}
+    .runhead{flex-wrap:wrap}
+    .runhead .date{margin-left:0;width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book</span>
+      </a>
+      <nav>
+        <a href="#" class="on">Index</a>
+        <a href="#">Heads</a>
+        <a href="#">Recent</a>
+        <a href="#">Graph</a>
+        <a href="#">About</a>
+        <a href="#" class="rss">RSS</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <!-- ============ THE INDEX (heads-first) ============ -->
+    <aside class="rail">
+      <div class="rail-label">The Index</div>
+      <ul class="index">
+        <li><a href="#"><span class="head-name">Artificial Intelligence</span><span class="dots"></span><span class="head-count">87</span></a></li>
+        <li><a href="#"><span class="head-name">Poetry</span><span class="dots"></span><span class="head-count">13</span></a></li>
+        <li><a href="#"><span class="head-name">Work</span><span class="dots"></span><span class="head-count">12</span></a></li>
+        <li><a href="#"><span class="head-name">Philosophy</span><span class="dots"></span><span class="head-count">9</span></a></li>
+        <li><a href="#"><span class="head-name">Reading</span><span class="dots"></span><span class="head-count">8</span></a></li>
+        <li><a href="#"><span class="head-name">Attention</span><span class="dots"></span><span class="head-count">6</span></a></li>
+        <li><a href="#"><span class="head-name">Randomness</span><span class="dots"></span><span class="head-count">5</span></a></li>
+        <li><a href="#"><span class="head-name">Nostalgia</span><span class="dots"></span><span class="head-count">4</span></a></li>
+      </ul>
+      <a href="#" class="index-more">all 62 heads →</a>
+
+      <p class="colophon">
+        Things that struck my fancy, filed in the open so you might fall down the same holes I did.
+        <span class="hand">kept by Bhuvanesh · since 2025</span>
+      </p>
+    </aside>
+
+    <!-- ============ THE STREAM ============ -->
+    <main class="stream">
+
+      <section class="thesis">
+        <div class="kicker">¶ 371 &nbsp;·&nbsp; you have wandered in</div>
+        <h1>A commonplace book, <em>kept in the open.</em></h1>
+        <p class="lede">
+          A collection of links, quotes, poems, plates and stray thoughts — the source in black,
+          my hand in <a href="#">red</a>. Read down the stream, or pull a thread from the <a href="#">Index</a>
+          and follow it wherever it goes.
+        </p>
+      </section>
+
+      <!-- VERSE -->
+      <article class="entry verse">
+        <div class="entry-body">
+          <div class="runhead">
+            <span class="folio">¶ 366</span>
+            <span class="type">Verse</span>
+            <span class="date">21 Sep 2025</span>
+          </div>
+          <h2><a href="#">Wild Geese</a></h2>
+          <blockquote>
+            You do not have to be good.<br>
+            You do not have to walk on your knees<br>
+            for a hundred miles through the desert, repenting.<br>
+            You only have to let the soft animal of your body<br>
+            love what it loves.
+          </blockquote>
+        </div>
+        <div class="margin">
+          <div class="sidenote">
+            <span class="sn-label">Hand</span>
+            <div class="sn-body" style="font-family:'Newsreader';font-style:italic;color:var(--red)">Mary Oliver. The permission I reread when the striving gets loud.</div>
+          </div>
+          <div class="sidenote">
+            <span class="sn-label">Source</span>
+            <div class="sn-body"><a href="#">allpoetry.com →</a></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- LINKS -->
+      <article class="entry">
+        <div class="entry-body">
+          <div class="runhead">
+            <span class="folio">¶ 370</span>
+            <span class="type">Links</span>
+            <span class="date">16 Jan 2026</span>
+          </div>
+          <h2><a href="#">The future of AI and automation</a></h2>
+          <div class="source-line">x.com/i/status · Charles Jones &amp; Christopher Tonetti</div>
+          <p>
+            The economy is a chain of complementary tasks, and output is limited by the weakest link.
+            So even if you automate 95% of tasks with <em>infinite</em> productivity, you don't get infinite
+            output — you're still bound by the remaining 5%.
+          </p>
+          <p>Software is ~2% of GDP; automating all of it perfectly raises GDP by… about 2%.</p>
+        </div>
+        <div class="margin">
+          <div class="sidenote note">
+            <span class="sn-label">Hand</span>
+            <div class="sn-body">The most sober thing I've read against both the hype and the doom. "Weak links" is the phrase I keep reaching for.</div>
+          </div>
+          <div class="sidenote threads">
+            <span class="sn-label">↝ threads to</span>
+            <a class="thread" href="#">Ben Thompson's optimistic case for AI<span class="ref">¶ 358 · shares: automation</span></a>
+            <a class="thread" href="#">The short-termism in our stars<span class="ref">¶ 362 · shares: growth</span></a>
+          </div>
+        </div>
+      </article>
+
+      <!-- QUOTE / REFLECTION -->
+      <article class="entry">
+        <div class="entry-body">
+          <div class="runhead">
+            <span class="folio">¶ 341</span>
+            <span class="type">Reflection</span>
+            <span class="date">23 Sep 2025</span>
+          </div>
+          <h2><a href="#">Kafka on reading</a></h2>
+          <p class="pull">
+            "A book must be the axe for the frozen sea inside us."
+          </p>
+          <p>From a letter to Oskar Pollak, 1904 — the sentence that ruined comfortable reading for me.</p>
+        </div>
+        <div class="margin">
+          <div class="sidenote note">
+            <span class="sn-label">Hand</span>
+            <div class="sn-body">I file most quotes under Poetry. This one goes under Attention — it's really about what's worth breaking for.</div>
+          </div>
+          <div class="sidenote threads">
+            <span class="sn-label">↝ threads to</span>
+            <a class="thread" href="#">Why read<span class="ref">¶ 214 · shares: reading, books</span></a>
+            <a class="thread" href="#">LLMs as your reading partner<span class="ref">¶ 349 · shares: reading</span></a>
+          </div>
+        </div>
+      </article>
+
+      <!-- IMAGE / CURIOSITY -->
+      <article class="entry">
+        <div class="entry-body">
+          <div class="runhead">
+            <span class="folio">¶ 355</span>
+            <span class="type">Curiosity</span>
+            <span class="date">01 Nov 2025</span>
+          </div>
+          <h2><a href="#">Dhwani — a directory of Indian public-domain works</a></h2>
+          <div class="plate">
+            <div class="frame">plate · scanned leaf</div>
+            <div class="cap">Fig. — an index card from the archive</div>
+          </div>
+          <p>Someone quietly catalogued the public domain of a whole subcontinent. Exactly the kind of labour the web forgets to thank people for.</p>
+        </div>
+        <div class="margin">
+          <div class="sidenote">
+            <span class="sn-label">Source</span>
+            <div class="sn-body"><a href="#">dhwani.org →</a></div>
+          </div>
+          <div class="sidenote threads">
+            <span class="sn-label">↝ threads to</span>
+            <a class="thread" href="#">All knowledge is my province<span class="ref">¶ 301 · shares: archives</span></a>
+          </div>
+        </div>
+      </article>
+
+      <div class="stream-foot">
+        <span class="count">371 folios · 62 heads · last kept 3 days ago</span>
+        <a href="#">wander further — the full index →</a>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

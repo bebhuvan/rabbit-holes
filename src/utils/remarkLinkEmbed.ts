@@ -11,7 +11,14 @@ interface EmbedInfo {
 }
 
 export function remarkLinkEmbed() {
-  return (tree: Root) => {
+  return (tree: Root, file: { path?: string; history?: string[] }) => {
+    // Scoped to the folio corpus. Explainers are MDX, and MDX inherits
+    // `markdown.remarkPlugins` unless told otherwise — so without this guard a
+    // bare URL on its own line inside an explainer would silently become an
+    // embed card. Explainers cite sources through <Cite>, not embeds.
+    const path = file?.path ?? file?.history?.[0] ?? '';
+    if (!path.replace(/\\/g, '/').includes('/content/posts/')) return;
+
     const replacements: Array<{ parent: { children: unknown[] }; index: number; node: Html }> = [];
 
     visit(tree, 'paragraph', (node: Paragraph, index, parent) => {
@@ -135,7 +142,7 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
             frameborder="0" 
             allowfullscreen
             loading="lazy"
-            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px;"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
           ></iframe>
         </div>`;
       }
@@ -149,17 +156,26 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
             frameborder="0" 
             allowfullscreen
             loading="lazy"
-            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px;"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
           ></iframe>
         </div>`;
       }
       break;
-    case 'twitter':
-      return `<div class="twitter-embed" data-tweet-embed>
-        <blockquote class="twitter-tweet" data-dnt="true">
+    case 'twitter': {
+      // A syndicated widget is the one thing on the page drawn in someone
+      // else's design language. It can't be restyled from outside, so it is
+      // framed instead: a plate, captioned the way a book captions an inserted
+      // facsimile, with hairlines above and below to say "this is quoted
+      // matter" before the reader hits the sans-serif.
+      const handle = twitterHandle(embedInfo.url);
+      const caption = handle ? `On X · @${escapeAttribute(handle)}` : 'On X';
+      return `<figure class="twitter-embed" data-tweet-embed>
+        <figcaption class="embed-caption">${caption}</figcaption>
+        <blockquote class="twitter-tweet" data-dnt="true" data-conversation="none">
           <a href="${safeUrl}">View this post on X</a>
         </blockquote>
-      </div>`;
+      </figure>`;
+    }
     case 'spotify':
       // Handle various Spotify URL formats
       const spotifyPatterns = [
@@ -181,7 +197,6 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
               allowfullscreen=""
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
-              style="border-radius: 12px;"
             ></iframe>
           </div>`;
         }
@@ -209,6 +224,16 @@ function generateEmbedHTML(embedInfo: EmbedInfo): string {
   }
   
   return createLinkPreviewHTML(embedInfo.url);
+}
+
+/** `x.com/Brad_Setser/status/123` → `Brad_Setser`. `/i/status/123` has none. */
+function twitterHandle(url: string): string | undefined {
+  try {
+    const first = new URL(url).pathname.split('/').filter(Boolean)[0];
+    return first && first !== 'i' && /^[A-Za-z0-9_]{1,15}$/.test(first) ? first : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 // Helper functions

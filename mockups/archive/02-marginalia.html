@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes — The Marginalia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Karla:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #FAF8F4;
+            color: #222;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 20px;
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: #222;
+            color: #FAF8F4;
+        }
+
+        a { color: inherit; }
+
+        /* === HEADER === */
+        .header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .site-name {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .site-name a {
+            text-decoration: none;
+        }
+
+        .header nav {
+            display: flex;
+            gap: 2rem;
+            font-family: 'Karla', sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.04em;
+        }
+
+        .header nav a {
+            text-decoration: none;
+            color: #888;
+        }
+
+        .header nav a:hover {
+            color: #222;
+        }
+
+        /* === MAIN LAYOUT: CONTENT + MARGIN === */
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 0;
+        }
+
+        /* === MAIN COLUMN === */
+        .main {
+            padding: 2.5rem 4rem 3rem 0;
+            border-right: 1px solid #e0ddd6;
+        }
+
+        .intro {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e0ddd6;
+        }
+
+        .intro p {
+            font-size: 22px;
+            font-style: italic;
+            color: #555;
+            max-width: 600px;
+        }
+
+        /* === FEED ENTRIES === */
+        .entry {
+            position: relative;
+            margin-bottom: 0;
+            padding: 2rem 0;
+            border-bottom: 1px solid #ece9e2;
+        }
+
+        .entry-date {
+            font-family: 'Karla', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            color: #b0a89c;
+            margin-bottom: 0.4rem;
+        }
+
+        .entry-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .entry-title a {
+            text-decoration: none;
+        }
+
+        .entry-title a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .entry-type {
+            display: inline-block;
+            font-family: 'Karla', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+
+        .entry-body {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #444;
+            max-width: 600px;
+        }
+
+        .entry-body blockquote {
+            margin: 1rem 0;
+            padding-left: 1.25rem;
+            border-left: 2px solid #d5d0c6;
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Thread indicator — shows connections */
+        .entry-threads {
+            margin-top: 0.75rem;
+            font-family: 'Karla', sans-serif;
+            font-size: 12.5px;
+            color: #999;
+        }
+
+        .entry-threads a {
+            color: #777;
+            text-decoration: none;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .entry-threads a:hover {
+            color: #222;
+            border-bottom-color: #222;
+        }
+
+        /* External link indicator */
+        .entry-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-family: 'Karla', sans-serif;
+            font-size: 13px;
+            color: #999;
+            text-decoration: none;
+        }
+
+        .entry-link:hover {
+            color: #222;
+        }
+
+        .entry-link::after {
+            content: ' \2197';
+            font-size: 11px;
+        }
+
+        /* === MARGIN COLUMN === */
+        .margin {
+            padding: 2.5rem 0 3rem 2.5rem;
+            position: relative;
+        }
+
+        .margin-note {
+            margin-bottom: 2.5rem;
+        }
+
+        .margin-label {
+            font-family: 'Karla', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #b0a89c;
+            margin-bottom: 0.75rem;
+        }
+
+        .margin-note p, .margin-note li {
+            font-family: 'Karla', sans-serif;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #888;
+        }
+
+        .margin-note a {
+            color: #777;
+            text-decoration: none;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .margin-note a:hover {
+            color: #222;
+            border-bottom-color: #222;
+        }
+
+        .margin-note ul {
+            list-style: none;
+        }
+
+        .margin-note li {
+            margin-bottom: 0.6rem;
+            padding-left: 0.75rem;
+            position: relative;
+        }
+
+        .margin-note li::before {
+            content: '\2022';
+            position: absolute;
+            left: 0;
+            color: #ccc;
+        }
+
+        /* Verse in margin */
+        .margin-verse {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+
+        .margin-verse-cite {
+            font-family: 'Karla', sans-serif;
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        /* Thread line — visual connection between margin and entry */
+        .margin-thread {
+            position: relative;
+            padding-left: 1rem;
+            border-left: 1px solid #e0ddd6;
+            margin-left: 0.5rem;
+        }
+
+        /* Tag cloud in margin */
+        .margin-tags a {
+            display: inline-block;
+            font-family: 'Karla', sans-serif;
+            font-size: 12px;
+            color: #aaa;
+            text-decoration: none;
+            margin: 0 0.5rem 0.4rem 0;
+        }
+
+        .margin-tags a:hover {
+            color: #222;
+        }
+
+        /* Numbers in margin */
+        .margin-number {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 300;
+            color: #ddd;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .margin-number-label {
+            font-family: 'Karla', sans-serif;
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        /* === COLOPHON === */
+        .colophon {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: 'Karla', sans-serif;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .colophon nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .colophon a {
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        .colophon a:hover {
+            color: #222;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 900px) {
+            .page {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+            }
+
+            .main {
+                padding: 2rem 0;
+                border-right: none;
+            }
+
+            .margin {
+                padding: 0 0 2rem;
+                border-top: 1px solid #e0ddd6;
+            }
+
+            .header {
+                padding: 1.5rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="site-name"><a href="#">Rabbit Holes</a></div>
+        <nav>
+            <a href="#">Collections</a>
+            <a href="#">Archive</a>
+            <a href="#">Topics</a>
+            <a href="#">Search</a>
+            <a href="#">About</a>
+            <a href="#">RSS</a>
+        </nav>
+    </div>
+
+    <div class="page">
+        <div class="main">
+            <div class="intro">
+                <p>Quotes, links, and ideas that made me stop and think. Collected daily. Connected over time.</p>
+            </div>
+
+            <!-- ENTRY 1: Lead musing -->
+            <div class="entry">
+                <div class="entry-date">January 19, 2026</div>
+                <div class="entry-type">Musings</div>
+                <h2 class="entry-title"><a href="#">We are living in wild times</a></h2>
+                <div class="entry-body">
+                    <p>There's something almost surreal about the moment we're in. A few years ago, the idea of talking to a computer and having it build you a website, write you a poem, or help you think through a thorny philosophical question was science fiction. Now it's Tuesday.</p>
+                    <p>I recently built this entire blog by talking to an AI. Not writing code — talking. Describing what I wanted, arguing with it, watching it conjure things from plain English. We really are living in wild times.</p>
+                </div>
+                <div class="entry-threads">See also: <a href="#">Code is now content</a>, <a href="#">The Bullshit job apocalypse</a></div>
+            </div>
+
+            <!-- ENTRY 2: Link -->
+            <div class="entry">
+                <div class="entry-date">January 19</div>
+                <div class="entry-type">Links</div>
+                <h2 class="entry-title"><a href="#">What drives us</a></h2>
+                <div class="entry-body">
+                    <blockquote>What are the permanent drivers of humanity? Pride, greed, lust, envy, gluttony, sloth, wrath, fear, love, loyalty, hope, and curiosity. These are the things that make us human. They were the same in 50,000 BC as they are today.</blockquote>
+                </div>
+                <a href="#" class="entry-link">Source</a>
+                <div class="entry-threads">See also: <a href="#">All habits are hard work</a></div>
+            </div>
+
+            <!-- ENTRY 3: Link -->
+            <div class="entry">
+                <div class="entry-date">January 18</div>
+                <div class="entry-type">Links</div>
+                <h2 class="entry-title"><a href="#">The whole is not the sum of its parts</a></h2>
+                <div class="entry-body">
+                    <p>Fascinating research on how the brain creates meaning that transcends individual neural components. The emergent properties of consciousness remain the deepest rabbit hole in science.</p>
+                </div>
+                <a href="#" class="entry-link">Source</a>
+                <div class="entry-threads">See also: <a href="#">We are borrowed stardust</a></div>
+            </div>
+
+            <!-- ENTRY 4: Musing -->
+            <div class="entry">
+                <div class="entry-date">January 17</div>
+                <div class="entry-type">Reflections</div>
+                <h2 class="entry-title"><a href="#">The past is the present</a></h2>
+                <div class="entry-body">
+                    <p>History doesn't repeat itself, but it rhymes — and the rhymes are getting louder. Every generation believes it has invented a new problem, only to discover it is a very old one wearing new clothes.</p>
+                </div>
+            </div>
+
+            <!-- ENTRY 5 -->
+            <div class="entry">
+                <div class="entry-date">January 17</div>
+                <div class="entry-type">Links</div>
+                <h2 class="entry-title"><a href="#">China derangement syndrome</a></h2>
+                <div class="entry-body">
+                    <p>The gap between the China that exists and the China that lives in Western political discourse grows wider every year.</p>
+                </div>
+                <a href="#" class="entry-link">Source</a>
+            </div>
+
+            <!-- ENTRY 6 -->
+            <div class="entry">
+                <div class="entry-date">January 16</div>
+                <div class="entry-type">Musings</div>
+                <h2 class="entry-title"><a href="#">You don&rsquo;t know much</a></h2>
+                <div class="entry-body">
+                    <p>The illusion of knowledge is more dangerous than ignorance. In an age of infinite information, we confuse access with understanding. Knowing where to find an answer is not the same as knowing the answer — and the gap between the two keeps widening.</p>
+                </div>
+                <div class="entry-threads">See also: <a href="#">Why read?</a>, <a href="#">All habits are hard work</a></div>
+            </div>
+
+            <!-- ENTRY 7 -->
+            <div class="entry">
+                <div class="entry-date">January 13</div>
+                <div class="entry-type">Musings</div>
+                <h2 class="entry-title"><a href="#">The Bullshit job apocalypse</a></h2>
+                <div class="entry-body">
+                    <p>David Graeber's thesis is being tested at scale. If AI can do your job, was it ever a real job? The uncomfortable answer is forcing a reckoning with what we mean by meaningful work — and who gets to define it.</p>
+                </div>
+                <div class="entry-threads">See also: <a href="#">The virtual co-workers are here?</a>, <a href="#">On AI and job automation</a></div>
+            </div>
+
+            <!-- ENTRY 8 -->
+            <div class="entry">
+                <div class="entry-date">January 13</div>
+                <div class="entry-type">Musings</div>
+                <h2 class="entry-title"><a href="#">Small tyrannies</a></h2>
+                <div class="entry-body">
+                    <p>The tiny coercions of everyday life that we accept without question. How collective passivity in the face of minor impositions shapes societies in ways we barely notice until it's too late to push back.</p>
+                </div>
+            </div>
+
+            <!-- ENTRY 9 -->
+            <div class="entry">
+                <div class="entry-date">January 5</div>
+                <div class="entry-type">Verse</div>
+                <h2 class="entry-title"><a href="#">I dwell in possibility</a></h2>
+                <div class="entry-body">
+                    <blockquote>
+                        I dwell in Possibility &mdash;<br>
+                        A fairer House than Prose &mdash;<br>
+                        More numerous of Windows &mdash;<br>
+                        Superior &mdash; for Doors &mdash;
+                    </blockquote>
+                    <p style="margin-top: 0.5rem; font-size: 16px; color: #888;">&mdash; Emily Dickinson</p>
+                </div>
+            </div>
+
+            <!-- ENTRY 10 -->
+            <div class="entry">
+                <div class="entry-date">January 5</div>
+                <div class="entry-type">Musings</div>
+                <h2 class="entry-title"><a href="#">Code is now content</a></h2>
+                <div class="entry-body">
+                    <p>When anyone can conjure software by describing what they want, the line between writing and programming dissolves. What matters isn't syntax — it's taste, judgment, and knowing what to build.</p>
+                </div>
+                <div class="entry-threads">See also: <a href="#">We are living in wild times</a>, <a href="#">On AI coding</a></div>
+            </div>
+        </div>
+
+        <!-- MARGIN COLUMN -->
+        <div class="margin">
+            <div class="margin-note">
+                <div class="margin-number">193</div>
+                <div class="margin-number-label">rabbit holes and counting</div>
+            </div>
+
+            <div class="margin-note">
+                <div class="margin-label">Dive Deeper</div>
+                <div class="margin-thread">
+                    <ul>
+                        <li><a href="#">Conscientiousness &mdash; Wikipedia</a></li>
+                        <li><a href="#">Personality development</a></li>
+                        <li><a href="#">Social Networking and Ethics &mdash; Stanford</a></li>
+                        <li><a href="#">Philosophy of Technology &mdash; Stanford</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="margin-note">
+                <div class="margin-label">A Poem</div>
+                <div class="margin-verse">
+                    I, born of flesh and warm blood, choose<br>
+                    To count myself among the race<br>
+                    Of those who see the world and lose<br>
+                    Themselves in wonder at its face.
+                </div>
+                <div class="margin-verse-cite">Countee Cullen</div>
+            </div>
+
+            <div class="margin-note">
+                <div class="margin-label">Threads</div>
+                <div class="margin-thread">
+                    <p>AI is a recurring thread across 56 posts. The conversation weaves through <a href="#">automation anxiety</a>, <a href="#">creative possibility</a>, <a href="#">regulatory challenges</a>, and <a href="#">philosophical questions</a> about what it means when machines think.</p>
+                </div>
+            </div>
+
+            <div class="margin-note">
+                <div class="margin-label">Explore by topic</div>
+                <div class="margin-tags">
+                    <a href="#">AI</a>
+                    <a href="#">Poetry</a>
+                    <a href="#">Philosophy</a>
+                    <a href="#">Writing</a>
+                    <a href="#">Psychology</a>
+                    <a href="#">Work</a>
+                    <a href="#">Books</a>
+                    <a href="#">China</a>
+                    <a href="#">Society</a>
+                    <a href="#">Reading</a>
+                    <a href="#">Money</a>
+                    <a href="#">Technology</a>
+                    <a href="#">Habits</a>
+                    <a href="#">Evolution</a>
+                    <a href="#">Literature</a>
+                </div>
+            </div>
+
+            <div class="margin-note">
+                <div class="margin-label">Collections</div>
+                <div class="margin-thread">
+                    <ul>
+                        <li><a href="#">Start Here</a></li>
+                        <li><a href="#">Deep Thoughts</a></li>
+                        <li><a href="#">Quick Hits</a></li>
+                        <li><a href="#">Link Safari</a></li>
+                        <li><a href="#">Life &amp; Philosophy</a></li>
+                        <li><a href="#">Tech &amp; AI</a></li>
+                        <li><a href="#">Money &amp; Markets</a></li>
+                        <li><a href="#">Art &amp; Creativity</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="margin-note">
+                <div class="margin-label">About</div>
+                <div class="margin-thread">
+                    <p>I like tumbling down weird and wonderful rabbit holes. I like knowing random things and I think there&rsquo;s a certain joy in being a dilettante.</p>
+                    <p style="margin-top: 0.5rem;"><a href="#">More about this site &rarr;</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="colophon">
+        <span>Rabbit Holes &middot; By Bhuvan</span>
+        <nav>
+            <a href="#">RSS</a>
+            <a href="#">About</a>
+            <a href="#">Archive</a>
+            <a href="#">@bebhuvan</a>
+        </nav>
+    </div>
+
+</body>
+</html>

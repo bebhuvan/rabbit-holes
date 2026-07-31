@@ -10,7 +10,7 @@
 .filter-list a,.filter-list button{display:flex;width:100%;justify-content:space-between;gap:1rem;
   border:0;border-top:1px solid var(--rule);background:none;padding:.7rem 0;text-decoration:none;
   color:var(--ink-soft);font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
-  text-align:left;cursor:pointer}
+  text-align:left;cursor:pointer;transition:color var(--dur) var(--ease)}
 .filter-list a:hover,.filter-list button:hover,.filter-list .active{color:var(--red)}
 .ledger-main{min-width:0;padding:3.5rem 0 5rem 3rem}
 .ledger-head{padding-bottom:2.5rem;border-bottom:3px double var(--rule-strong)}
@@ -19,17 +19,31 @@
 .ledger-head h1{font-family:var(--display);font-size:var(--t-3xl);font-weight:600;line-height:1.04;
   letter-spacing:var(--tr-display)}
 .ledger-head p{max-width:36em;margin-top:1rem;color:var(--ink-soft);font-size:var(--t-body);line-height:1.6}
-.ledger-tools{display:flex;gap:1rem;align-items:center;padding:1.4rem 0;border-bottom:1px solid var(--rule)}
+/* The tools strip carried a bottom rule of its own directly beneath the
+   field's rule — two hairlines a few pixels apart, which reads as a slip.
+   The field keeps its rule, because that is the one that turns red on focus. */
+.ledger-tools{display:flex;gap:1rem;align-items:center;padding:1.4rem 0 .4rem}
 .ledger-search{width:100%;border:0;border-bottom:1px solid var(--rule-strong);background:transparent;
-  padding:.65rem 0;color:var(--ink);font-family:var(--body);font-size:var(--t-body);outline:0}
+  padding:.65rem 0;color:var(--ink);font-family:var(--body);font-size:var(--t-body);outline:0;
+  transition:border-color var(--dur) var(--ease)}
+.ledger-search::placeholder{color:var(--muted)}
 .ledger-search:focus{border-bottom-color:var(--red)}
 .year-block{padding-top:2.6rem}
+/* Body copy runs oldstyle figures, which is right inside a sentence and wrong
+   the moment a numeral is set large in the display face — a year or a count
+   at 39px came out with the 1 dropped to x-height and the 2 descending, which
+   reads as a rendering fault rather than a style. Every standing numeral is
+   lining and tabular, as the folio numbers already were. */
+.year-title,.head-card .head-count,.search-result .result-num{
+  font-variant-numeric:lining-nums tabular-nums;
+}
 .year-title{font-family:var(--display);font-size:var(--t-2xl);font-weight:600;color:var(--muted);
   border-bottom:1px solid var(--rule);padding-bottom:.65rem}
 .month-title{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
   text-transform:uppercase;color:var(--muted);margin:1.5rem 0 .2rem}
 .ledger-row{display:grid;grid-template-columns:4.2rem 3.4rem minmax(0,1fr) auto;gap:1rem;
   align-items:baseline;padding:.78rem 0;border-bottom:1px solid var(--rule);text-decoration:none}
+.ledger-row-title{transition:color var(--dur) var(--ease)}
 .ledger-row:hover .ledger-row-title{color:var(--red)}
 .ledger-num{font-family:var(--display);font-size:var(--t-md);font-weight:600;font-variant-numeric:tabular-nums}
 .ledger-date,.ledger-kind,.ledger-read{font-family:var(--mono);font-size:var(--l-sm);
@@ -37,11 +51,15 @@
 .ledger-row-title{font-size:var(--t-body);line-height:1.3;color:var(--ink)}
 .head-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2.5rem;margin-top:2.5rem}
 .head-card{display:block;padding:1.4rem 0 1.6rem;border-top:1px solid var(--rule);text-decoration:none}
+.head-card h2{transition:color var(--dur) var(--ease)}
 .head-card:hover h2{color:var(--red)}
-.head-card .head-count{font-family:var(--display);font-size:var(--t-xl);color:var(--red)}
-.head-card h2{font-family:var(--display);font-weight:600;font-size:var(--t-lg);margin:.25rem 0}
-.head-card p{color:var(--ink-soft);font-size:var(--t-base);line-height:1.5}
-.head-stream .entry{padding-left:0;padding-right:0}
+.head-card .head-count{display:block;font-family:var(--display);font-size:var(--t-xl);
+  line-height:1;color:var(--red)}
+.head-card h2{font-family:var(--display);font-weight:600;font-size:var(--t-lg);margin:.7rem 0 .3rem}
+.head-card p{color:var(--ink-soft);font-size:var(--t-base);line-height:1.5;max-width:34em}
+/* Inside a ledger column the entry supplies no side padding of its own, so
+   its rule must stop at the box rather than the box plus two paddings. */
+.head-stream .entry{padding-left:0;padding-right:0;max-width:var(--stream-box)}
 .search-results{margin-top:1.2rem}
 .search-result{display:grid;grid-template-columns:4rem minmax(0,1fr);gap:1.2rem;padding:1.2rem 0;
   border-bottom:1px solid var(--rule);text-decoration:none}
@@ -52,10 +70,45 @@
 .search-result .result-meta{display:block;margin-top:.55rem;font-family:var(--mono);font-size:var(--l-sm);
   letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
 .search-status{padding:1.4rem 0;font-style:italic;color:var(--ink-soft)}
-.tag-cloud{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem}
-.tag-cloud a{border:1px solid var(--rule-strong);padding:.3rem .55rem;text-decoration:none;
-  color:var(--ink-soft);font-family:var(--mono);font-size:var(--l-md)}
-.tag-cloud a:hover{border-color:var(--red);color:var(--red)}
+/* ---- THE LONG TAIL, SET AS AN INDEX ----
+   289 tags as bordered chips is 289 rectangles: a wall of interface on the
+   one page in the book that is literally an index. Set in columns under
+   letter heads, with the count as a quiet figure and long entries turning
+   over on a hanging indent, it reads the way the back of a book reads —
+   and you can actually find a word in it. */
+.tag-index{margin-top:2.6rem;columns:4;column-gap:2.6rem}
+.tag-index-letter{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+  line-height:1;color:var(--red);margin:1.6rem 0 .6rem;padding-bottom:.4rem;
+  border-bottom:1px solid var(--rule);
+  break-inside:avoid;break-after:avoid-column}
+.tag-index-letter:first-child{margin-top:0}
+.tag-index a{display:block;padding:.14rem 0 .14rem 1.1rem;text-indent:-1.1rem;
+  color:var(--ink-soft);font-family:var(--body);font-size:var(--t-base);line-height:1.42;
+  text-decoration:none;break-inside:avoid;transition:color var(--dur) var(--ease)}
+.tag-index a:hover{color:var(--red)}
+.tag-index a:hover .tag-index-name{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:var(--ul-offset);text-decoration-color:var(--red-soft)}
+.tag-index-count{margin-left:.42rem;font-family:var(--mono);font-size:var(--l-sm);
+  color:var(--muted);font-variant-numeric:lining-nums}
+
+/* The label voice on the ledger pages. Row data stays mono — a ledger's whole
+   point is that its columns line up. */
+.ledger-kicker,
+.filter-title,
+.month-title{
+  font-family:var(--sc);
+  font-size:var(--t-label);
+  font-variant-caps:all-small-caps;
+  font-weight:var(--w-label);
+  letter-spacing:var(--tr-label-sc);
+  text-transform:none;
+}
+
+@media(max-width:1000px){.tag-index{columns:3}}
+@media(max-width:760px){.tag-index{columns:2;column-gap:1.8rem}}
+/* Entries run to "China, Solar, Industrial policy, Economics". Two columns of
+   that on a phone is a column of turnovers, so it goes single early. */
+@media(max-width:560px){.tag-index{columns:1}}
 
 @media(max-width:800px){
   .ledger-shell{grid-template-columns:190px minmax(0,1fr);padding:0 1.5rem}

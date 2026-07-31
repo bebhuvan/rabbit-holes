@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archive &#8212; Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. See 11-folio-entry.html. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    /* one colour per REAL type in config.ts — musings is the plurality (84)
+       and had no treatment at all in mockup 10 */
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;
+    --maxw:1240px;--rail-w:272px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+      --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+      --c-verse:#82C29A;--c-practical:#D89A80;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+    --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+    --c-verse:#82C29A;--c-practical:#D89A80;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;}
+
+  /* Display optical size pinned — Bodoni's display cut has hairlines too
+     fine to survive at these sizes, especially on dark. */
+  .brand .mark,.thesis h1,.year-head .yn,.row .fn,.kinds .sw,.years .sw{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+
+  /* ==========================================================
+     THE TWO-INK RULE  — this is a system, not a colour choice.
+     ----------------------------------------------------------
+     RED marks WHOSE VOICE IT IS, never where a link goes.
+
+     On this page that decides exactly two things:
+
+       - the FILTERS take red when active. Choosing a kind or a
+         year is passage deeper into his garden — the same act
+         as choosing a head. Inactive, they are machinery, so
+         they sit in muted/ink.
+       - everything else in the ledger is the world: other
+         people's titles (ink), the dates (muted), the counts
+         (muted), the column of numerals (kind tint, which is
+         classification, not voice).
+
+     Consequence worth stating: a row title never goes red on
+     hover — it is someone else's title, and hover is not
+     authorship. Hover moves it to full ink and reveals the
+     rule beneath it instead.
+     ========================================================== */
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ============ MASTHEAD ============
+     Reads as the head of a book, not a web nav bar:
+     - the strapline is italic serif, not tracked-out caps. Nine words of
+       uppercase mono read as texture; the same words in italic read as a
+       sentence, which is what they are.
+     - the theme control is separated from navigation by a rule. It was
+       previously spaced identically to the links, so it read as a sixth
+       destination rather than a control.
+     - active item is marked with a hairline under the word itself, not a
+       floating tab bar.
+     - a double rule closes the head — a book device rather than a border. */
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  /* relative + a paper ground so the sticky tally below can never paint
+     into the head as it passes under it */
+  .masthead{border-bottom:3px double var(--rule-strong);
+    position:relative;z-index:5;background:var(--paper)}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    font-style:normal;margin:0 .25rem}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
+    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+  .lamp:hover{color:var(--red)}
+
+  .shell{max-width:var(--maxw);margin:0 auto;display:grid;
+    grid-template-columns:var(--rail-w) 1fr;align-items:start;position:relative}
+  /* The rail is sticky and therefore only as tall as its own content. On the
+     home page that is invisible; against 190 rows the rule stopped a fifth of
+     the way down and the ledger lost its left wall. The rule belongs to the
+     shell, not to the rail. */
+  .shell::before{content:"";position:absolute;left:var(--rail-w);top:0;bottom:0;
+    width:1px;background:var(--rule)}
+
+  /* ============ THE RAIL — here it is the filter apparatus ============
+     Same room as the home rail, different furniture. The "Five kinds" key
+     from the home page IS the kind filter here: the legend and the control
+     are the same object, so nothing has to be explained twice. */
+  .rail{padding:3rem 2rem;position:sticky;top:0}
+  .rail-label{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem}
+  /* the fleuron marks the rail's PRIMARY heading only — repeating it on
+     every label turns a flourish into wallpaper */
+  .rail-label.flr::after{content:"\2766";color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-base);letter-spacing:0}
+  .rail-note{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--muted);
+    line-height:1.45;margin-bottom:1.3rem}
+
+  /* the filters. Under the ink rule the active one takes red: choosing a
+     kind is passage into his garden, not a piece of machinery. Inactive
+     they are machinery, and stay in ink-soft. */
+  .kinds{list-style:none;font-family:var(--mono);font-size:var(--l-md)}
+  .kinds li+li{margin-top:.1rem}
+  .kinds button{display:flex;width:100%;align-items:baseline;gap:.55rem;
+    background:none;border:none;cursor:pointer;text-align:left;
+    font:inherit;letter-spacing:0;color:var(--ink-soft);
+    padding:.24rem .3rem;border-left:2px solid transparent;
+    transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+  /* the count IS the swatch — tinted, tabular, right-aligned, so the five
+     kinds stack into the same numeral column the ledger uses */
+  .kinds .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    font-variant-numeric:lining-nums tabular-nums;line-height:1;min-width:2.6rem;
+    text-align:right}
+  .kinds .kn{flex:1}
+  .kinds button:hover{color:var(--red)}
+  .kinds button[aria-pressed="true"]{color:var(--red);border-left-color:var(--red);
+    padding-left:.55rem;margin-left:-.25rem}
+  /* "All kinds" is the only row whose numeral is not a kind tint — it is the
+     total, so it takes ink, and red when it is the live choice */
+  .kinds button.all .sw{color:var(--ink-soft)}
+  .kinds button.all[aria-pressed="true"] .sw{color:var(--red)}
+
+  /* years run on the same rhythm as kinds — one ledger column down the whole
+     rail. The distinction is carried by the numerals: kind counts are tinted
+     because a kind has a colour, a year does not. */
+  .years{list-style:none;font-family:var(--mono);font-size:var(--l-md)}
+  .years li+li{margin-top:.1rem}
+  .years button{display:flex;width:100%;align-items:baseline;gap:.55rem;
+    background:none;border:none;cursor:pointer;text-align:left;
+    font:inherit;letter-spacing:0;color:var(--ink-soft);
+    padding:.24rem .3rem;border-left:2px solid transparent;
+    transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+  .years .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    color:var(--ink-soft);
+    font-variant-numeric:lining-nums tabular-nums;line-height:1;min-width:2.6rem;
+    text-align:right}
+  .years .kn{flex:1}
+  .years button:hover{color:var(--red)}
+  .years button:hover .sw{color:var(--red)}
+  .years button[aria-pressed="true"]{color:var(--red);border-left-color:var(--red);
+    padding-left:.55rem;margin-left:-.25rem}
+  .years button[aria-pressed="true"] .sw{color:var(--red)}
+
+  .rail-rule{border:none;border-top:1px solid var(--rule);margin:1.6rem 0}
+  /* the asterism marks ONE seam in the rail, not every seam */
+  .rail-rule.ast{text-align:center;overflow:visible}
+  .rail-rule.ast::after{content:"\2042";display:inline-block;transform:translateY(-.72em);
+    background:var(--paper);padding:0 .7rem;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base)}
+
+  .colophon{margin-top:1.4rem;font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.6;color:var(--ink-soft)}
+  .colophon .kept{display:block;margin-top:.85rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+
+  /* ============ THE LEDGER ============ */
+  .stream{min-width:0}
+  .thesis{padding:4rem 3.2rem 2.4rem;border-bottom:1px solid var(--rule)}
+  .thesis .kicker{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+  .thesis .kicker b{color:var(--red);font-weight:600}
+  .thesis h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.05;
+    letter-spacing:var(--tr-display);margin-bottom:1.1rem}
+  .thesis .lede{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);max-width:34em}
+
+  /* the live count — states honestly what the filters have left standing */
+  .tally{padding:1.1rem 3.2rem;border-bottom:1px solid var(--rule);
+    display:flex;align-items:baseline;gap:.7rem;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);
+    position:sticky;top:0;background:var(--paper);z-index:2}
+  .tally .n{font-variant-numeric:tabular-nums;color:var(--ink)}
+  .tally .clear{margin-left:auto;color:var(--red);text-decoration:none;
+    background:none;border:none;cursor:pointer;font:inherit;letter-spacing:inherit;
+    text-transform:inherit;visibility:hidden}
+  .tally .clear:hover{text-decoration:underline;text-underline-offset:4px}
+  .tally.filtered .clear{visibility:visible}
+
+  /* ---- year: the big standing numeral, the way a ledger opens a book ---- */
+  .year{padding:0 3.2rem}
+  .year-head{display:flex;align-items:baseline;gap:1rem;
+    padding:2.6rem 0 .5rem}
+  .year-head .yn{font-family:var(--display);font-weight:600;font-size:var(--t-2xl);
+    line-height:1;letter-spacing:var(--tr-display);
+    font-variant-numeric:lining-nums tabular-nums}
+  .year-head .yr{flex:1;border-bottom:3px double var(--rule-strong);transform:translateY(-.35em)}
+  .year-head .yc{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted)}
+  .year-head .yc b{font-weight:400;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+
+  /* ---- month: a running head, not a title. Small, tracked, with the
+         count sitting at the far edge so the eye can weigh the month. ---- */
+  .mon-head{display:flex;align-items:baseline;gap:.8rem;padding:1.5rem 0 .45rem;
+    font-family:var(--mono);font-weight:400;font-size:var(--l-md);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--ink-soft)}
+  .mon-head .md{flex:1;border-bottom:1px solid var(--rule);transform:translateY(-.28em)}
+  .mon-head .mc{color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:var(--tr-label)}
+
+  /* ---- the row. Four columns on one baseline:
+         numeral (kind tint) · title · kind · day.
+         The numeral column is fixed and tabular so 8 and 190 stack into a
+         true column — that is the whole reason the folio number exists. ---- */
+  .rows{list-style:none}
+  .row a{display:grid;grid-template-columns:3.1rem 1fr auto 2.1rem;
+    align-items:baseline;gap:0 1rem;
+    padding:.3rem 0 .32rem;text-decoration:none;
+    border-bottom:1px solid transparent;
+    transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+  .row a:hover{border-bottom-color:var(--rule-strong)}
+  .row .fn{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    line-height:1.25;text-align:right;
+    font-variant-numeric:lining-nums tabular-nums;letter-spacing:var(--tr-display)}
+  .row .tt{font-family:var(--body);font-size:var(--t-body);line-height:1.25;
+    color:var(--ink-soft);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    transition:color var(--dur) var(--ease)}
+  .row a:hover .tt{color:var(--ink)}
+  /* the kind word repeats what the tint already says — so it is set at the
+     quietest size in the system and only resolves when you look for it */
+  .row .kd{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted)}
+  /* narrowed to one kind, the kind word is the same word 84 times over. It
+     is hidden rather than removed so the day column does not shift under
+     the reader mid-filter. */
+  .stream.one-kind .row .kd{visibility:hidden}
+  .row .dy{font-family:var(--mono);font-size:var(--l-md);color:var(--muted);
+    font-variant-numeric:tabular-nums;text-align:right}
+
+  .row[data-kind="musings"] .fn{color:var(--c-musings)}
+  .row[data-kind="links"] .fn{color:var(--c-links)}
+  .row[data-kind="reflections"] .fn{color:var(--c-reflections)}
+  .row[data-kind="verse"] .fn{color:var(--c-verse)}
+  .row[data-kind="practical"] .fn{color:var(--c-practical)}
+
+  .row[hidden],.month[hidden],.year[hidden]{display:none}
+
+  .stream-foot{padding:3.2rem 3.2rem 4rem;text-align:center;
+    border-top:1px solid var(--rule);margin-top:3rem}
+  .stream-foot .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-lg)}
+  .stream-foot .line{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    color:var(--ink-soft);margin:.8rem 0 .5rem}
+  .stream-foot .meta{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+  .stream-foot .meta a{color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="12-home.html">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="12-home.html" class="on">Index</a>
+        <a href="#">Heads</a>
+        <a href="#">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <aside class="rail">
+
+      <div class="rail-label flr">The Archive</div>
+      <p class="rail-note">Everything kept, in the order it was kept.</p>
+
+      <div class="rail-label" style="margin:1.6rem 0 .7rem">Filter by kind</div>
+      <ul class="kinds" id="kinds">
+        <li><button class="all" type="button" data-kind="all" aria-pressed="true"><span class="sw">190</span><span class="kn">All kinds</span></button></li>
+        <li><button type="button" data-kind="musings" aria-pressed="false"><span class="sw" style="color:var(--c-musings)">84</span><span class="kn">Musings</span></button></li>
+        <li><button type="button" data-kind="links" aria-pressed="false"><span class="sw" style="color:var(--c-links)">57</span><span class="kn">Links</span></button></li>
+        <li><button type="button" data-kind="reflections" aria-pressed="false"><span class="sw" style="color:var(--c-reflections)">23</span><span class="kn">Reflections</span></button></li>
+        <li><button type="button" data-kind="verse" aria-pressed="false"><span class="sw" style="color:var(--c-verse)">16</span><span class="kn">Verse</span></button></li>
+        <li><button type="button" data-kind="practical" aria-pressed="false"><span class="sw" style="color:var(--c-practical)">10</span><span class="kn">Practical</span></button></li>
+      </ul>
+
+      <hr class="rail-rule">
+
+      <div class="rail-label" style="margin-bottom:.75rem">Filter by year</div>
+      <ul class="years" id="years">
+        <li><button type="button" data-year="all" aria-pressed="true"><span class="sw">190</span><span class="kn">Both years</span></button></li>
+        <li><button type="button" data-year="2026" aria-pressed="false"><span class="sw">38</span><span class="kn">2026</span></button></li>
+        <li><button type="button" data-year="2025" aria-pressed="false"><span class="sw">152</span><span class="kn">2025</span></button></li>
+      </ul>
+
+      <hr class="rail-rule ast">
+
+      <p class="colophon">Nothing here is ranked. The ledger only knows when a thing arrived.
+        <span class="kept">kept by Bhuvanesh &#183; since Aug 2025</span>
+      </p>
+    </aside>
+
+    <main class="stream">
+
+      <section class="thesis">
+        <div class="kicker"><b>&#182; 1&#8211;190</b> &nbsp;&#183;&nbsp; the whole ledger</div>
+        <h1>The Archive</h1>
+        <p class="lede">Every folio kept since August 2025, numbered in the order it arrived and tinted by kind. Read down a month, or narrow to one kind and watch how differently each one falls across the year.</p>
+      </section>
+
+      <div class="tally" id="tally">
+        <span>Showing</span><span class="n" id="tally-n">190</span><span id="tally-of">of 190 folios</span>
+        <button class="clear" type="button" id="clear">clear filters &#8594;</button>
+      </div>
+
+      <!-- ============ CANONICAL FOLIO NUMBERING ============
+           Settled 2026-07-20, after the home page and this ledger disagreed.
+
+             Folio number = the post's chronological index over PUBLISHED
+             posts only. Oldest = 1, newest = 190.
+
+             Tie-break for posts sharing a date: FILENAME ASCENDING.
+             (This was previously undefined, which is what caused the
+             disagreement.)
+
+           "Published" means src/pages/archive.astro's filter — `data.published
+           !== false`. Three posts in src/content/posts/ carry `published:
+           false` and are therefore not folios at all: they get no number and
+           no row, and every count on this page excludes them. Local total is
+           190, not the 193 files on disk.
+           ==================================================== -->
+      <section class="year" data-year="2026">
+        <div class="year-head"><span class="yn">2026</span><span class="yr"></span><span class="yc"><b data-ycount="2026">38</b> folios</span></div>
+        <div class="month" data-month="2026-01">
+          <h3 class="mon-head"><span class="mn">January</span><span class="md"></span><span class="mc" data-mcount="2026-01">38</span></h3>
+          <ol class="rows">
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">190</span><span class="tt">What drives us</span><span class="kd">Link</span><span class="dy">19</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">189</span><span class="tt">We are living in wild times</span><span class="kd">Musing</span><span class="dy">19</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">188</span><span class="tt">Using Obsidian with an AI assistant</span><span class="kd">Link</span><span class="dy">19</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">187</span><span class="tt">The whole is not the sum of its parts</span><span class="kd">Link</span><span class="dy">18</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2026"><a href="#"><span class="fn">186</span><span class="tt">The past is the present</span><span class="kd">Reflection</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">185</span><span class="tt">Influentists</span><span class="kd">Link</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">184</span><span class="tt">China derangement syndrome</span><span class="kd">Link</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">183</span><span class="tt">You don’t know much</span><span class="kd">Musing</span><span class="dy">16</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">182</span><span class="tt">The future of AI and automation</span><span class="kd">Link</span><span class="dy">16</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">181</span><span class="tt">On AI regulations</span><span class="kd">Musing</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">180</span><span class="tt">On AI coding</span><span class="kd">Link</span><span class="dy">14</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">179</span><span class="tt">Yeah, sure, AI is useless</span><span class="kd">Link</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">178</span><span class="tt">The virtual co-workers are here?</span><span class="kd">Link</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">177</span><span class="tt">The Bullshit job apocalypse</span><span class="kd">Musing</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">176</span><span class="tt">Small tyrannies</span><span class="kd">Musing</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">175</span><span class="tt">The future of coding</span><span class="kd">Link</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">174</span><span class="tt">Open source voice transcription tools</span><span class="kd">Link</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">173</span><span class="tt">The short-termism in our stars</span><span class="kd">Link</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">172</span><span class="tt">Automation is a moral imperative</span><span class="kd">Link</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">171</span><span class="tt">Best of times and worst of times for cognitive peasants</span><span class="kd">Musing</span><span class="dy">09</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">170</span><span class="tt">If you can describe it, you can solve it</span><span class="kd">Musing</span><span class="dy">08</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">169</span><span class="tt">AI is killing software jobs</span><span class="kd">Link</span><span class="dy">08</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">168</span><span class="tt">On AI and job automation</span><span class="kd">Link</span><span class="dy">07</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">167</span><span class="tt">All habits are hard work</span><span class="kd">Musing</span><span class="dy">07</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">166</span><span class="tt">Ben Thompson makes an optimistic case for AI</span><span class="kd">Link</span><span class="dy">06</span></a></li>
+            <li class="row" data-kind="verse" data-year="2026"><a href="#"><span class="fn">165</span><span class="tt">I dwell in possibility</span><span class="kd">Verse</span><span class="dy">05</span></a></li>
+            <li class="row" data-kind="musings" data-year="2026"><a href="#"><span class="fn">164</span><span class="tt">Code is now content</span><span class="kd">Musing</span><span class="dy">05</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">163</span><span class="tt">Writing as a way to converse with yourself</span><span class="kd">Link</span><span class="dy">04</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">162</span><span class="tt">Neo-gangsterism</span><span class="kd">Link</span><span class="dy">04</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2026"><a href="#"><span class="fn">161</span><span class="tt">Emotional returns vs financial returns</span><span class="kd">Reflection</span><span class="dy">04</span></a></li>
+            <li class="row" data-kind="verse" data-year="2026"><a href="#"><span class="fn">160</span><span class="tt">A Psalm of Life</span><span class="kd">Verse</span><span class="dy">04</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">159</span><span class="tt">We’re all unique protons and electrons</span><span class="kd">Link</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">158</span><span class="tt">The future of work</span><span class="kd">Link</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">157</span><span class="tt">Now is the time for fun</span><span class="kd">Link</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">156</span><span class="tt">2025: The year LLMs felt real</span><span class="kd">Link</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">155</span><span class="tt">Wild times in AI land</span><span class="kd">Link</span><span class="dy">01</span></a></li>
+            <li class="row" data-kind="links" data-year="2026"><a href="#"><span class="fn">154</span><span class="tt">Industrial-scale production of software</span><span class="kd">Link</span><span class="dy">01</span></a></li>
+            <li class="row" data-kind="verse" data-year="2026"><a href="#"><span class="fn">153</span><span class="tt">Gitanjali 48</span><span class="kd">Verse</span><span class="dy">01</span></a></li>
+          </ol>
+        </div>
+      </section>
+      <section class="year" data-year="2025">
+        <div class="year-head"><span class="yn">2025</span><span class="yr"></span><span class="yc"><b data-ycount="2025">152</b> folios</span></div>
+        <div class="month" data-month="2025-12">
+          <h3 class="mon-head"><span class="mn">December</span><span class="md"></span><span class="mc" data-mcount="2025-12">46</span></h3>
+          <ol class="rows">
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">152</span><span class="tt">You can just do things</span><span class="kd">Reflection</span><span class="dy">31</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">151</span><span class="tt">On the joys of writing</span><span class="kd">Link</span><span class="dy">31</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">150</span><span class="tt">AI and the compression of everything</span><span class="kd">Musing</span><span class="dy">31</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">149</span><span class="tt">Reflections on Scott Belsky’s Predictions</span><span class="kd">Musing</span><span class="dy">30</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">148</span><span class="tt">Welcome to the slopocalypse</span><span class="kd">Link</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">147</span><span class="tt">Skyfall post-AI world edition</span><span class="kd">Reflection</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">146</span><span class="tt">Building at the speed of thought</span><span class="kd">Link</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">145</span><span class="tt">Why write</span><span class="kd">Practical</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">144</span><span class="tt">Intellectual bacchanalia</span><span class="kd">Musing</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">143</span><span class="tt">Gitanjali 3 by Rabindranath Tagore</span><span class="kd">Verse</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">142</span><span class="tt">Summoning Ghosts: Why You Need to Try AI Coding Tools</span><span class="kd">Reflection</span><span class="dy">27</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">141</span><span class="tt">G.K. Chesterton on miracles</span><span class="kd">Link</span><span class="dy">26</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">140</span><span class="tt">Another lament for literature</span><span class="kd">Musing</span><span class="dy">26</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">139</span><span class="tt">Why AI is not a bubble</span><span class="kd">Link</span><span class="dy">25</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">138</span><span class="tt">Self improving systems are not possible</span><span class="kd">Musing</span><span class="dy">25</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">137</span><span class="tt">The debt part of the AI cycle</span><span class="kd">Link</span><span class="dy">24</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">136</span><span class="tt">Claude Code is awesome, but terribly named</span><span class="kd">Musing</span><span class="dy">24</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">135</span><span class="tt">AI is overdelivering</span><span class="kd">Musing</span><span class="dy">24</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">134</span><span class="tt">A dumb model of AI</span><span class="kd">Musing</span><span class="dy">24</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">133</span><span class="tt">Some non-advice advice</span><span class="kd">Reflection</span><span class="dy">23</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">132</span><span class="tt">We are a collection of particles but...</span><span class="kd">Musing</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">131</span><span class="tt">Preserving India’s artistic heritage</span><span class="kd">Musing</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">130</span><span class="tt">The case against superintelligence</span><span class="kd">Link</span><span class="dy">21</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">129</span><span class="tt">Blogging is good for your soul!</span><span class="kd">Practical</span><span class="dy">21</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">128</span><span class="tt">We are summoning ghosts with LLMs</span><span class="kd">Link</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">127</span><span class="tt">The digital world is the only escape</span><span class="kd">Link</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">126</span><span class="tt">Predictive AI &gt; Generative AI</span><span class="kd">Link</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">125</span><span class="tt">AGI for normal people is here</span><span class="kd">Link</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">124</span><span class="tt">My little heart</span><span class="kd">Link</span><span class="dy">19</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">123</span><span class="tt">Be human</span><span class="kd">Musing</span><span class="dy">18</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">122</span><span class="tt">AI coding tools keep getting better and better</span><span class="kd">Practical</span><span class="dy">16</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">121</span><span class="tt">Vibe engineering</span><span class="kd">Link</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">120</span><span class="tt">On China and chips</span><span class="kd">Link</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">119</span><span class="tt">LLMs as your reading partner</span><span class="kd">Musing</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">118</span><span class="tt">Poor countries are not catching up with rich countries</span><span class="kd">Musing</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">117</span><span class="tt">Ads everywhere</span><span class="kd">Musing</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">116</span><span class="tt">Links for later</span><span class="kd">Link</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">115</span><span class="tt">László Krasznahorkai’s Nobel Prize lecture</span><span class="kd">Link</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">114</span><span class="tt">An unified theory of vibes</span><span class="kd">Link</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">113</span><span class="tt">We’re are all unoriginal</span><span class="kd">Musing</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">112</span><span class="tt">Monkeys are really good at predicting electoral winners</span><span class="kd">Musing</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">111</span><span class="tt">How to read more</span><span class="kd">Musing</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">110</span><span class="tt">Virtue cannot be known without knowing vice</span><span class="kd">Musing</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">109</span><span class="tt">Learn some philosophy</span><span class="kd">Musing</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">108</span><span class="tt">How much knowledge has been lost</span><span class="kd">Musing</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">107</span><span class="tt">Charlie Munger on dealing with setbacks in life</span><span class="kd">Musing</span><span class="dy">09</span></a></li>
+          </ol>
+        </div>
+        <div class="month" data-month="2025-11">
+          <h3 class="mon-head"><span class="mn">November</span><span class="md"></span><span class="mc" data-mcount="2025-11">16</span></h3>
+          <ol class="rows">
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">106</span><span class="tt">The future of global trade</span><span class="kd">Musing</span><span class="dy">21</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">105</span><span class="tt">Oral traditions in India</span><span class="kd">Musing</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">104</span><span class="tt">Ah, but is not this a glorious time for your deep inward fires?</span><span class="kd">Musing</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">103</span><span class="tt">Take big shots</span><span class="kd">Musing</span><span class="dy">14</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">102</span><span class="tt">How many jobs can AI kill</span><span class="kd">Musing</span><span class="dy">14</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">101</span><span class="tt">What to expect when expecting</span><span class="kd">Practical</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">100</span><span class="tt">AGI will be business as usual?</span><span class="kd">Musing</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">99</span><span class="tt">Did we get evolution wrong?</span><span class="kd">Musing</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">98</span><span class="tt">Reading as escalation</span><span class="kd">Reflection</span><span class="dy">08</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">97</span><span class="tt">Evil by Arthur Rimbauld</span><span class="kd">Verse</span><span class="dy">08</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">96</span><span class="tt">Leviathan by George Oppen</span><span class="kd">Verse</span><span class="dy">06</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">95</span><span class="tt">AI as a research partner</span><span class="kd">Musing</span><span class="dy">05</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">94</span><span class="tt">The guy who financed Johannes Gutenberg</span><span class="kd">Musing</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">93</span><span class="tt">Human nature will never change</span><span class="kd">Reflection</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">92</span><span class="tt">AI blind spot</span><span class="kd">Musing</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">91</span><span class="tt">Dhwani: A directory for Indian public domain works</span><span class="kd">Practical</span><span class="dy">01</span></a></li>
+          </ol>
+        </div>
+        <div class="month" data-month="2025-10">
+          <h3 class="mon-head"><span class="mn">October</span><span class="md"></span><span class="mc" data-mcount="2025-10">37</span></h3>
+          <ol class="rows">
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">90</span><span class="tt">Post-cognitive world</span><span class="kd">Reflection</span><span class="dy">31</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">89</span><span class="tt">Invention of modernity</span><span class="kd">Musing</span><span class="dy">31</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">88</span><span class="tt">Can AI eliminate information advantages</span><span class="kd">Musing</span><span class="dy">30</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">87</span><span class="tt">Institutional impact of AI</span><span class="kd">Musing</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">86</span><span class="tt">Economic impact of AI</span><span class="kd">Musing</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">85</span><span class="tt">The value of asking right questions</span><span class="kd">Musing</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">84</span><span class="tt">Don’t want to die? Drink coffee</span><span class="kd">Musing</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">83</span><span class="tt">AI-powered invoice fraud</span><span class="kd">Musing</span><span class="dy">27</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">82</span><span class="tt">The value of education in the shadows of AI</span><span class="kd">Musing</span><span class="dy">26</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">81</span><span class="tt">Brian Eno on being pretentious</span><span class="kd">Musing</span><span class="dy">26</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">80</span><span class="tt">On having a philosophy of money</span><span class="kd">Musing</span><span class="dy">25</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">79</span><span class="tt">AI is kicking your butt; just accept it</span><span class="kd">Musing</span><span class="dy">25</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">78</span><span class="tt">Fun is a skill</span><span class="kd">Musing</span><span class="dy">23</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">77</span><span class="tt">Rousseau on reflection and reason</span><span class="kd">Musing</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">76</span><span class="tt">Here come the robots</span><span class="kd">Musing</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">75</span><span class="tt">The prerequisites for scientific progress</span><span class="kd">Musing</span><span class="dy">21</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">74</span><span class="tt">On ritual</span><span class="kd">Musing</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">73</span><span class="tt">Naked without values</span><span class="kd">Musing</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">72</span><span class="tt">China is playing long games</span><span class="kd">Musing</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">71</span><span class="tt">You never know when the carousel stops spinning</span><span class="kd">Practical</span><span class="dy">18</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">70</span><span class="tt">On hope and despair</span><span class="kd">Musing</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">69</span><span class="tt">For A Cynic by Countee Cullen</span><span class="kd">Verse</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">68</span><span class="tt">On billionaires and the ultra-wealthy</span><span class="kd">Musing</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">67</span><span class="tt">Tools for thinking</span><span class="kd">Musing</span><span class="dy">14</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">66</span><span class="tt">Odds and ends</span><span class="kd">Reflection</span><span class="dy">14</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">65</span><span class="tt">Where death is cheaper than life itself</span><span class="kd">Musing</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">64</span><span class="tt">A few good rabbit holes</span><span class="kd">Link</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">63</span><span class="tt">Rilke’s advice to a young poet</span><span class="kd">Verse</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">62</span><span class="tt">A beautiful line from Camus</span><span class="kd">Musing</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">61</span><span class="tt">Meditation by Charles Baudelaire</span><span class="kd">Verse</span><span class="dy">09</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">60</span><span class="tt">odds and ends</span><span class="kd">Link</span><span class="dy">07</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">59</span><span class="tt">How Terence Tao uses AI</span><span class="kd">Practical</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">58</span><span class="tt">Henry Oliver on how to have good taste</span><span class="kd">Musing</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">57</span><span class="tt">The cost of extreme weather</span><span class="kd">Reflection</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">56</span><span class="tt">On pursuing things</span><span class="kd">Musing</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">55</span><span class="tt">On nostalgia</span><span class="kd">Musing</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">54</span><span class="tt">C.S. Lewis on reading old books</span><span class="kd">Musing</span><span class="dy">02</span></a></li>
+          </ol>
+        </div>
+        <div class="month" data-month="2025-09">
+          <h3 class="mon-head"><span class="mn">September</span><span class="md"></span><span class="mc" data-mcount="2025-09">27</span></h3>
+          <ol class="rows">
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">53</span><span class="tt">AI links</span><span class="kd">Link</span><span class="dy">30</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">52</span><span class="tt">Everything everywhere all at once</span><span class="kd">Link</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">51</span><span class="tt">The day is gone by John Keats</span><span class="kd">Verse</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">50</span><span class="tt">The infinite pleasures of diving down rabbit holes</span><span class="kd">Reflection</span><span class="dy">27</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">49</span><span class="tt">Zero Sum thinking is ruining the world</span><span class="kd">Musing</span><span class="dy">25</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">48</span><span class="tt">I got some links for you</span><span class="kd">Link</span><span class="dy">24</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">47</span><span class="tt">Kafka on reading</span><span class="kd">Reflection</span><span class="dy">23</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">46</span><span class="tt">Twilight of the humans?</span><span class="kd">Link</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">45</span><span class="tt">Philosophy of life and Seneca’s letters</span><span class="kd">Practical</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">44</span><span class="tt">Wild Geese by Mary Oliver</span><span class="kd">Verse</span><span class="dy">21</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">43</span><span class="tt">How Americans use AI and what they think about it</span><span class="kd">Musing</span><span class="dy">19</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">42</span><span class="tt">How long do we have left?</span><span class="kd">Reflection</span><span class="dy">18</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">41</span><span class="tt">Today in learning</span><span class="kd">Link</span><span class="dy">16</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">40</span><span class="tt">The Second Coming by William Butler Yeats</span><span class="kd">Verse</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">39</span><span class="tt">We are borrowed stardust</span><span class="kd">Musing</span><span class="dy">14</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">38</span><span class="tt">Philosophy understood as a way of life</span><span class="kd">Link</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">37</span><span class="tt">The economics of tyranny</span><span class="kd">Link</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">36</span><span class="tt">A hopeful view of large language models (LLM)</span><span class="kd">Musing</span><span class="dy">11</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">35</span><span class="tt">Social media is a funhouse mirror</span><span class="kd">Musing</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">34</span><span class="tt">The solar revolution</span><span class="kd">Musing</span><span class="dy">09</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">33</span><span class="tt">Poetry is a salve for the soul</span><span class="kd">Verse</span><span class="dy">07</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">32</span><span class="tt">Aggregating book mentions</span><span class="kd">Practical</span><span class="dy">06</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">31</span><span class="tt">I got some links for you</span><span class="kd">Link</span><span class="dy">05</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">30</span><span class="tt">How fiber optic cables work</span><span class="kd">Musing</span><span class="dy">04</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">29</span><span class="tt">What is artificial intelligence (AI)?</span><span class="kd">Musing</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">28</span><span class="tt">Bhuvan’s law</span><span class="kd">Reflection</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">27</span><span class="tt">Will the poor countries catch up the rich?</span><span class="kd">Link</span><span class="dy">01</span></a></li>
+          </ol>
+        </div>
+        <div class="month" data-month="2025-08">
+          <h3 class="mon-head"><span class="mn">August</span><span class="md"></span><span class="mc" data-mcount="2025-08">26</span></h3>
+          <ol class="rows">
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">26</span><span class="tt">The heart wants what it wants</span><span class="kd">Verse</span><span class="dy">31</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">25</span><span class="tt">Speculation Is like water—it always finds a way</span><span class="kd">Reflection</span><span class="dy">30</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">24</span><span class="tt">Vibe Physics? Not Yet</span><span class="kd">Musing</span><span class="dy">29</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">23</span><span class="tt">The weight of telling stories</span><span class="kd">Musing</span><span class="dy">28</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">22</span><span class="tt">Your next good read</span><span class="kd">Link</span><span class="dy">27</span></a></li>
+            <li class="row" data-kind="practical" data-year="2025"><a href="#"><span class="fn">21</span><span class="tt">I just want to know</span><span class="kd">Practical</span><span class="dy">26</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">20</span><span class="tt">On luck and randomness in life</span><span class="kd">Reflection</span><span class="dy">25</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">19</span><span class="tt">On Walking</span><span class="kd">Reflection</span><span class="dy">24</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">18</span><span class="tt">On AI-assisted writing</span><span class="kd">Musing</span><span class="dy">23</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">17</span><span class="tt">On AI taking jobs</span><span class="kd">Link</span><span class="dy">22</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">16</span><span class="tt">All knowledge is my province</span><span class="kd">Musing</span><span class="dy">21</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">15</span><span class="tt">The cost of collective apathy</span><span class="kd">Musing</span><span class="dy">20</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">14</span><span class="tt">The greatest anonymous poem</span><span class="kd">Verse</span><span class="dy">18</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">13</span><span class="tt">Why read?</span><span class="kd">Reflection</span><span class="dy">17</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">12</span><span class="tt">Is the twilight of the humans? A few AI links</span><span class="kd">Link</span><span class="dy">15</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">11</span><span class="tt">Welcome to the age of weaponized interdependence</span><span class="kd">Musing</span><span class="dy">13</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">10</span><span class="tt">What It Means to Be Human in the Age of AI</span><span class="kd">Reflection</span><span class="dy">12</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">9</span><span class="tt">The world won’t end with a bang but with a shrug of indifference</span><span class="kd">Musing</span><span class="dy">10</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">8</span><span class="tt">The death of silence and the loss of contemplative spaces</span><span class="kd">Musing</span><span class="dy">09</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">7</span><span class="tt">The potato love story</span><span class="kd">Link</span><span class="dy">08</span></a></li>
+            <li class="row" data-kind="musings" data-year="2025"><a href="#"><span class="fn">6</span><span class="tt">Universities in the age of AI</span><span class="kd">Musing</span><span class="dy">07</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">5</span><span class="tt">War and Peace isn’t a novel, it’s a mirror</span><span class="kd">Reflection</span><span class="dy">05</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">4</span><span class="tt">Stephen Hawking on the philosophy of life</span><span class="kd">Reflection</span><span class="dy">04</span></a></li>
+            <li class="row" data-kind="verse" data-year="2025"><a href="#"><span class="fn">3</span><span class="tt">Good advice from Rudyard Kilpling</span><span class="kd">Verse</span><span class="dy">03</span></a></li>
+            <li class="row" data-kind="links" data-year="2025"><a href="#"><span class="fn">2</span><span class="tt">I gots Links for you: Issue #1</span><span class="kd">Link</span><span class="dy">02</span></a></li>
+            <li class="row" data-kind="reflections" data-year="2025"><a href="#"><span class="fn">1</span><span class="tt">The Protection Racket: A History of Tariffs and Who Really Pays</span><span class="kd">Reflection</span><span class="dy">01</span></a></li>
+          </ol>
+        </div>
+      </section>
+
+      <footer class="stream-foot">
+        <span class="flr">&#10086;</span>
+        <p class="line">That is all of it &#8212; every hole, from the first.</p>
+        <p class="meta">190 folios &#183; 5 kinds &#183; Aug 2025 &#8212; Jan 2026 &nbsp;&#183;&nbsp; <a href="12-home.html">back to the stream &#8594;</a></p>
+      </footer>
+
+    </main>
+  </div>
+
+<script>
+  // Theme override on top of prefers-color-scheme. Reads the *rendered*
+  // scheme first so the first click always flips what you can actually see.
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+
+  // The filters. Month and year headings recount themselves rather than
+  // keeping a stale total — a ledger that lies about its own subtotals is
+  // worse than one with no subtotals at all. Empty months and empty years
+  // are hidden outright.
+  (function(){
+    var kind='all', year='all';
+    var rows=[].slice.call(document.querySelectorAll('.row'));
+    var months=[].slice.call(document.querySelectorAll('.month'));
+    var years=[].slice.call(document.querySelectorAll('.year'));
+    var tally=document.getElementById('tally');
+    var tn=document.getElementById('tally-n');
+    var tof=document.getElementById('tally-of');
+
+    function apply(){
+      var total=0;
+      rows.forEach(function(r){
+        var ok=(kind==='all'||r.dataset.kind===kind)&&(year==='all'||r.dataset.year===year);
+        r.hidden=!ok; if(ok)total++;
+      });
+      months.forEach(function(m){
+        var n=m.querySelectorAll('.row:not([hidden])').length;
+        m.hidden=(n===0);
+        m.querySelector('.mc').textContent=n;
+      });
+      years.forEach(function(y){
+        var n=y.querySelectorAll('.row:not([hidden])').length;
+        y.hidden=(n===0);
+        y.querySelector('.yc b').textContent=n;
+      });
+      tn.textContent=total;
+      tof.textContent=(total===190?'of 190 folios':'of 190 folios'+(kind==='all'?'':' · '+kind)+(year==='all'?'':' · '+year));
+      tally.classList.toggle('filtered', kind!=='all'||year!=='all');
+      document.querySelector('.stream').classList.toggle('one-kind', kind!=='all');
+    }
+    function press(scope,attr,val){
+      [].slice.call(scope.querySelectorAll('button')).forEach(function(b){
+        b.setAttribute('aria-pressed', String(b.dataset[attr]===val));
+      });
+    }
+    var kw=document.getElementById('kinds'), yw=document.getElementById('years');
+    kw.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b)return;
+      kind=b.dataset.kind; press(kw,'kind',kind); apply();
+    });
+    yw.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b)return;
+      year=b.dataset.year; press(yw,'year',year); apply();
+    });
+    document.getElementById('clear').addEventListener('click',function(){
+      kind='all'; year='all'; press(kw,'kind','all'); press(yw,'year','all'); apply();
+    });
+  })();
+</script>
+</body>
+</html>

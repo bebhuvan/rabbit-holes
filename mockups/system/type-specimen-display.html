@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Display face specimen — Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Libre+Caslon+Display&family=Instrument+Serif:ital@0;1&family=Gloock&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400..700;1,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-display:swap;unicode-range:U+2010-2015;
+  }
+  :root{
+    --paper:#FFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;--rule:#EDEBE5;
+    --red:#C0392B;--c-verse:#5F9E79;
+    --mono:'Spline Sans Mono',monospace;
+  }
+  :root[data-theme="dark"]{
+    --paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;--rule:#2A2823;
+    --red:#E4715F;--c-verse:#82C29A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:'Newsreader',serif;
+    padding:2.4rem 3rem;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  .intro{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:1rem;margin-bottom:.6rem}
+
+  .spec{display:grid;grid-template-columns:150px 1fr;gap:0 2.2rem;align-items:center;
+    border-bottom:1px solid var(--rule);padding:1.5rem 0}
+  .name{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-soft);line-height:1.5}
+  .name b{display:block;color:var(--red);font-weight:500;margin-bottom:.25rem}
+  .name span{display:block;font-size:.58rem;color:var(--muted);letter-spacing:.04em;margin-top:.3rem}
+
+  .demo{display:grid;grid-template-columns:150px 1fr;gap:0 2rem;align-items:center;min-width:0}
+  .num{font-size:4.6rem;line-height:.9;color:var(--c-verse);
+    font-variant-numeric:lining-nums;letter-spacing:-.01em}
+  .ttl{font-size:2.5rem;line-height:1.1;letter-spacing:-.012em}
+  .sub{font-size:1rem;line-height:1.4;color:var(--ink-soft);margin-top:.45rem;
+    font-family:'Newsreader',serif;font-style:italic}
+
+  /* ---- the candidates ---- */
+  .f-bodoni .num,.f-bodoni .ttl{font-family:'DisplayPunct','Bodoni Moda',serif;font-weight:500}
+  /* same face, optical size pinned low so hairlines stay sturdy at display size */
+  .f-bodonifix .num,.f-bodonifix .ttl{font-family:'DisplayPunct','Bodoni Moda',serif;font-weight:600;
+    font-optical-sizing:none;font-variation-settings:'opsz' 11}
+  .f-garamond .num,.f-garamond .ttl{font-family:'DisplayPunct','EB Garamond',serif;font-weight:600}
+  .f-caslon .num,.f-caslon .ttl{font-family:'DisplayPunct','Libre Caslon Display',serif}
+  .f-instrument .num,.f-instrument .ttl{font-family:'DisplayPunct','Instrument Serif',serif}
+  .f-gloock .num,.f-gloock .ttl{font-family:'DisplayPunct','Gloock',serif}
+  .f-spectral .num,.f-spectral .ttl{font-family:'DisplayPunct','Spectral',serif;font-weight:600}
+  .f-playfair .num,.f-playfair .ttl{font-family:'DisplayPunct','Playfair Display',serif;font-weight:600}
+</style>
+</head>
+<body>
+  <div class="intro">Display face &#183; folio numeral + title &#183; em-dash included to verify the glyph survives</div>
+
+  <div class="spec f-bodoni">
+    <div class="name"><b>Bodoni Moda</b>current, opsz auto<span>didone &#183; hairlines thin as size grows</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-bodonifix">
+    <div class="name"><b>Bodoni Moda</b>opsz pinned to 11, wght 600<span>same face, sturdier cut</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-garamond">
+    <div class="name"><b>EB Garamond</b>600<span>the commonplace-book era face</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-caslon">
+    <div class="name"><b>Libre Caslon Display</b>400<span>English, bookish, sturdy</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-instrument">
+    <div class="name"><b>Instrument Serif</b>400<span>high contrast, heavier hairline</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-gloock">
+    <div class="name"><b>Gloock</b>400<span>didone flavour, no hairline problem</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-spectral">
+    <div class="name"><b>Spectral</b>600<span>quiet, screen-native</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+  <div class="spec f-playfair">
+    <div class="name"><b>Playfair Display</b>600<span>widely used &#8212; included as a control</span></div>
+    <div class="demo"><div class="num">147</div><div><div class="ttl">Wild Geese</div><div class="sub">Dhwani &#8212; a directory of public-domain works</div></div></div>
+  </div>
+
+</body>
+</html>

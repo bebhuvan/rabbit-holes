@@ -1,0 +1,57 @@
+---
+/**
+ * A sticky figure that the prose reads past.
+ *
+ * The figure holds in the viewport while the steps scroll by; the figure's
+ * state is bound continuously to scroll position by scrolly.js. See that file
+ * for why it is bound rather than triggered.
+ *
+ * Authored as:
+ *
+ *   <Scrolly>
+ *     <BigBangTimeline slot="sticky" />
+ *     <Step n={1}>At 10⁻³⁶ s, inflation…</Step>
+ *     <Step n={2}>At 1 s, neutrinos decouple…</Step>
+ *   </Scrolly>
+ *
+ * Note `data-static="true"` in the markup. That is the state the page ships in
+ * and the state it stays in with JavaScript off or unavailable: every step
+ * legible, stacked normally, figure showing its final form. scrolly.js turns it
+ * off only once it has successfully bound. The fallback is the default, not an
+ * afterthought.
+ */
+interface Props {
+  /** Describes the sequence as a whole, for assistive technology. */
+  label?: string;
+  /**
+   * `side` — figure left, steps right. Right for squarish figures.
+   * `top`  — figure spans the full width and sticks to the top of the viewport,
+   *          steps scroll beneath it in a reading column. Required for anything
+   *          genuinely wide: a sixty-decade timeline in a half-width column
+   *          cannot label itself without collisions.
+   */
+  layout?: 'side' | 'top';
+}
+
+const { label, layout = 'side' } = Astro.props;
+---
+
+<div
+  class="ex-scrolly"
+  data-ex-scrolly
+  data-static="true"
+  data-step="0"
+  data-layout={layout}
+  aria-label={label}
+>
+  <div class="ex-scrolly-sticky">
+    <slot name="sticky" />
+  </div>
+  <div class="ex-scrolly-steps">
+    <slot />
+  </div>
+</div>
+
+<script>
+  import '../../explainers/kit/scrolly.js';
+</script>

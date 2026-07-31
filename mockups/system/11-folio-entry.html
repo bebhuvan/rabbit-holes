@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wild Geese by Mary Oliver — Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* ==========================================================
+     PUNCTUATION REPAIR  — structural fix for the em-dash defect
+     ----------------------------------------------------------
+     Bodoni Moda's latin subset DECLARES unicode-range U+2000-206F
+     but ships no glyph for the dash block. Because the range is
+     declared, the browser never falls back — it paints nothing.
+     We re-declare Newsreader under a private family name scoped
+     to ONLY the dash block, and list it FIRST in the display
+     stack. Audited: Bodoni's own quotes / ellipsis / primes are
+     fine, so the override stays narrow and Bodoni keeps them.
+     ========================================================== */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600; font-style:normal; font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;
+    --ink:#1B1B19;
+    --ink-soft:#5E5C56;
+    --muted:#A3A199;
+    --rule:#EDEBE5;
+    --rule-strong:#DEDBD2;
+    --red:#C0392B;
+    --red-soft:#E0A69E;
+    --red-wash:#FBF2F0;
+    --c-verse:#5F9E79;
+    --c-links:#4E7EC2;
+    --c-reflections:#C58A2E;
+    --c-musings:#8E76B8;
+    --c-practical:#B0705A;
+    --maxw:1240px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    /* Flourishes (&#10086; &#9758; &#8258;) exist in none of the three webfonts, so they
+       land on whatever symbol font the OS supplies and differ per platform.
+       Pin an explicit stack, and never set them below ~1rem — at mono
+       caption sizes they degrade into specks. */
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2',
+               'DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#221B18;
+      --c-verse:#82C29A;--c-links:#84AAE4;--c-reflections:#E2B267;--c-musings:#B6A2E0;--c-practical:#D89A80;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#221B18;
+    --c-verse:#82C29A;--c-links:#84AAE4;--c-reflections:#E2B267;--c-musings:#B6A2E0;--c-practical:#D89A80;
+  }
+  :root[data-theme="light"]{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FBF2F0;
+    --c-verse:#5F9E79;--c-links:#4E7EC2;--c-reflections:#C58A2E;--c-musings:#8E76B8;--c-practical:#B0705A;
+  }
+
+  /* ==========================================================
+     DISPLAY OPTICAL SIZE  — the legibility fix
+     ----------------------------------------------------------
+     Bodoni Moda carries an optical-size axis (6..96). With
+     font-optical-sizing:auto the browser asks for the DISPLAY
+     cut as size grows, and a didone's display cut has the
+     finest hairlines — so the folio numeral and the title, the
+     two largest things on the page, were drawn with the most
+     fragile strokes. Worst on dark, where the "1" all but
+     disappeared. Pin opsz low and carry the weight instead.
+     Applied only to display elements: Newsreader keeps its own
+     optical sizing for reading text.
+     ========================================================== */
+  .brand .mark, h1, .folio-num, .hand .say, .thread .tn{
+    font-optical-sizing:none;
+    font-variation-settings:'opsz' 11;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--body);font-size:20px;line-height:1.7;
+    font-optical-sizing:auto;font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ---- ink rule (see specimen at foot of file) ----
+     RED  = the collector's hand, and passage deeper into the garden.
+     BLACK= the source, and anything belonging to the world outside. */
+
+  /* ============ MASTHEAD ============ (shared with 12 + 13) */
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;
+    font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft)}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    margin:0 .25rem;font-style:normal}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none;transition:color var(--dur) var(--ease)}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;
+    padding:0 0 0 1.7rem;border-left:1px solid var(--rule);
+    transition:color var(--dur) var(--ease)}
+  .lamp:hover{color:var(--red)}
+
+  /* ============ ENTRY SHELL ============ */
+  .folio{max-width:var(--maxw);margin:0 auto;display:grid;
+    grid-template-columns:190px minmax(0,640px) 260px;gap:0 3rem;
+    padding:0 2.6rem;align-items:start}
+
+  /* ---- left: the standing meta rail ---- */
+  .rail{position:sticky;top:2.2rem;padding-top:4.2rem;text-align:right}
+  .rail .back{display:block;font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);text-decoration:none;margin-bottom:2.6rem;transition:color .18s}
+  .rail .back:hover{color:var(--red)}
+  .folio-num{font-family:var(--display);font-weight:600;font-size:var(--t-4xl);line-height:.82;
+    letter-spacing:var(--tr-display);color:var(--c-verse);font-variant-numeric:lining-nums;display:block}
+  .folio-word{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);display:block;margin-top:.7rem}
+  .rail dl{margin-top:2.4rem;font-family:var(--mono);font-size:var(--l-md);line-height:1.55}
+  .rail dt{color:var(--muted);font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;margin-top:1.3rem}
+  .rail dd{color:var(--ink-soft);margin-top:.3rem}
+  .rail dd a{color:var(--red);text-decoration:none}
+  .rail dd a:hover{text-decoration:underline;text-underline-offset:3px}
+
+  /* ---- centre: the leaf ---- */
+  .leaf{padding:4rem 0 2rem;min-width:0}
+
+  .attrib{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase;
+    color:var(--muted);margin-bottom:1.1rem}
+  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.08;
+    letter-spacing:var(--tr-display);margin-bottom:.4rem}
+  .byline{font-family:var(--body);font-style:italic;font-size:var(--t-md);color:var(--ink-soft);margin-bottom:2.8rem}
+
+  /* ---- THE HAND — rubricated, and monumental when terse ----
+     Real notes in this corpus are often a single word ("Beautiful.").
+     A small grey sidenote would read as a missing field. Set at
+     display scale in red, one word becomes a considered response. */
+  .hand{margin:0 0 2.9rem;position:relative;padding-left:1.6rem}
+  .hand::before{content:"";position:absolute;left:0;top:.34em;bottom:.34em;width:2px;background:var(--red)}
+  .hand .label{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red-soft);margin-bottom:.55rem}
+  .hand .say{font-family:var(--display);font-style:italic;font-weight:500;color:var(--red);
+    font-size:var(--t-2xl);line-height:1.24;letter-spacing:var(--tr-display)}
+  /* when the note runs long, it steps down to reading size automatically */
+  .hand.long .say{font-family:var(--body);font-style:italic;font-size:var(--t-md);line-height:1.62}
+
+  /* ---- the source ---- */
+  .source-label{display:flex;align-items:center;gap:.8rem;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
+  .source-label::after{content:"";flex:1;border-bottom:1px solid var(--rule)}
+
+  /* Verse: every line flush; ONLY over-long lines that wrap are indented.
+     (An earlier hanging-indent via text-indent hung line 1 alone and
+     indented all the rest — it read as a typesetting error.) */
+  .verse{font-family:var(--body);font-size:var(--t-lg);line-height:1.82;color:var(--ink)}
+  .verse p{margin-bottom:1.5rem}
+  /* each line is its own block, so the hanging indent applies per line:
+     lines sit flush, and only a line too long for the measure turns over. */
+  .verse .l{display:block;padding-left:1.5rem;text-indent:-1.5rem}
+
+  .prose p{margin-bottom:1.35rem}
+  .prose a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--rule-strong);
+    text-underline-offset:3px;text-decoration-thickness:1px}
+  .prose a:hover{text-decoration-color:var(--ink)}
+  .prose blockquote{margin:1.9rem 0;padding-left:1.4rem;border-left:2px solid var(--rule-strong);
+    font-size:var(--t-body);line-height:1.72;color:var(--ink)}
+
+  .leaf-mark{text-align:center;color:var(--red-soft);font-family:var(--flourish);
+    font-size:var(--t-lg);line-height:1;margin:2.4rem 0 0}
+
+  /* ---- dive deeper ---- */
+  .deeper{margin-top:2.6rem;border-top:1px solid var(--rule);padding-top:1.6rem}
+  .deeper .h{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);margin-bottom:1.1rem}
+  .deeper ul{list-style:none}
+  .deeper li{margin-bottom:.85rem;display:flex;gap:.7rem;align-items:baseline}
+  .deeper .n{font-family:var(--mono);font-size:var(--l-md);color:var(--muted);flex:none}
+  .deeper a{font-family:var(--body);font-size:var(--t-body);color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  .deeper a:hover{text-decoration-color:var(--ink)}
+  .deeper .dsc{display:block;font-size:var(--t-base);font-style:italic;color:var(--ink-soft);margin-top:.15rem}
+
+  /* ---- threads: connective tissue, derived from shared heads ----
+     Spans the reading column AND the margin. The page deliberately
+     opens out here: narrow while you read, wide when you leave. */
+  .threads{grid-column:2 / 4;margin-top:1rem;border-top:2px solid var(--red);
+    padding:1.5rem 0 0}
+  .threads .h{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--red);margin-bottom:.4rem;display:flex;align-items:baseline;gap:.55rem}
+  .threads .h .mani{font-family:var(--flourish);font-size:var(--t-base);line-height:1}
+  .threads .hsub{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--ink-soft);margin-bottom:1.7rem}
+  .thread-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 3rem}
+  .thread{display:grid;grid-template-columns:3.2rem 1fr;gap:.9rem;align-items:baseline;
+    padding:.85rem 0;border-top:1px solid var(--rule);text-decoration:none;transition:padding-left .2s}
+  .thread:hover{padding-left:.4rem}
+  .thread .tn{font-family:var(--display);font-weight:600;font-size:var(--t-lg);color:var(--c-verse);font-variant-numeric:lining-nums;line-height:1}
+  .thread .tt{font-family:var(--body);font-size:var(--t-body);color:var(--ink);line-height:1.35}
+  .thread:hover .tt{color:var(--red)}
+  .thread .tr{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    color:var(--muted);margin-top:.28rem}
+  .threads .all{display:inline-block;margin-top:1.5rem;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
+  .threads .all:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* ---- right margin: sidenotes ---- */
+  .margin{padding-top:12.4rem;position:sticky;top:2.2rem}
+  .sidenote{margin-bottom:2.1rem;font-size:var(--t-base);line-height:1.58}
+  .sidenote .sl{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
+  .sidenote .sb{font-family:var(--body);color:var(--ink-soft);font-style:italic}
+  .sidenote a{color:var(--red);text-decoration:none}
+  .sidenote a:hover{text-decoration:underline;text-underline-offset:3px}
+  .heads a{display:inline-block;font-family:var(--mono);font-size:var(--l-md);color:var(--red);
+    text-decoration:none;border:1px solid var(--rule-strong);border-radius:2px;
+    padding:.18rem .5rem;margin:0 .3rem .35rem 0;transition:border-color .18s}
+  .heads a:hover{border-color:var(--red)}
+
+  footer.foot{max-width:var(--maxw);margin:5rem auto 0;padding:2rem 2.6rem 4rem;
+    border-top:1px solid var(--rule);font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--muted);display:flex;justify-content:space-between;gap:2rem}
+  footer.foot a{color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#" class="on">Index</a>
+        <a href="#">Heads</a>
+        <a href="#">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <article class="folio">
+
+    <!-- ============ LEFT RAIL ============ -->
+    <aside class="rail">
+      <a class="back" href="#">&#8592; the index</a>
+      <span class="folio-num">044</span>
+      <span class="folio-word">folio</span>
+      <dl>
+        <dt>Kept</dt>
+        <dd>21 Sept 2025</dd>
+        <dt>Kind</dt>
+        <dd>Verse</dd>
+        <dt>Source</dt>
+        <dd><a href="https://allpoetry.com/poem/15374223-Wild-geese-by-Mary-J-Oliver">allpoetry.com &#8599;</a></dd>
+      </dl>
+    </aside>
+
+    <!-- ============ THE LEAF ============ -->
+    <div class="leaf">
+
+      <div class="attrib">Verse &#183; kept 21 September 2025</div>
+      <h1>Wild Geese</h1>
+      <p class="byline">by Mary Oliver</p>
+
+      <!-- THE HAND. In the source markdown this is the single word
+           "Beautiful." — it precedes the quote, so it leads here too. -->
+      <div class="hand">
+        <span class="label">The hand</span>
+        <p class="say">Beautiful.</p>
+      </div>
+
+      <div class="source-label">The source</div>
+
+      <div class="verse">
+        <p>
+          <span class="l">You do not have to be good.</span>
+          <span class="l">You do not have to walk on your knees</span>
+          <span class="l">For a hundred miles through the desert, repenting.</span>
+          <span class="l">You only have to let the soft animal of your body</span>
+          <span class="l">love what it loves.</span>
+          <span class="l">Tell me about despair, yours, and I will tell you mine.</span>
+          <span class="l">Meanwhile the world goes on.</span>
+          <span class="l">Meanwhile the sun and the clear pebbles of the rain</span>
+          <span class="l">are moving across the landscapes,</span>
+          <span class="l">over the prairies and the deep trees,</span>
+          <span class="l">the mountains and the rivers.</span>
+          <span class="l">Meanwhile the wild geese, high in the clean blue air,</span>
+          <span class="l">are heading home again.</span>
+          <span class="l">Whoever you are, no matter how lonely,</span>
+          <span class="l">the world offers itself to your imagination,</span>
+          <span class="l">calls to you like the wild geese, harsh and exciting &#8212;</span>
+          <span class="l">over and over announcing your place</span>
+          <span class="l">in the family of things.</span>
+        </p>
+      </div>
+
+      <div class="leaf-mark">&#10086;</div>
+
+      <section class="deeper">
+        <div class="h">Dive deeper</div>
+        <ul>
+          <li><span class="n">01</span><a href="https://allpoetry.com/poem/15374223-Wild-geese-by-Mary-J-Oliver">Link to the original source</a></li>
+        </ul>
+      </section>
+
+    </div>
+
+    <!-- ============ RIGHT MARGIN ============ -->
+    <aside class="margin">
+      <div class="sidenote">
+        <span class="sl">Filed under</span>
+        <div class="heads"><a href="#">Poetry</a></div>
+      </div>
+      <div class="sidenote">
+        <span class="sl">In this hand</span>
+        <div class="sb">One word. The commonplace tradition allowed for that &#8212; a mark of assent in the margin, nothing more.</div>
+      </div>
+      <div class="sidenote">
+        <span class="sl">Neighbours in time</span>
+        <div class="sb"><a href="#">&#8592; The day is gone</a><br><a href="#">Meditation &#8594;</a></div>
+      </div>
+    </aside>
+
+    <!-- ============ CONNECTIVE TISSUE — spans reading column + margin ====
+         Derived today from shared heads + kind, which exist for 172 of 190
+         leaves. When find-related.js has been run across the corpus, the
+         reason line carries its sentence instead. Same slot either way. -->
+    <section class="threads">
+      <div class="h"><span class="mani">&#9758;</span> Threads from here</div>
+      <p class="hsub">Fifteen other leaves sit under <em>Poetry</em>. These are nearest.</p>
+
+      <div class="thread-grid">
+        <a class="thread" href="#">
+          <span class="tn">165</span>
+          <span><span class="tt">I dwell in possibility</span>
+          <span class="tr">shares &#8212; poetry &#183; both verse</span></span>
+        </a>
+        <a class="thread" href="#">
+          <span class="tn">014</span>
+          <span><span class="tt">The greatest anonymous poem</span>
+          <span class="tr">shares &#8212; poetry &#183; both verse</span></span>
+        </a>
+        <a class="thread" href="#">
+          <span class="tn">033</span>
+          <span><span class="tt">Poetry is a salve for the soul</span>
+          <span class="tr">shares &#8212; poetry</span></span>
+        </a>
+        <a class="thread" href="#">
+          <span class="tn">096</span>
+          <span><span class="tt">Leviathan by George Oppen</span>
+          <span class="tr">shares &#8212; poetry &#183; both verse</span></span>
+        </a>
+        <a class="thread" href="#">
+          <span class="tn">040</span>
+          <span><span class="tt">The Second Coming by William Butler Yeats</span>
+          <span class="tr">shares &#8212; poetry &#183; both verse</span></span>
+        </a>
+        <a class="thread" href="#">
+          <span class="tn">143</span>
+          <span><span class="tt">Gitanjali 3 by Rabindranath Tagore</span>
+          <span class="tr">shares &#8212; poetry &#183; both verse</span></span>
+        </a>
+      </div>
+
+      <a class="all" href="#">all fifteen under Poetry &#8594;</a>
+    </section>
+
+  </article>
+
+  <footer class="foot">
+    <span>folio 44 of 190 &#183; kept by Bhuvanesh</span>
+    <span><a href="#">a random leaf &#8594;</a></span>
+  </footer>
+
+<script>
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

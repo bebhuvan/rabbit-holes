@@ -1,0 +1,46 @@
+---
+/**
+ * How sure we are, marked in the prose itself.
+ *
+ * This is the piece's second axis of ink. Black already means "the world" and
+ * red already means "the author's judgment"; this says how firmly the world is
+ * known. It is carried as TREATMENT — solid, dashed, dotted underline — not as
+ * colour alone, so it survives both themes and colour-blind readers.
+ *
+ * `id` matters: `open` marks are collected to build the chapter on what remains
+ * unresolved, so that chapter can never contradict the text above it.
+ */
+import { epistemicLabels, type Epistemic } from '../../utils/explainers';
+
+interface Props {
+  status: Epistemic;
+  /** Stable handle, e.g. "baryogenesis". Required for `open` marks. */
+  id?: string;
+  /** Overrides the default hover explanation. */
+  why?: string;
+}
+
+const { status, id, why } = Astro.props;
+const label = epistemicLabels[status];
+
+if (status === 'open' && !id) {
+  throw new Error(
+    '[explainers] <Uncertainty status="open"> needs an id — open questions are ' +
+      'collected into the chapter on what we do not know, and an unnamed one ' +
+      'cannot be collected.'
+  );
+}
+---
+
+{/* The slot sits flush against the tags: a newline here becomes a real space
+    and the underline would run past the words it is marking.
+    `tabindex` so the explanation is reachable without a mouse — a hover-only
+    affordance is invisible on touch and to the keyboard. */}
+<span
+  class="ex-unc"
+  data-epistemic={status}
+  data-unc-id={id}
+  data-explain={`${label.short} — ${why ?? label.long}`}
+  tabindex="0"
+  role="note"
+  aria-label={`${label.short}: ${why ?? label.long}`}><slot /></span>

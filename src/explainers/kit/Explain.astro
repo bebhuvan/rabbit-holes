@@ -1,0 +1,47 @@
+---
+/**
+ * A box that explains, in plain words, the two or three terms the next stretch
+ * of the argument cannot be read without.
+ *
+ * WHY THIS EXISTS ALONGSIDE <Term>. They are not the same job.
+ *
+ *   <Term k="sphaleron">  a hover card carrying Wikipedia's summary. Optional,
+ *                         invisible until you reach for it, useless on a touch
+ *                         screen or on paper, and often written in the same
+ *                         register as the thing it was meant to unlock.
+ *
+ *   <Explain>             the author's own scaffolding, in the flow, always
+ *                         visible, placed at the first point the reader
+ *                         actually needs it. Not optional and not a digression:
+ *                         if a reader skips this they will not follow what
+ *                         comes next, which is exactly what separates it from
+ *                         <Aside>, and why unlike an Aside it is never closed.
+ *
+ * So the hover glosses stay for the long tail — thirty-four of them — and these
+ * carry the handful of ideas everything else rests on.
+ *
+ * Breaks out to `wide`, because a definition list at the reading measure looks
+ * like a paragraph that has gone wrong, and the whole point is that the reader
+ * can see at a glance that this is scaffolding rather than argument.
+ */
+interface Props {
+  /** What this box is for, in the author's voice. Not "Glossary". */
+  title: string;
+}
+
+const { title } = Astro.props;
+
+if (!title || !title.trim()) {
+  throw new Error(
+    '[explainers] <Explain> needs a title. It is the line that tells a reader ' +
+      'why they are being stopped, and without one the box reads as an interruption.'
+  );
+}
+---
+
+<aside class="ex-explain" data-width="wide" aria-label={title}>
+  <p class="ex-explain-head">{title}</p>
+  <div class="ex-explain-grid">
+    <slot />
+  </div>
+</aside>

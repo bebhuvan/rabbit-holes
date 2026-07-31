@@ -1,0 +1,592 @@
+---
+/**
+ * FIG 2 — The asymmetry we cannot explain.
+ *
+ * REBUILT WITH NO SVG AT ALL, and that is the point of it.
+ *
+ * The audit (scripts/audit-figures.mjs) found the defect that had been behind
+ * every round of review on this section: an SVG scales with its container, and
+ * so does every word inside it. At a 1024px viewport — an ordinary laptop —
+ * this figure was rendering at 0.88× and the figures either side of it at 0.64×,
+ * which paints a 9.3px label at under six pixels. The document has a carefully
+ * tuned major-third type scale in tokens.css and every figure was throwing it
+ * away the moment the window was not exactly the width it had been drawn at.
+ *
+ * So: MARKS IN SVG, WORDS IN HTML. And this figure turns out to have no marks
+ * at all — it is three rectangles on a logarithmic axis and some prose. It
+ * needs a layout engine, and there is an excellent one already in the browser.
+ *
+ * What that bought, none of it a matter of taste:
+ *
+ *   - Type is set in rem and stays set. It is the same size at 390px as at
+ *     1728px, which is what having a type scale means.
+ *   - The three Sakharov conditions wrap themselves. The previous version
+ *     carried a hand-rolled word-wrap function, a per-character width estimate
+ *     and a computed box height — some eighty lines reimplementing, badly,
+ *     something CSS does exactly. Two of the three boxes overprinted their own
+ *     last line during review because that estimate was wrong. Twice.
+ *   - It reflows instead of panning. The conditions stack on a phone.
+ *   - Collisions in the card grid are now structurally impossible rather than
+ *     avoided by arithmetic.
+ *
+ * The void keeps its meaning: drawn at true scale on the log axis, unfilled,
+ * in the author's ink — the epistemic register's `open` treatment used
+ * literally. It is the largest thing in the figure because it is the largest
+ * thing in the problem. Deliberately NOT glowing particles annihilating in
+ * space, which is the exact cliché this piece exists to avoid and which also
+ * hides the number.
+ */
+import { log, logTicks, exponentOf } from '../../kit/scale.js';
+
+// Observed baryon-to-photon ratio, Planck 2018: η = 6.1 × 10⁻¹⁰.
+const OBSERVED = 6.1e-10;
+// Upper end of what Standard Model CP violation can generate. Estimates run
+// from 10⁻²⁰ up to about 10⁻¹⁸; the generous end is used, because the argument
+// is stronger when it is made against the best case for the other side.
+const SM_MAX = 1e-18;
+
+const D0 = 1e-22;
+const D1 = 1e-9;
+
+/* The scale returns percentages, not pixels, and that is the whole trick: a
+   percentage survives any container width. A pixel does not. */
+const x = log([D0, D1], [3.5, 97]);
+const ticks = logTicks([D0, D1], 8);
+
+const smStart = x(D0);
+const smEnd = x(SM_MAX);
+const obs = x(OBSERVED);
+const decades = Math.log10(OBSERVED / SM_MAX);
+
+const sakharov = [
+  {
+    n: 1,
+    title: 'Baryon number must not be conserved',
+    status: 'settled' as const,
+    verdict: 'available',
+    note: 'Something has to be able to change how many protons and neutrons exist. The Standard Model has a process that can — a sphaleron — although nobody has ever seen one happen.',
+  },
+  {
+    n: 2,
+    title: 'C and CP symmetry must be violated',
+    status: 'open' as const,
+    verdict: 'not nearly enough of it',
+    note: 'The laws have to treat matter and antimatter differently. They do — it was first seen in 1964. But the difference the Standard Model allows falls short by the whole width of the void above.',
+  },
+  {
+    n: 3,
+    title: 'The universe must fall out of equilibrium',
+    status: 'settled' as const,
+    verdict: 'available',
+    note: 'Everything has to be changing too fast to settle into balance. A universe expanding and cooling this quickly never settles, so this one comes free.',
+  },
+];
+---
+
+<div class="asym">
+  <div class="residue" aria-hidden="true">
+    <div class="residue-before">
+      <span class="residue-stage">Before annihilation</span>
+      <div class="residue-ledger residue-matter">
+        <span class="residue-sign">+</span>
+        <strong>1,000,000,001</strong>
+        <small>matter particles</small>
+      </div>
+      <div class="residue-ledger residue-antimatter">
+        <span class="residue-sign">−</span>
+        <strong>1,000,000,000</strong>
+        <small>antimatter particles</small>
+      </div>
+    </div>
+
+    <div class="residue-event">
+      <span class="residue-ray r1"></span>
+      <span class="residue-ray r2"></span>
+      <span class="residue-ray r3"></span>
+      <span class="residue-ray r4"></span>
+      <span class="residue-flash"></span>
+      <span class="residue-word">annihilation</span>
+    </div>
+
+    <div class="residue-after">
+      <span class="residue-stage">After</span>
+      <strong class="residue-one">1</strong>
+      <p>matter particle remains</p>
+      <small>Everything visible is made from survivors like this.</small>
+    </div>
+  </div>
+
+  <p class="asym-eyebrow">Matter left over per photon, after everything annihilated</p>
+
+  <div class="asym-rail">
+    {/* What the Standard Model can account for. Hatched: contested, because the
+        estimate itself is model-dependent. A repeating gradient, so it cannot
+        skew when its container does. */}
+    <div class="asym-sm" style={`left:${smStart}%;width:${smEnd - smStart}%`}>
+      <span class="asym-sm-lbl">the most the Standard Model can produce</span>
+    </div>
+
+    {/* THE VOID. Unfilled, at true scale, and now able to hold its own words —
+        the text inside wraps to the void's real width at any viewport. */}
+    <div class="asym-void" style={`left:${smEnd}%;width:${obs - smEnd}%`}>
+      <p class="asym-void-head">
+        a factor approaching 10<sup>{Math.round(decades)}</sup>, unaccounted for
+      </p>
+      <p class="asym-void-big">nobody knows</p>
+      <p class="asym-void-note">
+        Leptogenesis. Electroweak baryogenesis beyond the Standard Model. An asymmetry seeded
+        during inflation. None of them confirmed.
+      </p>
+    </div>
+
+    <div class="asym-obs" style={`left:${obs}%`}><span class="asym-obs-dot"></span></div>
+  </div>
+
+  <div class="asym-axis">
+    {
+      ticks.map((tick) => (
+        <span class="asym-tick" style={`left:${x(tick)}%`}>
+          10<sup>{exponentOf(tick)}</sup>
+        </span>
+      ))
+    }
+  </div>
+
+  <div class="asym-measured-row">
+    <p class="asym-measured" style={`margin-left:${obs}%`}>
+      <span class="asym-measured-v">measured: 6.1 × 10<sup>−10</sup></span>
+      <span class="asym-measured-n">one survivor per billion · Planck 2018</span>
+    </p>
+  </div>
+
+  <p class="asym-cond-head">
+    What a universe needs in order to keep any matter at all — Sakharov, 1967
+  </p>
+  <ol class="asym-conditions">
+    {
+      sakharov.map((condition) => (
+        <li class="asym-cond" data-epistemic={condition.status}>
+          <span class="asym-cond-n">{String(condition.n).padStart(2, '0')}</span>
+          <h4 class="asym-cond-title">{condition.title}</h4>
+          <p class="asym-cond-note">{condition.note}</p>
+          <span class="asym-cond-verdict">{condition.verdict}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="ex-fig-data" tabindex="0">
+    <table>
+      <caption>Sakharov conditions and the baryon asymmetry</caption>
+      <tbody>
+        <tr>
+          <th scope="row">Observed baryon-to-photon ratio</th>
+          <td>6.1 × 10⁻¹⁰ (Planck 2018)</td>
+        </tr>
+        <tr>
+          <th scope="row">Standard Model upper estimate</th>
+          <td>of order 10⁻¹⁸ or less</td>
+        </tr>
+        {
+          sakharov.map((condition) => (
+            <tr>
+              <th scope="row">{condition.title}</th>
+              <td>
+                {condition.verdict} — {condition.note}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .asym {
+    --rail-h: clamp(9rem, 13vw, 12rem);
+    padding: clamp(1.25rem, 3vw, 3rem);
+  }
+  .asym sup {
+    font-size: 0.72em;
+    vertical-align: super;
+    line-height: 0;
+  }
+  .asym-eyebrow {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--s-7);
+  }
+
+  /* The emotional scale first; the logarithmic evidence follows it. */
+  .residue {
+    min-height: clamp(20rem, 39vw, 34rem);
+    margin: calc(-1 * clamp(1.25rem, 3vw, 3rem)) calc(-1 * clamp(1.25rem, 3vw, 3rem))
+      clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(2.2rem, 5vw, 5rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(7rem, 0.35fr) minmax(10rem, 0.6fr);
+    gap: clamp(1.2rem, 4vw, 4rem);
+    align-items: center;
+    overflow: hidden;
+    background: #f3f4f6;
+    border-bottom: 1px solid var(--rule);
+  }
+  .residue-stage {
+    display: block;
+    margin-bottom: 1.4rem;
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .residue-ledger {
+    position: relative;
+    padding: 0.8rem 0 1rem clamp(2rem, 4vw, 3.8rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .residue-ledger + .residue-ledger {
+    margin-top: 0.9rem;
+  }
+  .residue-ledger strong {
+    display: block;
+    font-family: var(--display);
+    font-size: clamp(2rem, 5.5vw, 5.4rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    font-variant-numeric: lining-nums tabular-nums;
+    white-space: nowrap;
+  }
+  .residue-matter strong,
+  .residue-matter .residue-sign {
+    color: #244a9b;
+  }
+  .residue-antimatter strong,
+  .residue-antimatter .residue-sign {
+    color: #d94d35;
+  }
+  .residue-sign {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-55%);
+    font-family: var(--display);
+    font-size: clamp(2rem, 4.5vw, 4rem);
+    font-weight: 300;
+  }
+  .residue-ledger small,
+  .residue-after small {
+    display: block;
+    margin-top: 0.6rem;
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    line-height: 1.4;
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .residue-event {
+    position: relative;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+  }
+  .residue-flash {
+    width: clamp(1rem, 2.2vw, 2rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #111216;
+  }
+  .residue-ray {
+    position: absolute;
+    width: 90%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #858891, transparent);
+  }
+  .residue-ray.r2 {
+    transform: rotate(45deg);
+  }
+  .residue-ray.r3 {
+    transform: rotate(90deg);
+  }
+  .residue-ray.r4 {
+    transform: rotate(135deg);
+  }
+  .residue-word {
+    position: absolute;
+    top: calc(50% + clamp(2rem, 4vw, 3.5rem));
+    font-family: var(--display);
+    font-style: italic;
+    font-size: var(--t-base);
+    color: var(--ink-soft);
+  }
+  .residue-after {
+    text-align: center;
+  }
+  .residue-one {
+    display: block;
+    font-family: var(--display);
+    font-size: clamp(8rem, 20vw, 18rem);
+    font-weight: 400;
+    line-height: 0.68;
+    color: #111216;
+  }
+  .residue-after p {
+    margin: 1rem 0 0;
+    font-family: var(--display);
+    font-size: var(--t-md);
+    font-style: italic;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  /* ---- the rail ---- */
+  .asym-rail {
+    position: relative;
+    height: var(--rail-h);
+  }
+  .asym-sm,
+  .asym-void {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+  .asym-sm {
+    border: 1px dashed var(--ink-soft);
+    background: repeating-linear-gradient(45deg, transparent 0 4px, var(--rule-strong) 4px 5px);
+  }
+  .asym-sm-lbl,
+  .asym-void-head {
+    position: absolute;
+    top: calc(-1 * var(--s-5));
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .asym-sm-lbl {
+    left: var(--s-3);
+    color: var(--muted);
+  }
+  /* Outline only, never filled. There is nothing in there to draw. */
+  .asym-void {
+    border: 1px dotted var(--red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-5);
+    text-align: center;
+  }
+  .asym-void-head {
+    left: 0;
+    right: 0;
+    color: var(--red);
+  }
+  .asym-void-big {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: var(--t-2xl);
+    line-height: 1;
+    color: var(--red);
+  }
+  .asym-void-note {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 34rem;
+  }
+
+  .asym-obs {
+    position: absolute;
+    top: calc(-1 * var(--s-4));
+    bottom: calc(-1 * var(--s-4));
+    border-left: 2px solid var(--ink);
+  }
+  .asym-obs-dot {
+    position: absolute;
+    top: 50%;
+    left: -4.5px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
+  /* ---- axis ---- */
+  .asym-axis {
+    position: relative;
+    height: var(--s-6);
+    margin-top: var(--s-5);
+  }
+  .asym-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    color: var(--muted);
+    font-variant-numeric: lining-nums tabular-nums;
+    white-space: nowrap;
+  }
+  .asym-tick::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: calc(-1 * var(--s-4));
+    height: var(--s-3);
+    border-left: 1px solid var(--rule-strong);
+  }
+
+  .asym-measured-row {
+    margin-bottom: var(--s-8);
+  }
+  .asym-measured {
+    width: max-content;
+    max-width: 100%;
+    transform: translateX(-100%);
+    padding-right: var(--s-3);
+    text-align: right;
+  }
+  .asym-measured-v {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--l-lg);
+    color: var(--ink);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .asym-measured-n {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---- Sakharov's three ----
+     A grid. The heights match themselves, the text wraps itself, and the third
+     card cannot be printed on by the second — none of which was true when this
+     was three groups of hand-placed <text>. */
+  .asym-cond-head {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--s-4);
+  }
+  .asym-conditions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--s-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .asym-cond {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    border: 1px solid var(--rule-strong);
+    padding: var(--s-4) var(--s-4) var(--s-5);
+  }
+  .asym-cond[data-epistemic='open'] {
+    border: 1px dotted var(--red);
+  }
+  .asym-cond-n {
+    font-family: var(--mono);
+    font-size: var(--l-lg);
+    letter-spacing: var(--tr-eyebrow);
+    color: var(--muted);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .asym-cond[data-epistemic='open'] .asym-cond-n {
+    color: var(--red);
+  }
+  .asym-cond-title {
+    font-family: var(--display);
+    font-size: var(--t-md);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .asym-cond-note {
+    font-size: var(--t-xs);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .asym-cond-verdict {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: var(--s-2);
+  }
+  .asym-cond[data-epistemic='open'] .asym-cond-verdict {
+    color: var(--red);
+  }
+
+  /* On a phone the rail's commentary has nowhere to go, so the two labels that
+     are commentary step aside and the ones that are quantities stay. */
+  @media (max-width: 700px) {
+    .residue {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      padding: 2.2rem 1.1rem 2.7rem;
+    }
+    .residue-event {
+      width: 8rem;
+      margin-inline: auto;
+    }
+    .residue-after {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 1.2rem;
+      align-items: center;
+      text-align: left;
+    }
+    .residue-after .residue-stage,
+    .residue-after small {
+      grid-column: 1 / -1;
+    }
+    .residue-one {
+      grid-row: 2 / 4;
+      font-size: 8rem;
+    }
+    .residue-after p {
+      margin: 0;
+    }
+    .asym-void-note,
+    .asym-sm-lbl {
+      display: none;
+    }
+    /* The void is narrower than its own caption on a phone, so the caption
+       stops being one line. It is a sentence; it is allowed to wrap. */
+    .asym-rail {
+      margin-top: var(--s-6);
+    }
+    .asym-void-head {
+      white-space: normal;
+      line-height: 1.35;
+      top: auto;
+      bottom: calc(100% + var(--s-2));
+    }
+    .asym-void-big {
+      font-size: var(--t-lg);
+    }
+    .asym-tick:nth-child(even) {
+      display: none;
+    }
+  }
+</style>

@@ -8,6 +8,24 @@ import { canonicalTags, newestFirst } from '../../utils/content';
 
 const posts = newestFirst(await getCollection('posts'));
 const tags = canonicalTags(posts);
+
+// Set as a back-of-book index rather than ranked by count. The page's own
+// promise is that tags are "useful when you know what you are looking for",
+// and looking something up means going to its letter. Weight is already the
+// Subjects page's job — it shows the eight heads worth navigating by.
+const collator = new Intl.Collator('en', { sensitivity: 'base' });
+const initial = (name: string) => {
+  const letter = name.trim().charAt(0).toUpperCase();
+  return /[A-Z]/.test(letter) ? letter : '#';
+};
+const letters = [...new Set(tags.map((tag) => initial(tag.name)))]
+  .sort((a, b) => (a === '#' ? 1 : b === '#' ? -1 : collator.compare(a, b)))
+  .map((letter) => ({
+    letter,
+    entries: tags
+      .filter((tag) => initial(tag.name) === letter)
+      .sort((a, b) => collator.compare(a.name, b.name)),
+  }));
 ---
 
 <Base title="The Long Tail" description="Every normalized tag in the commonplace book." active="heads">
@@ -17,8 +35,18 @@ const tags = canonicalTags(posts);
       <h1>Everything mentioned.</h1>
       <p>Subjects are curated paths. Tags are the smaller pencil marks: specific, untidy, and useful when you know what you are looking for.</p>
     </header>
-    <div class="tag-cloud">
-      {tags.map((tag) => <a href={`/tags/${tag.slug}`}>{tag.name} · {tag.count}</a>)}
+    <div class="tag-index">
+      {letters.map(({ letter, entries }) => (
+        <>
+          <h2 class="tag-index-letter" id={`letter-${letter === '#' ? 'other' : letter.toLowerCase()}`}>{letter}</h2>
+          {entries.map((tag) => (
+            <a href={`/tags/${tag.slug}`}>
+              <span class="tag-index-name">{tag.name}</span>
+              <span class="tag-index-count">{tag.count}</span>
+            </a>
+          ))}
+        </>
+      ))}
     </div>
   </main>
 </Base>

@@ -1,0 +1,115 @@
+{
+  "source": {
+    "title": "Big Bang Nucleosynthesis: Present Status",
+    "url": "https://arxiv.org/abs/1505.01076",
+    "author": "Cyburt, Fields, Olive & Yeh",
+    "year": 2016,
+    "retrieved": "2026-07-29",
+    "note": "Epoch timings cross-checked against Planck 2018 cosmological parameters for recombination and the present age. `display`, `short` and `tick` are editorial labels for the figure — `tick` is the shortened form used where a label must fit above a plotted axis; `t` remains the quantitative value."
+  },
+  "epistemic": "settled",
+  "units": {
+    "t": "seconds after the Big Bang"
+  },
+  "rows": [
+    {
+      "t": 5.39e-44,
+      "label": "Planck time",
+      "note": "Before this, no theory we have applies. Nothing is drawn to the left of it because there is nothing honest to draw.",
+      "epistemic": "open",
+      "display": "10⁻⁴³ s",
+      "short": "nothing we can describe",
+      "tick": "Planck time"
+    },
+    {
+      "t": 1e-36,
+      "label": "Inflation",
+      "note": "Space expands by a factor of at least 10^26. Strongly motivated, not directly observed.",
+      "epistemic": "contested",
+      "display": "10⁻³⁶ s",
+      "short": "space expands by 10²⁶",
+      "tick": "Inflation"
+    },
+    {
+      "t": 1e-12,
+      "label": "Matter wins",
+      "note": "Whatever tipped the balance between matter and antimatter has finished acting by about here. One part in a billion survives.",
+      "epistemic": "open",
+      "display": "10⁻¹² s",
+      "short": "one particle in a billion survives",
+      "tick": "Matter wins"
+    },
+    {
+      "t": 0.000001,
+      "label": "Protons form",
+      "note": "Quarks bind into protons and neutrons. Every hydrogen nucleus in your body dates from this moment.",
+      "epistemic": "settled",
+      "display": "10⁻⁶ s",
+      "short": "quarks bind — your hydrogen is made here",
+      "tick": "Protons form"
+    },
+    {
+      "t": 1,
+      "label": "Neutrinos decouple",
+      "note": "The universe becomes transparent to neutrinos, and the neutron-to-proton ratio freezes at about one to six.",
+      "epistemic": "settled",
+      "display": "1 second",
+      "short": "neutrons freeze at one to six protons",
+      "tick": "Neutrinos decouple"
+    },
+    {
+      "t": 180,
+      "label": "The deuterium bottleneck breaks",
+      "note": "Until now, deuterium is destroyed as fast as it forms. Below about a billion kelvin it survives, and nucleosynthesis can finally proceed.",
+      "epistemic": "settled",
+      "display": "3 minutes",
+      "short": "deuterium finally survives a photon",
+      "tick": "Deuterium survives"
+    },
+    {
+      "t": 1200,
+      "label": "It is over",
+      "note": "Twenty minutes in, the universe is too cool and too thin to fuse anything further. Helium is locked in at about a quarter of all baryonic mass.",
+      "epistemic": "settled",
+      "display": "20 minutes",
+      "short": "a quarter of all matter is now helium",
+      "tick": "Fusion stops"
+    },
+    {
+      "t": 12000000000000,
+      "label": "First atoms",
+      "note": "380,000 years. Nuclei capture electrons, the fog clears, and the light released is still arriving as the cosmic microwave background.",
+      "epistemic": "settled",
+      "display": "380,000 years",
+      "short": "nuclei catch electrons; the fog clears",
+      "tick": "First atoms"
+    },
+    {
+      "t": 6300000000000000,
+      "label": "First stars",
+      "note": "Around 200 million years. Everything heavier than lithium begins here — nothing in your body except hydrogen existed before this point.",
+      "epistemic": "contested",
+      "display": "200 million years",
+      "short": "everything heavier than lithium begins",
+      "tick": "First stars"
+    },
+    {
+      "t": 145000000000000000,
+      "label": "The Sun forms",
+      "note": "4.6 billion years ago, from gas already enriched by generations of earlier stars.",
+      "epistemic": "settled",
+      "display": "9.2 billion years",
+      "short": "from gas already enriched by earlier stars",
+      "tick": "The Sun"
+    },
+    {
+      "t": 435000000000000000,
+      "label": "Now",
+      "note": "13.8 billion years. You are reading this.",
+      "epistemic": "settled",
+      "display": "13.8 billion years",
+      "short": "you are reading this",
+      "tick": "Now"
+    }
+  ]
+}

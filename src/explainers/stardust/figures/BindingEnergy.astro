@@ -1,0 +1,775 @@
+---
+/**
+ * FIG 4 — Where fusion stops paying.
+ *
+ * Rebuilt. The previous version was a correct line on a zero-based axis, which
+ * meant four-fifths of the drawing was empty white below the curve and the flat
+ * maximum — the thing the chapter and its aside are actually about — was a few
+ * pixels of wobble at the top.
+ *
+ * Two changes, and both of them are readings of the same measured numbers
+ * rather than decoration added to fill space.
+ *
+ * 1. THE SPACE UNDER THE CURVE MEANS SOMETHING. Binding energy per nucleon is
+ *    energy already released assembling that nucleus out of free nucleons, so
+ *    the height of the curve is a quantity and the area under it can be filled
+ *    and split. Split at helium-4 and the figure states a fact the prose does
+ *    not: fusing hydrogen to helium releases about four-fifths of everything a
+ *    star will ever get from that matter, and the entire rest of the ladder —
+ *    carbon, oxygen, neon, silicon, all the way to the peak — is the thin band
+ *    on top. The dead space was the argument all along.
+ *
+ * 2. THE PHOTO FINISH IS DRAWN, NOT LISTED. Nickel-62, iron-58 and iron-56 are
+ *    separated by four thousandths of an MeV per nucleon. At the main plot's
+ *    scale that is a third of a pixel, so the old version printed the three
+ *    numbers as a text block beside the peak — which is a table, not a figure.
+ *    They now get their own axis beneath, spanning eight thousandths of an MeV,
+ *    magnified by a factor the figure computes and prints.
+ *
+ * Every derived quantity below — which nuclide is the peak, the margin over the
+ * runner-up, the share released by the first step, the magnification — is
+ * computed from the AME2020 rows. Edit the data and the annotations follow. No
+ * number in this figure is typed in twice.
+ */
+import { linear, linePath, niceTicks } from '../../kit/scale.js';
+import { dataset, rows } from '../../../utils/provenance';
+import raw from '../data/binding-energy.json';
+
+type Nuclide = { a: number; symbol: string; name: string; bePerA: number };
+
+const data = rows<Nuclide>(dataset('binding-energy', raw)).sort((p, q) => p.a - q.a);
+
+/* ---- frame ---- */
+const W = 1080;
+const H = 686;
+const L = 74;
+const R = 40;
+const T = 44;
+const BASE = 430; // the zero line of the main plot
+
+const A_MAX = 240;
+/* 0.8 MeV of headroom above the peak. Not slack: it is the shelf the peak's
+   own label stands on, and without it that label sits on the curve. */
+const V_MAX = 9.6;
+
+const x = linear([0, A_MAX], [L, W - R]);
+const y = linear([0, V_MAX], [BASE, T]);
+
+const xTicks = niceTicks([0, A_MAX], 6).filter((t) => t > 0);
+const yTicks = niceTicks([0, 9], 5);
+
+/* ---- the numbers the annotations are made of ------------------------- */
+const byBinding = [...data].sort((p, q) => q.bePerA - p.bePerA);
+const peak = byBinding[0]; // Ni-62
+const runnerUp = byBinding[1]; // Fe-58
+const third = byBinding[2]; // Fe-56
+const helium = data.find((d) => d.a === 4)!;
+
+/** What the first rung of the ladder is worth, and what all the rest are. */
+const firstStep = helium.bePerA;
+const everythingAfter = peak.bePerA - helium.bePerA;
+const firstStepShare = Math.round((firstStep / peak.bePerA) * 100);
+
+/** The margin at the top, in parts per ten thousand, over the runner-up. */
+const margin = peak.bePerA - runnerUp.bePerA;
+const marginParts = (margin / peak.bePerA) * 1e4;
+
+/* ---- the two territories under the curve -----------------------------
+   Split at helium-4. The split line is crossed twice — once going up at
+   helium and once coming back down, because lithium, beryllium and boron
+   are LESS bound per nucleon than helium is. That notch is real, it is the
+   reason those three elements are not made in stellar fusion, and a curve
+   drawn without the crossings inserted would paper over it. */
+type P = { a: number; v: number };
+const HE = helium.bePerA;
+
+const vertices: P[] = [];
+for (let i = 0; i < data.length; i++) {
+  vertices.push({ a: data[i].a, v: data[i].bePerA });
+  const next = data[i + 1];
+  if (!next) break;
+  const here = data[i].bePerA - HE;
+  const there = next.bePerA - HE;
+  if ((here < 0 && there > 0) || (here > 0 && there < 0)) {
+    const f = here / (here - there);
+    vertices.push({ a: data[i].a + f * (next.a - data[i].a), v: HE });
+  }
+}
+
+const px = (p: P) => [x(p.a), y(p.v)] as const;
+
+/** Everything released getting as far as helium. */
+const lowerPath =
+  linePath(vertices.map((p) => [x(p.a), y(Math.min(p.v, HE))])) +
+  `L${x(vertices[vertices.length - 1].a).toFixed(2)} ${BASE}L${x(vertices[0].a).toFixed(2)} ${BASE}Z`;
+
+/** Everything released after that, as contiguous runs above the helium line. */
+const upperRuns: P[][] = [];
+let run: P[] = [];
+for (const p of vertices) {
+  if (p.v >= HE - 1e-9) run.push(p);
+  else if (run.length) {
+    upperRuns.push(run);
+    run = [];
+  }
+}
+if (run.length) upperRuns.push(run);
+
+const upperPaths = upperRuns
+  .filter((r) => r.length > 1)
+  .map(
+    (r) =>
+      linePath(r.map(px)) +
+      `L${x(r[r.length - 1].a).toFixed(2)} ${y(HE).toFixed(2)}L${x(r[0].a).toFixed(2)} ${y(HE).toFixed(2)}Z`
+  );
+
+const curve = linePath(data.map((d) => [x(d.a), y(d.bePerA)]));
+
+/* ---- labels on the curve ---------------------------------------------
+   Staggered down into the lower territory, which has room, with a leader
+   back up to the point each one names. The light nuclides sit inside the
+   first two hundred pixels of a 970px axis, so the stagger is not
+   cosmetic — without it they are one illegible smear. */
+const marks = [
+  { a: 4, at: 6.2, anchor: 'start' as const, dx: 10 },
+  { a: 12, at: 5.3, anchor: 'start' as const, dx: 10 },
+  { a: 16, at: 4.4, anchor: 'start' as const, dx: 10 },
+  { a: 28, at: 3.5, anchor: 'start' as const, dx: 10 },
+  { a: 56, at: 6.2, anchor: 'start' as const, dx: 10 },
+  { a: 120, at: 5.3, anchor: 'middle' as const, dx: 0 },
+  { a: 208, at: 6.2, anchor: 'middle' as const, dx: 0 },
+  { a: 238, at: 4.4, anchor: 'end' as const, dx: -10 },
+]
+  .map((spec) => {
+    const nuclide = data.find((d) => d.a === spec.a);
+    return nuclide ? { ...nuclide, ...spec } : null;
+  })
+  .filter((d): d is NonNullable<typeof d> => d !== null);
+
+/** The notch: where the curve dips back under helium. */
+const dip = data.filter((d) => d.a > 4 && d.a < 12 && d.bePerA < HE);
+const dipMid = dip.length ? dip[Math.floor(dip.length / 2)] : null;
+
+const peakX = x(peak.a);
+const fusionMid = (L + peakX) / 2;
+const fissionMid = (peakX + x(238)) / 2;
+
+/* ---- the magnifier at the peak ----------------------------------------
+   An axis in binding energy, not mass number: the three contenders differ
+   in the fourth decimal place, so the only way to separate them is to give
+   that decimal place the whole width. */
+const D_T = 540;
+const D_AXIS = 610;
+const D_LO = 8.788;
+const D_HI = 8.796;
+const dx = linear([D_LO, D_HI], [L, W - R]);
+const dTicks = [8.788, 8.79, 8.792, 8.794, 8.796];
+
+/** How much bigger this axis is than the main plot's. Computed, not claimed. */
+const magnification = Math.round(
+  (W - R - L) / (D_HI - D_LO) / ((BASE - T) / V_MAX)
+);
+
+const contenders = [third, runnerUp, peak].map((nuclide) => ({
+  ...nuclide,
+  px: dx(nuclide.bePerA),
+}));
+
+/* Portrait geometry. The measured curve and its two truthful fills retain the
+   desktop coordinate system inside a transformed group; the words are reset
+   outside it at phone size. The photo finish becomes its own panel rather than
+   being compressed under an already compressed chart. */
+const BM = { left: 16, right: 344, top: 48, bottom: 252 };
+const bmSx = (BM.right - BM.left) / (W - R - L);
+const bmSy = (BM.bottom - BM.top) / (BASE - T);
+const bmX = (a: number) => BM.left + ((a / A_MAX) * (BM.right - BM.left));
+const bmY = (value: number) => BM.bottom - (value / V_MAX) * (BM.bottom - BM.top);
+const bdX = linear([D_LO, D_HI], [24, 336]);
+---
+
+<div class="be">
+  <svg class="be-wide" viewBox={`0 0 ${W} ${H}`} role="presentation">
+    <!-- ---- main plot ---- -->
+    {
+      yTicks.map((tick) => (
+        <>
+          <line class="grid s-hair" x1={L} y1={y(tick)} x2={W - R} y2={y(tick)} />
+          <text class="lbl tiny" x={L - 10} y={y(tick) + 4} text-anchor="end">
+            {tick}
+          </text>
+        </>
+      ))
+    }
+    <text class="lbl axis-title" x={L - 10} y={T - 20} text-anchor="start">
+      MeV released per nucleon, measured
+    </text>
+
+    <!-- the two territories -->
+    <path class="fill-first" d={lowerPath} />
+    {upperPaths.map((d) => <path class="fill-rest" d={d} />)}
+    <line class="he-line" x1={x(4)} y1={y(HE)} x2={W - R} y2={y(HE)} />
+
+    <path class="curve" d={curve} />
+    {data.map((d) => <circle class="pt" cx={x(d.a)} cy={y(d.bePerA)} r="2.2" />)}
+
+    <!-- element marks, staggered down into the lower territory. Five of the
+         eight sit inside the first fifth of the axis, so the staircase is
+         load-bearing, not styling. -->
+    {
+      marks.map((d) => (
+        <>
+          <line
+            class="mark-leader s-hair"
+            x1={x(d.a)}
+            y1={y(d.bePerA) + 5}
+            x2={x(d.a)}
+            y2={y(d.at) - 10}
+          />
+          <text class="mark" x={x(d.a) + d.dx} y={y(d.at)} text-anchor={d.anchor}>
+            {d.name}
+          </text>
+        </>
+      ))
+    }
+
+    <!-- the reading, stated inside the territory it describes -->
+    <text class="anno terr" x={x(155)} y={y(2.9)} text-anchor="middle">
+      hydrogen → helium releases {firstStep.toFixed(2)} MeV per nucleon
+    </text>
+    <text class="terr-sub" x={x(155)} y={y(2.9) + 22} text-anchor="middle">
+      {firstStepShare}% of everything fusion can release, all the way to the peak
+    </text>
+
+    <text class="terr-sub" x={x(155)} y={y(HE) - 16} text-anchor="middle">
+      helium → the peak: {everythingAfter.toFixed(2)} MeV per nucleon — every rung after the first,
+      put together
+    </text>
+
+    <!-- the notch at lithium, beryllium and boron -->
+    {
+      dipMid && (
+        <>
+          <line
+            class="anno-line"
+            x1={x(dipMid.a) + 3}
+            y1={y(dipMid.bePerA)}
+            x2={x(48)}
+            y2={y(6.75)}
+          />
+          <text class="anno" x={x(52)} y={y(6.75) + 5}>
+            lithium, beryllium and boron sit below helium — stars destroy them, not make them
+          </text>
+        </>
+      )
+    }
+
+    <!-- the peak's own label, on the shelf the headroom exists to provide -->
+    <line class="peak-line" x1={peakX} y1={y(peak.bePerA) - 5} x2={peakX} y2={T + 22} />
+    <text class="peak-lbl" x={peakX + 8} y={T + 18}>
+      the flat maximum — magnified below ↓
+    </text>
+
+    <line class="axis s-rule" x1={L} y1={BASE} x2={W - R} y2={BASE} />
+    {
+      xTicks.map((tick) => (
+        <text class="lbl tiny" x={x(tick)} y={BASE + 18} text-anchor="middle">
+          {tick}
+        </text>
+      ))
+    }
+
+    <!-- Which direction pays, said on the axis where the sign actually
+         changes rather than floating above the plot. -->
+    <g class="direction">
+      <line class="dir-split" x1={peakX} y1={BASE} x2={peakX} y2={BASE + 52} />
+      <path
+        class="dir-arrow s-hair"
+        d={`M${fusionMid - 68} ${BASE + 40} L${fusionMid + 68} ${BASE + 40} l-7 -4 m7 4 l-7 4`}
+      />
+      <text class="lbl dir-lbl" x={fusionMid} y={BASE + 34} text-anchor="middle">
+        fusion pays, up to here
+      </text>
+      <path
+        class="dir-arrow s-hair"
+        d={`M${fissionMid + 64} ${BASE + 40} L${fissionMid - 64} ${BASE + 40} l7 -4 m-7 4 l7 4`}
+      />
+      <text class="lbl dir-lbl" x={fissionMid} y={BASE + 34} text-anchor="middle">
+        past it, only fission pays
+      </text>
+    </g>
+
+    <text class="lbl axis-title" x={(L + W - R) / 2} y={BASE + 70} text-anchor="middle">
+      mass number — protons plus neutrons in the nucleus
+    </text>
+
+    <!-- ---- the magnifier ---- -->
+    <text class="lbl" x={L} y={D_T - 18}>
+      the flat maximum, magnified ×{magnification.toLocaleString('en-GB')}
+    </text>
+    <text class="note" x={L} y={D_T}>
+      This whole axis is {((D_HI - D_LO) * 1000).toFixed(0)} thousandths of an MeV wide. Iron-56 is
+      the nuclide everyone names, and it comes third.
+    </text>
+
+    {
+      contenders.map((nuclide, i) => (
+        <>
+          <line class="det-stem" x1={nuclide.px} y1={D_AXIS} x2={nuclide.px} y2={D_AXIS - 26} />
+          <circle
+            class={`det-pt${i === contenders.length - 1 ? ' det-win' : ''}`}
+            cx={nuclide.px}
+            cy={D_AXIS}
+            r="4.5"
+          />
+          <text class="det-name" x={nuclide.px} y={D_AXIS - 46} text-anchor="middle">
+            {nuclide.name}
+          </text>
+          <text class="det-val" x={nuclide.px} y={D_AXIS - 30} text-anchor="middle">
+            {nuclide.bePerA.toFixed(4)}
+          </text>
+        </>
+      ))
+    }
+
+    <line class="axis s-rule" x1={L} y1={D_AXIS} x2={W - R} y2={D_AXIS} />
+    {
+      dTicks.map((tick) => (
+        <>
+          <line class="axis-tick" x1={dx(tick)} y1={D_AXIS} x2={dx(tick)} y2={D_AXIS + 5} />
+          <text class="lbl tiny" x={dx(tick)} y={D_AXIS + 18} text-anchor="middle">
+            {tick.toFixed(3)}
+          </text>
+        </>
+      ))
+    }
+
+    {/* the margin that decides it, drawn as a span rather than asserted */}
+    <path
+      class="det-span"
+      d={`M${dx(runnerUp.bePerA)} ${D_AXIS + 32}L${dx(runnerUp.bePerA)} ${D_AXIS + 40}L${dx(
+        peak.bePerA
+      )} ${D_AXIS + 40}L${dx(peak.bePerA)} ${D_AXIS + 32}`}
+    />
+    <text
+      class="anno"
+      x={(dx(runnerUp.bePerA) + dx(peak.bePerA)) / 2}
+      y={D_AXIS + 60}
+      text-anchor="middle"
+    >
+      {margin.toFixed(4)} MeV per nucleon — {marginParts.toFixed(1)} parts in ten thousand
+    </text>
+  </svg>
+
+  <div class="be-tall">
+    <svg class="be-tall-main" viewBox="0 0 360 352" role="presentation">
+      <text class="be-mobile-head" x="16" y="20">Where fusion stops paying</text>
+      <text class="be-mobile-sub" x="16" y="36">measured binding energy per nucleon</text>
+
+      <g
+        class="be-mobile-plot"
+        transform={`translate(${BM.left} ${BM.top}) scale(${bmSx} ${bmSy}) translate(${-L} ${-T})`}
+      >
+        <path class="fill-first" d={lowerPath} />
+        {upperPaths.map((d) => <path class="fill-rest" d={d} />)}
+        <line class="he-line" x1={x(4)} y1={y(HE)} x2={W - R} y2={y(HE)} />
+        <path class="curve" d={curve} />
+      </g>
+
+      {
+        [0, 4, 8].map((tick) => (
+          <>
+            <line class="be-mobile-grid" x1={BM.left} y1={bmY(tick)} x2={BM.right} y2={bmY(tick)} />
+            <text class="be-mobile-tick" x={BM.left - 5} y={bmY(tick) + 4} text-anchor="end">
+              {tick}
+            </text>
+          </>
+        ))
+      }
+      <line class="be-mobile-axis" x1={BM.left} y1={BM.bottom} x2={BM.right} y2={BM.bottom} />
+      {
+        [0, 60, 120, 180, 240].map((tick) => (
+          <text class="be-mobile-tick" x={bmX(tick)} y={BM.bottom + 17} text-anchor="middle">
+            {tick}
+          </text>
+        ))
+      }
+      <text class="be-mobile-axis-title" x="180" y={BM.bottom + 35} text-anchor="middle">
+        mass number · protons + neutrons
+      </text>
+
+      <line
+        class="be-mobile-mark"
+        x1={bmX(4)}
+        y1={bmY(helium.bePerA)}
+        x2="40"
+        y2="96"
+      />
+      <text class="be-mobile-nuclide" x="44" y="91">helium-4</text>
+      <text class="be-mobile-reading" x="180" y="177" text-anchor="middle">
+        the first step releases {firstStepShare}% of all fusion energy
+      </text>
+      <text class="be-mobile-reading-sub" x="180" y="193" text-anchor="middle">
+        every rung after helium is the thin amber band
+      </text>
+
+      <line
+        class="be-mobile-peak-line"
+        x1={bmX(peak.a)}
+        y1={bmY(peak.bePerA)}
+        x2={bmX(peak.a)}
+        y2="67"
+      />
+      <text class="be-mobile-peak-lbl" x={bmX(peak.a) + 6} y="63">iron–nickel peak</text>
+      <text class="be-mobile-uranium" x={bmX(238) - 4} y={bmY(data.find((d) => d.a === 238)!.bePerA) - 7} text-anchor="end">
+        uranium
+      </text>
+
+      <path class="be-mobile-dir" d={`M28 310H${bmX(peak.a) - 8}l-6 -4m6 4l-6 4`} />
+      <text class="be-mobile-dir-lbl" x="28" y="304">fusion releases energy →</text>
+      <path class="be-mobile-dir" d={`M332 334H${bmX(peak.a) + 8}l6 -4m-6 4l6 4`} />
+      <text class="be-mobile-dir-lbl" x="332" y="328" text-anchor="end">← fission releases energy</text>
+    </svg>
+
+    <svg class="be-tall-detail" viewBox="0 0 360 226" role="presentation">
+      <text class="be-mobile-detail-head" x="16" y="22">A photo finish at the top</text>
+      <text class="be-mobile-detail-sub" x="16" y="40">
+        eight thousandths of an MeV across the whole line
+      </text>
+
+      <line class="be-mobile-detail-axis" x1="24" y1="130" x2="336" y2="130" />
+      {
+        dTicks.map((tick) => (
+          <>
+            <line class="be-mobile-detail-tick" x1={bdX(tick)} y1="126" x2={bdX(tick)} y2="135" />
+            <text class="be-mobile-detail-val" x={bdX(tick)} y="151" text-anchor="middle">
+              {tick.toFixed(3)}
+            </text>
+          </>
+        ))
+      }
+      {
+        [third, runnerUp, peak].map((nuclide, index) => (
+          <>
+            <line
+              class="be-mobile-detail-stem"
+              x1={bdX(nuclide.bePerA)}
+              y1="130"
+              x2={bdX(nuclide.bePerA)}
+              y2={index === 0 ? 102 : index === 1 ? 84 : 66}
+            />
+            <circle
+              class={`be-mobile-detail-dot${nuclide.symbol === peak.symbol && nuclide.a === peak.a ? ' winner' : ''}`}
+              cx={bdX(nuclide.bePerA)}
+              cy="130"
+              r="4"
+            />
+            <text
+              class="be-mobile-detail-name"
+              x={bdX(nuclide.bePerA)}
+              y={index === 0 ? 96 : index === 1 ? 78 : 60}
+              text-anchor={index === 0 || index === 2 ? 'end' : 'middle'}>
+              {nuclide.name} · {nuclide.bePerA.toFixed(4)}
+            </text>
+          </>
+        ))
+      }
+      <path
+        class="be-mobile-detail-span"
+        d={`M${bdX(runnerUp.bePerA)} 172V180H${bdX(peak.bePerA)}V172`}
+      />
+      <text
+        class="be-mobile-detail-answer"
+        x={(bdX(runnerUp.bePerA) + bdX(peak.bePerA)) / 2}
+        y="202"
+        text-anchor="middle">nickel wins by {marginParts.toFixed(1)} parts in ten thousand</text
+      >
+    </svg>
+  </div>
+
+  <div class="ex-fig-data" tabindex="0">
+    <table>
+      <caption>Binding energy per nucleon, measured (AME2020)</caption>
+      <thead>
+        <tr>
+          <th scope="col">Nuclide</th>
+          <th scope="col">Mass number</th>
+          <th scope="col">MeV per nucleon</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          data.map((d) => (
+            <tr>
+              <th scope="row">{d.name}</th>
+              <td>{d.a}</td>
+              <td>{d.bePerA.toFixed(4)}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .be .be-tall {
+    display: none;
+  }
+  .be svg {
+    overflow: visible;
+  }
+  .be .tiny {
+    font-size: var(--l-sm);
+    fill: var(--muted);
+  }
+  .be .axis-title {
+    fill: var(--muted);
+  }
+  .be .note {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    fill: var(--ink-soft);
+  }
+
+  .be .curve {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+  .be .pt {
+    fill: var(--ink);
+  }
+
+  /* Two territories, not one wash. The lower is what the first rung of the
+     ladder pays; the upper is what every rung after it pays put together,
+     and it is meant to look as thin as it is. */
+  .be .fill-first {
+    fill: var(--c-links);
+    fill-opacity: 0.16;
+  }
+  .be .fill-rest {
+    fill: var(--c-reflections);
+    fill-opacity: 0.34;
+  }
+  .be .he-line {
+    stroke: var(--ink-soft);
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+  }
+
+  /* The author reading his own plot, so it takes the author's ink and the
+     author's face — the same gesture as a note in the margin of a folio. */
+  .be .terr {
+    font-size: var(--t-md);
+  }
+  .be .terr-sub {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: 0.05em;
+    fill: var(--ink-soft);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .be .peak-line {
+    stroke: var(--red);
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+  }
+  .be .peak-lbl {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    fill: var(--red);
+  }
+  .be .dir-split {
+    stroke: var(--red);
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+  }
+
+  .be .mark {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    fill: var(--ink-soft);
+  }
+  .be .mark-leader {
+    stroke: var(--rule-strong);
+    fill: none;
+  }
+  .be .dir-arrow {
+    stroke: var(--muted);
+    fill: none;
+  }
+  .be .dir-lbl {
+    fill: var(--muted);
+  }
+  .be .axis-tick {
+    stroke: var(--rule-strong);
+  }
+
+  /* ---- the magnifier ---- */
+  .be .zoom-bracket {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .be .det-stem {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .be .det-pt {
+    fill: var(--paper);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .be .det-win {
+    fill: var(--red);
+    stroke: var(--red);
+  }
+  .be .det-name {
+    font-family: var(--display);
+    font-size: var(--t-base);
+    font-weight: 600;
+    fill: var(--ink);
+  }
+  .be .det-val {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    fill: var(--ink-soft);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .be .det-span {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1;
+  }
+
+  @media (max-width: 700px) {
+    .be .terr-sub,
+    .be .note {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1050px) {
+    .be .be-wide {
+      display: none;
+    }
+    .be .be-tall {
+      display: block;
+      max-width: 620px;
+      margin-inline: auto;
+    }
+    .be .be-tall svg {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      overflow: visible;
+    }
+    .be .be-mobile-plot .curve,
+    .be .be-mobile-plot .he-line {
+      vector-effect: non-scaling-stroke;
+    }
+    .be .be-mobile-head,
+    .be .be-mobile-detail-head {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 600;
+      fill: var(--ink);
+    }
+    .be .be-mobile-sub,
+    .be .be-mobile-tick,
+    .be .be-mobile-axis-title,
+    .be .be-mobile-reading-sub,
+    .be .be-mobile-dir-lbl,
+    .be .be-mobile-detail-sub,
+    .be .be-mobile-detail-val {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: var(--tr-label);
+      text-transform: uppercase;
+      fill: var(--muted);
+    }
+    .be .be-mobile-grid {
+      stroke: var(--rule);
+      stroke-width: 1;
+    }
+    .be .be-mobile-axis {
+      stroke: var(--ink);
+      stroke-width: 1;
+    }
+    .be .be-mobile-mark,
+    .be .be-mobile-peak-line {
+      stroke: var(--red);
+      stroke-width: 1;
+    }
+    .be .be-mobile-nuclide,
+    .be .be-mobile-peak-lbl,
+    .be .be-mobile-uranium {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: var(--tr-label);
+      text-transform: uppercase;
+      fill: var(--ink-soft);
+    }
+    .be .be-mobile-peak-lbl {
+      fill: var(--red);
+    }
+    .be .be-mobile-reading,
+    .be .be-mobile-detail-answer {
+      font-family: var(--display);
+      font-size: 15px;
+      font-style: italic;
+      fill: var(--red);
+    }
+    .be .be-mobile-dir {
+      fill: none;
+      stroke: var(--muted);
+      stroke-width: 1;
+    }
+    .be .be-tall-detail {
+      margin-top: var(--s-4);
+      border-top: 1px solid var(--rule);
+      padding-top: var(--s-3);
+    }
+    .be .be-mobile-detail-sub {
+      font-family: var(--body);
+      font-size: 12px;
+      font-style: italic;
+      letter-spacing: 0;
+      text-transform: none;
+      fill: var(--ink-soft);
+    }
+    .be .be-mobile-detail-axis,
+    .be .be-mobile-detail-tick,
+    .be .be-mobile-detail-stem {
+      stroke: var(--rule-strong);
+      stroke-width: 1;
+    }
+    .be .be-mobile-detail-dot {
+      fill: var(--paper);
+      stroke: var(--ink);
+      stroke-width: 1.5;
+    }
+    .be .be-mobile-detail-dot.winner {
+      fill: var(--red);
+      stroke: var(--red);
+    }
+    .be .be-mobile-detail-name {
+      font-family: var(--mono);
+      font-size: 10px;
+      fill: var(--ink);
+    }
+    .be .be-mobile-detail-span {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 1;
+    }
+    .be .be-mobile-detail-answer {
+      font-size: 14px;
+    }
+  }
+</style>

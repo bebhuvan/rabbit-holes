@@ -16,14 +16,20 @@
     "emergency:deploy": "./scripts/emergency-deploy.sh",
     "fix:deps": "npm cache clean --force && rm -rf node_modules package-lock.json && npm install",
     "check": "tsc --noEmit",
+    "wiki": "node scripts/fetch-wikipedia.mjs",
+    "test": "node --test scripts/test-scale.mjs scripts/test-figures.mjs",
     "health:check": "curl -f -s -o /dev/null -w '%{http_code}' https://bhuvan.dev || echo 'Site might be down'",
     "optimize-images": "node scripts/optimize-images.js",
     "optimize-images:dry": "node scripts/optimize-images.js --dry",
     "optimize-images:force": "node scripts/optimize-images.js --force",
-    "optimize-images:verbose": "node scripts/optimize-images.js --verbose"
+    "optimize-images:verbose": "node scripts/optimize-images.js --verbose",
+    "nuclides": "node scripts/fetch-nuclides.mjs",
+    "check:motion": "node scripts/check-motion.mjs",
+    "audit": "node scripts/audit-figures.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.3",
+    "@astrojs/mdx": "^4.3.14",
     "@astrojs/rss": "^4.0.12",
     "astro": "^5.11.0",
     "marked": "^16.1.2"

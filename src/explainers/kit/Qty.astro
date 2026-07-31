@@ -1,0 +1,42 @@
+---
+/**
+ * A quantity and its unit, kept together.
+ *
+ * Two typographic facts this enforces so nobody has to remember them:
+ *   — the space before a unit is a THIN space (U+2009), not a word space
+ *   — a quantity never breaks across a line
+ *
+ * `exp` sets a power of ten properly rather than leaving 1e-36 in the prose,
+ * which is code, not writing.
+ *
+ * Accessibility: the visible form is left readable by default. A spoken
+ * alternative is supplied only when the visible form would be read wrongly —
+ * which is the case for exponents, where "10 -36 s" is not what anyone means.
+ */
+interface Props {
+  /** The mantissa or plain number, e.g. "10" or "1.6". */
+  value?: number | string;
+  /** Exponent, rendered as a real superscript: <Qty value="10" exp="-36" unit="s" /> */
+  exp?: number | string;
+  /** Unit symbol, e.g. "s", "MeV", "K". */
+  unit?: string;
+  /** Overrides how this is read aloud. */
+  say?: string;
+}
+
+const { value, exp, unit, say } = Astro.props;
+
+const spoken =
+  say ??
+  (exp !== undefined
+    ? `${value ?? 10} to the power ${exp}${unit ? ` ${unit}` : ''}`
+    : undefined);
+---
+
+{/* Tight against the tags — compressHTML turns a newline into a real space,
+    and a leading space inside a nowrap quantity is visible. */}
+{spoken ? (
+  <span class="ex-qty"><span aria-hidden="true">{value}{exp !== undefined && <sup>{exp}</sup>}{unit && <>&#8201;{unit}</>}</span><span class="ex-sr">{spoken}</span></span>
+) : (
+  <span class="ex-qty">{value}{unit && <>&#8201;{unit}</>}</span>
+)}

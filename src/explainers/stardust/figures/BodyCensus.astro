@@ -1,0 +1,691 @@
+---
+/**
+ * FIG 0 / FIG 8 — The body census.
+ *
+ * See ../SPECS.md. Two columns, the same body sorted two ways, with ribbons
+ * connecting each element between its positions. The ribbons cross, and the
+ * crossing IS the argument: hydrogen swoops from a thin band on the left to the
+ * dominant block on the right.
+ *
+ * Explicitly not a pie chart and not two bar charts side by side. The claim
+ * being made is about RE-ORDERING, so the figure has to show the re-ordering
+ * happen rather than leaving the reader to compare two lists.
+ *
+ * Built twice with different props: plain in chapter 0 as a question, and with
+ * `annotated` in chapter 8 as the answer, carrying everything the reading
+ * earned. That return is the strongest argument the piece was worth reading,
+ * and it costs one component.
+ */
+import { dataset, rows } from '../../../utils/provenance';
+import raw from '../data/body-composition.json';
+
+interface Props {
+  /** Chapter 8: origins, confidence and the open questions, all marked. */
+  annotated?: boolean;
+}
+const { annotated = false } = Astro.props;
+
+type Row = {
+  symbol: string;
+  name: string;
+  massPercent: number;
+  atomicWeight: number;
+  origin: 'bigbang' | 'lowmass' | 'massive' | 'whitedwarf';
+  epistemic: 'settled' | 'contested' | 'open';
+  where: string;
+};
+
+const elements = rows<Row>(dataset('body-composition', raw));
+
+// Atom counts are DERIVED from mass, not stored alongside it. One source of
+// truth, and the arithmetic is the reader's to check: moles ∝ mass ÷ weight.
+const moles = elements.map((e) => e.massPercent / e.atomicWeight);
+const molesTotal = moles.reduce((a, b) => a + b, 0);
+const massTotal = elements.reduce((a, e) => a + e.massPercent, 0);
+
+const enriched = elements.map((element, i) => ({
+  ...element,
+  massFraction: element.massPercent / massTotal,
+  countFraction: moles[i] / molesTotal,
+}));
+
+const byMass = [...enriched].sort((a, b) => b.massFraction - a.massFraction);
+const byCount = [...enriched].sort((a, b) => b.countFraction - a.countFraction);
+
+/* Drawn at the width it renders at (`wide`, ~1074px). At 900 the whole figure
+   was scaled up 1.19× on the page, and — worse — the element labels were set
+   at x = LEFT_X − something with only 132px of margin to sit in, so
+   "HYDROGEN 61.3%" ran off both edges of the viewBox and was clipped by the
+   page. The margins are now wide enough to hold the longest label. */
+const W = 1080;
+const TOP = 66;
+// Reserves room for the two-row origin key beneath. At 34 the key sat on top
+// of the last band.
+const BOT = 92;
+/* The columns are the same height in both variants — the annotated one is not
+   a different figure, it is the same figure carrying what the reading added —
+   so the plot area is fixed and only the footer grows. Without this the closing
+   annotation printed straight through the origin key. */
+const H_AVAIL = 462;
+const H = TOP + H_AVAIL + BOT + (annotated ? 40 : 0);
+const COL_W = 150;
+const LEFT_X = 250;
+const RIGHT_X = W - 250 - COL_W;
+
+/** Stack a sorted list into pixel bands. */
+function stack(list: typeof enriched, key: 'massFraction' | 'countFraction') {
+  let y = TOP;
+  return new Map(
+    list.map((element) => {
+      const h = element[key] * H_AVAIL;
+      const band = { y, h, mid: y + h / 2 };
+      y += h;
+      return [element.symbol, band];
+    })
+  );
+}
+
+const leftBands = stack(byMass, 'massFraction');
+const rightBands = stack(byCount, 'countFraction');
+
+const originFill: Record<Row['origin'], string> = {
+  bigbang: 'var(--c-links)',
+  lowmass: 'var(--c-verse)',
+  massive: 'var(--c-reflections)',
+  whitedwarf: 'var(--c-practical)',
+};
+
+/* The key's names are set to be read horizontally under the figure. On the
+   bands they have 150px of column, so they break where a person would. */
+const originOnBand: Record<Row['origin'], string[]> = {
+  bigbang: ['the Big Bang'],
+  lowmass: ['dying', 'low-mass stars'],
+  massive: ['exploding', 'massive stars'],
+  whitedwarf: ['exploding', 'white dwarfs'],
+};
+
+const originLabel: Record<Row['origin'], string> = {
+  bigbang: 'the Big Bang',
+  lowmass: 'dying low-mass stars',
+  massive: 'exploding massive stars',
+  whitedwarf: 'exploding white dwarfs',
+};
+
+// Keys resolved here, not in the template. A cast like `as Array<Row['origin']>`
+// inside the markup gets read as JSX by the parser — the angle brackets are
+// ambiguous — and fails with a message that points at the wrong line entirely.
+const originKeys = Object.keys(originLabel) as Array<Row['origin']>;
+// Two rows of two. Four across at 168px collided — "exploding massive stars"
+// ran straight into the next swatch.
+const originLegend = originKeys.map((key, index) => ({
+  key,
+  label: originLabel[key],
+  fill: originFill[key],
+  x: LEFT_X + (index % 2) * 360,
+  row: Math.floor(index / 2),
+}));
+
+/** A ribbon from the left band to the right band, as a closed bezier. */
+function ribbon(symbol: string) {
+  const l = leftBands.get(symbol)!;
+  const r = rightBands.get(symbol)!;
+  const x0 = LEFT_X + COL_W;
+  const x1 = RIGHT_X;
+  const c = (x1 - x0) * 0.5;
+  return (
+    `M${x0} ${l.y.toFixed(1)}` +
+    `C${(x0 + c).toFixed(1)} ${l.y.toFixed(1)} ${(x1 - c).toFixed(1)} ${r.y.toFixed(1)} ${x1} ${r.y.toFixed(1)}` +
+    `L${x1} ${(r.y + r.h).toFixed(1)}` +
+    `C${(x1 - c).toFixed(1)} ${(r.y + r.h).toFixed(1)} ${(x0 + c).toFixed(1)} ${(l.y + l.h).toFixed(1)} ${x0} ${(l.y + l.h).toFixed(1)}Z`
+  );
+}
+
+// Only label bands tall enough to hold text; the rest are named in the table.
+const LABEL_MIN = 13;
+const hydrogen = enriched.find((e) => e.symbol === 'H')!;
+const pct = (n: number) => `${(n * 100).toFixed(n < 0.01 ? 2 : 1)}%`;
+
+// The hydrogen annotation, computed here rather than inline: a template literal
+// this size inside a JSX attribute is unreadable and, as it turns out, does not
+// survive the transform.
+// The foot of each column is a stack of sub-pixel bands. Rather than leave it
+// an unexplained grey smear, bracket it and say what is in there.
+function traceSpan(bands: Map<string, { y: number; h: number; mid: number }>) {
+  const small = [...bands.values()].filter((b) => b.h < LABEL_MIN);
+  if (!small.length) return null;
+  const top = Math.min(...small.map((b) => b.y));
+  const bottom = Math.max(...small.map((b) => b.y + b.h));
+  return { top, bottom, mid: (top + bottom) / 2 };
+}
+const leftTrace = traceSpan(leftBands);
+const rightTrace = traceSpan(rightBands);
+const traceNames = byMass
+  .filter((e) => (leftBands.get(e.symbol)!.h < LABEL_MIN))
+  .map((e) => e.name.toLowerCase());
+const tracePct = byMass
+  .filter((e) => (leftBands.get(e.symbol)!.h < LABEL_MIN))
+  .reduce((sum, e) => sum + e.massFraction, 0);
+
+/**
+ * Ribbon painting order.
+ *
+ * The ribbons were uniformly translucent, and four of them overlapping in the
+ * middle mixed into a grey swamp exactly where the argument happens. Opaque
+ * ribbons painted back-to-front fix that — but only if the ORDER carries the
+ * meaning: biggest first, so they read as ground, and hydrogen last so its
+ * swoop from sliver to dominant block crosses everything as one clean shape.
+ *
+ * This is the figure's whole thesis, so it is the thing that must be
+ * unobstructed.
+ */
+const ribbonOrder = [
+  ...[...enriched]
+    .filter((element) => element.symbol !== 'H')
+    .sort((a, b) => b.massFraction - a.massFraction),
+  enriched.find((element) => element.symbol === 'H')!,
+];
+
+const hLeft = leftBands.get('H')!;
+const hRight = rightBands.get('H')!;
+const annoPath = [
+  `M${(LEFT_X + COL_W + 22).toFixed(1)} ${hLeft.mid.toFixed(1)}`,
+  `C${(W / 2 - 40).toFixed(1)} ${hLeft.mid.toFixed(1)}`,
+  `${(W / 2 - 40).toFixed(1)} ${hRight.mid.toFixed(1)}`,
+  `${(RIGHT_X - 22).toFixed(1)} ${hRight.mid.toFixed(1)}`,
+].join(' ');
+
+/* A phone is not a narrow desktop. Panning the proportional columns hides the
+   comparison this figure exists to make, so the portrait drawing preserves
+   the rank inversion in five equal-height rows. The printed percentages still
+   carry magnitude; row height carries rank only. */
+const mobileTop = new Set(['O', 'C', 'H', 'N']);
+const mobileOther = {
+  symbol: 'other',
+  name: 'All others',
+  origin: 'other' as const,
+  massFraction: enriched
+    .filter((element) => !mobileTop.has(element.symbol))
+    .reduce((sum, element) => sum + element.massFraction, 0),
+  countFraction: enriched
+    .filter((element) => !mobileTop.has(element.symbol))
+    .reduce((sum, element) => sum + element.countFraction, 0),
+};
+const mobileMass = [
+  ...byMass.filter((element) => mobileTop.has(element.symbol)),
+  mobileOther,
+];
+const mobileCount = [
+  ...byCount.filter((element) => mobileTop.has(element.symbol)),
+  mobileOther,
+];
+const mobileLeft = new Map(mobileMass.map((element, index) => [element.symbol, index]));
+const mobileRight = new Map(mobileCount.map((element, index) => [element.symbol, index]));
+const mobileFill = (element: (typeof mobileMass)[number]) =>
+  element.origin === 'other' ? 'var(--muted)' : originFill[element.origin];
+const mobileY = (index: number) => 76 + index * 62;
+const mobileRibbon = (element: (typeof mobileMass)[number]) => {
+  const left = mobileY(mobileLeft.get(element.symbol)!);
+  const right = mobileY(mobileRight.get(element.symbol)!);
+  const h0 = Math.max(3, element.massFraction * 32);
+  const h1 = Math.max(3, element.countFraction * 32);
+  return [
+    `M133 ${left - h0 / 2}`,
+    `C180 ${left - h0 / 2} 180 ${right - h1 / 2} 227 ${right - h1 / 2}`,
+    `L227 ${right + h1 / 2}`,
+    `C180 ${right + h1 / 2} 180 ${left + h0 / 2} 133 ${left + h0 / 2}`,
+    'Z',
+  ].join('');
+};
+const mobileRibbonOrder = [
+  ...mobileMass.filter((element) => element.symbol !== 'H'),
+  mobileMass.find((element) => element.symbol === 'H')!,
+];
+---
+
+<div class="census" data-census data-annotated={String(annotated)}>
+  <svg class="census-wide" viewBox={`0 0 ${W} ${H}`} role="presentation">
+    <text class="lbl lbl-strong" x={LEFT_X} y={30}>Sorted by mass</text>
+    <text class="lbl" x={LEFT_X} y={46}>what you weigh</text>
+    <text class="lbl lbl-strong" x={RIGHT_X + COL_W} y={30} text-anchor="end">Sorted by atom count</text>
+    <text class="lbl" x={RIGHT_X + COL_W} y={46} text-anchor="end">how many pieces</text>
+
+    <!-- ribbons first, behind the columns -->
+    {
+      ribbonOrder.map((element) => (
+        <path
+          class="ribbon"
+          d={ribbon(element.symbol)}
+          fill={originFill[element.origin]}
+          data-el={element.symbol}
+          data-lead={element.symbol === 'H' ? 'true' : 'false'}
+          data-epistemic={element.epistemic}
+        />
+      ))
+    }
+
+    <!-- the two columns -->
+    {
+      byMass.map((element) => {
+        const b = leftBands.get(element.symbol)!;
+        return (
+          <g class="band-g" data-el={element.symbol}>
+            <rect
+              class="band"
+              x={LEFT_X}
+              y={b.y}
+              width={COL_W}
+              height={Math.max(0.6, b.h)}
+              fill={originFill[element.origin]}
+              data-epistemic={element.epistemic}
+              data-trace={b.h < 2 ? 'true' : 'false'}
+            />
+            {b.h >= LABEL_MIN && (
+              <text class="band-txt" x={LEFT_X - 10} y={b.mid + 4} text-anchor="end">
+                {element.name} <tspan class="band-pct">{pct(element.massFraction)}</tspan>
+              </text>
+            )}
+          </g>
+        );
+      })
+    }
+    {
+      byCount.map((element) => {
+        const b = rightBands.get(element.symbol)!;
+        return (
+          <g class="band-g" data-el={element.symbol}>
+            <rect
+              class="band"
+              x={RIGHT_X}
+              y={b.y}
+              width={COL_W}
+              height={Math.max(0.6, b.h)}
+              fill={originFill[element.origin]}
+              data-epistemic={element.epistemic}
+              data-trace={b.h < 2 ? 'true' : 'false'}
+            />
+            {b.h >= LABEL_MIN && (
+              <text class="band-txt" x={RIGHT_X + COL_W + 10} y={b.mid + 4}>
+                {element.name} <tspan class="band-pct">{pct(element.countFraction)}</tspan>
+              </text>
+            )}
+            {/* The returning figure's whole job. First time round the colours
+                are a code the reader has to hold; by chapter eight they have
+                names, so the names go on the bands and the key goes away. */}
+            {annotated &&
+              b.h >= 34 &&
+              originOnBand[element.origin].map((line, k, all) => (
+                <text
+                  class="band-origin"
+                  data-epistemic={element.epistemic}
+                  x={RIGHT_X + COL_W / 2}
+                  y={b.mid + 4 + (k - (all.length - 1) / 2) * 15}
+                  text-anchor="middle">{line}</text
+                >
+              ))}
+          </g>
+        );
+      })
+    }
+
+    <!-- The trace region, bracketed and named. -->
+    {leftTrace && (
+      <g class="trace">
+        <path
+          class="trace-brace"
+          d={`M${LEFT_X - 6} ${leftTrace.top} L${LEFT_X - 12} ${leftTrace.top} L${LEFT_X - 12} ${leftTrace.bottom} L${LEFT_X - 6} ${leftTrace.bottom}`}
+        />
+        <text class="trace-lbl" x={LEFT_X} y={TOP + H_AVAIL + 20}>
+          everything else {pct(tracePct)}
+        </text>
+        <text class="trace-sub" x={LEFT_X} y={TOP + H_AVAIL + 34}>
+          {traceNames.slice(0, 5).join(', ')}…
+        </text>
+      </g>
+    )}
+    {rightTrace && (
+      <g class="trace">
+        <path
+          class="trace-brace"
+          d={`M${RIGHT_X + COL_W + 6} ${rightTrace.top} L${RIGHT_X + COL_W + 12} ${rightTrace.top} L${RIGHT_X + COL_W + 12} ${rightTrace.bottom} L${RIGHT_X + COL_W + 6} ${rightTrace.bottom}`}
+        />
+        <text class="trace-lbl" x={RIGHT_X + COL_W} y={TOP + H_AVAIL + 20} text-anchor="end">
+          everything else
+        </text>
+      </g>
+    )}
+
+    <!-- The annotation. Red, because it is the author's hand on the world's
+         material — the same gesture as a note in a folio margin. -->
+    <g class="anno-g">
+      <path class="anno-line" d={annoPath} />
+      <text class="anno" x={W / 2} y={hLeft.mid - 14} text-anchor="middle">
+        hydrogen — {pct(hydrogen.massFraction)} of your weight,
+      </text>
+      <text class="anno" x={W / 2} y={hLeft.mid + 2} text-anchor="middle">
+        {pct(hydrogen.countFraction)} of your atoms
+      </text>
+    </g>
+
+    {
+      annotated && (
+        <g class="edges">
+          <text
+            class="anno"
+            x={RIGHT_X + COL_W}
+            y={TOP + H_AVAIL + 62}
+            text-anchor="end">and all of it survives an asymmetry nobody can explain</text
+          >
+        </g>
+      )
+    }
+
+    <!-- Origins, labelled directly under the column they colour. A legend
+         would make the reader hold four colours in their head. -->
+    <g class="origins">
+      {
+        !annotated &&
+        originLegend.map((entry) => (
+          <g>
+            <rect
+              x={entry.x}
+              y={H - 40 + entry.row * 20}
+              width="10"
+              height="10"
+              fill={entry.fill}
+            />
+            <text class="lbl origin-lbl" x={entry.x + 16} y={H - 31 + entry.row * 20}>
+              {entry.label}
+            </text>
+          </g>
+        ))
+      }
+    </g>
+  </svg>
+
+  <svg class="census-tall" viewBox="0 0 360 430" role="presentation">
+    <text class="mobile-head" x="8" y="20">By mass</text>
+    <text class="mobile-sub" x="8" y="35">what you weigh</text>
+    <text class="mobile-head" x="352" y="20" text-anchor="end">By atom count</text>
+    <text class="mobile-sub" x="352" y="35" text-anchor="end">how many pieces</text>
+    <text class="mobile-read" x="180" y="52" text-anchor="middle">the order inverts</text>
+
+    {
+      mobileRibbonOrder.map((element) => (
+        <path
+          class="mobile-ribbon"
+          data-lead={element.symbol === 'H' ? 'true' : 'false'}
+          d={mobileRibbon(element)}
+          fill={mobileFill(element)}
+        />
+      ))
+    }
+
+    {
+      mobileMass.map((element, index) => (
+        <g>
+          <rect
+            class="mobile-card"
+            x="8"
+            y={mobileY(index) - 22}
+            width="125"
+            height="44"
+            fill={mobileFill(element)}
+          />
+          <text class="mobile-name" x="16" y={mobileY(index) - 2}>{element.name}</text>
+          <text class="mobile-pct" x="16" y={mobileY(index) + 14}>
+            {pct(element.massFraction)}
+          </text>
+        </g>
+      ))
+    }
+    {
+      mobileCount.map((element, index) => (
+        <g>
+          <rect
+            class="mobile-card"
+            x="227"
+            y={mobileY(index) - 22}
+            width="125"
+            height="44"
+            fill={mobileFill(element)}
+          />
+          <text class="mobile-name" x="344" y={mobileY(index) - 2} text-anchor="end">
+            {element.name}
+          </text>
+          <text class="mobile-pct" x="344" y={mobileY(index) + 14} text-anchor="end">
+            {pct(element.countFraction)}
+          </text>
+        </g>
+      ))
+    }
+
+    <path class="mobile-anno-line" d="M138 200 C164 200 184 76 222 76" />
+    <text class="mobile-anno" x="180" y="370" text-anchor="middle">
+      hydrogen crosses every other element
+    </text>
+    <text class="mobile-note" x="180" y="388" text-anchor="middle">
+      9.5% of your weight · 61.3% of your atoms
+    </text>
+    {
+      annotated && (
+        <text class="mobile-edge" x="180" y="418" text-anchor="middle">
+          all of it survives an asymmetry nobody can explain
+        </text>
+      )
+    }
+  </svg>
+
+  {/* The table equivalent. A chart is not an argument if the only way to read
+      it is to see it. */}
+  <div class="ex-fig-data" tabindex="0">
+    <table>
+      <caption>Elemental composition of the human body, by mass and by atom count</caption>
+      <thead>
+        <tr>
+          <th scope="col">Element</th>
+          <th scope="col">Per cent by mass</th>
+          <th scope="col">Per cent by atom count</th>
+          <th scope="col">Principal origin</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          byMass.map((element) => (
+            <tr>
+              <th scope="row">{element.name}</th>
+              <td>{pct(element.massFraction)}</td>
+              <td>{pct(element.countFraction)}</td>
+              <td>{originLabel[element.origin]}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .census .census-tall {
+    display: none;
+  }
+  /* Opaque and painted back-to-front rather than translucent and stacked.
+     Four transparent ribbons overlapping mixed to a muddy grey in the middle
+     of the figure — precisely where the argument is. Pale tints keep them
+     subordinate to the columns; hydrogen gets full strength because it is the
+     point. */
+  .census .ribbon {
+    opacity: 0.9;
+    fill-opacity: 0.22;
+    stroke: none;
+  }
+  .census .ribbon[data-lead='true'] {
+    fill-opacity: 0.5;
+  }
+  .census .band {
+    stroke: var(--paper);
+    stroke-width: 0.75;
+  }
+  /* Trace elements are sub-pixel bands; a 0.75px separator between them turned
+     the foot of each column into a grey blur. */
+  .census .band[data-trace='true'] {
+    stroke-width: 0;
+  }
+  /* contested attributions are hatched, not merely a different colour —
+     the register must survive a reader who cannot separate the hues */
+  .census [data-epistemic='contested'] {
+    stroke: var(--paper);
+    stroke-dasharray: 3 2;
+  }
+  /* Reversed out of the band it names. Sits on saturated fill, so it takes a
+     halo rather than a lighter weight — a hairline would vanish on the darker
+     origins and shout on the paler ones. */
+  .census .band-origin {
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    fill: var(--paper);
+    paint-order: stroke;
+    stroke: rgb(0 0 0 / 0.18);
+    stroke-width: 2.5;
+  }
+  /* An origin that is not settled says so on the band, not only in a hue. */
+  .census .band-origin[data-epistemic='contested'] {
+    text-decoration: underline dashed;
+    text-underline-offset: 3px;
+  }
+  .census .band-txt {
+    font-family: var(--mono);
+    font-size: var(--l-lg);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    fill: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .census .band-pct {
+    fill: var(--ink-soft);
+    font-weight: 400;
+  }
+  .census .origin-lbl {
+    fill: var(--ink-soft);
+  }
+  .census .trace-brace {
+    fill: none;
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .census .trace-lbl {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    fill: var(--ink-soft);
+  }
+  .census .trace-sub {
+    font-family: var(--mono);
+    font-size: var(--l-sm);
+    letter-spacing: var(--tr-label);
+    text-transform: uppercase;
+    fill: var(--muted);
+  }
+  /* A solid 1.5px leader, not a 1px dash. It reads as a mark made on top of
+     the printed figure, which is what the author's ink means here — rather
+     than as a chart gridline, which is what it looked like. */
+  .census .anno-line {
+    stroke: var(--red);
+    stroke-width: 1.5;
+    fill: none;
+  }
+
+  /* Highlight one element across BOTH columns at once — the only interaction,
+     and it exists because tracing an element between the two orderings by eye
+     is exactly the thing the figure is asking the reader to do. */
+  .census:has([data-el]:hover) .ribbon {
+    opacity: 0.08;
+  }
+  .census:has(.band-g[data-el]:hover) .band {
+    opacity: 0.35;
+  }
+  .census .band-g:hover .band {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .census .ribbon,
+    .census .band {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 1050px) {
+    .census .census-wide {
+      display: none;
+    }
+    .census .census-tall {
+      display: block;
+      width: 100%;
+      max-width: 520px;
+      margin-inline: auto;
+    }
+    .census .mobile-head,
+    .census .mobile-sub,
+    .census .mobile-read,
+    .census .mobile-pct,
+    .census .mobile-note {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: var(--tr-label);
+    }
+    .census .mobile-head {
+      font-size: 12px;
+      font-weight: 600;
+      fill: var(--ink);
+    }
+    .census .mobile-sub,
+    .census .mobile-read {
+      font-size: 10px;
+      fill: var(--muted);
+    }
+    .census .mobile-card {
+      fill-opacity: 0.84;
+      stroke: var(--paper);
+      stroke-width: 1;
+    }
+    .census .mobile-ribbon {
+      fill-opacity: 0.25;
+    }
+    .census .mobile-ribbon[data-lead='true'] {
+      fill-opacity: 0.6;
+    }
+    .census .mobile-name {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 600;
+      fill: var(--ink);
+    }
+    .census .mobile-pct {
+      font-size: 10px;
+      fill: var(--ink-soft);
+    }
+    .census .mobile-anno-line {
+      fill: none;
+      stroke: var(--red);
+      stroke-width: 1.5;
+    }
+    .census .mobile-anno,
+    .census .mobile-edge {
+      font-family: var(--display);
+      font-size: 15px;
+      font-style: italic;
+      fill: var(--red);
+    }
+    .census .mobile-note {
+      font-size: 10px;
+      fill: var(--ink-soft);
+    }
+    .census .mobile-edge {
+      font-size: 12px;
+    }
+  }
+</style>

@@ -9,6 +9,7 @@ import {
   readingTime,
   tagSlug,
 } from '../utils/content';
+import { sourceHost, sourceName } from '../utils/sources';
 
 interface Props {
   post: Post;
@@ -22,9 +23,8 @@ const { post, number, total, relatedCount = 0, rubric = false } = Astro.props;
 const kind = postKinds[post.data.type];
 const body = post.body || '';
 const minutes = readingTime(body);
-const sourceDomain = post.data.url
-  ? new URL(post.data.url).hostname.replace(/^www\./, '')
-  : undefined;
+const sourceDomain = post.data.url ? sourceHost(post.data.url) : undefined;
+const sourceLabel = post.data.url ? sourceName(post.data.url) : undefined;
 const imageMatch = body.match(/!\[([^\]]*)\]\((\/images\/[^)\s]+(?:\s[^)]*)?)\)/);
 const image = imageMatch?.[2]?.replace(/%20/g, ' ');
 const quoteLines = body.match(/(?:^>\s?.+(?:\n|$))+/m)?.[0]
@@ -44,48 +44,55 @@ const verseLines = post.data.type === 'verse'
 ---
 
 <article class="entry">
+  {/* The numeral hangs in the margin, as it does on the folio page. Everything
+     else begins on one shared left edge, so a column of entries reads as a
+     ruled ledger rather than a stack of cards. */}
   <div class="runhead">
     <span class="folio-big" style={`color:${kind.color}`}>{folioLabel(number, total)}</span>
-    <span class="meta">
-      <span>{kind.singular}</span>
-      <span>{formatPostDate(post.data.date)}</span>
-    </span>
+    <span class="folio-kind">{kind.singular}</span>
   </div>
-  <h2><a href={`/posts/${post.slug}`}>{post.data.title}</a></h2>
 
-  {post.data.note && (
-    <div class="hand-line">
-      <span class="hand-say">{post.data.note}</span>
-      {sourceDomain && <span class="hand-src">{sourceDomain}</span>}
-    </div>
-  )}
+  <div class="entry-body">
+    <div class="entry-date">{formatPostDate(post.data.date)}</div>
+    <h2><a href={`/posts/${post.slug}`}>{post.data.title}</a></h2>
 
-  {!post.data.note && post.data.url && (
-    <a class="source-chip" href={post.data.url} target="_blank" rel="noopener noreferrer">
-      source · {sourceDomain} ↗
+    {post.data.note && (
+      <div class="hand-line">
+        <span class="hand-say">{post.data.note}</span>
+        {sourceDomain && <span class="hand-src">{sourceDomain}</span>}
+      </div>
+    )}
+
+    {!post.data.note && post.data.url && (
+      <a class="source-chip" href={post.data.url} target="_blank" rel="noopener noreferrer">
+        <span class="source-chip-label">source</span>
+        <span class="source-chip-name">{sourceLabel}</span>
+        {sourceLabel !== sourceDomain && <span class="source-chip-host">{sourceDomain}</span>}
+        <span aria-hidden="true">↗</span>
+      </a>
+    )}
+
+    {image && <img class="folio-media" src={image} alt={imageMatch?.[1] || ''} loading="lazy" decoding="async" />}
+
+    {post.data.type === 'verse' && verseLines.length > 0 ? (
+      <div class="verse">
+        {verseLines.map((line) => <span class="l">{line}</span>)}
+      </div>
+    ) : quoteLines ? (
+      <blockquote><p>{excerpt(quoteLines, 430)}</p></blockquote>
+    ) : summary ? (
+      <p class:list={['say', { rubric }]}>{summary}</p>
+    ) : null}
+
+    <a class="more" href={`/posts/${post.slug}`}>
+      keep reading — {minutes} min ↗
     </a>
-  )}
 
-  {image && <img class="folio-media" src={image} alt={imageMatch?.[1] || ''} loading="lazy" decoding="async" />}
-
-  {post.data.type === 'verse' && verseLines.length > 0 ? (
-    <div class="verse">
-      {verseLines.map((line) => <span class="l">{line}</span>)}
+    <div class="entry-foot">
+      {(post.data.tags || []).slice(0, 3).map((tag) => (
+        <a class="head" href={`/tags/${tagSlug(tag)}`}>{displayTag(tag)}</a>
+      ))}
+      {relatedCount > 0 && <a class="thr" href={`/posts/${post.slug}#threads`}>{relatedCount} threads →</a>}
     </div>
-  ) : quoteLines ? (
-    <blockquote><p>{excerpt(quoteLines, 430)}</p></blockquote>
-  ) : summary ? (
-    <p class:list={['say', { rubric }]}>{summary}</p>
-  ) : null}
-
-  <a class="more" href={`/posts/${post.slug}`}>
-    keep reading — {minutes} min ↗
-  </a>
-
-  <div class="entry-foot">
-    {(post.data.tags || []).slice(0, 3).map((tag) => (
-      <a class="head" href={`/tags/${tagSlug(tag)}`}>{displayTag(tag)}</a>
-    ))}
-    {relatedCount > 0 && <a class="thr" href={`/posts/${post.slug}#threads`}>{relatedCount} threads →</a>}
   </div>
 </article>

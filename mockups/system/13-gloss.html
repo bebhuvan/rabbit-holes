@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gloss — The antimeme is the message — Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;
+    /* ---- THE THIRD INK ----------------------------------------
+       Glosses are written by a machine, not by the collector and
+       not by the source. In manuscripts the gloss was the
+       commentary ringing the text, set in a different hand and
+       usually a browner, weaker ink than the body. Same here:
+       --gloss is the machine's hand. It must never be red (that
+       is his voice) and never full black (that is the source). */
+    --gloss:#8A6E45;--gloss-soft:#C8B48E;--gloss-wash:#FBF8F3;
+    --maxw:1240px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;
+      --gloss:#C9A96E;--gloss-soft:#8A7550;--gloss-wash:#1D1B15;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;
+    --gloss:#C9A96E;--gloss-soft:#8A7550;--gloss-wash:#1D1B15;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;
+    --gloss:#8A6E45;--gloss-soft:#C8B48E;--gloss-wash:#FBF8F3;}
+
+  .brand .mark,h1,.gloss-num,.note-say{font-optical-sizing:none;font-variation-settings:'opsz' 11}
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* masthead — identical to the commonplace book. Same building. */
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft)}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);margin:0 .25rem;font-style:normal}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--gloss);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);padding:0 0 0 1.7rem;
+    border-left:1px solid var(--rule);line-height:1}
+
+  /* ---- the shelf band: says what this room is, once, plainly ---- */
+  .shelf{border-bottom:1px solid var(--rule);background:var(--gloss-wash)}
+  .shelf-in{max-width:var(--maxw);margin:0 auto;padding:1rem 2.6rem;
+    display:flex;align-items:baseline;gap:.85rem;flex-wrap:wrap}
+  .shelf .ast{color:var(--gloss-soft);font-family:var(--flourish);font-size:var(--t-base)}
+  .shelf .nm{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--gloss)}
+  .shelf .dsc{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--ink-soft)}
+  .shelf .back{margin-left:auto;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
+  .shelf .back:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* single reading column — deliberately NOT the folio page's three-column
+     grid. Different shelf, different architecture. */
+  .sheet{max-width:40rem;margin:0 auto;padding:3.4rem 2.6rem 2rem}
+
+  /* ---- the source being glossed: this is the world, so it is BLACK ---- */
+  .source{border-top:2px solid var(--ink);padding-top:1.1rem;margin-bottom:2.6rem}
+  .source .k{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:.7rem;
+    display:flex;gap:.9rem;flex-wrap:wrap}
+  .source .t{font-family:var(--body);font-size:var(--t-lg);line-height:1.32;margin-bottom:.3rem}
+  .source .t a{text-decoration:underline;text-decoration-color:var(--rule-strong);
+    text-underline-offset:3px}
+  .source .t a:hover{text-decoration-color:var(--ink)}
+  .source .by{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--ink-soft)}
+
+  h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.1;
+    letter-spacing:var(--tr-display);margin-bottom:1.4rem}
+
+  /* ---- disclosure. On the page, in the machine's own ink, above the
+       text it wrote. Not a footnote, not a badge in the corner. ---- */
+  .disclosure{border-left:2px solid var(--gloss);padding-left:1.05rem;margin-bottom:2.4rem}
+  .disclosure .l{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--gloss);margin-bottom:.45rem}
+  .disclosure .b{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.55;color:var(--ink-soft)}
+
+  /* ---- his hand still gets to speak, in red ---- */
+  .note{border-left:2px solid var(--red);padding-left:1.05rem;margin-bottom:2.6rem}
+  .note .l{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red-soft);margin-bottom:.5rem}
+  .note-say{font-family:var(--display);font-style:italic;font-weight:500;
+    color:var(--red);font-size:var(--t-lg);line-height:1.36}
+
+  /* ---- the gloss body: warmer than the source, and rules in gloss ink ---- */
+  .gloss-body{font-size:var(--t-body);line-height:1.72}
+  .gloss-body p{margin-bottom:1.15rem}
+  .gloss-body h2{font-family:var(--display);font-weight:600;font-size:var(--t-lg);
+    line-height:1.25;margin:2.2rem 0 .8rem;padding-top:1rem;
+    border-top:1px solid var(--rule)}
+  .gloss-body strong{font-weight:600}
+  .gloss-body em{font-style:italic}
+  .gloss-body a{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+  .gloss-body blockquote{margin:1.4rem 0;padding-left:1.2rem;
+    border-left:2px solid var(--gloss-soft);font-size:var(--t-base);color:var(--ink-soft)}
+
+  .gloss-mark{text-align:center;color:var(--gloss-soft);font-family:var(--flourish);
+    font-size:var(--t-lg);margin:2.4rem 0 0}
+
+  /* ---- back to the folio: the commonplace book is one click away ---- */
+  .tofolio{margin-top:2.6rem;border-top:2px solid var(--red);padding-top:1.3rem}
+  .tofolio .l{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red);margin-bottom:.9rem}
+  .tofolio a.f{display:grid;grid-template-columns:3.4rem 1fr;gap:.9rem;
+    align-items:baseline;text-decoration:none;padding:.5rem 0}
+  .tofolio .fn{font-family:var(--display);font-weight:600;font-size:var(--t-lg);
+    color:#4E7EC2;font-variant-numeric:lining-nums;line-height:1}
+  .tofolio .ft{font-family:var(--body);font-size:var(--t-md);line-height:1.35}
+  .tofolio a.f:hover .ft{color:var(--red)}
+  .tofolio .fr{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    color:var(--muted);margin-top:.25rem}
+
+  footer.foot{max-width:40rem;margin:3rem auto 0;padding:1.6rem 2.6rem 4rem;
+    border-top:1px solid var(--rule);font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--muted);display:flex;justify-content:space-between;gap:1.5rem}
+  footer.foot a{color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#">Index</a>
+        <a href="#">Heads</a>
+        <a href="#" class="on">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shelf">
+    <div class="shelf-in">
+      <span class="ast">&#8258;</span>
+      <span class="nm">The Gloss</span>
+      <span class="dsc">Machine-written explanations of things I read and listened to, kept so I remember them.</span>
+      <a class="back" href="#">&#8592; back to the commonplace book</a>
+    </div>
+  </div>
+
+  <article class="sheet">
+
+    <!-- THE SOURCE — black ink, because it belongs to the world -->
+    <div class="source">
+      <div class="k"><span>Article</span><span>&#183;</span><span>8,400 words</span><span>&#183;</span><span>read 2 Aug 2025</span></div>
+      <p class="t"><a href="https://kevinmunger.substack.com/p/the-antimeme-is-the-message-of-the">The antimeme is the message of the medium</a></p>
+      <p class="by">Kevin Munger &#183; kevinmunger.substack.com</p>
+    </div>
+
+    <h1>Memes, antimemes, and what a feed cannot carry</h1>
+
+    <!-- DISCLOSURE — in the machine's own ink, above what it wrote -->
+    <div class="disclosure">
+      <span class="l">Written by a machine</span>
+      <p class="b">Claude Opus 4.8 wrote this gloss from the source above, at my request. It is here so I remember the piece, not because I wrote it. Where it is wrong, the source is right.</p>
+    </div>
+
+    <!-- HIS HAND — red, still his site -->
+    <div class="note">
+      <span class="l">Why I asked for this</span>
+      <p class="note-say">I don&#8217;t always understand half of what he says.</p>
+    </div>
+
+    <div class="gloss-body">
+      <p>Munger&#8217;s argument turns on a distinction that sounds like wordplay and isn&#8217;t. A <strong>meme</strong>, in the original Dawkins sense, is a unit of culture that spreads &#8212; an idea shaped by selection pressure toward being transmitted. On a feed-based platform, that pressure is extreme, and what survives is whatever compresses best into an image, a phrase, a clip.</p>
+
+      <p>An <strong>antimeme</strong> is not the opposite of that. It is something that <em>resists</em> the compression. Not because it is obscure or difficult, but because the thing itself is made of properties a feed cannot encode.</p>
+
+      <h2>The information-density argument</h2>
+
+      <p>The move that makes the essay more than a taxonomy is the claim about density. Munger accepts that a meme may be the densest possible communication <em>within</em> a feed &#8212; and then points out how thin that frame is:</p>
+
+      <blockquote>Humans are quite plastic; our sensory apparatus changes based on the communication environment in which we are raised. But we&#8217;re not <em>infinitely</em> plastic. The information-density frontier must involve all of our senses.</blockquote>
+
+      <p>The densest human communication, on this account, happens when the stakes are high and you are physically among other people. Team sports. The school dance. The street protest. These are saturated with signal &#8212; posture, timing, breath, the reactions of dozens of people at once &#8212; and essentially none of it survives being filmed.</p>
+
+      <h2>Why this is a claim about media, not about touching grass</h2>
+
+      <p>It would be easy to read this as nostalgia. It isn&#8217;t. The argument is structural: every medium has a carrying capacity, and a medium selects for the content that fits it. As more of our attention moves into feeds, we are not just consuming worse things &#8212; we are being trained to treat the feed&#8217;s carrying capacity as the natural limit of what communication is.</p>
+
+      <p>The loss, then, is not that antimemes are being outcompeted. It is that they become progressively harder to <em>notice</em>, because the medium that dominates your attention has no way to represent them, and therefore no way to remind you they exist.</p>
+
+      <h2>The one thing worth pushing back on</h2>
+
+      <p>The essay is stronger on diagnosis than on measurement. &#8220;Information density&#8221; is doing heavy lifting without a definition that would let you compare a protest to a tweet in any rigorous way. The intuition is persuasive; the metric is gestural. That may be fine for the argument&#8217;s purpose, but it is the seam where a sceptic would pull.</p>
+
+      <div class="gloss-mark">&#8258;</div>
+    </div>
+
+    <section class="tofolio">
+      <div class="l">&#9758; The folio this belongs to</div>
+      <a class="f" href="#">
+        <span class="fn">002</span>
+        <span><span class="ft">I gots Links for you: Issue #1</span>
+        <span class="fr">where I first kept this &#183; 2 Aug 2025</span></span>
+      </a>
+    </section>
+
+  </article>
+
+  <footer class="foot">
+    <span>gloss 01 &#183; kept by Bhuvanesh</span>
+    <span><a href="#">all glosses &#8594;</a></span>
+  </footer>
+
+<script>
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

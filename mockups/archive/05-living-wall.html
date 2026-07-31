@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Holes — Living Wall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --flame: #E05A2B;
+            --ocean: #1D5FE0;
+            --plum: #8B3DC7;
+            --forest: #1A854A;
+            --ink: #141414;
+            --paper: #F9F5EE;
+            --faded: #C8C0B4;
+        }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--flame);
+            color: #fff;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* === TOP BAR === */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            border-bottom: 1px solid var(--faded);
+        }
+
+        .topbar-logo {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 22px;
+        }
+
+        .topbar nav {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .topbar nav a { color: #888; }
+        .topbar nav a:hover { color: var(--ink); }
+
+        /* === SPLASH === */
+        .splash {
+            padding: 4rem 2.5rem 3rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 3rem;
+            border-bottom: 3px solid var(--ink);
+        }
+
+        .splash-left {}
+
+        .splash-title {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+        }
+
+        .splash-title .hole {
+            color: var(--flame);
+            font-style: italic;
+        }
+
+        .splash-right {
+            max-width: 320px;
+            padding-bottom: 0.5rem;
+        }
+
+        .splash-desc {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-style: italic;
+            font-size: 19px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .splash-stats {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: var(--faded);
+        }
+
+        .splash-stats strong {
+            color: var(--ink);
+        }
+
+        /* === WALL GRID === */
+        .wall {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            padding: 0 2.5rem;
+        }
+
+        /* Each "brick" in the wall spans different columns */
+        .brick {
+            padding: 1.75rem;
+            border-bottom: 1px solid #E0DBD0;
+            border-right: 1px solid #E0DBD0;
+        }
+
+        /* SIZE VARIANTS */
+        .brick.w6 { grid-column: span 6; }
+        .brick.w4 { grid-column: span 4; }
+        .brick.w3 { grid-column: span 3; }
+        .brick.w8 { grid-column: span 8; }
+        .brick.w12 { grid-column: span 12; }
+
+        .brick:last-child { border-right: none; }
+
+        /* TYPE-BASED STYLING */
+        .brick-type {
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .brick-type.musings { color: var(--flame); }
+        .brick-type.links { color: var(--ocean); }
+        .brick-type.reflections { color: var(--plum); }
+        .brick-type.verse { color: var(--plum); }
+        .brick-type.practical { color: var(--forest); }
+
+        .brick-title {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 22px;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .brick-title a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 1.5px;
+            text-underline-offset: 3px;
+        }
+
+        .brick-snippet {
+            font-size: 15px;
+            line-height: 1.55;
+            color: #666;
+        }
+
+        .brick-date {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--faded);
+            margin-top: 0.6rem;
+        }
+
+        .brick-tags {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--faded);
+            margin-top: 0.3rem;
+        }
+
+        .brick-tags a:hover { color: var(--ink); }
+
+        /* BIG BRICK: hero treatment */
+        .brick.hero {
+            padding: 2.5rem;
+        }
+
+        .brick.hero .brick-title {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            margin-bottom: 0.75rem;
+        }
+
+        .brick.hero .brick-snippet {
+            font-size: 17px;
+            line-height: 1.65;
+            max-width: 560px;
+        }
+
+        /* VERSE BRICK: special treatment */
+        .brick.verse-brick {
+            background: var(--ink);
+            color: #E8E2D8;
+            border-color: var(--ink);
+        }
+
+        .brick.verse-brick .brick-type { color: #666; }
+
+        .brick.verse-brick blockquote {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-style: italic;
+            font-size: 21px;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .brick.verse-brick cite {
+            font-family: 'DM Sans', sans-serif;
+            font-style: normal;
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* QUOTE BRICK */
+        .brick.quote-brick {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .brick.quote-brick blockquote {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-style: italic;
+            font-size: 18px;
+            line-height: 1.55;
+            color: #555;
+        }
+
+        .brick.quote-brick cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 12px;
+            color: var(--faded);
+            font-style: normal;
+        }
+
+        /* LINKS CLUSTER BRICK */
+        .brick.cluster .cluster-item {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #E8E4DA;
+        }
+
+        .brick.cluster .cluster-item:last-child {
+            border-bottom: none;
+        }
+
+        .brick.cluster .cluster-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .brick.cluster .cluster-title a:hover {
+            color: var(--ocean);
+        }
+
+        .brick.cluster .cluster-meta {
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+            color: var(--faded);
+        }
+
+        /* COLOR ACCENT BRICK (topic highlight) */
+        .brick.accent-flame {
+            background: var(--flame);
+            color: #fff;
+            border-color: var(--flame);
+        }
+
+        .brick.accent-flame .brick-type { color: rgba(255,255,255,0.6); }
+        .brick.accent-flame .brick-snippet { color: rgba(255,255,255,0.8); }
+        .brick.accent-flame .brick-date { color: rgba(255,255,255,0.5); }
+
+        /* STATS BRICK */
+        .brick.stats-brick {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .stat-block strong {
+            display: block;
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 2.5rem;
+            line-height: 1;
+            color: var(--ink);
+        }
+
+        .stat-block span {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--faded);
+        }
+
+        /* === THREADS ROW === */
+        .threads-row {
+            padding: 2rem 2.5rem;
+            border-top: 3px solid var(--ink);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .thread-col h3 {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 18px;
+            margin-bottom: 0.5rem;
+        }
+
+        .thread-col h3 a:hover { color: var(--flame); }
+
+        .thread-count {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--faded);
+            margin-bottom: 0.5rem;
+        }
+
+        .thread-links a {
+            display: block;
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+        }
+
+        .thread-links a:hover { color: var(--ink); }
+
+        /* === FOOTER === */
+        .foot {
+            padding: 2rem 2.5rem;
+            border-top: 1px solid var(--faded);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .foot nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .foot a { color: #aaa; }
+        .foot a:hover { color: var(--ink); }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 1000px) {
+            .wall { grid-template-columns: repeat(6, 1fr); }
+            .brick.w8 { grid-column: span 6; }
+            .brick.w4 { grid-column: span 6; }
+            .brick.w3 { grid-column: span 3; }
+            .threads-row { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 700px) {
+            .wall { grid-template-columns: 1fr; padding: 0 1.5rem; }
+            .brick { grid-column: span 1 !important; border-right: none; }
+            .splash { flex-direction: column; padding: 2.5rem 1.5rem 2rem; gap: 1.5rem; }
+            .threads-row { grid-template-columns: 1fr; padding: 1.5rem; }
+            .topbar { padding: 1rem 1.5rem; }
+            .topbar nav { gap: 1rem; font-size: 13px; }
+            .foot { padding: 1.5rem; flex-direction: column; gap: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <div class="topbar-logo"><a href="#">Rabbit Holes</a></div>
+        <nav>
+            <a href="#">Collections</a>
+            <a href="#">Archive</a>
+            <a href="#">Topics</a>
+            <a href="#">Search</a>
+            <a href="#">About</a>
+            <a href="#">RSS</a>
+        </nav>
+    </div>
+
+    <div class="splash">
+        <div class="splash-left">
+            <h1 class="splash-title">Rabbit<br><span class="hole">Holes</span></h1>
+        </div>
+        <div class="splash-right">
+            <p class="splash-desc">Quotes, links, and ideas that made me stop and think. Collected daily. Connected over time.</p>
+            <div class="splash-stats">
+                <span><strong>193</strong> posts</span>
+                <span><strong>50+</strong> topics</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- === THE WALL === -->
+    <div class="wall">
+        <!-- Row 1: Hero + Verse -->
+        <div class="brick hero w8">
+            <div class="brick-type musings">Musings &middot; Latest</div>
+            <h2 class="brick-title"><a href="#">We are living in wild times</a></h2>
+            <div class="brick-snippet">There's something almost surreal about the moment we're in. A few years ago, the idea of talking to a computer and having it build you a website was science fiction. Now it's Tuesday. I recently built this entire blog by talking to an AI. Not writing code — talking.</div>
+            <div class="brick-date">January 19, 2026</div>
+        </div>
+
+        <div class="brick verse-brick w4">
+            <div class="brick-type verse">Verse</div>
+            <blockquote>
+                I dwell in Possibility &mdash;<br>
+                A fairer House than Prose &mdash;<br>
+                More numerous of Windows &mdash;<br>
+                Superior &mdash; for Doors &mdash;
+            </blockquote>
+            <cite>Emily Dickinson</cite>
+        </div>
+
+        <!-- Row 2: Three musings -->
+        <div class="brick w4">
+            <div class="brick-type musings">Musings</div>
+            <h3 class="brick-title"><a href="#">The Bullshit job apocalypse</a></h3>
+            <div class="brick-snippet">David Graeber's thesis is being tested at scale. If AI can do your job, was it ever a real job?</div>
+            <div class="brick-date">Jan 13</div>
+        </div>
+
+        <div class="brick accent-flame w4">
+            <div class="brick-type">Musings</div>
+            <h3 class="brick-title"><a href="#">Small tyrannies</a></h3>
+            <div class="brick-snippet">The tiny coercions of everyday life that we accept without question. How collective passivity shapes societies.</div>
+            <div class="brick-date">Jan 13</div>
+        </div>
+
+        <div class="brick w4">
+            <div class="brick-type musings">Musings</div>
+            <h3 class="brick-title"><a href="#">You don&rsquo;t know much</a></h3>
+            <div class="brick-snippet">The illusion of knowledge is more dangerous than ignorance.</div>
+            <div class="brick-date">Jan 16</div>
+        </div>
+
+        <!-- Row 3: Links cluster + Reflection + Stats -->
+        <div class="brick cluster w4">
+            <div class="brick-type links">Links</div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">What drives us</a></div>
+                <div class="cluster-meta">Psychology &middot; Evolution</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">The whole is not the sum of its parts</a></div>
+                <div class="cluster-meta">Neuroscience</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">China derangement syndrome</a></div>
+                <div class="cluster-meta">Geopolitics</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">On AI coding</a></div>
+                <div class="cluster-meta">AI &middot; Software</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">Influentists</a></div>
+                <div class="cluster-meta">Social media</div>
+            </div>
+        </div>
+
+        <div class="brick w4">
+            <div class="brick-type reflections">Reflections</div>
+            <h3 class="brick-title"><a href="#">The past is the present</a></h3>
+            <div class="brick-snippet">Every generation believes it has invented a new problem, only to discover it is a very old one wearing new clothes.</div>
+            <div class="brick-date">Jan 17</div>
+        </div>
+
+        <div class="brick stats-brick w4">
+            <div class="stat-block">
+                <strong>56</strong>
+                <span>on AI</span>
+            </div>
+            <div class="stat-block">
+                <strong>9</strong>
+                <span>poems</span>
+            </div>
+            <div class="stat-block">
+                <strong>6</strong>
+                <span>philosophy</span>
+            </div>
+        </div>
+
+        <!-- Row 4: Wide quote + musing -->
+        <div class="brick quote-brick w6">
+            <blockquote>The important thing is not to stop questioning. Curiosity has its own reason for existence.</blockquote>
+            <cite>Albert Einstein</cite>
+        </div>
+
+        <div class="brick w6">
+            <div class="brick-type musings">Musings</div>
+            <h3 class="brick-title"><a href="#">Code is now content</a></h3>
+            <div class="brick-snippet">When anyone can conjure software by describing what they want, the line between writing and programming dissolves. What matters isn't syntax — it's taste, judgment, and knowing what to build.</div>
+            <div class="brick-date">Jan 5</div>
+        </div>
+
+        <!-- Row 5: Deep Holes -->
+        <div class="brick w6">
+            <div class="brick-type musings">Deep Hole &middot; 8 min</div>
+            <h3 class="brick-title"><a href="#">The world won&rsquo;t end with a bang but with a shrug of indifference</a></h3>
+            <div class="brick-snippet">Young people are becoming less conscientious, less outgoing, and less trustworthy — while becoming more neurotic and more argumentative.</div>
+            <div class="brick-tags"><a href="#">Technology</a> &middot; <a href="#">Smartphones</a> &middot; <a href="#">Society</a></div>
+        </div>
+
+        <div class="brick w3">
+            <div class="brick-type reflections">Deep Hole &middot; 6 min</div>
+            <h3 class="brick-title"><a href="#">Why read?</a></h3>
+            <div class="brick-snippet">The case for deep reading has never been stronger.</div>
+            <div class="brick-tags"><a href="#">Books</a> &middot; <a href="#">Literature</a></div>
+        </div>
+
+        <div class="brick w3">
+            <div class="brick-type musings">Deep Hole &middot; 5 min</div>
+            <h3 class="brick-title"><a href="#">Zero sum thinking is ruining the world</a></h3>
+            <div class="brick-snippet">The most destructive idea in human psychology.</div>
+            <div class="brick-tags"><a href="#">Psychology</a></div>
+        </div>
+
+        <!-- Row 6: More links -->
+        <div class="brick cluster w4">
+            <div class="brick-type links">More Links</div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">The future of AI and automation</a></div>
+                <div class="cluster-meta">AI &middot; Automation</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">Yeah, sure, AI is useless</a></div>
+                <div class="cluster-meta">AI &middot; Legal</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">The virtual co-workers are here?</a></div>
+                <div class="cluster-meta">AI &middot; Work</div>
+            </div>
+            <div class="cluster-item">
+                <div class="cluster-title"><a href="#">AI is killing software jobs</a></div>
+                <div class="cluster-meta">AI &middot; Software</div>
+            </div>
+        </div>
+
+        <div class="brick w4">
+            <div class="brick-type musings">Musings</div>
+            <h3 class="brick-title"><a href="#">On AI regulations</a></h3>
+            <div class="brick-snippet">The regulatory landscape is catching up — slowly, unevenly, and with the usual political theater.</div>
+            <div class="brick-date">Jan 15</div>
+        </div>
+
+        <div class="brick w4">
+            <div class="brick-type musings">Musings</div>
+            <h3 class="brick-title"><a href="#">All habits are hard work</a></h3>
+            <div class="brick-snippet">There are no easy habits. The ones that stick demand something of you every single day.</div>
+            <div class="brick-date">Jan 7</div>
+        </div>
+    </div>
+
+    <!-- THREADS -->
+    <div class="threads-row">
+        <div class="thread-col">
+            <h3><a href="#">AI</a></h3>
+            <div class="thread-count">56 posts</div>
+            <div class="thread-links">
+                <a href="#">We are living in wild times</a>
+                <a href="#">The Bullshit job apocalypse</a>
+                <a href="#">Code is now content</a>
+            </div>
+        </div>
+        <div class="thread-col">
+            <h3><a href="#">Philosophy</a></h3>
+            <div class="thread-count">6 posts</div>
+            <div class="thread-links">
+                <a href="#">We are borrowed stardust</a>
+                <a href="#">You don't know much</a>
+                <a href="#">The past is the present</a>
+            </div>
+        </div>
+        <div class="thread-col">
+            <h3><a href="#">Psychology</a></h3>
+            <div class="thread-count">5 posts</div>
+            <div class="thread-links">
+                <a href="#">What drives us</a>
+                <a href="#">All habits are hard work</a>
+                <a href="#">Small tyrannies</a>
+            </div>
+        </div>
+        <div class="thread-col">
+            <h3><a href="#">Poetry</a></h3>
+            <div class="thread-count">9 posts</div>
+            <div class="thread-links">
+                <a href="#">I dwell in possibility</a>
+                <a href="#">For A Cynic</a>
+                <a href="#">We are borrowed stardust</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="foot">
+        <span>Rabbit Holes &middot; by Bhuvan</span>
+        <nav>
+            <a href="#">RSS</a>
+            <a href="#">About</a>
+            <a href="#">Archive</a>
+            <a href="#">@bebhuvan</a>
+        </nav>
+    </div>
+
+</body>
+</html>

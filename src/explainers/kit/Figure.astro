@@ -1,0 +1,94 @@
+---
+/**
+ * The frame every figure sits in.
+ *
+ * `alt` and `source` are REQUIRED, and that is the whole point of this
+ * component existing rather than authors writing <figure> by hand. Both are
+ * rules that get remembered on the first figure and forgotten by the ninth, so
+ * they are enforced by the type system and again at runtime.
+ *
+ * Writing the alt text during the figure's spec — before the figure exists —
+ * reliably improves the figure itself: one that is hard to describe in a
+ * sentence usually has more than one idea in it and should be two figures.
+ *
+ * Width is one of exactly three. Prose holds the measure; a figure earns `wide`
+ * when a diagram needs room, and `full` only when its subject IS scale and it
+ * cannot be told the truth inside 66 characters.
+ */
+import type { Epistemic } from '../../utils/explainers';
+
+interface Props {
+  /** Text alternative. Required. Describe what it SHOWS, not that it is a chart. */
+  alt: string;
+  /** Where the data or the claim comes from. Required. */
+  source: string;
+  /** Frontmatter source id, to link the credit into the source list. */
+  sourceId?: string;
+  /** The reading caption. Says what to notice, not what it is. */
+  caption?: string;
+  width?: 'measure' | 'wide' | 'full';
+  /**
+   * The figure has its own narrow-screen layout, so it must not be made to
+   * pan. Set this and the figure keeps the full width of a phone and redraws
+   * itself; leave it off and it holds its size and scrolls sideways, which is
+   * the honest fallback for a fixed grid that cannot reflow.
+   */
+  reflow?: boolean;
+  /** Confidence of what the figure asserts; inherited by everything inside. */
+  epistemic?: Epistemic;
+  /** Accessible id, for the rail and for deep links. */
+  id?: string;
+}
+
+const {
+  alt,
+  source,
+  sourceId,
+  caption,
+  width = 'measure',
+  epistemic = 'settled',
+  reflow = false,
+  id,
+} = Astro.props;
+
+// Belt and braces: TypeScript catches these in the editor, this catches them in
+// a build where someone passed an empty string to shut the editor up.
+if (!alt || !alt.trim()) {
+  throw new Error(
+    '[explainers] <Figure> needs real alt text. A figure nobody can read is ' +
+      'not an argument, it is decoration.'
+  );
+}
+if (!source || !source.trim()) {
+  throw new Error(
+    `[explainers] <Figure alt="${alt.slice(0, 40)}…"> needs a source. ` +
+      'Every figure says where its numbers came from, or it does not ship.'
+  );
+}
+---
+
+<figure
+  class="ex-fig"
+  data-width={width}
+  data-epistemic={epistemic}
+  data-reflow={reflow ? 'true' : undefined}
+  id={id}>
+  <div class="ex-fig-frame" role="img" aria-label={alt}>
+    <slot />
+  </div>
+
+  {/* Below 900px a wide figure keeps its size and pans rather than shrinking to
+      an illegible thumbnail. Say so, or it looks broken. */}
+  {width !== 'measure' && <span class="ex-fig-pan">Drag the figure sideways to read it all</span>}
+
+  {caption && <figcaption>{caption}</figcaption>}
+
+  <span class="ex-fig-source">
+    {sourceId ? <a href={`#src-${sourceId}`}>{source}</a> : source}
+  </span>
+
+  {/* The table equivalent, for data-bearing figures. Visually hidden, reachable
+      by keyboard and by screen reader — a chart is not an argument if the only
+      way to read it is to see it. */}
+  <slot name="data" />
+</figure>

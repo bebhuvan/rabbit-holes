@@ -1,0 +1,35 @@
+---
+/**
+ * A number in the prose, bound to where it came from.
+ *
+ * Renders a small numbered chip that links to the source entry. It was a bare
+ * `°` — which was invisible at reading size and far too small to click. A link
+ * nobody can hit is not a link; it is a decoration pretending to be one.
+ *
+ * The number comes from the build-time registry the page publishes. If the
+ * registry cannot supply one, this falls back to a neutral mark that still
+ * links correctly — unnumbered but honest, never a wrong number.
+ *
+ * The id itself is validated at build time in utils/provenance.ts, so a marker
+ * can never point at nothing.
+ */
+import { numberFor } from './citeRegistry';
+
+interface Props {
+  id: string;
+  /** Optional human label, for the tooltip and screen readers. */
+  label?: string;
+}
+
+const { id, label } = Astro.props;
+const n = numberFor(id);
+const described = label ?? id;
+---
+
+<a
+  class="ex-cite"
+  href={`#src-${id}`}
+  data-cite={id}
+  aria-label={`Source ${n || ''}: ${described}`.replace('  ', ' ')}
+  title={described}>{n > 0 ? n : '·'}</a
+>

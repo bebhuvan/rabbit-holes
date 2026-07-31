@@ -1,0 +1,571 @@
+---
+/**
+ * FIG 5 — The two routes past iron.
+ *
+ * Rebuilt from nothing. The previous version was captioned "the chart of
+ * nuclides" and contained no nuclides: one grey diagonal for the line of beta
+ * stability, one dashed diagonal for the r-process, and a great deal of empty
+ * box. Two lines in a rectangle cannot show a valley, a shell closure, or a
+ * path leaving measured territory, which are the three things this chapter
+ * needs the figure to do.
+ *
+ * It now draws the actual landscape, from the evaluated table:
+ *
+ *   - 3,383 nuclides as territory — everything NUBASE2020 carries.
+ *   - 288 natural nuclides as individual marks. That set is an observation
+ *     (a measured terrestrial abundance) rather than a classification, which
+ *     sidesteps the long argument about which nuclides count as "stable" and
+ *     is anyway the right set: these are the ones actually out there.
+ *   - The neutron-rich edge of the table, drawn as a boundary.
+ *
+ * And the boundary is the point. For most of the elements between iron and
+ * uranium the table simply ENDS while the neutron separation energy is still
+ * above the ~2.5 MeV that marks an r-process waiting point. The rapid path runs
+ * outside everything anyone has measured or even extrapolated. That is a far
+ * better argument for marking this figure contested than a dashed line is, and
+ * it is computed from the dataset rather than asserted here.
+ *
+ * See scripts/fetch-nuclides.mjs for the download and its sanity checks.
+ *
+ * Static. Nothing here needs motion.
+ */
+import { dataset, rows } from '../../../utils/provenance';
+import raw from '../data/nuclides.json';
+
+type Element = {
+  z: number;
+  symbol: string;
+  known: [number, number][];
+  natural: number[];
+  stable: number[];
+  edgeN: number;
+  edgeSn: number | null;
+  edgeExtrapolated: boolean;
+};
+
+const data = dataset('nuclides', raw);
+const elements = rows<Element>(data);
+const totals = (raw as unknown as { totals: Record<string, number> }).totals;
+const waitingPoint = (raw as unknown as { waitingPointKeV: number }).waitingPointKeV;
+
+/* ---- frame. Square cells, because the diagonal is the subject. ---- */
+const W = 1300;
+/* Z runs to 100, not 92. Nothing natural exists above uranium, so the extra
+   eight rows carry almost no data — they are headroom. Every mark on this chart
+   sits on one diagonal, and the only direction with space to put a label is up
+   and to the left, perpendicular to the valley; without those rows the labels
+   for gold and bismuth had nowhere to go and printed on top of the nuclides
+   they were naming. */
+const H = 856;
+const N_MAX = 170;
+const Z_MAX = 100;
+const PL = 74;
+const CELL = (1274 - PL) / N_MAX; // ≈ 7.06
+const Z0 = 794; // y of Z = 0
+
+const x = (n: number) => PL + n * CELL;
+const y = (z: number) => Z0 - z * CELL;
+const PR = x(N_MAX);
+const TOP = y(Z_MAX);
+
+const round = (v: number) => Number(v.toFixed(1));
+
+const shown = elements.filter((e) => e.z >= 1 && e.z <= Z_MAX);
+
+/** Everything the evaluated table carries, as territory. */
+const territory = shown.flatMap((element) =>
+  element.known
+    .filter(([, to]) => to <= N_MAX + 2)
+    .map(([from, to]) => ({
+      // one decimal is a twentieth of a pixel at this scale; the extra fifteen
+      // digits SVG would otherwise carry are ~20KB of markup across 600 rects
+      x: round(x(from) - CELL / 2),
+      y: round(y(element.z) - CELL / 2),
+      w: round((to - from + 1) * CELL),
+    }))
+);
+
+/** The ones that actually occur, one mark each. */
+const natural = shown.flatMap((element) =>
+  element.natural.map((n) => ({ n, z: element.z, slow: element.z >= 26 && element.z <= 83 }))
+);
+
+/* ---- the stretch the slow path walks --------------------------------
+   Not a ribbon. An outline through min and max natural N per element
+   sawtooths violently, because odd-numbered elements almost always have
+   exactly one stable isotope and even-numbered ones have several — which is
+   a real and interesting effect, and reads as noise when you draw a polygon
+   round it. The marks themselves already are the valley; the slow path's
+   stretch is said by tinting them instead. */
+const S_FROM = 26; // iron: where fusion stopped
+const S_TO = 83; // bismuth: where the slow path stops
+
+/** The odd-even effect, counted rather than claimed. */
+const heavyNatural = shown.filter((e) => e.z >= S_FROM && e.z <= S_TO && e.natural.length > 0);
+const evenAvg =
+  heavyNatural.filter((e) => e.z % 2 === 0).reduce((s2, e) => s2 + e.natural.length, 0) /
+  Math.max(1, heavyNatural.filter((e) => e.z % 2 === 0).length);
+const oddAvg =
+  heavyNatural.filter((e) => e.z % 2 === 1).reduce((s2, e) => s2 + e.natural.length, 0) /
+  Math.max(1, heavyNatural.filter((e) => e.z % 2 === 1).length);
+
+/* ---- the neutron-rich edge of everything measured --------------------- */
+const edge = shown
+  .filter((e) => e.z >= S_FROM)
+  .map((e) => ({ z: e.z, n: Math.min(e.edgeN, N_MAX) }));
+const edgePath = edge
+  .map((e, i) => `${i ? 'L' : 'M'}${round(x(e.n) + CELL / 2)} ${round(y(e.z))}`)
+  .join('');
+
+/** The rapid path: beyond the edge, and drawn as beyond it. Its width is a
+    schematic dozen neutrons; its LEFT boundary is the real table edge. */
+const R_WIDTH = 13;
+const rPath =
+  edgePath +
+  [...edge]
+    .reverse()
+    .map((e) => `L${round(x(Math.min(e.n + R_WIDTH, N_MAX)) + CELL / 2)} ${round(y(e.z))}`)
+    .join('') +
+  'Z';
+
+/* ---- textbook magic numbers. Not in the download; stated as what they are. */
+const N_MAGIC = [50, 82, 126];
+const Z_MAGIC = [50, 82];
+
+/* ---- nuclides the prose names, located from the data rather than typed ---- */
+const nameOf = (z: number) => shown.find((e) => e.z === z)?.symbol ?? '';
+/* Every mark lies on the same diagonal, so a label placed beside its own cell
+   lands on its neighbours — which is what was happening: gold sat on the
+   platinum isotopes, lead sat on bismuth, and a decay arrow ran through both.
+   Each label is now carried out of the band along a leader running up and to
+   the left, which is the one direction with room. `out` is how many steps; the
+   assertion below checks the endpoint actually lands in clear space rather
+   than trusting that it does.
+
+   Lead-208 is gone. It shared a neutron number with bismuth-209, so the two
+   could never be separated, and this chapter names bismuth, not lead — the
+   doubly-closed shell they share is said on the bismuth label instead. */
+const marked = [
+  { z: 26, a: 56, out: 9, note: 'where fusion stopped' },
+  { z: 53, a: 127, out: 11, note: 'in your thyroid' },
+  { z: 79, a: 197, out: 13, note: '' },
+  { z: 83, a: 209, out: 16, note: 'the slow path stops, on the closed shell' },
+  { z: 92, a: 238, out: 0, note: 'rapid path only' },
+].map((m) => {
+  const n = m.a - m.z;
+  // up and left, or — for uranium, which has superheavy territory above it —
+  // straight out to the right, where the chart has already ended
+  const lz = m.out ? m.z + m.out : m.z;
+  const ln = m.out ? n - m.out : n + 4;
+  return { ...m, n, lz, ln, symbol: nameOf(m.z), anchor: m.out ? ('end' as const) : ('start' as const) };
+});
+
+/** Leftmost nuclide the table carries for an element — the proton-rich shore. */
+const shoreOf = (z: number) => {
+  const element = shown.find((e) => e.z === z);
+  return element && element.known.length ? element.known[0][0] : Infinity;
+};
+for (const m of marked) {
+  if (!m.out) continue;
+  if (m.ln >= shoreOf(m.lz) - 2) {
+    throw new Error(
+      `[stardust] the label for ${m.symbol}-${m.a} lands at N=${m.ln}, Z=${m.lz}, which is ` +
+        `inside the nuclide field (that row starts at N=${shoreOf(m.lz)}). Increase its ` +
+        `\`out\`, or the label will print on top of the data it is naming.`
+    );
+  }
+}
+
+/* ---- β⁻ decay runs back up-left, exactly one step per decay ----------- */
+/* β⁻ decay: N→N−1, Z→Z+1, so exactly one step up and one step left per decay.
+   Each arrow now STOPS where it first reaches a nuclide that exists in nature,
+   rather than running a fixed ten steps and overshooting into the marks. The
+   rows are chosen to sit clear of the labelled nuclides. */
+const naturalMax = new Map(shown.map((e) => [e.z, e.natural.length ? Math.max(...e.natural) : -1]));
+const decays = [34, 48, 64].map((z) => {
+  const at = edge.find((e) => e.z === z);
+  const n = (at?.n ?? 100) + 8;
+  let steps = 1;
+  while (steps < 26 && n - steps > (naturalMax.get(z + steps) ?? -1)) steps++;
+  const hx = x(n - steps);
+  const hy = y(z + steps);
+  return {
+    d: `M${round(x(n))} ${round(y(z))}L${round(hx)} ${round(hy)}`,
+    head: `M${round(hx + CELL * 2.4)} ${round(hy + CELL * 0.3)}L${round(hx)} ${round(
+      hy
+    )}L${round(hx + CELL * 0.3)} ${round(hy + CELL * 2.4)}`,
+  };
+});
+
+const nTicks = [0, 20, 40, 60, 80, 100, 120, 140, 160];
+const zTicks = [0, 20, 40, 60, 80];
+---
+
+<div class="nc">
+  <svg viewBox={`0 0 ${W} ${H}`} role="presentation">
+    <!-- ---- territory: everything in the evaluated table ---- -->
+    <g class="known">
+      {territory.map((r) => <rect x={r.x} y={r.y} width={r.w} height={round(CELL)} />)}
+    </g>
+
+    <!-- ---- shell closures ---- -->
+    {
+      N_MAGIC.map((n) => (
+        <>
+          <line class="magic" x1={x(n)} y1={TOP - 20} x2={x(n)} y2={Z0} />
+          <text class="lbl magic-lbl" x={x(n)} y={TOP - 26} text-anchor="middle">
+            N = {n}
+          </text>
+        </>
+      ))
+    }
+    {
+      Z_MAGIC.map((z) => (
+        <>
+          <line class="magic" x1={PL} y1={y(z)} x2={PR} y2={y(z)} />
+          <text class="lbl magic-lbl" x={PR - 6} y={y(z) - 8} text-anchor="end">
+            Z = {z}
+          </text>
+        </>
+      ))
+    }
+    <text class="magic-note" x={x(126)} y={TOP - 44} text-anchor="middle">
+      closed shells — both paths stall here, and the elements pile up
+    </text>
+
+    <!-- ---- N = Z ---- -->
+    <line class="nz" x1={x(0)} y1={y(0)} x2={x(Z_MAX)} y2={y(Z_MAX)} />
+    <text class="lbl nz-lbl" x={x(Z_MAX) + 8} y={y(Z_MAX) - 8}>N = Z</text>
+
+    <!-- ---- the natural nuclides, one mark each ---- -->
+    <g class="nat">
+      {
+        natural.map((d) => (
+          <rect
+            class={d.slow ? 'slow' : undefined}
+            x={round(x(d.n) - CELL / 2 + 0.8)}
+            y={round(y(d.z) - CELL / 2 + 0.8)}
+            width={round(CELL - 1.6)}
+            height={round(CELL - 1.6)}
+          />
+        ))
+      }
+    </g>
+
+    <!-- ---- the edge of measurement, and what lies past it ---- -->
+    <path class="rpath" d={rPath} />
+    <path class="edge" d={edgePath} />
+    {
+      decays.map((d) => (
+        <>
+          <path class="decay" d={d.d} />
+          <path class="decay-head" d={d.head} />
+        </>
+      ))
+    }
+
+    <!-- ---- the nuclides the chapter names ---- -->
+    {
+      marked.map((m) => (
+        <>
+          <line
+            class="mark-leader"
+            x1={x(m.n) + (m.out ? -CELL * 0.7 : CELL * 0.7)}
+            y1={y(m.z) + (m.out ? -CELL * 0.7 : 0)}
+            x2={x(m.ln) + (m.out ? CELL * 0.6 : -CELL * 0.6)}
+            y2={y(m.lz) + (m.out ? CELL * 0.6 : 0)}
+          />
+          <rect
+            class="mark-cell"
+            x={x(m.n) - CELL / 2 - 1.5}
+            y={y(m.z) - CELL / 2 - 1.5}
+            width={CELL + 3}
+            height={CELL + 3}
+          />
+          <text class="mark-lbl" x={x(m.ln)} y={y(m.lz)} text-anchor={m.anchor}>
+            {m.symbol}-{m.a}
+          </text>
+          {m.note && (
+            <text class="mark-note" x={x(m.ln)} y={y(m.lz) + 15} text-anchor={m.anchor}>
+              {m.note}
+            </text>
+          )}
+        </>
+      ))
+    }
+
+    <!-- ---- axes ---- -->
+    <line class="axis" x1={PL} y1={Z0} x2={PR} y2={Z0} />
+    <line class="axis" x1={PL} y1={Z0} x2={PL} y2={TOP} />
+    {
+      nTicks.map((n) => (
+        <text class="lbl tiny" x={x(n)} y={Z0 + 20} text-anchor="middle">
+          {n}
+        </text>
+      ))
+    }
+    {
+      zTicks.map((z) => (
+        <text class="lbl tiny" x={PL - 10} y={y(z) + 4} text-anchor="end">
+          {z}
+        </text>
+      ))
+    }
+    <text class="lbl axis-title" x={(PL + PR) / 2} y={Z0 + 42} text-anchor="middle">
+      neutrons in the nucleus →
+    </text>
+    <text class="lbl axis-title" x={PL - 10} y={TOP - 26} text-anchor="start">↑ protons</text>
+
+    <!-- ---- said on the drawing, in the quarter physics leaves empty ---- -->
+    <g class="say">
+      <text class="say-h" x={PL + 28} y={TOP + 30}>The chart of nuclides</text>
+      <text class="say-p" x={PL + 28} y={TOP + 54}>
+        All {totals.known.toLocaleString('en-GB')} nuclides in the evaluated table, faint.
+      </text>
+      <text class="say-p" x={PL + 28} y={TOP + 72}>
+        The {totals.natural} that occur in nature, solid.
+      </text>
+
+      <line class="say-leader" x1={PL + 34} y1={y(56) + 6} x2={x(78)} y2={y(56)} />
+      <text class="say-h sm" x={PL + 28} y={y(56) - 44}>The slow path stays in the valley</text>
+      <text class="say-p" x={PL + 28} y={y(56) - 24}>
+        A neutron every few thousand years, so anything unstable has
+      </text>
+      <text class="say-p" x={PL + 28} y={y(56) - 6}>
+        decayed before the next one arrives. It never leaves the nuclides
+      </text>
+      <text class="say-p" x={PL + 28} y={y(56) + 12}>
+        that exist in nature — and at bismuth it stops.
+      </text>
+    </g>
+
+    <g class="say">
+      <text class="say-h sm" x={x(108)} y={y(40)}>The rapid path is off the table</text>
+      <text class="say-p" x={x(108)} y={y(40) + 20}>
+        Neutrons arrive faster than anything can decay, so nuclei are
+      </text>
+      <text class="say-p" x={x(108)} y={y(40) + 38}>
+        driven past the edge of everything measured. For{' '}
+        {totals.heavyElementsBeyondTable} of the {totals.heavyElements} elements from
+      </text>
+      <text class="say-p" x={x(108)} y={y(40) + 56}>
+        iron to uranium the table runs out while the neutron separation
+      </text>
+      <text class="say-p" x={x(108)} y={y(40) + 74}>
+        energy is still above the {(waitingPoint / 1000).toFixed(1)} MeV of a waiting point.
+      </text>
+      <text class="say-p" x={x(108)} y={y(40) + 92}>
+        Nobody has ever held one of these nuclei.
+      </text>
+      <text class="anno" x={x(108)} y={y(40) + 122}>
+        The thin diagonals are β⁻ decay carrying it back:
+      </text>
+      <text class="anno" x={x(108)} y={y(40) + 142}>
+        one neutron becomes one proton, one step up and left.
+      </text>
+
+      <text class="say-p" x={x(108)} y={y(40) + 176}>
+        On 17 August 2017 two neutron stars merged 130 million light years
+      </text>
+      <text class="say-p" x={x(108)} y={y(40) + 194}>
+        away and the glow that followed carried this signature. It is the
+      </text>
+      <text class="say-p" x={x(108)} y={y(40) + 212}>
+        only time anyone has watched it happen — once.
+      </text>
+    </g>
+
+    <text class="lbl edge-lbl" x={x(53)} y={y(26) + 34}>
+      ↖ the neutron-rich edge of the evaluated table
+    </text>
+
+    {/* Two facts the marks show that nothing else in the document says. */}
+    <text class="say-p" x={x(46)} y={y(11)}>
+      The rows are ragged for a reason: an even-numbered element has
+    </text>
+    <text class="say-p" x={x(46)} y={y(11) + 18}>
+      {evenAvg.toFixed(1)} naturally occurring isotopes on average, an odd-numbered one
+    </text>
+    <text class="say-p" x={x(46)} y={y(11) + 36}>
+      {oddAvg.toFixed(1)}. Nucleons prefer to pair off, all the way up the table.
+    </text>
+  </svg>
+
+  <div class="ex-fig-data" tabindex="0">
+    <table>
+      <caption>
+        Naturally occurring nuclides by element (NUBASE2020 / AME2020, via IAEA)
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Element</th>
+          <th scope="col">Protons</th>
+          <th scope="col">Neutron numbers occurring in nature</th>
+          <th scope="col">Most neutron-rich nuclide in the table</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          shown
+            .filter((e) => e.natural.length > 0)
+            .map((e) => (
+              <tr>
+                <th scope="row">{e.symbol}</th>
+                <td>{e.z}</td>
+                <td>{e.natural.join(', ')}</td>
+                <td>N = {e.edgeN}</td>
+              </tr>
+            ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .nc svg {
+    overflow: visible;
+  }
+  .nc .tiny {
+    font-size: var(--l-sm);
+    fill: var(--muted);
+  }
+  .nc .axis {
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .nc .axis-title {
+    fill: var(--ink-soft);
+  }
+
+  /* Everything the table carries. Territory, not marks — three thousand
+     individual squares is a hundred kilobytes of SVG and reads as a smear
+     anyway; contiguous runs read as exactly what they are, a region. */
+  .nc .known rect {
+    fill: var(--ink);
+    fill-opacity: 0.1;
+  }
+  /* The ones that are actually out there. These get to be things. */
+  .nc .nat rect {
+    fill: var(--ink);
+    fill-opacity: 0.85;
+  }
+
+  /* From iron to bismuth: the stretch the slow path walks, said on the
+     nuclides themselves rather than by drawing a shape around them. */
+  .nc .nat rect.slow {
+    fill: var(--c-verse);
+    fill-opacity: 1;
+  }
+
+  .nc .edge {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  /* Contested, and drawn as contested: bounded, dashed and unfilled, because
+     there is nothing inside it that anyone has measured. */
+  .nc .rpath {
+    fill: none;
+    stroke: var(--ink-soft);
+    stroke-width: 1;
+    stroke-dasharray: 5 3;
+  }
+  .nc .decay {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1.25;
+    stroke-dasharray: 3 2;
+  }
+  .nc .decay-head {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1.25;
+  }
+
+  .nc .magic {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .nc .magic-lbl {
+    fill: var(--ink-soft);
+  }
+  .nc .magic-note {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    fill: var(--muted);
+  }
+  .nc .nz {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+  .nc .nz-lbl,
+  .nc .edge-lbl {
+    fill: var(--muted);
+  }
+
+  .nc .mark-cell {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1.5;
+  }
+  .nc .mark-lbl {
+    font-family: var(--mono);
+    font-size: var(--l-md);
+    letter-spacing: 0.04em;
+    fill: var(--red);
+    font-variant-numeric: lining-nums tabular-nums;
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3;
+  }
+  .nc .mark-note {
+    font-family: var(--body);
+    font-style: italic;
+    font-size: var(--t-xs);
+    fill: var(--red);
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3;
+  }
+  .nc .mark-leader {
+    stroke: var(--red);
+    stroke-width: 1;
+  }
+
+  /* Said on the drawing, in the two corners physics leaves empty — no
+     nucleus can exist in either, so the words cost no data. */
+  .nc .say-h {
+    font-family: var(--display);
+    font-size: var(--t-lg);
+    font-weight: 600;
+    fill: var(--ink);
+  }
+  .nc .say-h.sm {
+    font-size: var(--t-md);
+  }
+  .nc .say-p {
+    font-family: var(--body);
+    font-size: var(--t-xs);
+    fill: var(--ink-soft);
+  }
+  .nc .say-leader {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .nc .say text,
+  .nc .anno {
+    paint-order: stroke;
+    stroke: var(--paper);
+    stroke-width: 3.5;
+  }
+
+  @media (max-width: 760px) {
+    .nc .say-p,
+    .nc .magic-note {
+      display: none;
+    }
+  }
+</style>

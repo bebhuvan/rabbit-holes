@@ -16,26 +16,31 @@
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
       U+2212,U+2215,U+FEFF,U+FFFD;
   }
+  /* EB Garamond is the reading face, and it is subset here from the upstream
+     variable font rather than taken from Google's CDN. Google's latin subset
+     strips the OpenType layout tables: on their file `font-variant-caps` and
+     `font-variant-numeric` are both no-ops, which would have made the small
+     caps this design now runs on silently impossible. Rebuild with:
+
+       pyftsubset EBGaramond[wght].ttf \
+         --unicodes=<the range below> \
+         --layout-features=kern,liga,clig,calt,ccmp,locl,mark,mkmk,\
+                           smcp,c2sc,onum,lnum,tnum,pnum,case,frac \
+         --flavor=woff2 --no-hinting --desubroutinize
+
+     Source: github.com/google/fonts/ofl/ebgaramond (OFL). */
   @font-face{
-    font-family:'Newsreader';
-    src:url('/fonts/newsreader-latin.6078fc14.woff2') format('woff2');
-    font-weight:400;font-style:normal;font-display:swap;
+    font-family:'EB Garamond';
+    src:url('/fonts/eb-garamond-latin.6bdf26cf.woff2') format('woff2');
+    font-weight:400 800;font-style:normal;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
       U+2212,U+2215,U+FEFF,U+FFFD;
   }
   @font-face{
-    font-family:'Newsreader';
-    src:url('/fonts/newsreader-600-latin.d9c885ab.woff2') format('woff2');
-    font-weight:600;font-style:normal;font-display:swap;
-    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
-      U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
-      U+2212,U+2215,U+FEFF,U+FFFD;
-  }
-  @font-face{
-    font-family:'Newsreader';
-    src:url('/fonts/newsreader-italic-latin.b8d22045.woff2') format('woff2');
-    font-weight:400;font-style:italic;font-display:swap;
+    font-family:'EB Garamond';
+    src:url('/fonts/eb-garamond-italic-latin.c9d5e8b2.woff2') format('woff2');
+    font-weight:400 800;font-style:italic;font-display:swap;
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,
       U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,
       U+2212,U+2215,U+FEFF,U+FFFD;
@@ -50,10 +55,15 @@
   }
 
   /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
-     glyph, which suppresses fallback. */
+     glyph, which suppresses fallback.
+
+     This used to point at the full Newsreader latin file: 22.7KB fetched over
+     the wire to draw an en-dash. It is now a six-glyph subset of the reading
+     face at 1.1KB, which is also the more correct answer — a dash borrowed
+     into a Bodoni headline should come from the book's own text face. */
   @font-face{
     font-family:'DisplayPunct';
-    src:url('/fonts/newsreader-latin.6078fc14.woff2') format('woff2');
+    src:url('/fonts/eb-garamond-punct.d58294dc.woff2') format('woff2');
     font-weight:400;font-style:normal;font-display:swap;
     unicode-range:U+2010-2015;
   }
@@ -67,9 +77,21 @@
     --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
     --c-verse:#5F9E79;--c-practical:#B0705A;
     --maxw:1240px;--rail-w:272px;
+    /* ---- the stream's composition ----
+       One box governs the home column: a hanging gutter for the folio
+       numeral, then the reading measure. Section rules stop at the box
+       edge rather than running to the column edge, so the page has a
+       right margin it chose rather than one left over. */
+    --stream-pad:3.2rem;
+    --folio-gutter:5.4rem;
+    --folio-gap:1.7rem;
+    --stream-box:calc(var(--folio-gutter) + var(--folio-gap) + var(--measure));
     --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
     --mono:'Spline Sans Mono',ui-monospace,monospace;
-    --body:'Newsreader',Georgia,serif;
+    --body:'EB Garamond',Georgia,serif;
+    /* Editorial labels are set in small caps of the reading face. Data and
+       machinery stay in mono. See the note above --label-sc. */
+    --sc:'EB Garamond',Georgia,serif;
     --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
   }
   @media (prefers-color-scheme:dark){
@@ -88,9 +110,12 @@
     --c-verse:#5F9E79;--c-practical:#B0705A;}
 
   /* Display optical size pinned — Bodoni's display cut has hairlines too
-     fine to survive at these sizes, especially on dark. */
+     fine to survive at these sizes, especially on dark. The value lives in
+     tokens.css; the spans in this list (.folio-big, .hand-say) are not
+     headings, so they need naming here. Lining figures for the same reason
+     the headings take them: a folio number is a numeral, not a word. */
   .brand .mark,.thesis h1,.folio-big,.entry h2,.hand-say{
-    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+    font-optical-sizing:none;font-variation-settings:'opsz' var(--opsz-display);
   }
 
   /* ==========================================================
@@ -114,11 +139,17 @@
      ========================================================== */
 
   *{margin:0;padding:0;box-sizing:border-box}
+  /* 22px, not 20. EB Garamond's x-height is roughly 12% shorter than
+     Newsreader's, so matching the old px size would have shrunk the apparent
+     reading size by about a step. Set to hold the same optical size. */
   body{background:var(--paper);color:var(--ink);font-family:var(--body);
-    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-size:22px;line-height:1.62;font-optical-sizing:auto;
     font-feature-settings:"liga" 1,"onum" 1;font-kerning:normal;font-synthesis:none;
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  ::selection{background:var(--red);color:#fff}
+  /* A wash rather than a flag. Solid --red behind white reversed a whole
+     paragraph out on selection, which is the loudest event on a page whose
+     entire argument is that red is used sparingly. */
+  ::selection{background:var(--red-soft);color:var(--ink)}
   a{color:inherit}
 
   /* ============ MASTHEAD ============
@@ -132,24 +163,41 @@
      - active item is marked with a hairline under the word itself, not a
        floating tab bar.
      - a double rule closes the head — a book device rather than a border. */
-  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:1.7rem 2.6rem 1.35rem;
     display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
   .masthead{border-bottom:3px double var(--rule-strong)}
   .brand{text-decoration:none;line-height:1}
-  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  /* The wordmark carries the head, so it is set a step up and the strapline
+     tucked in tight beneath it — the two read as one lockup rather than as a
+     title with a caption floating under it. */
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;
+    font-size:var(--t-2xl);line-height:1;letter-spacing:-.022em}
   .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
     font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
   .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
     font-style:normal;margin:0 .25rem}
-  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
-    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
-  .masthead nav a{color:var(--muted);text-decoration:none}
-  .masthead nav a:hover{color:var(--ink)}
+  /* Six words of tracked-out mono are a texture, not a menu. Set a step
+     smaller than the meta they sit beside so the wordmark clearly leads,
+     and let the destinations carry the tracking rather than the size. */
+  /* Sentence case in the reading face. It was mono uppercase, then small-cap
+     uppercase — both of which make six ordinary words shout. A book's running
+     head names its destinations the way the page names anything else. */
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--body);
+    font-size:var(--t-base);letter-spacing:0;text-transform:none}
+  /* --muted is the colour of a count in the margin, and the nav set in it read
+     as five disabled items beside one live one. Navigation is not marginalia. */
+  .masthead nav a{color:var(--ink-soft);text-decoration:none;
+    transition:color var(--dur) var(--ease)}
+  .masthead nav a:hover{color:var(--red)}
   .masthead nav a.on{color:var(--ink);text-decoration:underline;
-    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:.36em}
+  /* The lamp had a 1.85rem gutter and its own rule, which left it stranded in
+     the far corner looking like a stray glyph. Brought in tight against the
+     nav; the rule alone is enough to say it is a control, not a destination. */
   .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
-    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
-    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+    font-family:var(--flourish);font-size:var(--t-md);line-height:1;padding:0 0 0 1.1rem;
+    margin-left:-.55rem;border-left:1px solid var(--rule-strong);
+    transition:color var(--dur) var(--ease)}
   .lamp:hover{color:var(--red)}
 
   .shell{max-width:var(--maxw);margin:0 auto;display:grid;
@@ -179,7 +227,7 @@
     line-height:1.45;margin-bottom:1.4rem}
   .index{list-style:none;font-family:var(--mono);font-size:var(--l-lg)}
   .index a{display:flex;align-items:baseline;gap:.5rem;padding:.32rem .3rem;
-    text-decoration:none;color:var(--ink-soft)}
+    text-decoration:none;color:var(--ink-soft);transition:color var(--dur) var(--ease)}
   /* head names never wrap — a wrapped name loses its dotted leader and
      breaks the ledger rhythm the whole rail depends on */
   .index a>span:first-child{white-space:nowrap}
@@ -216,12 +264,15 @@
      an unexplained decoration. Counts are real. */
   .kinds{margin-top:.2rem;list-style:none;font-family:var(--mono);font-size:var(--l-md)}
   .kinds li{color:var(--ink-soft)}
-  .kinds a{display:flex;align-items:baseline;gap:.55rem;padding:.24rem .3rem;
-    color:inherit;text-decoration:none}
+  .kinds a{display:flex;align-items:baseline;gap:.65rem;padding:.24rem .3rem;
+    color:inherit;text-decoration:none;transition:color var(--dur) var(--ease)}
   .kinds a:hover{color:var(--red)}
+  /* Right-aligned and tabular, so five counts of one, two and three digits
+     form a numeric column instead of a ragged edge. */
   .kinds .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
-    font-optical-sizing:none;font-variation-settings:'opsz' 11;
-    font-variant-numeric:lining-nums;line-height:1;min-width:2.1rem}
+    font-optical-sizing:none;font-variation-settings:'opsz' var(--opsz-display);
+    font-variant-numeric:lining-nums tabular-nums;line-height:1;
+    min-width:2.4rem;text-align:right}
   .kinds .kn{flex:1}
   .kinds .kc{color:var(--muted);font-size:var(--l-md);font-variant-numeric:tabular-nums}
 
@@ -238,62 +289,122 @@
     color:var(--ink-soft)}
   .study-note-link{display:block;margin-top:.65rem;font-family:var(--mono);font-size:var(--l-sm);
     letter-spacing:var(--tr-label);color:var(--red)}
-  .study-note-callout:hover .study-note-link{text-decoration:underline;text-underline-offset:4px}
+  .study-note-callout:hover .study-note-link{text-decoration:underline;text-underline-offset:var(--ul-offset)}
   .rail-follow{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:1.25rem;
     font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);color:var(--muted)}
   .rail-follow a{text-decoration:none}
   .rail-follow a:hover{color:var(--red)}
 
-  /* ============ STREAM ============ */
+  /* ============ STREAM ============
+     Every block in the stream is capped at --stream-box, so the hairlines
+     that separate them all stop on the same vertical. Before this, rules ran
+     the full width of the column while the type stopped wherever it stopped,
+     and the right side of the page read as unfilled rather than as margin. */
   .stream{min-width:0}
-  .thesis{padding:4rem 3.2rem 2.8rem;border-bottom:1px solid var(--rule)}
-  .thesis .kicker{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-eyebrow);
-    text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+  .eyebrow,.entry,.stacks,.stream-end{
+    max-width:calc(var(--stream-box) + var(--stream-pad) * 2);
+  }
+
+  /* ---- THE HEAD OF THE BOOK ----
+     The one block that is NOT held to the measure box. Everything below it is
+     a folio and reads at 66 characters; this is the title page, and a title
+     page that stops where the body copy stops has no presence — it was boxed
+     to 618px with 350px of dead column beside it, which is what made the
+     landing feel like a narrow ribbon.
+
+     Its rule runs the full column too, and that is the hierarchy: the page's
+     double rule closes the masthead, this single full-width rule closes the
+     head, and the folio rules below stop at the measure. Three widths, three
+     sizes of division. */
+  .thesis{padding:4.6rem var(--stream-pad) 3.2rem;border-bottom:1px solid var(--rule)}
+  .thesis .kicker{font-size:var(--t-base);color:var(--muted);margin-bottom:1.5rem;
+    font-variant-numeric:lining-nums}
   .thesis .kicker b{color:var(--red);font-weight:600}
-  .thesis h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.05;
-    letter-spacing:var(--tr-display);margin-bottom:1.1rem}
+  /* Sized to fit the box rather than to a scale step: the hero is one sentence
+     per line by design, and at the full --t-3xl the second line overran the
+     measure box by a few pixels and broke into three. */
+  /* Sized against the column, not against a scale step: one sentence per line
+     is the point, so the ceiling is whatever keeps the longer of the two on
+     one line at the narrowest desktop width. */
+  .thesis h1{font-family:var(--display);font-weight:600;
+    font-size:clamp(2.1rem,4.8vw,3.25rem);line-height:1.06;
+    letter-spacing:var(--tr-display);margin-bottom:1.5rem}
   .thesis h1 span{display:block}
-  .thesis .lede{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);max-width:34em}
-  .thesis .lede a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-soft)}
-  .thesis-links{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.5rem}
-  .thesis-links a{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
-    color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule-strong);
-    padding-bottom:.18rem}
-  .thesis-links a:hover{color:var(--red);border-bottom-color:var(--red)}
+  .thesis .lede{font-size:var(--t-body);line-height:1.6;color:var(--ink-soft);max-width:var(--measure)}
+  .thesis .lede a{color:var(--red);text-decoration:underline;
+    text-decoration-color:var(--red-soft);text-decoration-thickness:1px;
+    text-underline-offset:var(--ul-offset);transition:text-decoration-color var(--dur) var(--ease)}
+  .thesis .lede a:hover{text-decoration-color:var(--red)}
+  /* Two invitations, not two buttons. In mono with a boxy underline they read
+     as form controls; in the book's small caps with the arrow in the
+     collector's red, they read as offers of passage — which under the two-ink
+     rule is exactly what they are. */
+  /* The rail already has a word for this: .wayin sets an offer of passage in
+     italic serif with a red manicule. These are the same kind of thing, so
+     they get the same voice. Mono made them look like form controls; small
+     caps made them shout. An invitation is written, not labelled. */
+  .thesis-links{display:flex;gap:2.4rem;flex-wrap:wrap;margin-top:2.3rem}
+  .thesis-links a{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    line-height:1.3;color:var(--ink);text-decoration:underline;
+    text-decoration-color:transparent;text-decoration-thickness:var(--ul-thick);
+    text-underline-offset:var(--ul-offset);
+    transition:color var(--dur) var(--ease),text-decoration-color var(--dur) var(--ease)}
+  .thesis-links a span{color:var(--red);font-style:normal;margin-left:.4rem}
+  .thesis-links a:hover{color:var(--red);text-decoration-color:var(--ul-red)}
 
   .eyebrow{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
-    color:var(--muted);padding:2rem 3.2rem .4rem;display:flex;align-items:center;gap:.6rem}
+    color:var(--muted);padding:2.6rem var(--stream-pad) .2rem;display:flex;align-items:center;gap:.6rem}
   .eyebrow .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-base)}
 
-  /* ---- the folio ---- */
-  .entry{padding:2.2rem 3.2rem 2.4rem;border-bottom:1px solid var(--rule)}
-  .runhead{display:flex;align-items:baseline;gap:1rem;margin-bottom:.7rem}
-  .folio-big{font-family:var(--display);font-weight:600;font-size:var(--t-2xl);line-height:1;
-    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display)}
-  .runhead .meta{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
-    text-transform:uppercase;color:var(--muted);display:flex;gap:.9rem}
-  .entry h2{font-family:var(--display);font-weight:600;font-size:var(--t-xl);line-height:1.18;
-    letter-spacing:var(--tr-display);margin-bottom:.75rem}
-  .entry h2 a{text-decoration:none}
+  /* ---- the folio ----
+     Two columns: the numeral hangs in the gutter with its kind beneath it,
+     and the leaf begins on the measure. The gutter is the same device the
+     folio page uses for its standing rail, so an entry in the stream and the
+     entry opened full-page are recognisably the same object. */
+  .entry{display:grid;grid-template-columns:var(--folio-gutter) minmax(0,var(--measure));
+    column-gap:var(--folio-gap);align-items:start;
+    padding:2.6rem var(--stream-pad) 2.9rem;border-bottom:1px solid var(--rule)}
+  /* The numeral's cap aligns with the date line that opens the leaf, so the
+     gutter and the leaf share a top edge as well as a baseline grid. */
+  .runhead{text-align:right;padding-top:.12rem}
+  .folio-big{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-2xl);line-height:1;
+    font-variant-numeric:lining-nums tabular-nums;letter-spacing:var(--tr-display)}
+  .folio-kind{display:block;margin-top:.5rem;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+  .entry-body{min-width:0}
+  .entry-date{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);margin-bottom:.55rem}
+  .entry h2{font-family:var(--display);font-weight:600;font-size:var(--t-lg);line-height:1.2;
+    letter-spacing:var(--tr-display);margin-bottom:.8rem}
+  .entry h2 a{text-decoration:none;transition:color var(--dur) var(--ease)}
   .entry h2 a:hover{color:var(--red)}
 
   /* THE HAND — 2 to 5 words, in red, and usually carrying the source link.
      This is the single most common shape in the corpus. */
-  .hand-line{margin-bottom:.9rem;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
+  .hand-line{margin-bottom:1rem;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
   .hand-say{font-family:var(--display);font-style:italic;font-weight:500;
     font-size:var(--t-lg);line-height:1.2;color:var(--red)}
-  .hand-say a{text-decoration:none;border-bottom:1px solid var(--red-soft)}
+  .hand-say a{text-decoration:underline;text-decoration-color:var(--red-soft);
+    text-decoration-thickness:1px;text-underline-offset:var(--ul-offset);
+    transition:text-decoration-color var(--dur) var(--ease)}
+  .hand-say a:hover{text-decoration-color:var(--red)}
   .hand-src{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);color:var(--muted)}
 
-  blockquote{margin:0 0 .9rem;padding-left:1.3rem;border-left:2px solid var(--rule-strong);
+  /* The quote's rule hangs into the gutter so the quoted line starts on the
+     same vertical as the title above it. Indenting the rule instead would
+     put a second left edge inside a block that already has one. */
+  blockquote{margin:0 0 1rem;padding-left:1.3rem;border-left:2px solid var(--rule-strong);
     font-size:var(--t-body);line-height:1.66;color:var(--ink)}
+  .entry blockquote{margin-left:-1.3rem}
   blockquote p+p{margin-top:.75rem}
   blockquote cite{display:block;margin-top:.6rem;font-style:normal;font-family:var(--mono);
     font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
 
-  .entry p.say{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);margin-bottom:.8rem}
+  .entry p.say{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);margin-bottom:.9rem}
   .entry p.say a{color:var(--ink);text-decoration:underline;
-    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+    text-decoration-color:var(--rule-strong);text-underline-offset:var(--ul-offset);
+    transition:text-decoration-color var(--dur) var(--ease)}
+  .entry p.say a:hover{text-decoration-color:var(--ink)}
 
   /* verse */
   .verse{font-size:var(--t-body);line-height:1.75}
@@ -301,8 +412,8 @@
 
   /* a long entry is truncated, and says how long it is */
   .more{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--red);
-    text-decoration:none;display:inline-block;margin-top:.3rem}
-  .more:hover{text-decoration:underline;text-underline-offset:4px}
+    text-decoration:none;display:inline-block;margin-top:.4rem}
+  .more:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
 
   /* embed placeholder */
   /* embeds sit at the measure of the text, not the width of the column —
@@ -312,36 +423,55 @@
     font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
     text-transform:uppercase;color:var(--muted)}
 
-  /* footer of the entry: heads + threads, quiet */
-  .entry-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.9rem;
+  /* Footer of the entry: heads + threads, quiet.
+     The heads were bordered chips, which is the one piece of interface
+     furniture on a page made entirely of hairlines and type. They are set as
+     marked-up words instead — the same red mark the folio page uses for the
+     heads in its right margin, so both surfaces name a subject the same way. */
+  .entry-foot{display:flex;align-items:baseline;gap:1.15rem;flex-wrap:wrap;margin-top:1.2rem;
     font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
-  .entry-foot .head{color:var(--red);text-decoration:none;border:1px solid var(--rule-strong);
-    border-radius:2px;padding:.14rem .45rem}
-  .entry-foot .head:hover{border-color:var(--red)}
-  .entry-foot .thr{color:var(--muted);text-decoration:none;margin-left:auto}
+  /* Sentence case in the reading face. Small caps here were a third uppercase
+     treatment on a card that already has an eyebrow above it, and a subject is
+     just a word — "Trade" reads as Trade. The tally beside it keeps the mono
+     because it is a count. */
+  .entry-foot .head{color:var(--red);text-decoration:none;
+    font-family:var(--body);font-size:var(--t-base);letter-spacing:0;
+    transition:text-decoration-color var(--dur) var(--ease)}
+  .entry-foot .head::before{content:"·";margin-right:.42rem;color:var(--red-soft)}
+  .entry-foot .head:hover{text-decoration:underline;text-decoration-thickness:1px;
+    text-underline-offset:var(--ul-offset);text-decoration-color:var(--red-soft)}
+  .entry-foot .thr{color:var(--muted);text-decoration:none;margin-left:auto;
+    transition:color var(--dur) var(--ease)}
   .entry-foot .thr:hover{color:var(--red)}
 
   /* ---- pulled from the stacks: serendipity as a first-class module.
      The stream is reverse-chron and therefore always shows you the
      newest things; this is the door to the other 188. It is the whole
      thesis of the site expressed as one component. ---- */
-  .stacks{padding:2.4rem 3.2rem;border-bottom:1px solid var(--rule);
-    background:var(--red-wash,transparent)}
-  .stacks-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.3rem}
+  /* Marked by the book's own double rule rather than a tinted panel. The wash
+     was #FDFBFA on #FFFFFF — a panel you could only see if you knew it was
+     there, which is a panel doing nothing. The asterism carries the break. */
+  .stacks{padding:3rem var(--stream-pad) 0;border-top:3px double var(--rule-strong);
+    border-bottom:1px solid var(--rule)}
+  .stacks-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.35rem}
   .stacks-head .ast{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-md)}
   .stacks-head .t{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
     text-transform:uppercase;color:var(--muted)}
   .stacks-sub{font-family:var(--body);font-style:italic;font-size:var(--t-base);
-    color:var(--ink-soft);margin-bottom:1.4rem}
+    color:var(--ink-soft)}
   .stacks .again{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
-    color:var(--red);text-decoration:none;margin-left:auto}
-  .stacks .again:hover{text-decoration:underline;text-underline-offset:4px}
+    color:var(--red);text-decoration:none;margin-left:auto;transition:color var(--dur) var(--ease)}
+  .stacks .again:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
+  /* the nested folio keeps the section's padding; its own rule would double
+     the one the section already draws */
+  .stacks .entry{max-width:none;padding-left:0;padding-right:0;border-bottom:0}
 
-  .stream-end{display:flex;align-items:center;gap:1rem;padding:2.1rem 3.2rem 2.6rem;
+  .stream-end{display:flex;align-items:center;gap:1rem;padding:2.4rem var(--stream-pad) 3rem;
     color:var(--muted);font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
   .stream-end .flr{font-family:var(--flourish);font-size:var(--t-md);color:var(--red-soft)}
-  .stream-end a{margin-left:auto;color:var(--red);text-decoration:none}
-  .stream-end a:hover{text-decoration:underline;text-underline-offset:4px}
+  .stream-end a{margin-left:auto;color:var(--red);text-decoration:none;
+    transition:color var(--dur) var(--ease)}
+  .stream-end a:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
 
   /* Shared production additions */
   html{background:var(--paper);scroll-behavior:smooth;scrollbar-gutter:stable}
@@ -364,10 +494,20 @@
     line-height:1.65;color:var(--ink-soft)}
   .folio-media{margin:.8rem 0 1rem;max-width:var(--measure);max-height:28rem;
     object-fit:contain;border:1px solid var(--rule)}
-  .source-chip{display:inline-flex;gap:.5rem;align-items:center;margin:.15rem 0 .9rem;
+  .source-chip{display:inline-flex;gap:.5rem;align-items:baseline;margin:.15rem 0 .95rem;
     color:var(--ink-soft);font-family:var(--mono);font-size:var(--l-md);
-    letter-spacing:var(--tr-label);text-decoration:none}
+    letter-spacing:var(--tr-label);text-decoration:none;
+    transition:color var(--dur) var(--ease)}
+  .source-chip-label{color:var(--muted);text-transform:uppercase;
+    letter-spacing:var(--tr-eyebrow);font-size:var(--l-sm)}
+  .source-chip-label::after{content:"·";margin-left:.5rem;color:var(--red-soft)}
+  /* The publication reads in the book's own face, not in mono. A name is a
+     name; the machinery around it is what the mono is for. */
+  .source-chip-name{font-family:var(--body);font-size:var(--t-base);
+    letter-spacing:0;color:var(--ink-soft)}
+  .source-chip-host{color:var(--muted);font-size:var(--l-sm)}
   .source-chip:hover{color:var(--red)}
+  .source-chip:hover .source-chip-name{color:var(--red)}
   /* Standalone URLs become quiet editorial cards. Metadata is an enhancement:
      the domain, inferred title, and real link are useful before it arrives and
      remain so when a publisher blocks preview requests. */
@@ -391,22 +531,95 @@
   .link-preview-arrow{color:var(--red);font-family:var(--mono);font-size:var(--l-lg)}
   .link-preview:hover{border-color:var(--red-soft)}
   .link-preview:hover strong{color:var(--red)}
-  .twitter-embed{min-height:3.5rem;margin:2rem 0}
-  [data-tweet-embed] .twitter-tweet{margin:0;padding:1rem;border:1px solid var(--rule);
-    color:var(--ink-soft);font-style:italic}
+  /* ---- SYNDICATED EMBEDS AS PLATES ----
+     A rendered X widget is drawn in someone else's design language — system
+     sans, blue links, rounded corners, avatars — and none of it can be reached
+     from outside the widget. So it is not restyled, it is FRAMED: hairlines
+     above and below, a mono caption naming the source, and the whole thing
+     inset. The reader is told "quoted matter, in the original dress" before
+     they hit the sans-serif, which is the difference between a facsimile
+     plate in a book and a screenshot pasted into one. */
+  /* display:flow-root contains the widget. widgets.js can float what it
+     injects, and a floated iframe escaped the figure — the bottom rule rode
+     up to meet the top one and the next paragraph wrapped around the tweet. */
+  .twitter-embed{display:flow-root;min-height:3.5rem;margin:2.4rem 0;padding:0 0 .3rem;
+    border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong)}
+  .embed-caption{padding:.75rem 0 .9rem;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--muted)}
+  /* The pre-render fallback. Once widgets.js swaps in the iframe this no
+     longer applies, which is why the frame lives on the figure, not here. */
+  [data-tweet-embed] .twitter-tweet{margin:0 0 .9rem;color:var(--ink-soft);font-style:italic}
+  [data-tweet-embed] .twitter-tweet-rendered{margin:0 0 .9rem!important}
   .empty-state{padding:var(--s-9) 0;text-align:center;color:var(--ink-soft);
     font-style:italic;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
   .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;
     padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
     white-space:nowrap!important;border:0!important}
 
+  /* ==========================================================
+     THE LABEL VOICE — small caps for editorial labels, mono for data.
+     ----------------------------------------------------------
+     Every non-body element on this site used to be tracked-out uppercase
+     mono: the nav, the eyebrows, the folio meta, the captions, the kickers,
+     the footer. Uppercase mono at 10px is a UI convention, and enough of it
+     turns a book into a dashboard — it was the single biggest reason the
+     pages read as a designed system rather than as printed matter.
+
+     The split now means something:
+
+       SMALL CAPS  anything a reader READS as running head or label —
+                   Filed under, Recently kept, Folio, Source, On X, and the
+                   date line that opens a folio. The compositor's voice, in
+                   the book's own face.
+       MONO        anything that must LINE UP or be compared — the rail's
+                   counts, ledger rows, reading times, tag tallies, the
+                   hostname beside a source. Mono earns its place wherever
+                   figures form a column; nowhere else.
+
+     This only works because the reading face carries true small caps. See
+     the @font-face note at the top of this file: the CDN build of EB
+     Garamond does not, and on it every rule below would silently do nothing.
+     ========================================================== */
+  .nav-toggle,
+  .rail-label,
+  .eyebrow,
+  .entry-date,
+  .folio-kind,
+  .wayin .s,
+  .colophon .kept,
+  .stacks-head .t,
+  .page-kicker,
+  .footer-label,
+  .embed-caption,
+  .source-chip-label,
+  .link-preview-domain{
+    font-family:var(--sc);
+    font-size:var(--t-label);
+    font-variant-caps:all-small-caps;
+    font-weight:var(--w-label);
+    letter-spacing:var(--tr-label-sc);
+    text-transform:none;
+  }
+  .thesis .kicker{font-variant-caps:all-small-caps;font-size:var(--t-label);
+    letter-spacing:var(--tr-label-sc)}
+  /* the folio count is a figure, not a word: small-cap figures rendered the
+     zero at x-height and "380" read as "38o" */
+  .thesis .kicker b{font-variant-caps:normal;font-variant-numeric:lining-nums}
+  /* the eyebrow's fleuron sat on the mono baseline; small caps sit higher */
+  .eyebrow .flr,.stacks-head .ast{transform:translateY(.06em)}
+
+  @media (max-width:1100px){
+    /* The gutter narrows before the measure does — a reading column is worth
+       more than a wide hanging margin. */
+    :root{--stream-pad:2.4rem;--folio-gutter:4.4rem;--folio-gap:1.2rem}
+    .folio-big{font-size:var(--t-xl)}
+  }
+
   @media (max-width:900px){
-    :root{--rail-w:220px}
+    :root{--rail-w:220px;--stream-pad:2rem}
     .masthead-inner{padding:1.5rem 1.5rem 1.2rem}
     .masthead nav{gap:1rem}
     .rail{padding:2.3rem 1.3rem}
-    .thesis,.entry,.stacks{padding-left:2rem;padding-right:2rem}
-    .eyebrow{padding-left:2rem;padding-right:2rem}
   }
 
   @media (max-width:720px){
@@ -427,22 +640,28 @@
     .rail .rail-index,.rail .rail-kinds,.rail .rail-colophon,.rail .rail-rule,
     .rail .study-note-callout,.rail .rail-follow{display:none}
     .wayin{margin:0}
-    .thesis{padding:2.7rem 1.35rem 2.2rem}
+    /* Below the rail, the hanging gutter has nothing to hang into: the numeral
+       and its kind step back onto the text's own left edge, as one line. */
+    :root{--stream-pad:1.35rem}
+    .thesis{padding:2.7rem var(--stream-pad) 2.2rem}
     .thesis h1{font-size:clamp(2.15rem,9vw,2.6rem);line-height:1.04}
     .page-title{font-size:clamp(2.25rem,12vw,var(--t-3xl))}
-    .eyebrow{padding:1.5rem 1.35rem .25rem}
-    .entry{padding:1.65rem 1.35rem 1.8rem}
-    .folio-big{font-size:var(--t-xl)}
-    .entry h2{font-size:var(--t-lg)}
-    .runhead{gap:.75rem;align-items:center}
-    .runhead .meta{gap:.55rem;flex-wrap:wrap}
+    .eyebrow{padding:1.8rem var(--stream-pad) .25rem}
+    .entry{display:block;padding:1.8rem var(--stream-pad) 1.9rem}
+    .runhead{display:flex;align-items:baseline;gap:.75rem;text-align:left;
+      padding-top:0;margin-bottom:.15rem}
+    .folio-big{display:inline;font-size:var(--t-lg)}
+    .folio-kind{display:inline;margin-top:0}
+    .entry-date{margin-bottom:.5rem}
+    .entry h2{font-size:var(--t-md)}
+    .entry blockquote{margin-left:0}
     .entry-foot .thr{width:100%;margin:.3rem 0 0}
-    .stacks{padding:1.8rem 0 0}
-    .stacks>.stacks-head,.stacks>.stacks-sub{margin-left:1.35rem;margin-right:1.35rem}
-    .stacks .entry{padding-left:1.35rem;padding-right:1.35rem}
+    .stacks{padding:2rem 0 0}
+    .stacks>.stacks-head,.stacks>.stacks-sub{margin-left:var(--stream-pad);margin-right:var(--stream-pad)}
+    .stacks .entry{padding-left:var(--stream-pad);padding-right:var(--stream-pad)}
     .stacks-head{flex-wrap:wrap}
     .stacks .again{margin-left:0;width:100%}
-    .stream-end{padding:2rem 1.35rem 2.5rem;flex-wrap:wrap}
+    .stream-end{padding:2rem var(--stream-pad) 2.5rem;flex-wrap:wrap}
     .stream-end a{width:100%;margin-left:0}
     .page-shell{padding:2.7rem 1.35rem 4rem}
     .link-preview[data-link-preview]>a{gap:.75rem;padding:.9rem}
@@ -452,10 +671,9 @@
 
   @media (max-width:420px){
     body{font-size:17px}
+    :root{--stream-pad:1rem}
     .masthead-inner{padding:1.15rem 1rem}
     .brand .sub{max-width:15rem}
-    .thesis,.entry{padding-left:1rem;padding-right:1rem}
-    .folio-big{min-width:2.7rem}
     .hand-say{font-size:var(--t-md)}
     blockquote{padding-left:.9rem}
   }
@@ -475,7 +693,7 @@
   .footer-label{margin-bottom:.55rem;color:var(--muted);font-family:var(--mono);
     font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase}
   .footer-links a{color:var(--ink-soft);font-size:var(--t-base);text-decoration:none;
-    text-decoration-thickness:1px;text-underline-offset:4px}
+    text-decoration-thickness:1px;text-underline-offset:var(--ul-offset)}
   .footer-links a:hover{color:var(--red);text-decoration:underline}
   .site-footer-base{max-width:var(--maxw);margin:0 auto;padding:1.25rem 2.6rem 2.5rem;
     border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:2rem;

@@ -1,0 +1,33 @@
+---
+/**
+ * One term inside an <Explain> box.
+ *
+ * Written as:
+ *
+ *   <Def term="Sphaleron">
+ *     A rearrangement of the vacuum that the Standard Model permits…
+ *   </Def>
+ *
+ * The house rule for the body, which is the only thing that makes these worth
+ * having: explain it without using another term that also needs explaining. If
+ * a definition needs a second definition it is not a definition, it is a
+ * forwarding address.
+ */
+interface Props {
+  /** The thing being explained, capitalised as a heading, not as running prose. */
+  term: string;
+}
+
+const { term } = Astro.props;
+
+if (!term || !term.trim()) {
+  throw new Error('[explainers] <Def> needs a `term`. An unlabelled definition explains nothing.');
+}
+---
+
+<div class="ex-def">
+  <p class="ex-def-term">{term}</p>
+  <div class="ex-def-body">
+    <slot />
+  </div>
+</div>

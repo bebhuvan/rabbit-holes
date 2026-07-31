@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poetry — a head — Rabbit Holes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. See 11-folio-entry.html. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;
+    --maxw:1240px;--rail-w:272px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+      --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+      --c-verse:#82C29A;--c-practical:#D89A80;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+    --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+    --c-verse:#82C29A;--c-practical:#D89A80;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;}
+
+  /* Display optical size pinned — Bodoni's display cut has hairlines too
+     fine to survive at these sizes, especially on dark. */
+  .brand .mark,.frontis h1,.folio-big,.entry h2,.hand-say,.mv-num,.row-num,
+  .essay .lead,.row-t,.row-hand{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+
+  /* ==========================================================
+     THE TWO-INK RULE — as elsewhere in the system.
+     RED marks WHOSE VOICE IT IS, never where a link goes.
+
+     On a HEAD page specifically, the ruling that mattered:
+     the word "Poetry" in the title stays BLACK. A head name is
+     the world's word, and the page title is structure — and red
+     is never structural (§2). What is HIS on this page is the
+     ARRANGEMENT: the head essay, the reason line under every
+     movement, the hands, and the passage out to related heads.
+     Those are red, and they are dense, because a head is an
+     argument he is making about someone else's material.
+     ========================================================== */
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ============ MASTHEAD ============ (verbatim, shared with 11 + 12 + 13) */
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    font-style:normal;margin:0 .25rem}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
+    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+  .lamp:hover{color:var(--red)}
+
+  .shell{max-width:var(--maxw);margin:0 auto;display:grid;
+    grid-template-columns:var(--rail-w) 1fr;align-items:start}
+
+  /* ============ THE HEAD RAIL ============
+     Not the site index — this rail belongs to ONE head. It carries the
+     head's own facts and, below them, the CONTENTS: the five movements
+     as a table of contents. That table is the proof that the page is
+     arranged rather than sorted; a date-ordered archive cannot have one. */
+  .rail{border-right:1px solid var(--rule);padding:3rem 2rem;position:sticky;top:0}
+  .rail .back{display:block;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted);
+    text-decoration:none;margin-bottom:2.1rem;transition:color var(--dur) var(--ease)}
+  .rail .back:hover{color:var(--red)}
+  .rail-label{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.65rem;margin-bottom:.55rem}
+  /* the fleuron marks the rail's PRIMARY heading only */
+  .rail-label.flr::after{content:"\2766";color:var(--red-soft);font-family:var(--flourish);
+    font-size:var(--t-base);letter-spacing:0}
+
+  .facts{list-style:none;font-family:var(--mono);font-size:var(--l-md);line-height:1.6}
+  .facts li{display:flex;align-items:baseline;gap:.55rem;padding:.24rem .3rem;color:var(--ink-soft)}
+  .facts .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+    font-variant-numeric:lining-nums;line-height:1;min-width:1.9rem}
+  .facts .kn{flex:1}
+  .facts .plain{color:var(--muted);font-variant-numeric:tabular-nums}
+
+  .rail-rule{border:none;border-top:1px solid var(--rule);margin:1.7rem 0}
+  /* the asterism marks ONE seam in the rail, not every seam */
+  .rail-rule.ast{text-align:center;overflow:visible}
+  .rail-rule.ast::after{content:"\2042";display:inline-block;transform:translateY(-.72em);
+    background:var(--paper);padding:0 .7rem;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base)}
+
+  .rail-note{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--muted);
+    line-height:1.45;margin-bottom:1.1rem}
+
+  /* contents — the .index ledger idiom, reused for movements */
+  .contents{list-style:none;font-family:var(--mono);font-size:var(--l-md)}
+  .contents a{display:flex;align-items:baseline;gap:.5rem;padding:.3rem .3rem;
+    text-decoration:none;color:var(--ink-soft)}
+  .contents a>span:first-child{white-space:nowrap}
+  .contents a:hover{color:var(--red)}
+  .contents .dots{flex:1;border-bottom:1px dotted var(--rule-strong);transform:translateY(-.2em);margin:0 .15rem}
+  .contents .n{color:var(--muted);font-variant-numeric:lining-nums tabular-nums}
+  .contents a:hover .n{color:var(--red)}
+
+  /* the escape hatch: his order is the default, date order is available
+     and secondary. Red, because offering a different door into his own
+     garden is him speaking. */
+  .bydate{display:inline-block;margin-top:.9rem;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
+  .bydate:hover{text-decoration:underline;text-underline-offset:4px}
+
+  .colophon{margin-top:2.2rem;font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.6;color:var(--ink-soft)}
+  .colophon .kept{display:block;margin-top:.85rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+
+  /* ============ MAIN ============ */
+  .body{min-width:0}
+
+  /* ---- FRONTISPIECE ---- */
+  .frontis{padding:4rem 3.2rem 2.6rem;border-bottom:1px solid var(--rule)}
+  .frontis .kicker{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;display:flex;
+    align-items:baseline;gap:.7rem;flex-wrap:wrap}
+  .frontis .kicker b{color:var(--red);font-weight:600}
+  .frontis h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.02;
+    letter-spacing:var(--tr-display);margin-bottom:.5rem}
+  .frontis .strap{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    color:var(--ink-soft);max-width:34em;margin-bottom:2.2rem}
+
+  /* ---- THE HEAD ESSAY — the collector, at length ----
+     A head is not a filter, and this is the element that says so. It is
+     the same organ as the hand on a folio: red-ruled, red-inked, opening
+     at display scale and stepping down to reading size as it runs on
+     (§5 — the hand steps down when the note runs long). */
+  .essay{position:relative;padding-left:1.7rem;max-width:34em}
+  .essay::before{content:"";position:absolute;left:0;top:.3em;bottom:.3em;width:2px;background:var(--red)}
+  .essay .label{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-eyebrow);text-transform:uppercase;color:var(--red-soft);margin-bottom:.6rem}
+  .essay .lead{font-family:var(--display);font-style:italic;font-weight:500;color:var(--red);
+    font-size:var(--t-lg);line-height:1.26;letter-spacing:var(--tr-display);margin-bottom:.7rem}
+  .essay p{font-family:var(--body);font-style:italic;font-size:var(--t-md);line-height:1.55;
+    color:var(--red);margin-bottom:.6rem}
+  .essay p:last-child{margin-bottom:0}
+
+  /* ---- A MOVEMENT ---- */
+  .movement{border-bottom:1px solid var(--rule)}
+  /* the movement head is held to the reading column's width, not the
+     column's full bleed — otherwise the count drifts to the far right
+     edge and stops reading as part of the same line. */
+  .mv-head{padding:2.4rem 3.2rem 0;max-width:46rem}
+  .mv-title{display:flex;align-items:baseline;gap:.9rem;margin-bottom:.55rem}
+  .mv-num{font-family:var(--display);font-weight:600;font-size:var(--t-md);line-height:1;
+    color:var(--red-soft);font-variant-numeric:lining-nums;letter-spacing:var(--tr-display)}
+  /* ---------------------------------------------------------------
+     RULING — movement titles stay BLACK. (settled; do not re-litigate)
+
+     The case for red was real: "Start with these" is not the world's
+     word for anything. Nobody wrote it but him, and on a head page the
+     arrangement IS the argument, so §2 ("red marks whose voice it is")
+     points straight at these five lines.
+
+     It still loses, on three counts:
+
+     1. §2's own second consequence — RED IS NEVER STRUCTURAL. These are
+        section headings. They own the anchors (#m1–#m5) and they are
+        reprinted verbatim in the rail's table of contents. Red here
+        would force the contents list red too, or split the same six
+        words across two inks. Either way red starts meaning "heading"
+        on this page and "his voice" everywhere else. That is the
+        dilution, and it is not hypothetical — the ToC is right there.
+     2. They are set in the LABEL register: mono, uppercase, tracked out.
+        That register is machinery by construction. Red in tracked mono
+        caps reads as a UI accent, not as a person talking; the ink rule
+        governs voice-bearing prose, and this typeface is not carrying
+        prose no matter who wrote the words.
+     3. The voice is already marked, twice, and better. The roman numeral
+        above is --red-soft (the enumeration is his) and the reason line
+        below is full red, italic, red-ruled (the argument is his). The
+        title sits in black between them — and it is precisely that black
+        that lets the two reds read as two different registers of him
+        rather than one undifferentiated red block. Making the middle
+        term red collapses all three into a wash and costs the reason
+        line the emphasis it earns by being the sentence that says
+        something.
+
+     Same reasoning that kept the H1 "Poetry" black. A head argues in
+     prose, not in its headings.
+     --------------------------------------------------------------- */
+  .mv-title .t{font-family:var(--mono);font-size:var(--l-lg);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--ink)}
+  .mv-title .c{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);margin-left:auto;white-space:nowrap}
+  /* the reason line — HIS, so red, and ruled the way the hand is ruled */
+  .mv-why{position:relative;padding-left:1.2rem;max-width:33em;margin-bottom:.4rem;
+    font-family:var(--body);font-style:italic;font-size:var(--t-base);line-height:1.5;color:var(--red)}
+  .mv-why::before{content:"";position:absolute;left:0;top:.34em;bottom:.34em;width:1px;background:var(--red-soft)}
+
+  /* ---- a promoted folio (movement I only) ---- */
+  .entry{padding:2rem 3.2rem 2.2rem;border-top:1px solid var(--rule)}
+  .movement .entry:first-of-type{border-top:none}
+  .runhead{display:flex;align-items:baseline;gap:1rem;margin-bottom:.6rem}
+  .folio-big{font-family:var(--display);font-weight:600;font-size:var(--t-2xl);line-height:1;
+    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display)}
+  .runhead .meta{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);display:flex;gap:.9rem;flex-wrap:wrap}
+  .entry h2{font-family:var(--display);font-weight:600;font-size:var(--t-xl);line-height:1.16;
+    letter-spacing:var(--tr-display);margin-bottom:.7rem}
+  .entry h2 a{text-decoration:none}
+  .entry h2 a:hover{color:var(--red)}
+
+  /* THE HAND — 2 to 5 words, red, often carrying the source link. */
+  .hand-line{margin-bottom:.85rem;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
+  .hand-say{font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-lg);line-height:1.2;color:var(--red)}
+  .hand-say a{text-decoration:none;border-bottom:1px solid var(--red-soft)}
+  .hand-src{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);color:var(--muted)}
+  /* when the note runs long it steps down to reading size (§5) */
+  .hand-long{max-width:33em;margin-bottom:.85rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-body);line-height:1.55;color:var(--red)}
+
+  /* the source, quoted — 85% of folios carry one, so it is the hero case */
+  .verse{font-size:var(--t-body);line-height:1.72;color:var(--ink);
+    padding-left:1.3rem;border-left:2px solid var(--rule-strong);max-width:33em}
+  .verse .l{display:block;padding-left:1.4rem;text-indent:-1.4rem}
+  .verse p{margin:0}
+  .verse cite{display:block;margin-top:.55rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+
+  .more{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--red);
+    text-decoration:none;display:inline-block;margin-top:.85rem}
+  .more:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* ---- the compact folio row (movements II–V) ----
+     Same three layers as a promoted folio — numeral, source, hand — just
+     set quieter. One excerpt line only: enough to recognise the poem by,
+     not enough to substitute for reading it. */
+  .rows{list-style:none;margin-top:1.5rem}
+  .row{display:grid;grid-template-columns:4.2rem 1fr;gap:0 1.1rem;align-items:baseline;
+    padding:1rem 3.2rem;border-top:1px solid var(--rule);text-decoration:none;
+    transition:background var(--dur) var(--ease)}
+  .row:hover{background:var(--red-wash)}
+  .row-num{font-family:var(--display);font-weight:600;font-size:var(--t-lg);line-height:1;
+    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display);text-align:right}
+  .row-t{font-family:var(--display);font-weight:600;font-size:var(--t-md);line-height:1.22;
+    letter-spacing:var(--tr-display);display:block}
+  .row:hover .row-t{color:var(--red)}
+  .row-hand{display:block;font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-md);line-height:1.3;color:var(--red);margin-top:.25rem}
+  /* a long hand steps down, exactly as on a folio */
+  .row-hand.long{font-family:var(--body);font-size:var(--t-base);line-height:1.5;max-width:32em}
+  .row-q{display:block;font-family:var(--body);font-size:var(--t-base);line-height:1.5;
+    color:var(--ink-soft);margin-top:.35rem;padding-left:.9rem;
+    border-left:1px solid var(--rule-strong);max-width:32em}
+  .row-q .l{display:block}
+  .row-meta{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+  /* ---- RELATED HEADS — the connective-tissue treatment from folio 11,
+     lifted wholesale. On a folio it says "these leaves sit near this
+     one"; here it says "this head sits near these heads". Same organ,
+     one level up. Red top rule: passage deeper into the garden. ---- */
+  .near{margin:3rem 3.2rem 0;padding:1.5rem 0 0;border-top:2px solid var(--red)}
+  .near .h{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--red);margin-bottom:.4rem;display:flex;align-items:baseline;gap:.55rem}
+  .near .h .mani{font-family:var(--flourish);font-size:var(--t-base);line-height:1}
+  .near .hsub{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    color:var(--ink-soft);margin-bottom:1.6rem}
+  .near-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 3rem}
+  .near-i{display:grid;grid-template-columns:3.2rem 1fr;gap:.9rem;align-items:baseline;
+    padding:.9rem 0;border-top:1px solid var(--rule);text-decoration:none;
+    transition:padding-left var(--dur) var(--ease)}
+  .near-i:hover{padding-left:.4rem}
+  /* the count stays mono and muted — a count is machinery, not his voice —
+     but right-aligned so it hangs off the head name rather than floating. */
+  .near-i .n{font-family:var(--mono);font-size:var(--l-lg);color:var(--muted);
+    font-variant-numeric:lining-nums tabular-nums;text-align:right}
+  .near-i .nm{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    line-height:1.2;letter-spacing:var(--tr-display);color:var(--ink);
+    font-optical-sizing:none;font-variation-settings:'opsz' 11}
+  .near-i:hover .nm{color:var(--red)}
+  /* why they touch is HIS reading of the corpus, so it is red */
+  .near-i .r{display:block;font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.45;color:var(--red);margin-top:.25rem}
+  .near .all{display:inline-block;margin-top:1.5rem;font-family:var(--mono);font-size:var(--l-md);
+    letter-spacing:var(--tr-label);color:var(--red);text-decoration:none}
+  .near .all:hover{text-decoration:underline;text-underline-offset:4px}
+
+  .foot{padding:3rem 3.2rem 4rem;text-align:center}
+  .foot .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-lg)}
+  .foot .line{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    color:var(--ink-soft);margin:.8rem 0 .5rem}
+  .foot .meta{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+  .foot .meta a{color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#">Index</a>
+        <a href="#" class="on">Heads</a>
+        <a href="#">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <!-- ============ THE HEAD RAIL ============ -->
+    <aside class="rail">
+      <a class="back" href="#">&#8592; all heads</a>
+
+      <!-- Checked against the frontmatter: all fifteen Poetry-tagged posts
+           carry type: verse. The kind key therefore has one row here, and
+           that is worth saying rather than padding out. -->
+      <div class="rail-label flr">The head</div>
+      <ul class="facts">
+        <li><span class="sw" style="color:var(--c-verse)">15</span><span class="kn">Verse</span></li>
+      </ul>
+      <p class="rail-note" style="margin-top:.6rem;margin-bottom:0">One kind, all the way through &#8212; which is not true of any other head I keep.</p>
+
+      <hr class="rail-rule">
+
+      <div class="rail-label" style="margin-bottom:.75rem">Kept</div>
+      <ul class="facts">
+        <li><span class="kn">first</span><span class="plain">3 Aug 2025</span></li>
+        <li><span class="kn">latest</span><span class="plain">5 Jan 2026</span></li>
+        <li><span class="kn">folios</span><span class="plain">15</span></li>
+      </ul>
+
+      <hr class="rail-rule ast">
+
+      <div class="rail-label" style="margin-bottom:.55rem">Contents</div>
+      <p class="rail-note">Five movements, in the order I&#8217;d hand them to you.</p>
+      <ul class="contents">
+        <li><a href="#m1"><span>Start with these</span><span class="dots"></span><span class="n">3</span></a></li>
+        <li><a href="#m2"><span>The ones that read like now</span><span class="dots"></span><span class="n">3</span></a></li>
+        <li><a href="#m3"><span>On what a poem is for</span><span class="dots"></span><span class="n">3</span></a></li>
+        <li><a href="#m4"><span>A case for being alive</span><span class="dots"></span><span class="n">3</span></a></li>
+        <li><a href="#m5"><span>Love, and its going</span><span class="dots"></span><span class="n">3</span></a></li>
+      </ul>
+      <a class="bydate" href="#">or read it by date &#8594;</a>
+
+      <hr class="rail-rule">
+
+      <p class="colophon">A head is a place I keep coming back to, not a filter I ran once.
+        <span class="kept">promoted by hand &#183; Aug 2025</span>
+      </p>
+    </aside>
+
+    <main class="body">
+
+      <!-- ============ FRONTISPIECE ============ -->
+      <section class="frontis">
+        <div class="kicker"><b>&#182; Head</b> &nbsp;&#183;&nbsp; <span>15 folios</span> &nbsp;&#183;&nbsp; <span>chosen, not counted</span></div>
+        <h1>Poetry</h1>
+        <p class="strap">Fifteen leaves, arranged in five movements rather than by date &#8212; because the order I found them in is the least interesting thing about them.</p>
+
+        <!-- ============================================================
+             THE HEAD ESSAY.
+             *** ILLUSTRATIVE TEXT — Bhuvanesh must write his own. ***
+             It is set here at the length and register the design expects
+             (2–4 sentences, first person, specific about the material) so
+             the page can be judged. Every reference in it is real: the
+             Bloom interview that led to Tom o' Bedlam, the Oliver, the
+             Tagore, and the line about reading too little poetry in 2025,
+             which is his own from folio 156.
+             ============================================================ -->
+        <div class="essay">
+          <span class="label">Why I keep this head</span>
+          <p class="lead">I don&#8217;t trust myself to find these again.</p>
+          <p>Harold Bloom sent me to <em>Tom o&#8217; Bedlam</em> and I have reread it more times than I can defend; Mary Oliver told me I did not have to walk on my knees; Tagore keeps saying the thing I cannot. What I think I am circling is not beauty exactly &#8212; it is the small violence a poem does to an ordinary day, the way it stops you mid-sentence and makes you sit down.</p>
+          <p>I read too little of it last year. This head is the correction.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           THE ARRANGEMENT.
+           Deliberately NOT reverse-chronological. A head ordered by date
+           is an archive with a nicer title; the whole claim of this site
+           is that the head is the organising unit, which is only true if
+           the arrangement carries an argument. Five movements, each with
+           a reason line in his hand. Folio numerals run out of order on
+           purpose — that is the visible evidence that date is not driving.
+
+           FOLIO NUMBERING — canonical, settled. Do not recompute by hand.
+
+             folio number = chronological index over PUBLISHED posts ONLY,
+             oldest = 1, newest = 190. Tie-break for same-date posts is
+             filename ascending.
+
+           "Published only" is the part that was got wrong once already:
+           3 of the 193 local posts carry `published: false`, and the site
+           filters on `data.published !== false`, so the corpus is 190, not
+           193, and every numeral computed over 193 ran 2–3 high. DESIGN.md
+           §5 still quotes 193 as the local file count — that is the count
+           of files on disk, not the count of folios, and the two are not
+           the same number. Basis:
+
+             rows = [(date, filename) for every post without published:false]
+             rows.sort()   # date, then filename
+             folio = index + 1
+
+           The fifteen numerals below were regenerated on that basis.
+           ============================================================ -->
+
+      <!-- ---- MOVEMENT I — promoted, given full folio treatment ---- -->
+      <section class="movement" id="m1">
+        <div class="mv-head">
+          <div class="mv-title">
+            <span class="mv-num">I</span>
+            <span class="t">Start with these</span>
+            <span class="c">1&#8211;3 of 15</span>
+          </div>
+          <p class="mv-why">If you read nothing else under this head, read these three. One is where the head started, one is the one I give away most often, and one is the one I opened this year with.</p>
+        </div>
+
+        <article class="entry">
+          <div class="runhead">
+            <span class="folio-big" style="color:var(--c-verse)">14</span>
+            <span class="meta"><span>Verse</span><span>18 Aug 2025</span></span>
+          </div>
+          <h2><a href="#">The greatest anonymous poem</a></h2>
+          <div class="hand-line">
+            <span class="hand-say">And he&#8217;s not wrong.</span>
+            <span class="hand-src">Harold Bloom, on Tom o&#8217; Bedlam</span>
+          </div>
+          <div class="verse">
+            <p>
+              <span class="l">From the hag and hungry goblin</span>
+              <span class="l">That into rags would rend ye,</span>
+              <span class="l">The spirit that stands by the naked man</span>
+              <span class="l">In the Book of Moons defend ye,</span>
+            </p>
+            <cite>anonymous &#183; 17th century</cite>
+          </div>
+          <a class="more" href="#">the whole ballad, read line by line &#8594;</a>
+        </article>
+
+        <article class="entry">
+          <div class="runhead">
+            <span class="folio-big" style="color:var(--c-verse)">44</span>
+            <span class="meta"><span>Verse</span><span>21 Sept 2025</span></span>
+          </div>
+          <h2><a href="#">Wild Geese by Mary Oliver</a></h2>
+          <div class="hand-line">
+            <span class="hand-say">Beautiful.</span>
+            <span class="hand-src">Mary Oliver</span>
+          </div>
+          <div class="verse">
+            <p>
+              <span class="l">You do not have to be good.</span>
+              <span class="l">You do not have to walk on your knees</span>
+              <span class="l">For a hundred miles through the desert, repenting.</span>
+              <span class="l">You only have to let the soft animal of your body</span>
+              <span class="l">love what it loves.</span>
+            </p>
+          </div>
+          <a class="more" href="#">the whole poem &#8594;</a>
+        </article>
+
+        <article class="entry">
+          <div class="runhead">
+            <span class="folio-big" style="color:var(--c-verse)">153</span>
+            <span class="meta"><span>Verse</span><span>1 Jan 2026</span></span>
+          </div>
+          <h2><a href="#">Gitanjali 48</a></h2>
+          <!-- the hand carries the outbound link and therefore stays RED;
+               the domain beside it is muted, because the domain is the
+               world and not him. -->
+          <div class="hand-line">
+            <span class="hand-say"><a href="#">Pure and sublime poetic beauty</a></span>
+            <span class="hand-src">poets.org</span>
+          </div>
+          <div class="verse">
+            <p>The morning sea of silence broke into ripples of bird songs; and the flowers were all merry by the roadside; and the wealth of gold was scattered through the rift of the clouds while we busily went on our way and paid no heed.</p>
+            <cite>Rabindranath Tagore</cite>
+          </div>
+          <a class="more" href="#">keep reading &#8212; 480 words &#8594;</a>
+        </article>
+      </section>
+
+      <!-- ---- MOVEMENT II ---- -->
+      <section class="movement" id="m2">
+        <div class="mv-head">
+          <div class="mv-title">
+            <span class="mv-num">II</span>
+            <span class="t">The ones that read like now</span>
+            <span class="c">4&#8211;6 of 15</span>
+          </div>
+          <p class="mv-why">Three poems I can no longer read as belonging to their own century. I am forcing the present into them, no doubt, and I cannot stop.</p>
+        </div>
+        <ul class="rows">
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">40</span>
+            <span>
+              <span class="row-t">The Second Coming by William Butler Yeats</span>
+              <span class="row-hand">Damn. What a powerful poem.</span>
+              <span class="row-q"><span class="l">Things fall apart; the centre cannot hold;</span><span class="l">Mere anarchy is loosed upon the world,</span></span>
+              <span class="row-meta">Verse &#183; 15 Sept 2025</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">97</span>
+            <span>
+              <span class="row-t">Evil by Arthur Rimbaud</span>
+              <span class="row-hand">Ufff. What a poem.</span>
+              <span class="row-q"><span class="l">And madness grinds a hundred thousand men</span><span class="l">Into a steaming pile of rotting meat;</span></span>
+              <span class="row-meta">Verse &#183; 8 Nov 2025</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">96</span>
+            <span>
+              <span class="row-t">Leviathan by George Oppen</span>
+              <span class="row-hand">Dayum.</span>
+              <span class="row-q"><span class="l">We must talk now. Fear</span><span class="l">Is fear. But we abandon one another.</span></span>
+              <span class="row-meta">Verse &#183; 6 Nov 2025</span>
+            </span>
+          </a></li>
+        </ul>
+      </section>
+
+      <!-- ---- MOVEMENT III ---- -->
+      <section class="movement" id="m3">
+        <div class="mv-head">
+          <div class="mv-title">
+            <span class="mv-num">III</span>
+            <span class="t">On what a poem is for</span>
+            <span class="c">7&#8211;9 of 15</span>
+          </div>
+          <p class="mv-why">Two of these are not poems at all &#8212; and I filed them as verse anyway, which tells you how loosely I file. They are people trying to say why the others matter, which is the question the whole head is really asking.</p>
+        </div>
+        <ul class="rows">
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">33</span>
+            <span>
+              <span class="row-t">Poetry is a salve for the soul</span>
+              <span class="row-hand long">A beautiful perspective on what poetry can do for us &#8212; and a wonderful article on what it is to write and be a writer.</span>
+              <span class="row-q"><span class="l">I have always put my faith in poetry, have come to it for answers.</span></span>
+              <span class="row-meta">Verse &#183; 7 Sept 2025 &#183; Leila Chatti</span>
+            </span>
+          </a></li>
+          <!-- THE EMPTY-HAND CASE. This folio has no note in the source
+               markdown — the entry is the quote and the attribution, and
+               nothing else. It must still look finished; red does no
+               structural work here and its absence is not a gap. (§5) -->
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">63</span>
+            <span>
+              <span class="row-t">Rilke&#8217;s advice to a young poet</span>
+              <span class="row-q"><span class="l">Must I write? Dig deep into yourself for a true answer.</span></span>
+              <span class="row-meta">Verse &#183; 11 Oct 2025 &#183; Letters to a Young Poet</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">3</span>
+            <span>
+              <span class="row-t">Good advice from Rudyard Kipling</span>
+              <span class="row-hand">You can do a lot worse.</span>
+              <span class="row-q"><span class="l">If you can keep your head when all about you</span><span class="l">Are losing theirs and blaming it on you,</span></span>
+              <span class="row-meta">Verse &#183; 3 Aug 2025 &#183; 1,100 words</span>
+            </span>
+          </a></li>
+        </ul>
+      </section>
+
+      <!-- ---- MOVEMENT IV ---- -->
+      <section class="movement" id="m4">
+        <div class="mv-head">
+          <div class="mv-title">
+            <span class="mv-num">IV</span>
+            <span class="t">A case for being alive</span>
+            <span class="c">10&#8211;12 of 15</span>
+          </div>
+          <p class="mv-why">Three arguments, from three centuries, that the day is worth getting up for. I do not always believe them. I keep them anyway.</p>
+        </div>
+        <ul class="rows">
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">143</span>
+            <span>
+              <span class="row-t">Gitanjali 3 by Rabindranath Tagore</span>
+              <span class="row-hand">God damn it, this is beautiful!</span>
+              <span class="row-q"><span class="l">The light of thy music illumines the world.</span></span>
+              <span class="row-meta">Verse &#183; 28 Dec 2025</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">160</span>
+            <span>
+              <span class="row-t">A Psalm of Life</span>
+              <span class="row-hand">What a beautiful poem.</span>
+              <span class="row-q"><span class="l">Life is real! Life is earnest!</span><span class="l">And the grave is not its goal;</span></span>
+              <span class="row-meta">Verse &#183; 4 Jan 2026 &#183; Longfellow</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">165</span>
+            <span>
+              <span class="row-t">I dwell in possibility</span>
+              <span class="row-hand">Emily Dickinson is a goddamn genius.</span>
+              <span class="row-q"><span class="l">I dwell in Possibility &#8212;</span><span class="l">A fairer house than Prose,</span></span>
+              <span class="row-meta">Verse &#183; 5 Jan 2026</span>
+            </span>
+          </a></li>
+        </ul>
+      </section>
+
+      <!-- ---- MOVEMENT V ---- -->
+      <section class="movement" id="m5">
+        <div class="mv-head">
+          <div class="mv-title">
+            <span class="mv-num">V</span>
+            <span class="t">Love, and its going</span>
+            <span class="c">13&#8211;15 of 15</span>
+          </div>
+          <p class="mv-why">Three about wanting, and about what wanting costs. The Dickinson is not even a poem &#8212; it is a letter, and it holds the best line of the three.</p>
+        </div>
+        <ul class="rows">
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">51</span>
+            <span>
+              <span class="row-t">The day is gone by John Keats</span>
+              <span class="row-hand">Beautiful poem.</span>
+              <span class="row-q"><span class="l">The day is gone, and all its sweets are gone!</span><span class="l">Sweet voice, sweet lips, soft hand, and softer breast,</span></span>
+              <span class="row-meta">Verse &#183; 28 Sept 2025</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">61</span>
+            <span>
+              <span class="row-t">Meditation by Charles Baudelaire</span>
+              <span class="row-hand">Beautiful.</span>
+              <span class="row-q"><span class="l">Take it easy, Sadness. Settle down.</span><span class="l">You asked for evening. Now, it&#8217;s come. It&#8217;s here.</span></span>
+              <span class="row-meta">Verse &#183; 9 Oct 2025</span>
+            </span>
+          </a></li>
+          <li><a class="row" href="#">
+            <span class="row-num" style="color:var(--c-verse)">26</span>
+            <span>
+              <span class="row-t">The heart wants what it wants</span>
+              <span class="row-hand long">I learned the famous line is from a letter by Emily Dickinson, and not from Woody Allen.</span>
+              <span class="row-q"><span class="l">The Heart wants what it wants &#8212; or else it does not care &#8212;</span></span>
+              <span class="row-meta">Verse &#183; 31 Aug 2025 &#183; letter to Mary Bowles</span>
+            </span>
+          </a></li>
+        </ul>
+      </section>
+
+      <!-- ============ RELATED HEADS ============ -->
+      <section class="near">
+        <div class="h"><span class="mani">&#9758;</span> Heads this one touches</div>
+        <p class="hsub">Where the reading spills over. Counts are real; the reasons are mine.</p>
+        <div class="near-grid">
+          <a class="near-i" href="#">
+            <span class="n">9</span>
+            <span><span class="nm">Reading</span>
+            <span class="r">The Bloom interview lives there. Tom o&#8217; Bedlam came out of it, so in a sense this head did too.</span></span>
+          </a>
+          <a class="near-i" href="#">
+            <span class="n">8</span>
+            <span><span class="nm">Writing</span>
+            <span class="r">Rilke is filed in both. A third of what I keep here is about making, not reading.</span></span>
+          </a>
+          <a class="near-i" href="#">
+            <span class="n">6</span>
+            <span><span class="nm">Literature</span>
+            <span class="r">The prose end of the same shelf, and the one I raid when a poem sends me to a novel.</span></span>
+          </a>
+          <a class="near-i" href="#">
+            <span class="n">8</span>
+            <span><span class="nm">Philosophy</span>
+            <span class="r">For the days when I want the argument made plainly instead of made beautifully.</span></span>
+          </a>
+        </div>
+        <a class="all" href="#">all ten heads &#8594;</a>
+      </section>
+
+      <footer class="foot">
+        <span class="flr">&#10086;</span>
+        <p class="line">Fifteen under this head &#8212; and 175 elsewhere.</p>
+        <p class="meta">arranged by hand &#183; last kept 5 Jan 2026 &nbsp;&#183;&nbsp; <a href="#">a random leaf &#8594;</a></p>
+      </footer>
+
+    </main>
+  </div>
+
+<script>
+  // Theme override on top of prefers-color-scheme. Reads the *rendered*
+  // scheme first so the first click always flips what you can actually see.
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

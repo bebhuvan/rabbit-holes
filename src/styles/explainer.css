@@ -1,0 +1,1496 @@
+/* =============================================================
+   RABBIT HOLES — EXPLAINERS
+   The fourth register, after the commonplace stream, the folio
+   and the gloss shelf. Loaded only by /explainers routes.
+
+   Two rules govern everything below.
+
+   1. INK. The site already says whose voice is speaking: black is
+      the world, red is the collector, gloss-brown is the machine.
+      Explainers add a second axis — how sure we are — carried as
+      TREATMENT, not as new hue. Solid is settled, dashed is
+      contested, red-and-unfilled is open. The palette does not
+      grow.
+
+   2. MOTION. Scroll is a parameter, never a trigger. Nothing here
+      animates on arrival. State is set directly by scrolly.js and
+      is always reversible, so tokens.css's global
+      prefers-reduced-motion kill switch degrades this correctly by
+      construction rather than by special-casing.
+   ============================================================= */
+
+/* ---- epistemic status ------------------------------------------
+   Consumed by prose marks and by SVG alike: figures read
+   stroke="var(--ep)" stroke-dasharray="var(--ep-dash)", so a
+   region's confidence is declared once on a wrapper and inherited
+   by everything inside it. Never colour alone — the dash pattern
+   carries the same information for anyone who cannot separate the
+   hues. ---------------------------------------------------------- */
+[data-epistemic] {
+  --ep: var(--ink);
+  --ep-dash: none;
+  --ep-fill: none;
+}
+[data-epistemic='settled'] {
+  --ep: var(--ink);
+  --ep-dash: none;
+}
+[data-epistemic='contested'] {
+  --ep: var(--ink-soft);
+  --ep-dash: 5 3;
+}
+[data-epistemic='open'] {
+  --ep: var(--red);
+  --ep-dash: 2 4;
+}
+
+/* =============================================================
+   THE SHELF — /explainers
+   ============================================================= */
+.ex-shelf {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: var(--s-9) var(--s-6) var(--s-10);
+}
+.ex-shelf-head {
+  max-width: var(--measure);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: var(--s-6);
+  margin-bottom: var(--s-7);
+}
+.ex-shelf-head h1 {
+  font-family: var(--display);
+  font-size: var(--t-3xl);
+  font-weight: 600;
+  line-height: 1.06;
+}
+.ex-shelf-head .deck {
+  font-size: var(--t-md);
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-top: var(--s-4);
+  line-height: 1.5;
+}
+
+.ex-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  gap: var(--s-7);
+  padding: var(--s-7) 0;
+  border-top: 1px solid var(--rule);
+  text-decoration: none;
+  align-items: start;
+}
+.ex-card:first-of-type {
+  border-top: 0;
+}
+.ex-card .question {
+  font-family: var(--display);
+  font-size: var(--t-xl);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: var(--tr-display);
+}
+.ex-card:hover .question {
+  color: var(--red);
+}
+.ex-card .standfirst {
+  font-size: var(--t-body);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-top: var(--s-3);
+  max-width: var(--measure);
+}
+.ex-card .meta {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-top: var(--s-2);
+}
+
+/* The living badge. A document that is still moving says so. */
+.ex-living {
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--red);
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+.ex-living::before {
+  content: '';
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: var(--red);
+  transform: translateY(-0.1em);
+}
+
+.ex-empty {
+  max-width: var(--measure);
+  padding: var(--s-8) 0;
+  color: var(--ink-soft);
+  font-size: var(--t-body);
+  line-height: 1.65;
+}
+
+/* =============================================================
+   THE PIECE — /explainers/<slug>
+   ============================================================= */
+
+/* Stardust has one art direction, not a second nighttime costume. Keep the
+   article and its navigation on white paper even when the rest of the site is
+   using the lamplight preference, and remove the irrelevant toggle here. */
+body:has(.ex-light-only) {
+  --paper: #fff;
+  --ink: #111216;
+  --ink-soft: #555861;
+  --muted: #858891;
+  --rule: #e1e3e8;
+  --rule-strong: #aeb2bb;
+  --red: #d94d35;
+  --red-soft: #efb9af;
+  --red-wash: #fff;
+  color: var(--ink);
+  background: var(--paper);
+  color-scheme: light;
+}
+body:has(.ex-light-only) [data-theme-toggle] {
+  display: none !important;
+}
+
+/* ---- the opening. Answer first. -------------------------------
+   The question, then the honest answer, before any argument. The
+   payoff is given away in the first screen and the chapters earn
+   it — which is the opposite of how this genre usually behaves. */
+/* The opening shares the body's grid so the title, the standfirst and the
+   first paragraph all hang off ONE left edge. They did not, at first, and the
+   page read as two documents stacked. */
+.ex-open {
+  padding: var(--s-10) 0 var(--s-8);
+}
+.ex-open-inner {
+  /* wider than the reading measure — a display line wants room — but starting
+     on the same left edge */
+  max-width: 40rem;
+}
+.ex-eyebrow {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  align-items: baseline;
+  margin-bottom: var(--s-6);
+}
+.ex-open h1 {
+  font-family: var(--display);
+  font-size: var(--t-3xl);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: var(--tr-display);
+  text-wrap: balance;
+}
+.ex-standfirst {
+  font-size: var(--t-md);
+  line-height: 1.56;
+  color: var(--ink-soft);
+  margin-top: var(--s-6);
+  max-width: var(--measure);
+  border-left: 2px solid var(--red);
+  padding-left: var(--s-5);
+}
+.ex-standfirst strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* =============================================================
+   THE DEPTH RAIL
+   Not a progress bar. A progress bar measures how much is left,
+   which is the least interesting fact about a document like this.
+   This measures DEPTH: each chapter tick indents by how far down
+   the material has gone, so the rail draws the descent. The site
+   is called Rabbit Holes; the navigation may as well say so.
+   ============================================================= */
+.ex-rail {
+  position: fixed;
+  top: 50%;
+  left: var(--s-6);
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4) 0;
+}
+.ex-rail-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--muted);
+  /* the descent: 0.55rem of indent per level of depth */
+  margin-left: calc(var(--depth, 0) * 0.55rem);
+}
+.ex-rail-tick {
+  display: block;
+  width: 1.1rem;
+  height: 1px;
+  background: var(--rule-strong);
+  flex: none;
+}
+.ex-rail-item[aria-current='true'] .ex-rail-tick {
+  background: var(--red);
+  width: 1.9rem;
+}
+/* Absolutely positioned, and that is load-bearing rather than tidiness.
+   In flow, each label — even at opacity 0 — made its anchor 244px wide, so the
+   rail was silently swallowing clicks across the left two hundred pixels of
+   every full-bleed figure. Invisible, and the kind of thing nobody reports;
+   they just find the page navigates when they meant to look at a chart. */
+.ex-rail-label {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: var(--s-3);
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  /* The rail floats over the page, and next to a full-bleed figure that page
+     is no longer blank paper. A label nobody can read is worse than no label. */
+  background: var(--paper);
+  box-shadow: 0 0 0 3px var(--paper);
+}
+/* Hover and focus only.
+   The current chapter's label used to be permanently visible, and the rail is
+   fixed to the left edge at z-index 20 — so on any display wide enough to show
+   the rail AND a full-bleed figure, that label printed across the figure's left
+   margin, permanently. The red tick already says which chapter you are in;
+   the name is one hover away, and now it stops eating the drawings. */
+.ex-rail:hover .ex-rail-label,
+.ex-rail-item:focus-visible .ex-rail-label {
+  opacity: 1;
+}
+.ex-rail-item[aria-current='true'] .ex-rail-label {
+  color: var(--red);
+}
+.ex-rail-item:hover .ex-rail-label {
+  color: var(--ink);
+}
+
+/* A chapter revised since this reader last visited. The dot is the
+   only thing on the page that exists purely for returning readers. */
+.ex-rail-item[data-revised='true'] .ex-rail-tick {
+  position: relative;
+}
+.ex-rail-item[data-revised='true'] .ex-rail-tick::after {
+  content: '';
+  position: absolute;
+  right: -0.45rem;
+  top: -0.15rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+/* =============================================================
+   THE BODY GRID — three widths, and only three
+   Prose holds the measure. Figures earn their breakout: `wide`
+   for a diagram that needs room, `full` for something whose
+   subject IS scale and cannot be told the truth in 66 characters.
+   ============================================================= */
+.ex-body,
+.ex-open {
+  --gutter: var(--s-6);
+  --flank: 15rem;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [wide-start] minmax(0, var(--flank))
+    [measure-start] min(var(--measure), calc(100% - 2 * var(--gutter)))
+    [measure-end] minmax(0, var(--flank))
+    [wide-end] minmax(var(--gutter), 1fr)
+    [full-end];
+}
+.ex-body > *,
+.ex-open > * {
+  grid-column: measure;
+}
+.ex-body > [data-width='wide'] {
+  grid-column: wide;
+}
+.ex-body > [data-width='full'] {
+  grid-column: full;
+}
+/* A scrollytelling sequence always breaks out. Left in the measure column it
+   had 33em to split between a figure and a 22rem step column, which squeezed
+   the figure to about 11rem — unreadable, and the reason the deep-time chart
+   rendered as a postage stamp. */
+.ex-body > .ex-scrolly {
+  grid-column: full;
+}
+
+/* Full-bleed does not mean unbounded. On a wide display an uncapped figure
+   grows until the type inside it is absurd, and it slides under the fixed
+   depth rail.
+
+   The cap was 1120px, which is only 46px more than `wide` — so the document
+   had three declared widths and two actual ones, and no figure could be
+   visibly larger than any other. A hierarchy of scale that nobody can see is
+   not a hierarchy. `full` is now a genuine spread: measure 594 · wide 1074 ·
+   full 1400, which are distinguishable at a glance. The right margin clears
+   the depth rail, which is 1.9rem of tick plus its hover label. */
+.ex-fig[data-width='full'] .ex-fig-frame {
+  max-width: min(1400px, 100vw - 6rem);
+  margin-inline: auto;
+}
+/* Above 1180px the depth rail is on screen, fixed to the left edge, at
+   z-index 20 — so a figure using the full 100vw − 6rem runs underneath it and
+   the current chapter's label prints across the figure's left margin. The rail
+   gets its column back. */
+@media (min-width: 1181px) {
+  .ex-fig[data-width='full'] .ex-fig-frame,
+  .ex-scrolly[data-layout='top'] {
+    max-width: min(1400px, 100vw - 8rem);
+  }
+}
+.ex-fig[data-width='full'] figcaption {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+/* ---- prose ------------------------------------------------------
+   Oldstyle proportional figures so numbers sit in the line like
+   letters rather than shouting. Figures and axes get the opposite
+   treatment further down. ---------------------------------------- */
+.ex-body {
+  font-size: var(--t-body);
+  line-height: 1.72;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+.ex-body p {
+  margin-bottom: var(--s-5);
+}
+.ex-body h2 {
+  font-family: var(--display);
+  font-size: var(--t-2xl);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--tr-display);
+  margin: var(--s-10) 0 var(--s-4);
+  scroll-margin-top: var(--s-8);
+}
+.ex-body h3 {
+  font-family: var(--display);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  line-height: 1.22;
+  margin: var(--s-8) 0 var(--s-3);
+  scroll-margin-top: var(--s-8);
+}
+.ex-body a {
+  color: var(--ink);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule-strong);
+}
+.ex-body a:hover {
+  text-decoration-color: var(--red);
+}
+.ex-body blockquote {
+  margin: var(--s-6) 0;
+  padding-left: var(--s-5);
+  border-left: 1px solid var(--rule-strong);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.ex-body ul,
+.ex-body ol {
+  margin: 0 0 var(--s-5) var(--s-5);
+}
+.ex-body li {
+  margin-bottom: var(--s-2);
+}
+
+/* The chapter opener. Number, title, and the question the chapter
+   answers — so a reader arriving from the rail knows immediately
+   what they walked into. */
+.ex-chapter {
+  margin: var(--s-10) 0 var(--s-6);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+}
+.ex-chapter .num {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.ex-chapter .asks {
+  font-family: var(--display);
+  font-size: var(--t-md);
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-top: var(--s-3);
+  max-width: var(--measure);
+}
+
+/* =============================================================
+   FIGURES
+   ============================================================= */
+.ex-fig {
+  margin: var(--s-8) 0;
+}
+.ex-fig-frame {
+  position: relative;
+}
+.ex-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  /* axes, ticks and data labels align in columns */
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.ex-fig figcaption {
+  margin-top: var(--s-4);
+  font-size: var(--t-base);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+.ex-fig[data-width='wide'] figcaption,
+.ex-fig[data-width='full'] figcaption {
+  margin-left: auto;
+  margin-right: auto;
+}
+.ex-fig .ex-fig-source {
+  display: block;
+  margin-top: var(--s-3);
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ex-fig .ex-fig-source a {
+  color: inherit;
+}
+
+/* Figure typography. Labels sit ON the drawing — a legend is a
+   failure of layout, because it makes the reader hold a lookup
+   table in their head while looking somewhere else. */
+.ex-fig .lbl {
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+}
+.ex-fig .lbl-strong {
+  fill: var(--ink);
+}
+.ex-fig .val {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  fill: var(--ink);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Annotation is the author's hand on the world's material — the
+   same gesture as the note on a folio. So annotation is red, and
+   the ink rule extends into the figures for free. */
+.ex-fig .anno,
+.ex-fig .anno text {
+  fill: var(--red);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: var(--t-base);
+}
+.ex-fig .anno-line {
+  stroke: var(--red);
+  stroke-width: 1;
+  fill: none;
+}
+
+/* Three stroke weights. No more, for the same reason the type
+   scale has a fixed number of steps. */
+.ex-fig .s-hair {
+  stroke-width: 0.5;
+}
+.ex-fig .s-rule {
+  stroke-width: 1;
+}
+.ex-fig .s-bold {
+  stroke-width: 2;
+}
+.ex-fig .axis {
+  stroke: var(--rule-strong);
+  fill: none;
+}
+.ex-fig .grid {
+  stroke: var(--rule);
+  fill: none;
+}
+
+/* =============================================================
+   STARDUST — COSMIC FIELD ATLAS
+
+   This explainer is not a stack of charts placed between paragraphs. Its
+   figures are plates from one imagined atlas: white space, near-black ink,
+   restrained blue for primordial matter and oxide for stellar matter. The
+   source data remains code-native; the surface reads as one authored world.
+   ============================================================= */
+.ex-open + .ex-body {
+  counter-reset: stardust-chapter stardust-plate;
+}
+.ex-open + .ex-body > h2 {
+  counter-increment: stardust-chapter;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(0.85rem, 2vw, 1.4rem);
+  align-items: baseline;
+  margin-top: clamp(6rem, 11vw, 10rem);
+  padding-top: clamp(1.2rem, 3vw, 2rem);
+  border-top: 1px solid var(--rule-strong);
+}
+.ex-open + .ex-body > h2::before {
+  content: '0' counter(stardust-chapter);
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  line-height: 1;
+  letter-spacing: var(--tr-label);
+  color: var(--red);
+  transform: translateY(-0.22em);
+}
+.ex-open + .ex-body > h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: clamp(4.5rem, 13vw, 9rem);
+  height: 2px;
+  background: var(--red);
+}
+
+.ex-open + .ex-body .ex-fig {
+  counter-increment: stardust-plate;
+  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-bottom: clamp(4rem, 8vw, 7rem);
+}
+.ex-open + .ex-body .ex-fig-frame {
+  --paper: #fff;
+  --ink: #111216;
+  --ink-soft: #555861;
+  --muted: #858891;
+  --rule: #e1e3e8;
+  --rule-strong: #aeb2bb;
+  --red: #d94d35;
+  --red-soft: #efb9af;
+  --gloss: #244a9b;
+  --gloss-soft: #b6c4e3;
+  --c-links: #244a9b;
+  --c-verse: #d94d35;
+  --c-reflections: #111216;
+  --c-practical: #777b85;
+  --red-wash: #f8e3df;
+  position: relative;
+  color: var(--ink);
+  padding: 0;
+  background: #fff;
+  border-top: 1px solid #111216;
+  border-bottom: 1px solid #111216;
+  isolation: isolate;
+}
+.ex-open + .ex-body .ex-fig figcaption {
+  position: relative;
+  margin-top: var(--s-5);
+  padding-left: 1.25rem;
+  font-family: var(--display);
+  font-size: var(--t-base);
+  line-height: 1.52;
+}
+.ex-open + .ex-body .ex-fig figcaption::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.38em;
+  bottom: 0.32em;
+  width: 2px;
+  background: var(--red);
+}
+.ex-open + .ex-body .ex-fig .ex-fig-source {
+  padding-left: 1.25rem;
+}
+
+/* Scroll plates remain quiet while the article travels underneath them. */
+.ex-open + .ex-body .ex-scrolly[data-layout='top'] .ex-scrolly-sticky {
+  background: var(--paper);
+  border-bottom: 0;
+}
+.ex-open + .ex-body .ex-scrolly[data-layout='top'] .ex-step {
+  position: relative;
+  padding: var(--s-5) var(--s-5) var(--s-5) var(--s-6);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--rule-strong);
+  background: var(--paper);
+}
+.ex-open + .ex-body .ex-scrolly[data-layout='top'] .ex-step[data-active='true'] {
+  border-color: var(--rule-strong);
+  border-left-color: var(--red);
+}
+
+/* Hairlines that read on paper vanish on #181713. Dark gets its
+   own weight, which is a real optical difference and not a
+   preference. */
+:root[data-theme='dark'] .ex-fig .s-hair {
+  stroke-width: 0.75;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .ex-fig .s-hair {
+    stroke-width: 0.75;
+  }
+}
+
+/* The table equivalent of a data-bearing figure. Visually hidden
+   but reachable — a chart is not an argument if you cannot read it. */
+.ex-fig-data {
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+.ex-fig-data:focus-within {
+  clip-path: none;
+  position: static;
+  height: auto;
+  width: auto;
+  white-space: normal;
+}
+
+/* =============================================================
+   SCROLLYTELLING
+   The sticky figure holds while the steps read past it. Step
+   opacity is the ONE thing allowed to respond to position, and it
+   is bound continuously — scrub back up and it returns exactly.
+   ============================================================= */
+/* Side-by-side. Kept for a genuinely squarish figure, but it is no longer the
+   default, because on a 1440px display it handed the figure 528px — a figure
+   drawn at a 900-unit viewBox then renders every label at 0.59× the size it was
+   drawn at, which is the whole of "small, thin and apologetic". Whatever uses
+   this now gets the room a figure needs. */
+.ex-scrolly {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem);
+  gap: var(--s-7);
+  align-items: start;
+  /* `width: 100%` is load-bearing, not belt-and-braces. Auto inline margins on
+     a grid item switch off `justify-self: stretch`, so the box falls back to
+     fit-content — which here is driven by the steps column's own max-width, and
+     the whole sequence quietly collapsed to the reading measure however wide
+     the grid area it had been given. The previous build's 1180px cap hid this
+     because its contents happened to want more than that. */
+  width: 100%;
+  margin: var(--s-9) auto;
+  max-width: min(1500px, 100vw - 7rem);
+  padding: 0;
+}
+.ex-scrolly-sticky {
+  position: sticky;
+  top: var(--s-6);
+  align-self: start;
+}
+.ex-scrolly-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 55vh;
+  padding: 25vh 0;
+}
+
+/* ---- top-sticky: the figure holds the page --------------------------------
+   The figure takes the whole spread and pins to the top of the viewport while
+   the steps read past beneath it in the measure column. This is the default
+   for these figures now. The figure is not competing with a step column for
+   width, so it renders at ~1400px instead of ~530px, and its type arrives at
+   the size it was drawn at.
+
+   The trade is vertical: the pinned figure must leave the reader something to
+   read. `--fig-cap` is that budget, and the figures are drawn to an aspect
+   ratio that fits inside it. */
+.ex-scrolly[data-layout='top'] {
+  /* The figures drawn for this layout are wide and shallow; 54vh was leaving
+     the deep-time band height-capped and therefore narrower than its column. */
+  --fig-cap: 62vh;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  max-width: min(1400px, 100vw - 6rem);
+}
+.ex-scrolly[data-layout='top'] .ex-scrolly-sticky {
+  top: 0;
+  background: var(--paper);
+  padding: var(--s-5) 0 var(--s-4);
+  border-bottom: 1px solid var(--rule);
+  z-index: 6;
+}
+/* width:auto with an intrinsic viewBox ratio means the height cap shrinks the
+   drawing rather than letterboxing it, and it stays centred. */
+.ex-scrolly[data-layout='top'] .ex-fig svg {
+  width: auto;
+  max-width: 100%;
+  max-height: var(--fig-cap);
+  margin-inline: auto;
+}
+.ex-scrolly[data-layout='top'] .ex-scrolly-steps {
+  gap: 45vh;
+  padding: 18vh 0 25vh;
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+/* The pinned figure already carries the caption; repeating the source line
+   under every step is noise. */
+.ex-scrolly[data-layout='top'] .ex-fig {
+  margin: 0;
+}
+/* Pinned, the caption is a status line under the drawing, not a paragraph
+   floating in the middle of the spread. */
+.ex-scrolly[data-layout='top'] figcaption {
+  display: none;
+}
+.ex-scrolly[data-layout='top'] .ex-fig-source {
+  margin-top: var(--s-3);
+}
+
+/* Static fallback (no JS, or reduced motion): nothing is pinned, so the height
+   cap is pointless and the caption comes back. */
+.ex-scrolly[data-static='true'][data-layout='top'] .ex-scrolly-sticky {
+  position: static;
+  border-bottom: 0;
+}
+.ex-scrolly[data-static='true'][data-layout='top'] .ex-fig svg {
+  max-height: none;
+  width: 100%;
+}
+.ex-scrolly[data-static='true'] figcaption {
+  display: block;
+}
+/* This must follow the base top-scrolly rule. The earlier depth-rail
+   clearance has equal specificity and would otherwise lose by source order. */
+@media (min-width: 1181px) {
+  .ex-scrolly[data-layout='top'] {
+    max-width: min(1400px, 100vw - 8rem);
+  }
+}
+.ex-step {
+  font-size: var(--t-body);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  border-left: 1px solid var(--rule);
+  padding-left: var(--s-5);
+}
+.ex-step[data-active='true'] {
+  color: var(--ink);
+  border-left-color: var(--red);
+}
+.ex-step .ex-step-num {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--s-2);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* No-JS and reduced-motion: every step is simply legible, and the
+   figure shows its final state. Nothing is stranded. */
+.ex-scrolly[data-static='true'] .ex-scrolly-steps {
+  gap: var(--s-6);
+  padding: 0;
+}
+.ex-scrolly[data-static='true'] .ex-step {
+  color: var(--ink);
+}
+
+/* =============================================================
+   EXPLAINER BOXES
+   Scaffolding, not digression. An <Aside> is optional and closed
+   by default because depth must never tax the first read; an
+   <Explain> is the opposite — the two or three ideas without which
+   the next few pages do not parse. So it is always open, it breaks
+   out of the measure so the eye reads it as apparatus rather than
+   argument, and it takes the collector's ink because these are his
+   words rather than the machine's.
+   ============================================================= */
+.ex-explain {
+  margin: var(--s-8) 0;
+  border-top: 2px solid var(--red);
+  border-bottom: 1px solid var(--rule);
+  padding: var(--s-4) 0 var(--s-6);
+}
+.ex-explain-head {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: var(--s-5);
+}
+.ex-explain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--s-5) var(--s-7);
+  align-items: start;
+}
+.ex-def-term {
+  font-family: var(--display);
+  font-size: var(--t-md);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: var(--tr-display);
+  margin-bottom: var(--s-2);
+}
+.ex-def-body {
+  font-size: var(--t-base);
+  line-height: 1.58;
+  color: var(--ink-soft);
+}
+/* MDX wraps a component's children in a paragraph; the last one must not
+   carry the body copy's bottom margin into the grid gap. */
+.ex-def-body p {
+  margin-bottom: var(--s-3);
+}
+.ex-def-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* The Stardust apparatus reads like a technical insert, not a callout box. */
+.ex-light-only .ex-explain {
+  background: #f4f5f7;
+  border-top: 1px solid #111216;
+  border-bottom: 0;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+.ex-open + .ex-body > .ex-explain {
+  grid-column: wide;
+}
+.ex-light-only .ex-explain-head {
+  color: #244a9b;
+}
+.ex-light-only .ex-explain-grid {
+  counter-reset: explainer-definition;
+}
+.ex-light-only .ex-def {
+  counter-increment: explainer-definition;
+  position: relative;
+  padding-top: 1rem;
+  border-top: 1px solid #cfd2d9;
+}
+.ex-light-only .ex-def::before {
+  content: '0' counter(explainer-definition);
+  display: block;
+  margin-bottom: 1.2rem;
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-label);
+  color: #858891;
+}
+
+/* =============================================================
+   ASIDE — the digression
+   Depth must never tax the first read, so digressions are closed
+   by default and open in place.
+   ============================================================= */
+.ex-aside {
+  margin: var(--s-6) 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.ex-aside > summary {
+  cursor: pointer;
+  padding: var(--s-4) 0;
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  list-style: none;
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
+}
+.ex-aside > summary::-webkit-details-marker {
+  display: none;
+}
+.ex-aside > summary::before {
+  content: '+';
+  font-family: var(--mono);
+  color: var(--red);
+}
+.ex-aside[open] > summary::before {
+  content: '−';
+}
+.ex-aside > summary:hover {
+  color: var(--ink);
+}
+.ex-aside-body {
+  padding: 0 0 var(--s-5);
+  font-size: var(--t-base);
+  line-height: 1.68;
+  color: var(--ink-soft);
+}
+
+/* =============================================================
+   INLINE MARKS — uncertainty, citation, nuclide, quantity
+   ============================================================= */
+
+/* =============================================================
+   GLOSSED TERMS
+   A definition in place, so a reader meeting "sphaleron" for the
+   first time does not have to leave the page to find out what it
+   is — and so hovering something marked actually shows something.
+   Pure CSS: hover, focus and focus-within all open it, which means
+   it works on keyboard and needs no JavaScript.
+   ============================================================= */
+/* inline-block, not inline: an absolutely-positioned card inside an inline box
+   anchors to whichever line fragment came first, so a term that wrapped put its
+   card halfway up the paragraph. Terms are one to three words; not breaking
+   them across lines is the right behaviour anyway. */
+.ex-term {
+  position: relative;
+  display: inline-block;
+}
+.ex-term-trigger {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--ink-soft);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.ex-term-trigger:hover {
+  text-decoration-color: var(--red);
+  color: var(--red);
+}
+.ex-term-card {
+  position: absolute;
+  left: 0;
+  bottom: 1.7em;
+  z-index: 40;
+  width: min(24rem, 78vw);
+  display: none;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-4);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-top: 2px solid var(--red);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.09);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  font-style: normal;
+}
+.ex-term:hover .ex-term-card,
+.ex-term:focus-within .ex-term-card {
+  display: flex;
+}
+.ex-term-title {
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ex-term-gloss {
+  color: var(--ink);
+}
+.ex-term-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  align-items: baseline;
+  border-top: 1px solid var(--rule);
+  padding-top: var(--s-2);
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+}
+.ex-term-foot a {
+  color: var(--red);
+  text-decoration: none;
+}
+.ex-term-foot a:hover {
+  text-decoration: underline;
+}
+.ex-term-licence {
+  color: var(--muted);
+}
+/* Near the right edge the card would overflow; flip it. */
+.ex-term:nth-last-child(-n + 3) .ex-term-card {
+  left: auto;
+  right: 0;
+}
+
+/* An epistemic mark in running prose. Underlined in its own ink so
+   the reader can see confidence without leaving the sentence.
+   The card explains what the status MEANS — a bare `title` tooltip
+   was slow to appear, unstyled, and invisible on touch. */
+.ex-unc {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-color: var(--ep);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+.ex-unc::after {
+  content: attr(data-explain);
+  position: absolute;
+  left: 0;
+  bottom: 1.7em;
+  z-index: 40;
+  width: min(22rem, 78vw);
+  display: none;
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-top: 2px solid var(--ep);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.09);
+  font-family: var(--body);
+  font-size: var(--t-xs);
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--ink);
+  white-space: normal;
+  text-decoration: none;
+}
+.ex-unc:hover::after,
+.ex-unc:focus-visible::after {
+  display: block;
+}
+.ex-unc[data-epistemic='contested'] {
+  text-decoration-style: dashed;
+}
+.ex-unc[data-epistemic='open'] {
+  text-decoration-style: dotted;
+  color: var(--red);
+}
+
+/* A number bound to its source.
+   Was a bare ° — visually almost nothing and far too small to hit. Now a real
+   numbered marker with a proper target: a link nobody can click is not a link,
+   it is a decoration that lies about being one. */
+.ex-cite {
+  display: inline-block;
+  min-width: 1.15em;
+  padding: 0 0.2em;
+  font-family: var(--mono);
+  font-size: 0.62em;
+  line-height: 1.5;
+  vertical-align: super;
+  color: var(--red);
+  text-decoration: none;
+  margin-left: 0.12em;
+  text-align: center;
+  border-radius: 2px;
+  background: var(--red-wash);
+  border: 1px solid var(--red-soft);
+  font-variant-numeric: lining-nums tabular-nums;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.ex-cite:hover,
+.ex-cite:focus-visible {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--paper);
+}
+
+/* Isotope notation. Browser-default sup/sub stacking cannot set
+   ⁵⁶Fe — the two numbers must sit on the same left edge, tight to
+   the symbol, and not disturb the line. */
+/* Isotope notation.
+   The stack is absolutely positioned inside a zero-width relative box, so the
+   two numerals sit tight to the symbol WITHOUT contributing to the line box.
+   The earlier inline-flex version grew the line and dropped the atomic number
+   onto the row beneath — visible, ugly, and worse than plain text. */
+.ex-nuclide {
+  white-space: nowrap;
+  font-variant-numeric: lining-nums tabular-nums;
+  position: relative;
+  display: inline-block;
+  /* room for the numerals to the left of the symbol */
+  padding-left: 1.5em;
+}
+.ex-nuclide .n-stack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.4em;
+  height: 100%;
+  font-size: 0.58em;
+  line-height: 1.05;
+  text-align: right;
+  pointer-events: none;
+}
+.ex-nuclide .n-a {
+  position: absolute;
+  right: 0;
+  top: -0.05em;
+  display: block;
+}
+.ex-nuclide .n-z {
+  position: absolute;
+  right: 0;
+  bottom: -0.15em;
+  display: block;
+  color: var(--ink-soft);
+}
+/* No atomic number: the mass number alone sits as a normal superscript. */
+.ex-nuclide[data-solo='true'] .n-a {
+  top: 0.02em;
+}
+.ex-nuclide .n-sym {
+  font-variant-numeric: normal;
+}
+
+/* Quantities never break across lines, and the space before the
+   unit is a thin one. */
+.ex-qty {
+  white-space: nowrap;
+  font-variant-numeric: lining-nums proportional-nums;
+}
+.ex-qty sup {
+  font-size: 0.68em;
+  line-height: 0;
+  vertical-align: super;
+}
+
+/* Read aloud, never seen. Used where the visible form is correct
+   typography but wrong speech — exponents, mainly. */
+.ex-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =============================================================
+   REVISIONS — the living document, made legible
+   ============================================================= */
+.ex-revisions {
+  margin: var(--s-10) 0 var(--s-8);
+  padding-top: var(--s-6);
+  border-top: 2px solid var(--red);
+}
+.ex-revisions h2 {
+  font-family: var(--display);
+  font-size: var(--t-xl);
+  font-weight: 600;
+  margin-bottom: var(--s-3);
+}
+.ex-revisions .intro {
+  color: var(--ink-soft);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  margin-bottom: var(--s-6);
+  max-width: var(--measure);
+}
+.ex-rev {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--s-5);
+  padding: var(--s-4) 0;
+  border-top: 1px solid var(--rule);
+}
+.ex-rev .when {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.ex-rev .what {
+  font-size: var(--t-base);
+  line-height: 1.6;
+}
+.ex-rev .where {
+  margin-top: var(--s-2);
+  font-family: var(--mono);
+  font-size: var(--l-sm);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* =============================================================
+   SOURCES
+   ============================================================= */
+.ex-sources {
+  margin: var(--s-8) 0 var(--s-10);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule-strong);
+}
+.ex-sources h2 {
+  font-family: var(--display);
+  font-size: var(--t-xl);
+  font-weight: 600;
+  margin-bottom: var(--s-5);
+}
+.ex-source {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: var(--s-4);
+  padding: var(--s-4) 0;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: var(--s-8);
+}
+.ex-source:target {
+  background: var(--red-wash);
+}
+.ex-source .n {
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  color: var(--red);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.ex-source .title {
+  font-size: var(--t-base);
+  line-height: 1.5;
+}
+.ex-source .by {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.ex-source .note {
+  margin-top: var(--s-2);
+  color: var(--ink-soft);
+  font-size: var(--t-xs);
+  line-height: 1.55;
+}
+
+/* =============================================================
+   RESPONSIVE
+   The rail and the scrolly two-up are the only things that must
+   fundamentally change shape.
+   ============================================================= */
+@media (max-width: 1180px) {
+  .ex-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 1050px) {
+  .ex-scrolly {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-5);
+  }
+  .ex-scrolly-sticky {
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--rule);
+    z-index: 5;
+  }
+  .ex-scrolly-steps {
+    gap: 40vh;
+    padding: 15vh 0;
+  }
+  .ex-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+  .ex-card .meta {
+    flex-direction: row;
+    gap: var(--s-5);
+    flex-wrap: wrap;
+  }
+}
+
+/* The pan affordance, switched on by the narrow-screen block below. Declared
+   first: at equal specificity the later rule wins, and with the default sitting
+   after the media query the note was permanently hidden. */
+.ex-fig-pan {
+  display: none;
+  margin-top: var(--s-2);
+  font-family: var(--mono);
+  font-size: var(--l-md);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* =============================================================
+   NARROW SCREENS — figures pan, they do not shrink
+   A chart drawn at 1300 units rendered into 279px is not a small
+   chart, it is a picture of a chart: every label lands at three
+   pixels and the whole thing becomes decoration, which is the one
+   thing nothing here is allowed to be. So below the point where a
+   figure can hold its own detail, it keeps its size and the reader
+   moves along it. The hidden data table remains the other way in.
+   ============================================================= */
+@media (max-width: 1050px) {
+  .ex-fig[data-width='wide'] .ex-fig-frame,
+  .ex-fig[data-width='full'] .ex-fig-frame {
+    max-width: calc(100vw - 2rem);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* room for the scrollbar so it never sits on the drawing */
+    padding-bottom: var(--s-2);
+  }
+  .ex-fig[data-width='wide'] svg {
+    min-width: 1080px;
+  }
+  .ex-fig[data-width='full'] svg {
+    min-width: 1340px;
+  }
+  /* Panning is a last resort, not the policy.
+     Measured on a 390px phone, the old blanket rule showed 41% of a figure at
+     a time AND scaled it to 0.65×, so it was truncated and shrunk at once. A
+     figure that can reflow does; only the two that genuinely cannot — a chart
+     of nuclides and a periodic table, both of which have a fixed grid — keep
+     their size and pan, and they say so.
+
+     Declared AFTER the two rules above, not before: same specificity, so this
+     only wins on source order, and written first it lost silently. */
+  .ex-fig[data-reflow='true'] .ex-fig-frame {
+    overflow-x: visible;
+  }
+  .ex-fig[data-reflow='true'] svg {
+    min-width: 0;
+    width: 100%;
+  }
+  .ex-fig[data-reflow='true'] .ex-fig-pan {
+    display: none;
+  }
+  /* Pinned figures are subject to the same rule; the height cap would
+     otherwise fight the min-width and win. */
+  .ex-scrolly[data-layout='top'] .ex-fig svg {
+    width: 100%;
+    max-height: none;
+  }
+  .ex-scrolly[data-layout='top'] {
+    --fig-cap: none;
+    max-width: calc(100vw - 2rem);
+  }
+  /* Nothing pins on a phone or narrow tablet. A pinned figure needs to leave
+     the reader room to read past it, and on a short screen there is no
+     arrangement where a figure
+     worth looking at and a paragraph worth reading both fit. So the figure sits
+     in the flow, the steps follow it as ordinary prose, and the sequence
+     degrades to exactly the shape it already ships in with JavaScript off. */
+  .ex-scrolly[data-layout='top'] .ex-scrolly-sticky {
+    position: static;
+    border-bottom: 0;
+    padding: 0;
+  }
+  .ex-scrolly[data-layout='top'] .ex-scrolly-steps {
+    gap: var(--s-6);
+    padding: var(--s-6) 0 0;
+  }
+  .ex-scrolly .ex-step {
+    color: var(--ink);
+  }
+  .ex-scrolly[data-layout='top'] figcaption {
+    display: block;
+  }
+}
+
+/* The note only appears where the figure genuinely overflows: a `wide` figure
+   is 700px, so it still fits at 800px of viewport, and telling a reader to drag
+   something that does not move is worse than saying nothing. */
+@media (max-width: 1050px) {
+  .ex-fig[data-width='full'] .ex-fig-pan {
+    display: block;
+  }
+  .ex-fig[data-reflow='true'] .ex-fig-pan {
+    display: none;
+  }
+}
+@media (max-width: 730px) {
+  .ex-fig[data-width='wide'] .ex-fig-pan {
+    display: block;
+  }
+  .ex-fig[data-reflow='true'] .ex-fig-pan {
+    display: none;
+  }
+}
+
+
+@media (max-width: 650px) {
+  /* Vertical only. Horizontal spacing comes from the shared grid's gutter —
+     adding padding here too double-indented the title away from the prose. */
+  .ex-open {
+    padding: var(--s-7) 0 var(--s-6);
+  }
+  .ex-open h1 {
+    font-size: clamp(2.2rem, 11vw, var(--t-3xl));
+  }
+  .ex-standfirst {
+    font-size: var(--t-body);
+    padding-left: var(--s-4);
+  }
+  .ex-body {
+    --gutter: var(--s-4);
+  }
+  .ex-body h2 {
+    font-size: var(--t-xl);
+  }
+  .ex-shelf {
+    padding: var(--s-7) var(--s-4) var(--s-8);
+  }
+  .ex-rev,
+  .ex-source {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-2);
+  }
+}
+
+/* Licence notice for the Wikipedia glosses. */
+.ex-licence {
+  margin: var(--s-6) 0 var(--s-9);
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: var(--measure);
+}
+.ex-licence a {
+  color: var(--ink-soft);
+}

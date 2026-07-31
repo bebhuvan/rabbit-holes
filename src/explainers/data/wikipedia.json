@@ -1,0 +1,214 @@
+{
+  "source": {
+    "title": "Wikipedia article summaries",
+    "url": "https://en.wikipedia.org",
+    "licence": "CC BY-SA 4.0",
+    "note": "Fetched at build time and checked into the repo, so the text a reader sees is the text that was reviewed. Every gloss links to its article, as the licence requires."
+  },
+  "terms": {
+    "nucleosynthesis": {
+      "title": "Nucleosynthesis",
+      "gloss": "Nucleosynthesis is the process that creates new atomic nuclei from pre-existing nucleons and nuclei. According to current theories, the first nuclei were formed a few minutes after the Big Bang through nuclear reactions in a process called Big Bang nucleosynthesis.",
+      "url": "https://en.wikipedia.org/wiki/Nucleosynthesis",
+      "fetched": "2026-07-29"
+    },
+    "big-bang-nucleosynthesis": {
+      "title": "Big Bang nucleosynthesis",
+      "gloss": "In physical cosmology, Big Bang nucleosynthesis is a model for the production of light nuclei during the first ~20 minutes of the evolution of the universe.",
+      "url": "https://en.wikipedia.org/wiki/Big_Bang_nucleosynthesis",
+      "fetched": "2026-07-29"
+    },
+    "deuterium": {
+      "title": "Deuterium",
+      "gloss": "Deuterium is one of two stable isotopes of hydrogen; the other is protium, or hydrogen-1, 1H. The deuterium nucleus (deuteron) contains one proton and one neutron, whereas the far more common 1H has no neutrons.",
+      "url": "https://en.wikipedia.org/wiki/Deuterium",
+      "fetched": "2026-07-29"
+    },
+    "coulomb-barrier": {
+      "title": "Coulomb barrier",
+      "gloss": "The Coulomb barrier, named after Coulomb's law, which is in turn named after physicist Charles-Augustin de Coulomb, is the energy barrier caused by electrostatic interaction that two nuclei need to overcome so they can get close enough to undergo a nuclear reaction such as nuclear fusion.",
+      "url": "https://en.wikipedia.org/wiki/Coulomb_barrier",
+      "fetched": "2026-07-29"
+    },
+    "quantum-tunnelling": {
+      "title": "Quantum tunnelling",
+      "gloss": "In physics, quantum tunnelling, barrier penetration, or simply tunnelling is a quantum mechanical phenomenon in which an object such as an electron or atom passes through a potential energy barrier that, according to classical mechanics, should not be passable due to the object not having…",
+      "url": "https://en.wikipedia.org/wiki/Quantum_tunnelling",
+      "fetched": "2026-07-29"
+    },
+    "gamow-factor": {
+      "title": "Gamow factor",
+      "gloss": "The Gamow factor, Sommerfeld factor or Gamow–Sommerfeld factor, named after physicists George Gamow and Arnold Sommerfeld, is a probability factor for two nuclear particles' chance of overcoming the Coulomb barrier in order to undergo nuclear reactions, for example in nuclear fusion.",
+      "url": "https://en.wikipedia.org/wiki/Gamow_factor",
+      "fetched": "2026-07-29"
+    },
+    "proton-proton-chain": {
+      "title": "Proton–proton chain",
+      "gloss": "The proton–proton chain, also commonly referred to as the p–p chain, is one of two known sets of nuclear fusion reactions by which stars convert hydrogen to helium.",
+      "url": "https://en.wikipedia.org/wiki/Proton%E2%80%93proton_chain",
+      "fetched": "2026-07-29"
+    },
+    "cno-cycle": {
+      "title": "CNO cycle",
+      "gloss": "In astrophysics, the carbon–nitrogen–oxygen cycle, sometimes called Bethe–Weizsäcker cycle after Hans Albrecht Bethe and Carl Friedrich von Weizsäcker, is one of the two known sets of fusion reactions by which stars convert hydrogen to helium, the other being the proton–proton chain reaction, which…",
+      "url": "https://en.wikipedia.org/wiki/CNO_cycle",
+      "fetched": "2026-07-29"
+    },
+    "binding-energy": {
+      "title": "Nuclear binding energy",
+      "gloss": "Nuclear binding energy in nuclear physics and nuclear engineering is the minimum energy that is required to fully disassemble the nucleus of one atom into its constituent protons and neutrons, known collectively as nucleons.",
+      "url": "https://en.wikipedia.org/wiki/Nuclear_binding_energy",
+      "fetched": "2026-07-29"
+    },
+    "sphaleron": {
+      "title": "Sphaleron",
+      "gloss": "A sphaleron is a static (time-independent) solution to the electroweak field equations of the Standard Model of particle physics, and is involved in certain hypothetical processes that violate baryon and lepton numbers.",
+      "url": "https://en.wikipedia.org/wiki/Sphaleron",
+      "fetched": "2026-07-29"
+    },
+    "cp-violation": {
+      "title": "CP violation",
+      "gloss": "In particle physics, CP violation is a violation of CP-symmetry : the combination of C-symmetry and P-symmetry. CP-symmetry states that the laws of physics should be the same if a particle is interchanged with its antiparticle (C-symmetry) while its spatial coordinates are inverted.",
+      "url": "https://en.wikipedia.org/wiki/CP_violation",
+      "fetched": "2026-07-29"
+    },
+    "baryogenesis": {
+      "title": "Baryogenesis",
+      "gloss": "In physical cosmology, baryogenesis is the physical process that is hypothesized to have taken place during the early universe to produce baryonic asymmetry, the observation that only matter (baryons) and not antimatter (antibaryons) is detected in the universe .",
+      "url": "https://en.wikipedia.org/wiki/Baryogenesis",
+      "fetched": "2026-07-29"
+    },
+    "gw170817": {
+      "title": "GW170817",
+      "gloss": "GW170817 was a gravitational wave (GW) observed by the LIGO and Virgo detectors on 17 August 2017, originating within the shell elliptical galaxy NGC 4993, about 140 million light years away.",
+      "url": "https://en.wikipedia.org/wiki/GW170817",
+      "fetched": "2026-07-29"
+    },
+    "fred-hoyle": {
+      "title": "Fred Hoyle",
+      "gloss": "Sir Fred Hoyle (24 June 1915 – 20 August 2001) was an English astronomer. With Margaret and Geoffrey Burbidge and William Alfred Fowler, he formulated the theory of stellar nucleosynthesis in the influential B2FH paper.",
+      "url": "https://en.wikipedia.org/wiki/Fred_Hoyle",
+      "fetched": "2026-07-29"
+    },
+    "sakharov-conditions": {
+      "title": "Baryogenesis",
+      "gloss": "In physical cosmology, baryogenesis is the physical process that is hypothesized to have taken place during the early universe to produce baryonic asymmetry, the observation that only matter (baryons) and not antimatter (antibaryons) is detected in the universe .",
+      "url": "https://en.wikipedia.org/wiki/Baryogenesis",
+      "fetched": "2026-07-29"
+    },
+    "s-process": {
+      "title": "S-process",
+      "gloss": "The slow neutron-capture process, or s-process, is a series of reactions in nuclear astrophysics that occur in stars, particularly asymptotic giant branch stars. The s-process is responsible for the creation (nucleosynthesis) of approximately half the atomic nuclei heavier than iron.",
+      "url": "https://en.wikipedia.org/wiki/S-process",
+      "fetched": "2026-07-29"
+    },
+    "r-process": {
+      "title": "R-process",
+      "gloss": "In nuclear astrophysics, the rapid neutron-capture process, also known as the r-process, is a set of nuclear reactions that is responsible for the creation of approximately half of the atomic nuclei heavier than iron, the \"heavy elements\", with the other half produced largely by the s-process.",
+      "url": "https://en.wikipedia.org/wiki/R-process",
+      "fetched": "2026-07-29"
+    },
+    "kilonova": {
+      "title": "Kilonova",
+      "gloss": "A kilonova is a transient astronomical event that occurs in a compact binary system when two neutron stars (BNS) or a neutron star and a black hole collide.",
+      "url": "https://en.wikipedia.org/wiki/Kilonova",
+      "fetched": "2026-07-29"
+    },
+    "agb-star": {
+      "title": "Asymptotic giant branch",
+      "gloss": "The asymptotic giant branch (AGB) is a region of the Hertzsprung–Russell diagram populated by evolved cool luminous stars. This is a period of stellar evolution undertaken by all low- to intermediate-mass stars (about 0.5 to 8 solar masses) late in their lives.",
+      "url": "https://en.wikipedia.org/wiki/Asymptotic_giant_branch",
+      "fetched": "2026-07-29"
+    },
+    "type-ia-supernova": {
+      "title": "Type Ia supernova",
+      "gloss": "A Type Ia supernova is a supernova that occurs in binary systems in which one of the stars is a white dwarf. The other star can be anything from a giant star to an even smaller white dwarf.",
+      "url": "https://en.wikipedia.org/wiki/Type_Ia_supernova",
+      "fetched": "2026-07-29"
+    },
+    "core-collapse-supernova": {
+      "title": "Supernova",
+      "gloss": "A supernova is a powerful and luminous explosion of a star. A supernova occurs during the last evolutionary stages of a massive star, or when a white dwarf is triggered into runaway nuclear fusion.",
+      "url": "https://en.wikipedia.org/wiki/Supernova",
+      "fetched": "2026-07-29"
+    },
+    "recombination": {
+      "title": "Recombination (cosmology)",
+      "gloss": "In cosmology, recombination refers to the epoch during which charged electrons and protons first became bound to form electrically neutral hydrogen atoms. Recombination occurred about 378000 years after the Big Bang.",
+      "url": "https://en.wikipedia.org/wiki/Recombination_(cosmology)",
+      "fetched": "2026-07-29"
+    },
+    "cosmic-microwave-background": {
+      "title": "Cosmic microwave background",
+      "gloss": "The cosmic microwave background, or relic radiation, is microwave radiation that fills all space in the observable universe. With a standard optical telescope, the background space between stars and galaxies is almost completely dark.",
+      "url": "https://en.wikipedia.org/wiki/Cosmic_microwave_background",
+      "fetched": "2026-07-29"
+    },
+    "planck-time": {
+      "title": "Planck units",
+      "gloss": "In particle physics and physical cosmology, Planck units are a system of units of measurement defined exclusively in terms of four universal physical constants: c, G, ħ, and kB. Expressing one of these physical constants in terms of Planck units yields a numerical value of 1.",
+      "url": "https://en.wikipedia.org/wiki/Planck_units",
+      "fetched": "2026-07-29"
+    },
+    "chart-of-nuclides": {
+      "title": "Table of nuclides",
+      "gloss": "A table or chart of nuclides is a two-dimensional graph of isotopes of the chemical elements, in which one axis represents the number of neutrons and the other represents the number of protons in the atomic nucleus.",
+      "url": "https://en.wikipedia.org/wiki/Table_of_nuclides",
+      "fetched": "2026-07-29"
+    },
+    "magic-number": {
+      "title": "Magic number (physics)",
+      "gloss": "In nuclear physics, a magic number is a number of nucleons such that they are arranged into complete shells within the atomic nucleus. As a result, atomic nuclei with a \"magic\" number of protons or neutrons are much more stable than other nuclei.",
+      "url": "https://en.wikipedia.org/wiki/Magic_number_(physics)",
+      "fetched": "2026-07-29"
+    },
+    "stellar-nucleosynthesis": {
+      "title": "Stellar nucleosynthesis",
+      "gloss": "In astrophysics, stellar nucleosynthesis is the creation of chemical elements by nuclear fusion reactions within stars. Stellar nucleosynthesis has occurred since the original creation of hydrogen, helium and lithium during the Big Bang.",
+      "url": "https://en.wikipedia.org/wiki/Stellar_nucleosynthesis",
+      "fetched": "2026-07-29"
+    },
+    "neutron-star-merger": {
+      "title": "Neutron star merger",
+      "gloss": "A neutron star merger is the stellar collision of neutron stars. When two neutron stars fall into mutual orbit, they gradually spiral inward due to the loss of energy emitted as gravitational radiation.",
+      "url": "https://en.wikipedia.org/wiki/Neutron_star_merger",
+      "fetched": "2026-07-29"
+    },
+    "b2fh-paper": {
+      "title": "B2FH paper",
+      "gloss": "The B2FH paper was a landmark scientific paper on the origin of the chemical elements. The paper's title is \"Synthesis of the Elements in Stars\", but it became known as B2FH from the initials of its authors: Margaret Burbidge, Geoffrey Burbidge, William A. Fowler, and Fred Hoyle.",
+      "url": "https://en.wikipedia.org/wiki/B2FH_paper",
+      "fetched": "2026-07-29"
+    },
+    "cecilia-payne": {
+      "title": "Cecilia Payne-Gaposchkin",
+      "gloss": "Cecilia Payne-Gaposchkin was a British-born American astronomer and astrophysicist. Her work on the cosmic makeup of the universe and the nature of variable stars was foundational to modern astrophysics.",
+      "url": "https://en.wikipedia.org/wiki/Cecilia_Payne-Gaposchkin",
+      "fetched": "2026-07-29"
+    },
+    "george-gamow": {
+      "title": "George Gamow",
+      "gloss": "George Gamow was a Soviet and American polymath, theoretical physicist and cosmologist. He was an early advocate and developer of Georges Lemaître's Big Bang theory.",
+      "url": "https://en.wikipedia.org/wiki/George_Gamow",
+      "fetched": "2026-07-29"
+    },
+    "hans-bethe": {
+      "title": "Hans Bethe",
+      "gloss": "Hans Albrecht Eduard Bethe was a German-American physicist who made major contributions to nuclear physics, astrophysics, quantum electrodynamics and solid-state physics, and received the Nobel Prize in Physics in 1967 for his work on the theory of stellar nucleosynthesis.",
+      "url": "https://en.wikipedia.org/wiki/Hans_Bethe",
+      "fetched": "2026-07-29"
+    },
+    "neutrino-decoupling": {
+      "title": "Neutrino decoupling",
+      "gloss": "In Big Bang cosmology, neutrino decoupling was the epoch at which neutrinos ceased interacting with other types of matter, and thereby ceased influencing the dynamics of the universe at early times.",
+      "url": "https://en.wikipedia.org/wiki/Neutrino_decoupling",
+      "fetched": "2026-07-29"
+    },
+    "cosmological-lithium-problem": {
+      "title": "Cosmological lithium problem",
+      "gloss": "In astronomy, the lithium problem or lithium discrepancy refers to the discrepancy between the primordial abundance of lithium as inferred from observations of metal-poor halo stars in our galaxy and the amount that should theoretically exist due to Big Bang nucleosynthesis (BBN).",
+      "url": "https://en.wikipedia.org/wiki/Cosmological_lithium_problem",
+      "fetched": "2026-07-29"
+    }
+  }
+}

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rabbit Holes — a commonplace book, kept in the open</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Spline+Sans+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_tokens.css">
+<style>
+  /* Punctuation repair — Bodoni declares U+2000-206F but ships no dash
+     glyph, which suppresses fallback. See 11-folio-entry.html. */
+  @font-face{
+    font-family:'DisplayPunct';
+    src:url(https://fonts.gstatic.com/s/newsreader/v26/cY9AfjOCX1hbuyalUrK4397yjA.woff2) format('woff2');
+    font-weight:300 600;font-style:normal;font-display:swap;
+    unicode-range:U+2010-2015;
+  }
+
+  :root{
+    --paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;
+    --red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    /* one colour per REAL type in config.ts — musings is the plurality (87)
+       and had no treatment at all in mockup 10 */
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;
+    --maxw:1240px;--rail-w:272px;
+    --display:'DisplayPunct','Bodoni Moda',Didot,'Times New Roman',serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+    --body:'Newsreader',Georgia,serif;
+    --flourish:'Apple Symbols','Segoe UI Symbol','Noto Sans Symbols 2','DejaVu Sans',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+      --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+      --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+      --c-verse:#82C29A;--c-practical:#D89A80;}
+  }
+  :root[data-theme="dark"]{--paper:#181713;--ink:#EAE7DE;--ink-soft:#ABA79C;--muted:#6F6C62;
+    --rule:#2A2823;--rule-strong:#3C3A33;--red:#E4715F;--red-soft:#7C463C;--red-wash:#1E1A18;
+    --c-musings:#B6A2E0;--c-links:#84AAE4;--c-reflections:#E2B267;
+    --c-verse:#82C29A;--c-practical:#D89A80;}
+  :root[data-theme="light"]{--paper:#FFFFFF;--ink:#1B1B19;--ink-soft:#5E5C56;--muted:#A3A199;
+    --rule:#EDEBE5;--rule-strong:#DEDBD2;--red:#C0392B;--red-soft:#E0A69E;--red-wash:#FDFBFA;
+    --c-musings:#8E76B8;--c-links:#4E7EC2;--c-reflections:#C58A2E;
+    --c-verse:#5F9E79;--c-practical:#B0705A;}
+
+  /* Display optical size pinned — Bodoni's display cut has hairlines too
+     fine to survive at these sizes, especially on dark. */
+  .brand .mark,.thesis h1,.folio-big,.entry h2,.hand-say{
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+  }
+
+  /* ==========================================================
+     THE TWO-INK RULE  — this is a system, not a colour choice.
+     ----------------------------------------------------------
+     RED marks WHOSE VOICE IT IS, never where a link goes.
+
+       red  = the collector. His reaction (the hand), the heads he
+              chose, the ways he offers you deeper into his garden.
+       black= everyone else. Quoted text, other people's titles,
+              outbound destinations, dates, counts, machinery.
+
+     The consequence worth stating: when the hand carries an
+     outbound link ("[True dat](ft.com)"), it stays RED — the
+     voice wins over the destination. The domain beside it is
+     muted, because the domain is the world, not him.
+
+     Corollary: if red is doing nothing on a folio, that folio
+     has no hand yet, and it must still look finished. Red is
+     never structural.
+     ========================================================== */
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:20px;line-height:1.7;font-optical-sizing:auto;
+    font-feature-settings:"liga" 1,"onum" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--red);color:#fff}
+  a{color:inherit}
+
+  /* ============ MASTHEAD ============
+     Reads as the head of a book, not a web nav bar:
+     - the strapline is italic serif, not tracked-out caps. Nine words of
+       uppercase mono read as texture; the same words in italic read as a
+       sentence, which is what they are.
+     - the theme control is separated from navigation by a rule. It was
+       previously spaced identically to the links, so it read as a sixth
+       destination rather than a control.
+     - active item is marked with a hairline under the word itself, not a
+       floating tab bar.
+     - a double rule closes the head — a book device rather than a border. */
+  .masthead-inner{max-width:var(--maxw);margin:0 auto;padding:2.1rem 2.6rem 1.5rem;
+    display:flex;align-items:baseline;justify-content:space-between;gap:2rem}
+  .masthead{border-bottom:3px double var(--rule-strong)}
+  .brand{text-decoration:none;line-height:1}
+  .brand .mark{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-xl);letter-spacing:var(--tr-display)}
+  .brand .sub{display:block;margin-top:.5rem;font-family:var(--body);font-style:italic;
+    font-size:var(--t-base);color:var(--ink-soft);letter-spacing:0}
+  .brand .sub .flr{color:var(--red);font-family:var(--flourish);font-size:var(--l-lg);
+    font-style:normal;margin:0 .25rem}
+  .masthead nav{display:flex;align-items:baseline;gap:1.7rem;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);text-transform:uppercase}
+  .masthead nav a{color:var(--muted);text-decoration:none}
+  .masthead nav a:hover{color:var(--ink)}
+  .masthead nav a.on{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--red);text-decoration-thickness:1px;text-underline-offset:6px}
+  .lamp{background:none;border:none;cursor:pointer;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base);line-height:1;padding:0 0 0 1.7rem;
+    margin-left:-.2rem;border-left:1px solid var(--rule);transition:color .2s}
+  .lamp:hover{color:var(--red)}
+
+  .shell{max-width:var(--maxw);margin:0 auto;display:grid;
+    grid-template-columns:var(--rail-w) 1fr;align-items:start;position:relative}
+  /* The rail's rule lives on the shell, not on .rail. .rail is sticky, so a
+     border-right on it is only as tall as its own content — the left wall
+     stopped a fifth of the way down and the page lost its spine. Invisible
+     while the stream is short; glaring the moment it isn't. */
+  .shell::before{content:"";position:absolute;top:0;bottom:0;
+    left:var(--rail-w);width:1px;background:var(--rule)}
+
+  /* ============ THE INDEX RAIL ============
+     Heads are HAND-PROMOTED, not auto-derived. There are 143 tags but only
+     ~8 with enough weight to navigate by; the rest are a long tail of 2s
+     and 3s. The rail shows the curated set and says so. */
+  .rail{padding:3rem 2rem;position:sticky;top:0}
+  .rail-label{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem}
+  /* the fleuron marks the rail's PRIMARY heading only — repeating it on
+     every label turns a flourish into wallpaper */
+  .rail-label.flr::after{content:"\2766";color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-base);letter-spacing:0}
+  .rail-note{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--muted);
+    line-height:1.45;margin-bottom:1.4rem}
+  .index{list-style:none;font-family:var(--mono);font-size:var(--l-lg)}
+  .index a{display:flex;align-items:baseline;gap:.5rem;padding:.32rem .3rem;
+    text-decoration:none;color:var(--ink-soft)}
+  /* head names never wrap — a wrapped name loses its dotted leader and
+     breaks the ledger rhythm the whole rail depends on */
+  .index a>span:first-child{white-space:nowrap}
+  .index a:hover{color:var(--red)}
+  .index .dots{flex:1;border-bottom:1px dotted var(--rule-strong);transform:translateY(-.2em);margin:0 .15rem}
+  .index .n{color:var(--muted);font-size:var(--l-lg);font-variant-numeric:lining-nums tabular-nums}
+  .index a:hover .n{color:var(--red)}
+  .index-more{display:inline-block;margin:1rem .3rem 0;font-family:var(--mono);
+    font-size:var(--l-md);color:var(--muted);text-decoration:none}
+  .index-more:hover{color:var(--red)}
+
+  .rail-rule{border:none;border-top:1px solid var(--rule);margin:1.7rem 0}
+  /* the asterism marks ONE seam in the rail, not every seam */
+  .rail-rule.ast{text-align:center;overflow:visible}
+  .rail-rule.ast::after{content:"\2042";display:inline-block;transform:translateY(-.72em);
+    background:var(--paper);padding:0 .7rem;color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-base)}
+
+  /* THE WAY IN — promoted to the top of the rail. It is the highest-value
+     link for a first-time reader and it was previously below ten heads,
+     five kinds and two dividers. Red-ruled, because under the ink rule an
+     offer of passage into the garden is the collector speaking. */
+  .wayin{display:block;text-decoration:none;padding-left:1rem;
+    border-left:2px solid var(--red);margin-bottom:1.9rem}
+  .wayin .t{display:block;font-family:var(--body);font-style:italic;
+    font-size:var(--t-md);line-height:1.35;color:var(--ink)}
+  .wayin:hover .t{color:var(--red)}
+  .wayin .mani{color:var(--red);font-style:normal;font-family:var(--flourish);
+    font-size:var(--t-base);margin-right:.3rem}
+  .wayin .s{display:block;font-family:var(--mono);font-size:var(--l-sm);
+    letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+  /* the key — makes the tinted numerals legible as a system rather than
+     an unexplained decoration. Counts are real. */
+  .kinds{margin-top:.2rem;list-style:none;font-family:var(--mono);font-size:var(--l-md)}
+  .kinds li{display:flex;align-items:baseline;gap:.55rem;padding:.22rem .3rem;color:var(--ink-soft)}
+  .kinds .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
+    font-optical-sizing:none;font-variation-settings:'opsz' 11;
+    font-variant-numeric:lining-nums;line-height:1;min-width:2.1rem}
+  .kinds .kn{flex:1}
+  .kinds .kc{color:var(--muted);font-size:var(--l-md);font-variant-numeric:tabular-nums}
+
+  .colophon{margin-top:2.2rem;font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    line-height:1.6;color:var(--ink-soft)}
+  .colophon .kept{display:block;margin-top:.85rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-sm);letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
+
+  /* ============ STREAM ============ */
+  .stream{min-width:0}
+  .thesis{padding:4rem 3.2rem 2.8rem;border-bottom:1px solid var(--rule)}
+  .thesis .kicker{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+  .thesis .kicker b{color:var(--red);font-weight:600}
+  .thesis h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.05;
+    letter-spacing:var(--tr-display);margin-bottom:1.1rem}
+  .thesis .lede{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);max-width:34em}
+  .thesis .lede a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-soft)}
+
+  .eyebrow{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
+    color:var(--muted);padding:2rem 3.2rem .4rem;display:flex;align-items:center;gap:.6rem}
+  .eyebrow .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-base)}
+
+  /* ---- the folio ---- */
+  .entry{padding:2.2rem 3.2rem 2.4rem;border-bottom:1px solid var(--rule)}
+  .runhead{display:flex;align-items:baseline;gap:1rem;margin-bottom:.7rem}
+  .folio-big{font-family:var(--display);font-weight:600;font-size:var(--t-2xl);line-height:1;
+    font-variant-numeric:lining-nums;letter-spacing:var(--tr-display)}
+  .runhead .meta{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted);display:flex;gap:.9rem}
+  .entry h2{font-family:var(--display);font-weight:600;font-size:var(--t-xl);line-height:1.18;
+    letter-spacing:var(--tr-display);margin-bottom:.75rem}
+  .entry h2 a{text-decoration:none}
+  .entry h2 a:hover{color:var(--red)}
+
+  /* THE HAND — 2 to 5 words, in red, and usually carrying the source link.
+     This is the single most common shape in the corpus. */
+  .hand-line{margin-bottom:.9rem;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
+  .hand-say{font-family:var(--display);font-style:italic;font-weight:500;
+    font-size:var(--t-lg);line-height:1.2;color:var(--red)}
+  .hand-say a{text-decoration:none;border-bottom:1px solid var(--red-soft)}
+  .hand-src{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);color:var(--muted)}
+
+  blockquote{margin:0 0 .9rem;padding-left:1.3rem;border-left:2px solid var(--rule-strong);
+    font-size:var(--t-body);line-height:1.66;color:var(--ink)}
+  blockquote p+p{margin-top:.75rem}
+  blockquote cite{display:block;margin-top:.6rem;font-style:normal;font-family:var(--mono);
+    font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+
+  .entry p.say{font-size:var(--t-body);line-height:1.62;color:var(--ink-soft);margin-bottom:.8rem}
+  .entry p.say a{color:var(--ink);text-decoration:underline;
+    text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+
+  /* verse */
+  .verse{font-size:var(--t-body);line-height:1.75}
+  .verse .l{display:block;padding-left:1.4rem;text-indent:-1.4rem}
+
+  /* a long entry is truncated, and says how long it is */
+  .more{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--red);
+    text-decoration:none;display:inline-block;margin-top:.3rem}
+  .more:hover{text-decoration:underline;text-underline-offset:4px}
+
+  /* embed placeholder */
+  /* embeds sit at the measure of the text, not the width of the column —
+     a full-bleed 16:9 player swamps every other folio in the stream */
+  .embed{border:1px solid var(--rule-strong);aspect-ratio:16/9;max-width:26rem;
+    display:flex;align-items:center;justify-content:center;margin-bottom:.9rem;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    text-transform:uppercase;color:var(--muted)}
+
+  /* footer of the entry: heads + threads, quiet */
+  .entry-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.9rem;
+    font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label)}
+  .entry-foot .head{color:var(--red);text-decoration:none;border:1px solid var(--rule-strong);
+    border-radius:2px;padding:.14rem .45rem}
+  .entry-foot .head:hover{border-color:var(--red)}
+  .entry-foot .thr{color:var(--muted);text-decoration:none;margin-left:auto}
+  .entry-foot .thr:hover{color:var(--red)}
+
+  /* ---- pulled from the stacks: serendipity as a first-class module.
+     The stream is reverse-chron and therefore always shows you the
+     newest things; this is the door to the other 188. It is the whole
+     thesis of the site expressed as one component. ---- */
+  .stacks{padding:2.4rem 3.2rem;border-bottom:1px solid var(--rule);
+    background:var(--red-wash,transparent)}
+  .stacks-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.3rem}
+  .stacks-head .ast{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-md)}
+  .stacks-head .t{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
+    text-transform:uppercase;color:var(--muted)}
+  .stacks-sub{font-family:var(--body);font-style:italic;font-size:var(--t-base);
+    color:var(--ink-soft);margin-bottom:1.4rem}
+  .stacks .again{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);
+    color:var(--red);text-decoration:none;margin-left:auto}
+  .stacks .again:hover{text-decoration:underline;text-underline-offset:4px}
+
+  .stream-foot{padding:3rem 3.2rem 4rem;text-align:center}
+  .stream-foot .flr{color:var(--red-soft);font-family:var(--flourish);font-size:var(--t-lg)}
+  .stream-foot .line{font-family:var(--body);font-style:italic;font-size:var(--t-md);
+    color:var(--ink-soft);margin:.8rem 0 .5rem}
+  .stream-foot .meta{font-family:var(--mono);font-size:var(--l-md);letter-spacing:var(--tr-label);color:var(--muted)}
+  .stream-foot .meta a{color:var(--red);text-decoration:none}
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="brand" href="#">
+        <span class="mark">Rabbit Holes</span>
+        <span class="sub">a commonplace book,<span class="flr">&#10086;</span>kept in the open</span>
+      </a>
+      <nav>
+        <a href="#" class="on">Index</a>
+        <a href="#">Heads</a>
+        <a href="#">Glosses</a>
+        <a href="#">Search</a>
+        <a href="#">About</a>
+        <button class="lamp" id="lamp" type="button" title="light / lamplight">&#9789;</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+
+    <aside class="rail">
+
+      <a class="wayin" href="#">
+        <span class="t"><span class="mani">&#9758;</span>Start here &#8212; five to fall into first.</span>
+        <span class="s">a hand-picked way in</span>
+      </a>
+
+      <div class="rail-label flr">The Index</div>
+      <p class="rail-note">Ten heads, chosen &#8212; not counted.</p>
+      <ul class="index">
+        <li><a href="#"><span>Artificial Intelligence</span><span class="dots"></span><span class="n">62</span></a></li>
+        <li><a href="#"><span>Poetry</span><span class="dots"></span><span class="n">15</span></a></li>
+        <li><a href="#"><span>Reading</span><span class="dots"></span><span class="n">9</span></a></li>
+        <li><a href="#"><span>Writing</span><span class="dots"></span><span class="n">8</span></a></li>
+        <li><a href="#"><span>Philosophy</span><span class="dots"></span><span class="n">8</span></a></li>
+        <li><a href="#"><span>Literature</span><span class="dots"></span><span class="n">6</span></a></li>
+        <li><a href="#"><span>China</span><span class="dots"></span><span class="n">5</span></a></li>
+        <li><a href="#"><span>Work</span><span class="dots"></span><span class="n">5</span></a></li>
+        <li><a href="#"><span>Technology</span><span class="dots"></span><span class="n">5</span></a></li>
+        <li><a href="#"><span>Books</span><span class="dots"></span><span class="n">5</span></a></li>
+      </ul>
+      <a href="#" class="index-more">the long tail &#8212; 133 more &#8594;</a>
+
+      <hr class="rail-rule">
+
+      <div class="rail-label" style="margin-bottom:.75rem">Five kinds</div>
+      <ul class="kinds">
+        <li><span class="sw" style="color:var(--c-musings)">84</span><span class="kn">Musings</span></li>
+        <li><span class="sw" style="color:var(--c-links)">57</span><span class="kn">Links</span></li>
+        <li><span class="sw" style="color:var(--c-reflections)">23</span><span class="kn">Reflections</span></li>
+        <li><span class="sw" style="color:var(--c-verse)">16</span><span class="kn">Verse</span></li>
+        <li><span class="sw" style="color:var(--c-practical)">10</span><span class="kn">Practical</span></li>
+      </ul>
+
+      <hr class="rail-rule ast">
+
+      <p class="colophon">Things that struck my fancy, filed in the open &#8212; so you might fall down the same holes I did.
+        <span class="kept">kept by Bhuvanesh &#183; since Aug 2025</span>
+      </p>
+    </aside>
+
+    <main class="stream">
+
+      <section class="thesis">
+        <div class="kicker"><b>&#182; 190</b> &nbsp;&#183;&nbsp; you have wandered in</div>
+        <h1>A commonplace book, kept in the open.</h1>
+        <p class="lede">Links, quotes, poems and stray thoughts, gathered as they struck me &#8212; the source set in black, my own hand in <a href="#">red</a>. Read down the stream, or pull a thread from the <a href="#">Index</a> and follow it wherever it wants to go.</p>
+      </section>
+
+      <div class="eyebrow">Recently kept <span class="flr">&#10086;</span></div>
+      <article class="entry">
+        <div class="runhead">
+          <span class="folio-big" style="color:var(--c-musings)">189</span>
+          <span class="meta"><span>Musing</span><span>19 Jan 2026</span></span>
+        </div>
+        <h2><a href="#">We are living in wild times</a></h2>
+        <p class="say rubric">I was struggling with sleep, so I started chatting with Claude &#8212; just to think through the problem. At some point, almost casually, I asked: should I just build my own sleep-tracking app?</p>
+        <p class="say">The tool said no, and gave me genuinely useful advice instead. But what struck me wasn&#8217;t the answer. It was that the question even made sense to ask.</p>
+        <a class="more" href="#">keep reading &#8212; 1,400 words &#8594;</a>
+        <div class="entry-foot">
+          <a class="head" href="#">AI</a>
+          <a class="head" href="#">Vibecoding</a>
+          <a class="head" href="#">Personal software</a>
+          <a class="thr" href="#">6 threads &#8594;</a>
+        </div>
+      </article>
+      <article class="entry">
+        <div class="runhead">
+          <span class="folio-big" style="color:var(--c-links)">188</span>
+          <span class="meta"><span>Link</span><span>19 Jan 2026</span></span>
+        </div>
+        <h2><a href="#">Using Obsidian with an AI assistant</a></h2>
+        <div class="embed">youtube &#183; embedded player</div>
+        <p class="say">Found this helpful on using Obsidian with Gemini CLI &#8212; the same steps and logic apply to Claude Code as well.</p>
+        <div class="entry-foot">
+          <a class="head" href="#">Personal knowledge management</a>
+          <a class="thr" href="#">2 threads &#8594;</a>
+        </div>
+      </article>
+      <article class="entry">
+        <div class="runhead">
+          <span class="folio-big" style="color:var(--c-reflections)">186</span>
+          <span class="meta"><span>Reflection</span><span>17 Jan 2026</span></span>
+        </div>
+        <h2><a href="#">The past is the present</a></h2>
+        <div class="hand-line">
+          <span class="hand-say">Wow</span>
+        </div>
+        <blockquote>
+          <p>We look at the present through a rear view mirror. We march backwards into the future.</p>
+          <cite>Marshall McLuhan &#183; hat tip to Joe Weisenthal</cite>
+        </blockquote>
+        <div class="entry-foot">
+          <a class="head" href="#">Quotes</a>
+          <a class="thr" href="#">3 threads &#8594;</a>
+        </div>
+      </article>
+      <article class="entry">
+        <div class="runhead">
+          <span class="folio-big" style="color:var(--c-links)">184</span>
+          <span class="meta"><span>Link</span><span>17 Jan 2026</span></span>
+        </div>
+        <h2><a href="#">China derangement syndrome</a></h2>
+        <div class="hand-line">
+          <span class="hand-say"><a href="#">True dat</a></span>
+          <span class="hand-src">ft.com</span>
+        </div>
+        <blockquote>
+          <p>The reason could be that when you are powerful, people take note only when that power falters. The world was hardly impressed when Trump went on his tariff rampage; what struck people was when China successfully fought back.</p>
+        </blockquote>
+        <div class="entry-foot">
+          <a class="head" href="#">China</a>
+          <a class="head" href="#">Geopolitics</a>
+          <a class="thr" href="#">4 threads &#8594;</a>
+        </div>
+      </article>
+
+      <!-- ============================================================
+           PULLED FROM THE STACKS — serendipity as a component.
+           The stream above is reverse-chron and so only ever shows the
+           newest five. This is the door to the other 188, and it is the
+           site's thesis expressed as UI rather than as a slogan.
+           ============================================================ -->
+      <section class="stacks">
+        <div class="stacks-head">
+          <span class="ast">&#8258;</span>
+          <span class="t">Pulled from the stacks</span>
+          <a class="again" href="#">pull another &#8594;</a>
+        </div>
+        <p class="stacks-sub">One of the older 189, chosen at random. Refresh and it changes.</p>
+
+      <article class="entry">
+        <div class="runhead">
+          <span class="folio-big" style="color:var(--c-verse)">044</span>
+          <span class="meta"><span>Verse</span><span>21 Sept 2025</span></span>
+        </div>
+        <h2><a href="#">Wild Geese</a></h2>
+        <div class="hand-line">
+          <span class="hand-say">Beautiful.</span>
+          <span class="hand-src">Mary Oliver</span>
+        </div>
+        <div class="verse">
+          <span class="l">You do not have to be good.</span>
+          <span class="l">You do not have to walk on your knees</span>
+          <span class="l">For a hundred miles through the desert, repenting.</span>
+          <span class="l">You only have to let the soft animal of your body</span>
+          <span class="l">love what it loves.</span>
+        </div>
+        <a class="more" href="#">the whole poem &#8594;</a>
+        <div class="entry-foot">
+          <a class="head" href="#">Poetry</a>
+          <a class="thr" href="#">15 threads &#8594;</a>
+        </div>
+      </article>
+      </section>
+
+
+      <footer class="stream-foot">
+        <span class="flr">&#10086;</span>
+        <p class="line">Wander further &#8212; every thread leads somewhere.</p>
+        <p class="meta">190 folios &#183; 10 heads &#183; last kept yesterday &nbsp;&#183;&nbsp; <a href="#">the full index &#8594;</a></p>
+      </footer>
+
+    </main>
+  </div>
+
+<script>
+  // Theme override on top of prefers-color-scheme. Reads the *rendered*
+  // scheme first so the first click always flips what you can actually see.
+  (function(){
+    var r=document.documentElement, b=document.getElementById('lamp');
+    b.addEventListener('click',function(){
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>
