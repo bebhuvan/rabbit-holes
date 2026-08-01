@@ -1,6 +1,9 @@
 ---
 title: Did Western Countries Use Industrial Policy Before China?
 date: 2026-08-01
+description: >-
+  A historical look at how Western economies used tariffs, subsidies,
+  procurement, and state direction to build industries of their own.
 source_title: Glenn Luk's tweet
 source_url: https://rabbitholes.garden/posts/2026-08-01-china-envy/
 source_author: Glenn Luk
@@ -543,4 +546,3 @@ Western criticism is justified when it identifies specific harmful practices and
 - Douglas Irwin, [“Did Late-Nineteenth-Century U.S. Tariffs Promote Infant Industries?”](https://www.nber.org/papers/w6835)
 - Douglas Irwin, [“Tariffs and Growth in Late Nineteenth Century America”](https://www.nber.org/papers/w7639)
 - Anne Krueger, [“The Political Economy of the Rent-Seeking Society”](https://doi.org/10.2307/1808883)
-

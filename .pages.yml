@@ -182,9 +182,7 @@ content:
     path: src/content/glosses
     format: yaml-frontmatter
     exclude: [shelf-is-empty.md]
-    filename:
-      template: "{year}-{month}-{day}-{primary}.md"
-      field: create
+    filename: "{title}.md"
     view:
       primary: title
       fields: [title, source_kind, date, published]
