@@ -176,11 +176,12 @@ content:
         description: "Alternative: Write directly in markdown. Use this instead of the rich editor above if you prefer markdown syntax. **bold**, *italic*, # headings, - lists, > quotes"
 
   # Study Notes Collection
-  - name: glosses
+  - name: study_notes
     label: Study Notes
     type: collection
     path: src/content/glosses
     format: yaml-frontmatter
+    exclude: [shelf-is-empty.md]
     filename:
       template: "{year}-{month}-{day}-{primary}.md"
       field: create
@@ -221,6 +222,9 @@ content:
         type: string
         required: true
         description: "A full link to the original source, including https://."
+        pattern:
+          regex: "^https?://\\S+$"
+          message: "Enter one complete URL beginning with http:// or https://."
 
       - name: source_author
         label: Source Author
