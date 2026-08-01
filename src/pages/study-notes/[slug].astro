@@ -1,0 +1,35 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import GlossShelf from '../../components/GlossShelf.astro';
+import '../../styles/gloss.css';
+
+export async function getStaticPaths() {
+  const glosses = await getCollection('glosses', ({ data }) => data.published !== false);
+  return glosses.map((gloss) => ({ params: { slug: gloss.slug }, props: { gloss } }));
+}
+
+const { gloss } = Astro.props;
+const { Content } = await gloss.render();
+---
+
+<Base title={gloss.data.title} description={gloss.data.description} active="study-notes">
+  <GlossShelf />
+  <article class="gloss-sheet">
+    <div class="gloss-source">
+      <div class="meta">{gloss.data.source_kind} · read {gloss.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+      <p class="title"><a href={gloss.data.source_url} target="_blank" rel="noopener noreferrer">{gloss.data.source_title}</a></p>
+      {gloss.data.source_author && <p class="by">{gloss.data.source_author}</p>}
+    </div>
+    <h1>{gloss.data.title}</h1>
+    {gloss.data.description && <p class="gloss-deck">{gloss.data.description}</p>}
+    <div class="disclosure">
+      <div class="gloss-label">How this note was made</div>
+      <p>This grew out of a conversation with {gloss.data.model || 'an AI system'} after I worked through the source above. I asked the questions and reviewed the result; the source remains the authority where the note is incomplete or wrong.</p>
+    </div>
+    {gloss.data.note && <div class="gloss-note"><div class="gloss-label">Why I asked for this</div><p>{gloss.data.note}</p></div>}
+    <div class="gloss-body"><Content /></div>
+  </article>
+</Base>

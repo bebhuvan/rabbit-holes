@@ -1,6 +1,6 @@
 ---
 interface Props {
-  active?: 'index' | 'heads' | 'explainers' | 'glosses' | 'search' | 'about';
+  active?: 'index' | 'heads' | 'explainers' | 'study-notes' | 'search' | 'about';
 }
 
 const { active } = Astro.props;
@@ -8,7 +8,7 @@ const links = [
   { key: 'index', label: 'Home', href: '/' },
   { key: 'heads', label: 'Subjects', href: '/heads' },
   { key: 'explainers', label: 'Explainers', href: '/explainers' },
-  { key: 'glosses', label: 'Study notes', href: '/glosses' },
+  { key: 'study-notes', label: 'Study notes', href: '/study-notes' },
   { key: 'search', label: 'Search', href: '/search' },
   { key: 'about', label: 'About', href: '/about' },
 ] as const;

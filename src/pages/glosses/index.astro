@@ -1,38 +1,5 @@
 ---
 export const prerender = true;
 
-import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import GlossShelf from '../../components/GlossShelf.astro';
-import '../../styles/gloss.css';
-
-const glosses = (await getCollection('glosses', ({ data }) => data.published !== false))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+return Astro.redirect('/study-notes/', 301);
 ---
-
-<Base title="Study Notes" description="AI-assisted notes made after reading, watching, and listening." active="glosses">
-  <GlossShelf />
-  <main class="gloss-sheet">
-    <div class="gloss-label">Study notes · {glosses.length}</div>
-    <h1>Thinking things through, with a little help.</h1>
-    <p class="gloss-deck">After I finish a podcast, video, paper, or difficult essay, I often talk it through with AI—asking questions, testing what I understood, and turning the conversation into something I can return to.</p>
-    <p class="gloss-purpose">I publish selected notes here in case they are useful to someone else. They are AI-assisted, reviewed by me, and kept distinct from the commonplace book.</p>
-    {glosses.length ? (
-      <div class="gloss-list">
-        {glosses.map((gloss) => (
-          <a class="gloss-card" href={`/glosses/${gloss.slug}`}>
-            <span class="mark">⁂</span>
-            <span>
-              <h2>{gloss.data.title}</h2>
-              <p>{gloss.data.description || gloss.data.source_title}</p>
-            </span>
-          </a>
-        ))}
-      </div>
-    ) : (
-      <div class="empty-state">
-        The notebook is ready. The first study note will appear here.
-      </div>
-    )}
-  </main>
-</Base>

@@ -193,30 +193,31 @@ content:
         order: desc
     fields:
       - name: title
-        label: Note Title
+        label: Study Note Title
         type: string
         required: true
-        description: "The title shown on the Study Notes page."
+        description: "Your title for this note. It is also used to create the URL when the note is first published."
 
       - name: date
-        label: Date
+        label: Note Date
         type: date
         required: true
-        description: "When you finished or published this note."
+        description: "When you finished reviewing this note."
 
       - name: description
-        label: Introduction
+        label: One-Sentence Summary
         type: text
-        description: "A short introduction shown below the title and in the Study Notes index."
+        required: true
+        description: "Shown below the title, in the Study Notes index, and in search and social previews."
 
       - name: source_title
-        label: Source Title
+        label: Source Being Discussed
         type: string
         required: true
-        description: "The podcast, video, paper, book, or article this note is about."
+        description: "The title of the article, episode, video, paper, book, or post you worked through."
 
       - name: source_url
-        label: Source URL
+        label: Original Source URL
         type: string
         required: true
         description: "A full link to the original source, including https://."
@@ -225,12 +226,12 @@ content:
           message: "Enter one complete URL beginning with http:// or https://."
 
       - name: source_author
-        label: Source Author
+        label: Creator or Author
         type: string
         description: "The author, speaker, host, or creator."
 
       - name: source_kind
-        label: Source Type
+        label: Source Format
         type: select
         required: true
         default: Article
@@ -246,32 +247,30 @@ content:
               label: Paper
             - name: Book
               label: Book
+            - name: Social post
+              label: Social post or thread
             - name: Other
               label: Other
 
       - name: note
-        label: Why I Asked
+        label: What I Wanted to Understand
         type: text
-        description: "Optional context about what prompted the conversation or what you wanted to understand."
+        description: "Optional. This appears publicly under “Why I asked for this.”"
 
       - name: model
-        label: AI System
+        label: AI Used
         type: string
-        description: "Optional. For example: ChatGPT, Claude, or Gemini. The public note will say “an AI system” when left blank."
-
-      - name: folio
-        label: Related Commonplace Entry
-        type: string
-        description: "Optional slug of a related Rabbit Holes post."
+        required: true
+        description: "For transparency—for example, ChatGPT, Claude, or Gemini."
 
       - name: published
-        label: Published
+        label: Publish on Site
         type: boolean
         default: false
         description: "Turn this on when the note is ready to appear publicly."
 
       - name: body
-        label: Study Note
+        label: Note Content
         type: rich-text
         required: true
         description: "Your reviewed summary, questions, answers, and brief."

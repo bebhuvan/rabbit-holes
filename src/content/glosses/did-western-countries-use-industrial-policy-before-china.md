@@ -5,9 +5,10 @@ description: >-
   A historical look at how Western economies used tariffs, subsidies,
   procurement, and state direction to build industries of their own.
 source_title: Glenn Luk's tweet
-source_url: https://rabbitholes.garden/posts/2026-08-01-china-envy/
+source_url: https://x.com/i/status/2083333268322259131
 source_author: Glenn Luk
-source_kind: Article
+source_kind: Social post
+model: ChatGPT
 note: A lot of people complain that China is using industrial subsidies and
   other forms of industrial policy to promote its own industries, create
   national champions, and so on. A lot of people accuse China of this. But is it

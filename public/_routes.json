@@ -36,6 +36,7 @@
     "/search-index.json",
     "/heads/*",
     "/glosses/*",
+    "/study-notes/*",
     "/tags/*",
     "/types/*"
   ]
