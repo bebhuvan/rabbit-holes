@@ -14,7 +14,9 @@ featured: false
 
 **How sure am I?** Reasonably sure about the broad argument. Much less sure about how the technology, economics and geopolitics will unfold from here.
 
-**Disclosure:** I dictated most of this into ChatGPT and used it heavily to clean up the voice notes, organise the post, do research, verify claims, add links and fine-tune the language. The argument, opinions and occ
+**Disclosure:** I dictated most of this into ChatGPT and used it heavily to clean up the voice notes, organise the post, do research, verify claims, add links and fine-tune the language. The argument and the opinions are all mine. 
+
+![](/images/xi.png)
 
 The newer version of [DeepSeek V4 Flash](https://api-docs.deepseek.com/news/news260424/) launched recently, and if the benchmarks are to be believed, it's one of the better models in its class. In a lot of specific contexts, it seems on par with some of the better frontier models in the category.
 
