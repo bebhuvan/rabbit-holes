@@ -15,3 +15,5 @@ It's all fine! Nothing to see here!
 ![](</images/temperature (1).jpeg>)
 
 [https://x.com/hausfath/status/2083998233924079756?s=20](https://x.com/hausfath/status/2083998233924079756?s=20)  
+
+[https://x.com/MikeHudema/status/2083967100725403897?s=20](https://x.com/MikeHudema/status/2083967100725403897?s=20) 
