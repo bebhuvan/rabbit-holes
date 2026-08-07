@@ -20,7 +20,9 @@ const { Content } = await gloss.render();
   <article class="gloss-sheet">
     <div class="gloss-source">
       <div class="meta">{gloss.data.source_kind} · read {gloss.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
-      <p class="title"><a href={gloss.data.source_url} target="_blank" rel="noopener noreferrer">{gloss.data.source_title}</a></p>
+      <p class="title">{gloss.data.source_url
+        ? <a href={gloss.data.source_url} target="_blank" rel="noopener noreferrer">{gloss.data.source_title}</a>
+        : gloss.data.source_title}</p>
       {gloss.data.source_author && <p class="by">{gloss.data.source_author}</p>}
     </div>
     <h1>{gloss.data.title}</h1>

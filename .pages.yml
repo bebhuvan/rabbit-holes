@@ -219,8 +219,8 @@ content:
       - name: source_url
         label: Original Source URL
         type: string
-        required: true
-        description: "A full link to the original source, including https://."
+        required: false
+        description: "A full link to the original source, including https://. Leave blank if there isn't one."
         pattern:
           regex: "^https?://\\S+$"
           message: "Enter one complete URL beginning with http:// or https://."

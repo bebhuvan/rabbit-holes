@@ -44,7 +44,7 @@ const glosses = defineCollection({
     date: z.date(),
     description: z.string().optional(),
     source_title: z.string(),
-    source_url: z.string().url(),
+    source_url: z.string().url().optional(),
     source_author: z.string().optional(),
     source_kind: z.string().default('Article'),
     model: z.string().optional(),
