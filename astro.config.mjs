@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import mdx from '@astrojs/mdx';
 import { remarkLinkEmbed } from './src/utils/remarkLinkEmbed.js';
+import { remarkSubheadStrong } from './src/utils/remarkSubheadStrong.js';
 
 // https://astro.build/config
 export default defineConfig({
@@ -33,7 +34,7 @@ export default defineConfig({
     contentIntellisense: true
   },
   markdown: {
-    remarkPlugins: [remarkLinkEmbed]
+    remarkPlugins: [remarkLinkEmbed, remarkSubheadStrong]
   },
   vite: {
     build: {

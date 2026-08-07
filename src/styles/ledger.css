@@ -36,6 +36,7 @@
    lining and tabular, as the folio numbers already were. */
 .year-title,.head-card .head-count,.search-result .result-num{
   font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"liga" 1,"onum" 0;
 }
 .year-title{font-family:var(--display);font-size:var(--t-2xl);font-weight:600;color:var(--muted);
   border-bottom:1px solid var(--rule);padding-bottom:.65rem}
@@ -89,7 +90,7 @@
 .tag-index a:hover .tag-index-name{text-decoration:underline;text-decoration-thickness:1px;
   text-underline-offset:var(--ul-offset);text-decoration-color:var(--red-soft)}
 .tag-index-count{margin-left:.42rem;font-family:var(--mono);font-size:var(--l-sm);
-  color:var(--muted);font-variant-numeric:lining-nums}
+  color:var(--muted);font-variant-numeric:lining-nums;font-feature-settings:"liga" 1,"onum" 0}
 
 /* The label voice on the ledger pages. Row data stays mono — a ledger's whole
    point is that its columns line up. */

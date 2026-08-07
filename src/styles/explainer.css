@@ -444,6 +444,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   text-transform: uppercase;
   color: var(--muted);
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 .ex-chapter .asks {
   font-family: var(--display);
@@ -470,6 +471,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   overflow: visible;
   /* axes, ticks and data labels align in columns */
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 .ex-fig figcaption {
   margin-top: var(--s-4);
@@ -514,6 +516,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   font-size: var(--l-md);
   fill: var(--ink);
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 
 /* Annotation is the author's hand on the world's material — the
@@ -823,6 +826,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   color: var(--muted);
   margin-bottom: var(--s-2);
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 
 /* No-JS and reduced-motion: every step is simply legible, and the
@@ -1127,6 +1131,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   background: var(--red-wash);
   border: 1px solid var(--red-soft);
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .ex-cite:hover,
@@ -1147,6 +1152,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
 .ex-nuclide {
   white-space: nowrap;
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
   position: relative;
   display: inline-block;
   /* room for the numerals to the left of the symbol */
@@ -1189,6 +1195,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
 .ex-qty {
   white-space: nowrap;
   font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 .ex-qty sup {
   font-size: 0.68em;
@@ -1245,6 +1252,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   text-transform: uppercase;
   color: var(--muted);
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 .ex-rev .what {
   font-size: var(--t-base);
@@ -1289,6 +1297,7 @@ body:has(.ex-light-only) [data-theme-toggle] {
   font-size: var(--l-md);
   color: var(--red);
   font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "liga" 1, "onum" 0;
 }
 .ex-source .title {
   font-size: var(--t-base);

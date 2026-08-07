@@ -141,9 +141,11 @@
   *{margin:0;padding:0;box-sizing:border-box}
   /* 22px, not 20. EB Garamond's x-height is roughly 12% shorter than
      Newsreader's, so matching the old px size would have shrunk the apparent
-     reading size by about a step. Set to hold the same optical size. */
+     reading size by about a step. Set to hold the same optical size.
+     Keyed off --t-body rather than a literal 22px now, so the token and the
+     rendered size can't drift apart again like they did before. */
   body{background:var(--paper);color:var(--ink);font-family:var(--body);
-    font-size:22px;line-height:1.62;font-optical-sizing:auto;
+    font-size:var(--t-body);line-height:1.62;font-optical-sizing:auto;
     font-feature-settings:"liga" 1,"onum" 1;font-kerning:normal;font-synthesis:none;
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   /* A wash rather than a flag. Solid --red behind white reversed a whole
@@ -233,7 +235,8 @@
   .index a>span:first-child{white-space:nowrap}
   .index a:hover{color:var(--red)}
   .index .dots{flex:1;border-bottom:1px dotted var(--rule-strong);transform:translateY(-.2em);margin:0 .15rem}
-  .index .n{color:var(--muted);font-size:var(--l-lg);font-variant-numeric:lining-nums tabular-nums}
+  .index .n{color:var(--muted);font-size:var(--l-lg);font-variant-numeric:lining-nums tabular-nums;
+    font-feature-settings:"liga" 1,"onum" 0}
   .index a:hover .n{color:var(--red)}
   .index-more{display:inline-block;margin:1rem .3rem 0;font-family:var(--mono);
     font-size:var(--l-md);color:var(--muted);text-decoration:none}
@@ -271,7 +274,7 @@
      form a numeric column instead of a ragged edge. */
   .kinds .sw{font-family:var(--display);font-weight:600;font-size:var(--t-md);
     font-optical-sizing:none;font-variation-settings:'opsz' var(--opsz-display);
-    font-variant-numeric:lining-nums tabular-nums;line-height:1;
+    font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"liga" 1,"onum" 0;line-height:1;
     min-width:2.4rem;text-align:right}
   .kinds .kn{flex:1}
   .kinds .kc{color:var(--muted);font-size:var(--l-md);font-variant-numeric:tabular-nums}
@@ -318,7 +321,7 @@
      sizes of division. */
   .thesis{padding:4.6rem var(--stream-pad) 3.2rem;border-bottom:1px solid var(--rule)}
   .thesis .kicker{font-size:var(--t-base);color:var(--muted);margin-bottom:1.5rem;
-    font-variant-numeric:lining-nums}
+    font-variant-numeric:lining-nums;font-feature-settings:"liga" 1,"onum" 0}
   .thesis .kicker b{color:var(--red);font-weight:600}
   /* Sized to fit the box rather than to a scale step: the hero is one sentence
      per line by design, and at the full --t-3xl the second line overran the
@@ -368,7 +371,7 @@
      gutter and the leaf share a top edge as well as a baseline grid. */
   .runhead{text-align:right;padding-top:.12rem}
   .folio-big{display:block;font-family:var(--display);font-weight:600;font-size:var(--t-2xl);line-height:1;
-    font-variant-numeric:lining-nums tabular-nums;letter-spacing:var(--tr-display)}
+    font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"liga" 1,"onum" 0;letter-spacing:var(--tr-display)}
   .folio-kind{display:block;margin-top:.5rem;font-family:var(--mono);font-size:var(--l-sm);
     letter-spacing:var(--tr-label);text-transform:uppercase;color:var(--muted)}
   .entry-body{min-width:0}
@@ -525,7 +528,7 @@
     font-family:var(--body);font-size:var(--t-base);font-style:normal;line-height:1.38}
   .link-preview-image{width:7.5rem;height:5rem;overflow:hidden;padding:.35rem;
     border-left:1px solid var(--rule);background:var(--paper)}
-  .link-preview-image img{width:100%;height:100%;margin:0;border:0;object-fit:contain;
+  .link-preview-image img{display:block;width:100%;height:100%;margin:0;border:0;object-fit:contain;
     object-position:center}
   .link-preview-arrow{color:var(--red);font-family:var(--mono);font-size:var(--l-lg)}
   .link-preview:hover{border-color:var(--red-soft)}
@@ -603,7 +606,7 @@
     letter-spacing:var(--tr-label-sc)}
   /* the folio count is a figure, not a word: small-cap figures rendered the
      zero at x-height and "380" read as "38o" */
-  .thesis .kicker b{font-variant-caps:normal;font-variant-numeric:lining-nums}
+  .thesis .kicker b{font-variant-caps:normal;font-variant-numeric:lining-nums;font-feature-settings:"liga" 1,"onum" 0}
   /* the eyebrow's fleuron sat on the mono baseline; small caps sit higher */
   .eyebrow .flr,.stacks-head .ast{transform:translateY(.06em)}
 

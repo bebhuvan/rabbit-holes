@@ -14,7 +14,8 @@
     text-transform:uppercase;color:var(--muted);text-decoration:none;margin-bottom:2.6rem;transition:color .18s}
   .folio-rail .back:hover{color:var(--red)}
   .folio-num{font-family:var(--display);font-weight:600;font-size:var(--t-4xl);line-height:.82;
-    letter-spacing:var(--tr-display);color:var(--c-verse);font-variant-numeric:lining-nums;display:block}
+    letter-spacing:var(--tr-display);color:var(--c-verse);font-variant-numeric:lining-nums;
+    font-feature-settings:"liga" 1,"onum" 0;display:block}
   .folio-word{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
     color:var(--muted);display:block;margin-top:.7rem}
   .folio-rail dl{margin-top:2.4rem;font-family:var(--mono);font-size:var(--l-md);line-height:1.55}
@@ -36,7 +37,7 @@
      reads exactly like a chopped-off heading. Loosened a little and given
      real space beneath. */
   h1{font-family:var(--display);font-weight:600;font-size:var(--t-3xl);line-height:1.13;
-    letter-spacing:var(--tr-display);margin-bottom:1.1rem}
+    letter-spacing:var(--tr-display);margin-bottom:1.1rem;text-wrap:balance}
   .byline{font-family:var(--body);font-style:italic;font-size:var(--t-md);color:var(--ink-soft);margin-bottom:2.8rem}
 
   /* ---- THE HAND — rubricated, and monumental when terse ----
@@ -81,13 +82,17 @@
      lines sit flush, and only a line too long for the measure turns over. */
   .verse .l{display:block;padding-left:1.5rem;text-indent:-1.5rem}
 
-  .prose p{margin-bottom:1.35rem}
-  .prose a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--ul-ink);
-    text-underline-offset:var(--ul-offset);text-decoration-thickness:var(--ul-thick);
-    text-decoration-skip-ink:auto;transition:text-decoration-color var(--dur) var(--ease)}
-  .prose a:hover{text-decoration-color:var(--ink)}
+  .prose p{margin-bottom:1.35rem;text-wrap:pretty}
+  /* A resting underline the colour of wet ink rather than flat grey — it sits
+     back into the page until touched, then thickens and darkens like a nib
+     pressed harder, rather than just flipping a colour. */
+  .prose a{color:var(--ink);font-weight:400;text-decoration:underline;text-decoration-color:var(--ul-ink);
+    text-underline-offset:.28em;text-decoration-thickness:var(--ul-thick);
+    text-decoration-skip-ink:auto;
+    transition:text-decoration-color var(--dur) var(--ease),text-decoration-thickness var(--dur) var(--ease)}
+  .prose a:hover{text-decoration-color:var(--ink);text-decoration-thickness:.09em}
   .prose blockquote{margin:1.9rem 0;padding-left:1.4rem;border-left:2px solid var(--rule-strong);
-    font-size:var(--t-body);line-height:1.72;color:var(--ink)}
+    font-size:var(--t-body);line-height:1.72;color:var(--ink);hanging-punctuation:first}
 
   .leaf-mark{text-align:center;color:var(--red-soft);font-family:var(--flourish);
     font-size:var(--t-lg);line-height:1;margin:2.4rem 0 0}
@@ -117,7 +122,8 @@
   .thread{display:grid;grid-template-columns:3.2rem 1fr;gap:.9rem;align-items:baseline;
     padding:.85rem 0;border-top:1px solid var(--rule);text-decoration:none;transition:padding-left .2s}
   .thread:hover{padding-left:.4rem}
-  .thread .tn{font-family:var(--display);font-weight:600;font-size:var(--t-lg);color:var(--c-verse);font-variant-numeric:lining-nums;line-height:1}
+  .thread .tn{font-family:var(--display);font-weight:600;font-size:var(--t-lg);color:var(--c-verse);
+    font-variant-numeric:lining-nums;font-feature-settings:"liga" 1,"onum" 0;line-height:1}
   .thread .tt{font-family:var(--body);font-size:var(--t-body);color:var(--ink);line-height:1.35}
   .thread:hover .tt{color:var(--red)}
   .thread .tr{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
@@ -139,20 +145,26 @@
      the subjects and the neighbouring folios in view the whole way down. */
   .margin-notes{position:sticky;top:2.2rem}
   .sidenote{margin-bottom:2.1rem;font-size:var(--t-base);line-height:1.58}
+  /* The rule now belongs to the label, not to however many items follow it —
+     "Filed under" with two tags was drawing two hairlines (one per tag) while
+     "Neighbours in time" right below drew none, so two labels in the same
+     type treatment read as two different systems. One hairline per section,
+     always in the same place, regardless of what it introduces. */
   .sidenote .sl{display:block;font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);
-    text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
+    text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;padding-bottom:.55rem;
+    border-bottom:1px solid var(--rule)}
   .sidenote .sb{font-family:var(--body);color:var(--ink-soft);font-style:italic}
   .sidenote a{color:var(--red);text-decoration:none}
   .sidenote a:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
+  .heads{display:flex;flex-direction:column}
   .heads a{display:block;font-family:var(--body);font-size:var(--t-base);font-style:italic;
-    color:var(--ink-soft);text-decoration:none;border-top:1px solid var(--rule);
-    padding:.34rem 0;transition:color .18s}
+    color:var(--ink-soft);text-decoration:none;padding:.34rem 0;transition:color .18s}
   .heads a::before{content:"·";color:var(--red);margin-right:.45rem}
   .heads a:hover{color:var(--red)}
 
   .prose{font-size:var(--t-body);line-height:1.72}
   .prose h2,.prose h3{font-family:var(--display);font-weight:600;line-height:1.18;
-    letter-spacing:var(--tr-display);margin:2.2rem 0 1rem}
+    letter-spacing:var(--tr-display);margin:2.2rem 0 1rem;text-wrap:balance}
   .prose h2{font-size:var(--t-xl)}
   .prose h3{font-size:var(--t-lg)}
   /* ---- APPARATUS ----
@@ -175,10 +187,10 @@
   /* A paragraph whose whole content is bold is a subheading the author wrote
      without a heading level — "**The exchange**" over a list of sources.
      Setting it as one stops it reading as a shouted sentence. */
-  .prose p>strong:only-child{display:block;font-family:var(--mono);font-weight:400;
+  .prose p>strong:only-child:not(.no-subhead){display:block;font-family:var(--mono);font-weight:400;
     font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
     color:var(--muted)}
-  .prose p:has(>strong:only-child){margin:1.9rem 0 .8rem}
+  .prose p:has(>strong:only-child:not(.no-subhead)){margin:1.9rem 0 .8rem}
   .prose img{max-width:min(100%,54rem);height:auto;margin:1.8rem auto;border:1px solid var(--rule)}
   .prose pre{max-width:100%;overflow:auto;padding:1rem;background:var(--red-wash);
     border:1px solid var(--rule);font-family:var(--mono);font-size:.78rem;line-height:1.55}

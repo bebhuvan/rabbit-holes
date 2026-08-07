@@ -24,9 +24,15 @@
      not. Body copy is EB Garamond, whose x-height is ~12% shorter than the
      Newsreader it replaced; display type is still Bodoni and is unchanged. */
   --t-base: 1.08rem;
-  --t-body: 1.24rem;       /* reading size. Deliberately off the strict
-                              scale: a major third leaves no step between
-                              1 and 1.25rem, and 25px body copy is a wall. */
+  /* reading size, 22px (1.375rem). Off the strict major-third scale on
+     purpose — it leaves no step between 1 and 1.25rem, and 25px body copy
+     is a wall — and off the EB Garamond x-height compensation this file
+     used to carry, too: that landed at 1.24rem (~20px), which body{} later
+     corrected to a literal 22px directly and this token was never brought
+     back in line with. Every .prose/.gloss-body/.verse reader that keyed
+     off --t-body was quietly reading ~10% smaller than body{} actually
+     sets — restated here so there's one number again, not two. */
+  --t-body: 1.375rem;
   --t-md  : 1.25rem;
   --t-lg  : 1.5625rem;
   --t-xl  : 1.953rem;
@@ -62,7 +68,7 @@
   --s-5: 1.5rem;   --s-6: 2rem;     --s-7: 2.5rem;   --s-8: 3rem;
   --s-9: 4rem;     --s-10: 5rem;
 
-  /* ---- measure · 35rem = 65 characters of EB Garamond ----
+  /* ---- measure · 38rem ≈ 70 characters of EB Garamond ----
      Averaged over every long paragraph on a folio page, not sampled from one
      first line, which is what misled the earlier pass into 31.5rem. ----
      Stated in rem, not em, on purpose. As `33em` this resolved against
@@ -74,8 +80,8 @@
      characters to the em where Newsreader set 2, so the old 33em came out at
      78–85 characters. Measured in the browser, not estimated.
 
-     Widened from 31.5rem after seeing it in place. Two reasons, and the
-     second is the load-bearing one:
+     Widened from 31.5rem to 35rem (560px) after seeing it in place. Two
+     reasons, and the second is the load-bearing one:
 
        · 31.5rem measured 58 characters averaged across a page, not the 66
          a single first line suggested. Genuinely tight.
@@ -83,8 +89,12 @@
          stood proud of the text on every side, which is the one thing a
          measure must never do — the column stops looking chosen. 35rem is
          560px, so the widest object on the page now sits inside the text
-         block instead of breaking out of it. */
-  --measure: 35rem;
+         block instead of breaking out of it.
+
+     Widened again to 38rem (608px) on request, for more breathing room than
+     the textbook ~65-character ideal. Still clears the 550px embed floor
+     from the reasoning above with margin to spare. */
+  --measure: 38rem;
 
   /* ---- colour by kind · one tint per real `type` in config.ts ----
      Hoisted here 2026-07-20: these were duplicated in eight pages' :root
@@ -150,7 +160,14 @@ h1,h2,h3,.brand .mark,.display,[data-display]{
    x-height, and a numbered subhead opened with a "1" that read as a capital
    I. Display type takes lining figures — the folio numerals already did. */
 h1,h2,h3,.brand .mark,.display,[data-display]{
+  /* font-variant-numeric alone loses to the inherited font-feature-settings
+     "onum" 1 from body (Chromium keeps the explicit low-level feature over
+     the high-level property for the same tag), so headings kept drawing
+     oldstyle figures — Bodoni's oldstyle "3" and "9" have dramatic loops and
+     descenders that read as broken swashes at display size. Forcing "onum" 0
+     alongside is what actually wins the cascade. */
   font-variant-numeric:lining-nums;
+  font-feature-settings:"liga" 1,"onum" 0;
 }
 
 /* =============================================================
