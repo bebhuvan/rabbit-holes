@@ -75,3 +75,5 @@ Taxi drivers and ambulance drivers are [less likely to die of Alzheimer's](https
 >
 > Spatial reasoning can be trained, and training opportunities are already widespread. GIS and remote sensing instruction are available through geography, engineering, public health and environmental science programs worldwide.
 
+---
+
