@@ -67,3 +67,11 @@ This tweet speaks to something I've been increasingly thinking about. It started
 
 ---
 
+Taxi drivers and ambulance drivers are [less likely to die of Alzheimer's](https://theconversation.com/taxi-drivers-rarely-die-of-alzheimers-how-complex-mental-maps-and-spatial-reasoning-protect-your-brain-286650):
+
+> The implications of whether sustained spatial reasoning protects the brain reach beyond mapmakers and cab drivers. Studies have repeatedly found a link between mentally complex occupations and delayed cognitive decline and lower dementia risk, even after accounting for education.  
+>
+> Research on cognitive reserve – the brain’s capacity to continue functioning despite disease – can help explain why two people with a similar disease burden can show markedly different levels of cognitive impairment. If demanding spatial thinking protects the brain, then how societies design schooling, professional training and retirement all become questions of brain health.  
+>
+> Spatial reasoning can be trained, and training opportunities are already widespread. GIS and remote sensing instruction are available through geography, engineering, public health and environmental science programs worldwide.
+
