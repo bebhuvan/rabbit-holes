@@ -12,3 +12,7 @@ M.G. Siegler on the [massive brain exodus](https://spyglass.org/google-deepmind-
 > So yeah, had we gotten hit with Dean, Ghemawat, Vinyals, and Le – followed by Hassabis (even yes, with him technically staying, but in a new, less day-to-day role), it would have actually seemed even more catastrophic. Like Google couldn't stop the bleeding. Better to rip the band-aid off, perhaps?  
 > Regardless, it's still an optics nightmare. I mean, these people were just on stage together a couple months ago talking about the future of AI at Google as three of the four co-leads of Gemini. Now they're all gone – except for Kavukcuoglu.
 
+I have been running a lot of data visualization experiments and I came across this report with the lot of useful tools for dataviz:
+
+[https://github.com/ant-design/ant-design-charts?utm_source=opensourceprojects.dev&ref=opensourceprojects.dev](https://github.com/ant-design/ant-design-charts?utm_source=opensourceprojects.dev&ref=opensourceprojects.dev)
+
