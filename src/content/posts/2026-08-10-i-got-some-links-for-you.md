@@ -3,8 +3,8 @@ title: I got some links for you
 date: 2026-08-10
 type: links
 url: https://rabbitholes.garden/
-published: false
-draft: true
+published: true
+draft: false
 featured: false
 ---
 M.G. Siegler on the [massive brain exodus](https://spyglass.org/google-deepmind-hassabis-dean-gemini/) at Google:
