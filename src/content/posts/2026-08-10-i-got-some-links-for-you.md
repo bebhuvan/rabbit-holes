@@ -14,7 +14,7 @@ M.G. Siegler on the [massive brain exodus](https://spyglass.org/google-deepmind-
 
 ---
 
-I have been running a lot of data visualization experiments and I came across this report with the lot of useful tools for dataviz:
+I have been running a lot of data visualization experiments, and I came across this report with the lot of useful tools for data viz:
 
 [https://github.com/ant-design/ant-design-charts?utm_source=opensourceprojects.dev&ref=opensourceprojects.dev](https://github.com/ant-design/ant-design-charts?utm_source=opensourceprojects.dev&ref=opensourceprojects.dev)
 
@@ -34,7 +34,7 @@ This tweet speaks to something I've been increasingly thinking about. It started
 
 ​Nonetheless, I'm self-aware enough to see the flaws in my own argument—especially this penchant for a lot of otherwise well-meaning people to compress complex problems into a single reason.
 
-### ​Shaking the Needle a Few Millimeters
+**Shaking the Needle a Few Millimeters**
 
 ​That being said, after thinking about this long enough, I've come to the belief that there's no point in waiting for things to be better.
 
@@ -44,15 +44,15 @@ This tweet speaks to something I've been increasingly thinking about. It started
 
 ​This has been a late realization in my life, one that should have been obvious. But what is life if not a journey to rediscover all the things that other people have already discovered, written about, spoken about, and demonstrated? In that sense, life for a lot of us is a remake and not really original.
 
-### ​Doing Things in the Open
+**Doing Things in the Open**
 
 ​To make things a little concrete: in the last couple of years, especially since the advent of LLM coding tools, I’ve become increasingly interested in all things around open knowledge, the public commons, open data, and open information.
 
-​What I do with side projects like [akshara.ink](http://akshara.ink), [thisindianlife.today](http://thisindianlife.today), [opendespair.world](http://opendespair.world), or [paperlanterns.ink](http://paperlanterns.ink) might not seem like much. But I think I'm okay with doing whatever little I can rather than just sitting, complaining, and writing posts about how shitty things are. That doesn't help anything or anyone.
+​What I do with side projects like [akshara.ink](http://akshara.ink), [thisindianlife.today](http://thisindianlife.today), [hopendespair.world](http://hopendespair.world), [soochi.fyi,](http://soochi.fyi) or [paperlanterns.ink](http://paperlanterns.ink) might not seem like much. But I think I'm okay with doing whatever little I can rather than just sitting, complaining, and writing posts about how shitty things are. That doesn't help anything or anyone.
 
 ​My own inspiration comes from other people doing small things. It's not really from grandiose attempts at wholesale change, but from people who are trying to change things in their own way, within a setting where their ability to act is circumscribed by their capabilities and resources. That has left a deep mark on my psyche. It has changed the way I see things, and I've stopped being so pessimistic. Instead of complaining, I'd rather just sit and try to do things.
 
-### ​Action as a Cheat Code
+**Action as a Cheat Code**
 
 ​"Doing things" has become somewhat of a caricaturish phrase in the age of AI, but it's one I deeply believe in.
 
@@ -74,6 +74,12 @@ Taxi drivers and ambulance drivers are [less likely to die of Alzheimer's](https
 > Research on cognitive reserve – the brain’s capacity to continue functioning despite disease – can help explain why two people with a similar disease burden can show markedly different levels of cognitive impairment. If demanding spatial thinking protects the brain, then how societies design schooling, professional training and retirement all become questions of brain health.  
 >
 > Spatial reasoning can be trained, and training opportunities are already widespread. GIS and remote sensing instruction are available through geography, engineering, public health and environmental science programs worldwide.
+
+---
+
+[Adding to my reading list](https://plato.stanford.edu/entries/capitalism/):
+
+[https://x.com/chiaracordelli/status/2086457491827659097?s=20](https://x.com/chiaracordelli/status/2086457491827659097?s=20)
 
 ---
 
