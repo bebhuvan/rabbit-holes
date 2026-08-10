@@ -26,3 +26,9 @@ Adding this paper on critical minerals to my reading list.
 
 ---
 
+Be more fucking chalant. Amen a 100 times!
+
+[https://x.com/i/status/2086513928192893374](https://x.com/i/status/2086513928192893374) 
+
+---
+
