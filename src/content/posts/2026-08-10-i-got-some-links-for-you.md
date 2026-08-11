@@ -28,6 +28,10 @@ Adding this paper on critical minerals to my reading list.
 
 Be more fucking chalant. Amen a 100 times!
 
+[https://x.com/i/status/2086513928192893374](https://x.com/i/status/2086513928192893374) 
+
+[https://x.com/i/status/2086522264464368079](https://x.com/i/status/2086522264464368079) 
+
 This tweet speaks to something I've been increasingly thinking about. It started off as a clichéd diagnosis of why India is the way it is—that is, "premium mediocre."
 
 ​Much like all flawed social commentary, I had a mono-causal reason: indifference or apathy at the root of all the problems that plague India. It feels like we've stopped giving a shit about things, that we're okay with things being mediocre, and that we are perfectly comfortable with muddling along in life. At one point, it also started seeming to me that the reason there’s so much indifference and apathy is because people have stopped believing that tomorrow is going to be better than today. And if that's the case, why would people even bother to fight for things to be better?
@@ -60,10 +64,6 @@ This tweet speaks to something I've been increasingly thinking about. It started
 2. ​**Every action creates forward momentum.** People underappreciate the act of doing things—big, small, or otherwise. Taking action automatically opens doors in front of you.
 
 ​It's shocking to me how big of a cheat code this is for going through reality and letting good things happen to you. I'm a living example of that. All of this was triggered by this one tweet, but these are things that I've come to truly believe.
-
-[https://x.com/i/status/2086513928192893374](https://x.com/i/status/2086513928192893374) 
-
-[https://x.com/i/status/2086522264464368079](https://x.com/i/status/2086522264464368079) 
 
 ---
 
