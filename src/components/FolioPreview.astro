@@ -17,9 +17,10 @@ interface Props {
   total: number;
   relatedCount?: number;
   rubric?: boolean;
+  latest?: boolean;
 }
 
-const { post, number, total, relatedCount = 0, rubric = false } = Astro.props;
+const { post, number, total, relatedCount = 0, rubric = false, latest = false } = Astro.props;
 const kind = postKinds[post.data.type];
 const body = post.body || '';
 const minutes = readingTime(body);
@@ -53,11 +54,17 @@ const verseLines = post.data.type === 'verse'
      ruled ledger rather than a stack of cards. */}
   <div class="runhead">
     <span class="folio-big" style={`color:${kind.color}`}>{folioLabel(number, total)}</span>
-    <span class="folio-kind">{kind.singular}</span>
+    {/* the kind word takes a soft cast of its numeral's colour, so the gutter
+        reads as one lockup — full strength at this size would shout, hence
+        the mix back toward the muted label ink */}
+    <span class="folio-kind" style={`color:color-mix(in srgb, ${kind.color} 62%, var(--muted))`}>{kind.singular}</span>
   </div>
 
   <div class="entry-body">
-    <div class="entry-date">{formatPostDate(post.data.date)}</div>
+    <div class="entry-date">
+      {formatPostDate(post.data.date)}
+      {latest && <span class="latest">· the latest leaf ❦</span>}
+    </div>
     <h2><a href={`/posts/${post.slug}`}>{post.data.title}</a></h2>
 
     {post.data.note && (

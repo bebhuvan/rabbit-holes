@@ -15,6 +15,8 @@ const allPosts = await getCollection('posts');
 const posts = newestFirst(allPosts);
 const folioNumbers = buildFolioNumbers(posts);
 const recent = posts.slice(0, 7);
+const monthOf = (post: (typeof posts)[number]) =>
+  post.data.date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 const older = posts.slice(Math.min(20, posts.length));
 const stackIndex = older.length ? Math.floor(Date.now() / 86_400_000) % older.length : 0;
 const fromStacks = older[stackIndex];
@@ -31,8 +33,9 @@ const lastKept = posts[0]?.data.date;
 
     <main class="stream">
       <section class="thesis">
+        <span class="orn" aria-hidden="true">❦</span>
         <div class="kicker"><b>¶ {posts.length}</b> · a public commonplace book</div>
-        <h1><span>Hi, I’m Bhuvan.</span><span>This is my commonplace book.</span></h1>
+        <h1><span>Hi, I’m Bhuvan.</span><span>This is my <em>commonplace book</em>.</span></h1>
         <p class="lede">
           It is a linkblog and digital garden for the weird, wonderful, and unexpectedly useful things
           I find on the internet. Read what I have kept below, wander through a
@@ -48,13 +51,21 @@ const lastKept = posts[0]?.data.date;
       <div class="eyebrow">Recently kept <span class="flr">❦</span></div>
 
       {recent.map((post, index) => (
-        <FolioPreview
-          post={post}
-          number={folioNumbers.get(post.slug) || 0}
-          total={posts.length}
-          relatedCount={relatedPosts(post, posts).length}
-          rubric={index === 0}
-        />
+        <>
+          {/* A quiet station marker as the months turn — the stream is one
+              continuous column, so time needs its own punctuation. */}
+          {(index === 0 || monthOf(post) !== monthOf(recent[index - 1])) && (
+            <div class="month-mark">{monthOf(post)}</div>
+          )}
+          <FolioPreview
+            post={post}
+            number={folioNumbers.get(post.slug) || 0}
+            total={posts.length}
+            relatedCount={relatedPosts(post, posts).length}
+            rubric={index === 0}
+            latest={index === 0}
+          />
+        </>
       ))}
 
       {fromStacks && (

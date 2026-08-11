@@ -35,6 +35,12 @@ const previous = index > 0 ? posts[index - 1] : undefined;
 const next = index < posts.length - 1 ? posts[index + 1] : undefined;
 const sourceDomain = post.data.url ? sourceHost(post.data.url) : undefined;
 const sourceLabel = post.data.url ? sourceName(post.data.url) : undefined;
+/* The rubricated drop cap is reserved for long-form entries (see tokens.css):
+   a verse opens on its own measure, and a two-paragraph folio in a drop cap
+   is costume, not typography. Only applied when the leaf actually opens on
+   a paragraph — the selector's :first-child keeps an opening image or link
+   preview from leaving a stray capital mid-page. */
+const rubricated = minutes >= 5 && post.data.type !== 'verse';
 const { Content } = await post.render();
 
 const structuredData = {
@@ -99,7 +105,7 @@ const structuredData = {
       </a>
     )}
 
-      <div class:list={['prose', { verse: post.data.type === 'verse' }]}>
+      <div class:list={['prose', { verse: post.data.type === 'verse', 'rubric-folio': rubricated }]}>
         <Content />
       </div>
 
@@ -154,8 +160,8 @@ const structuredData = {
         <div class="sidenote">
           <span class="sl">Neighbours in time</span>
           <div class="sb">
-            {previous && <><a href={`/posts/${previous.slug}`}>←&nbsp;{previous.data.title}</a><br /></>}
-            {next && <a href={`/posts/${next.slug}`}>{next.data.title}&nbsp;→</a>}
+            {previous && <a class="nb" href={`/posts/${previous.slug}`}>←&nbsp;{previous.data.title}</a>}
+            {next && <a class="nb" href={`/posts/${next.slug}`}>{next.data.title}&nbsp;→</a>}
           </div>
         </div>
       )}

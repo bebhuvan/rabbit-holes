@@ -83,16 +83,25 @@
   .verse .l{display:block;padding-left:1.5rem;text-indent:-1.5rem}
 
   .prose p{margin-bottom:1.35rem;text-wrap:pretty}
-  /* A resting underline the colour of wet ink rather than flat grey — it sits
-     back into the page until touched, then thickens and darkens like a nib
-     pressed harder, rather than just flipping a colour. */
+  /* A resting underline the colour of wet ink rather than flat grey — fine and
+     low, with the descenders skipped, so it reads as a pen line rather than a
+     rule. On hover it warms to the collector's red instead of thickening into
+     a black bar: the line was the crudest stroke on the page at .09em. */
   .prose a{color:var(--ink);font-weight:400;text-decoration:underline;text-decoration-color:var(--ul-ink);
-    text-underline-offset:.28em;text-decoration-thickness:var(--ul-thick);
+    text-underline-offset:var(--ul-offset);text-decoration-thickness:1px;
     text-decoration-skip-ink:auto;
-    transition:text-decoration-color var(--dur) var(--ease),text-decoration-thickness var(--dur) var(--ease)}
-  .prose a:hover{text-decoration-color:var(--ink);text-decoration-thickness:.09em}
+    transition:text-decoration-color var(--dur) var(--ease)}
+  .prose a:hover{color:var(--red);text-decoration-color:var(--ul-red)}
   .prose blockquote{margin:1.9rem 0;padding-left:1.4rem;border-left:2px solid var(--rule-strong);
     font-size:var(--t-body);line-height:1.72;color:var(--ink);hanging-punctuation:first}
+
+  /* A scene break is a breath, not a bar. Markdown's "---" rendered as the
+     browser's default inset rule — a grey bevelled line with no business in
+     a book. The asterism is the book's own mark (the rail uses it for its
+     one seam), spaced wide so it reads as three stars, not a glyph. */
+  .prose hr,.gloss-body hr{border:none;margin:2.6rem 0;text-align:center}
+  .prose hr::after,.gloss-body hr::after{content:"\2042";color:var(--muted);
+    font-family:var(--flourish);font-size:var(--t-md)}
 
   .leaf-mark{text-align:center;color:var(--red-soft);font-family:var(--flourish);
     font-size:var(--t-lg);line-height:1;margin:2.4rem 0 0}
@@ -156,6 +165,10 @@
   .sidenote .sb{font-family:var(--body);color:var(--ink-soft);font-style:italic}
   .sidenote a{color:var(--red);text-decoration:none}
   .sidenote a:hover{text-decoration:underline;text-underline-offset:var(--ul-offset)}
+  /* neighbours in time — two rows, one hairline between them, so the pair
+     reads as the before/after of a single entry rather than two loose links */
+  .sidenote .nb{display:block;padding:.34rem 0}
+  .sidenote .nb+.nb{border-top:1px solid var(--rule)}
   .heads{display:flex;flex-direction:column}
   .heads a{display:block;font-family:var(--body);font-size:var(--t-base);font-style:italic;
     color:var(--ink-soft);text-decoration:none;padding:.34rem 0;transition:color .18s}
@@ -167,30 +180,37 @@
     letter-spacing:var(--tr-display);margin:2.2rem 0 1rem;text-wrap:balance}
   .prose h2{font-size:var(--t-xl)}
   .prose h3{font-size:var(--t-lg)}
-  /* ---- APPARATUS ----
-     A folio usually ends in a source list, and markdown gives it default
-     discs at full reading size, so a bibliography came out looking exactly
-     like the argument above it. Set a step down, with the red mark the rest
-     of the book uses for a reference and a hanging indent so turned lines
-     align under the entry rather than under the marker. */
-  .prose ul,.prose ol{margin:1rem 0 1.5rem;padding-left:0;list-style:none}
+  /* ---- LISTS ----
+     Set at the full reading size. They used to run a step down "so a
+     bibliography wouldn't look like the argument" — but most lists in the
+     corpus ARE the argument, and shrinking them read as a printing error:
+     visibly smaller, tighter type the moment a thought became a point.
+     The apparatus distinction is carried by the markers instead — the red
+     reference mark and quiet lining numerals — and a hanging indent so
+     turned lines align under the entry rather than under the marker. */
+  .prose ul,.prose ol{margin:1.1rem 0 1.6rem;padding-left:0;list-style:none}
   .prose ol{counter-reset:prose-item}
-  .prose li{margin-bottom:.6rem;padding-left:1.25rem;text-indent:-1.25rem;
-    font-size:var(--t-base);line-height:1.52}
-  .prose ul>li::before{content:"·";display:inline-block;width:1.25rem;
+  .prose li{margin-bottom:.7rem;padding-left:1.4rem;text-indent:-1.4rem;
+    font-size:var(--t-body);line-height:1.62}
+  .prose ul>li::before{content:"·";display:inline-block;width:1.4rem;
     text-indent:0;color:var(--red-soft)}
   .prose ol>li{counter-increment:prose-item}
-  .prose ol>li::before{content:counter(prose-item)".";display:inline-block;width:1.25rem;
-    text-indent:0;font-family:var(--mono);font-size:var(--l-sm);color:var(--muted)}
+  .prose ol>li::before{content:counter(prose-item)".";display:inline-block;width:1.4rem;
+    text-indent:0;color:var(--muted);font-variant-numeric:lining-nums tabular-nums;
+    font-feature-settings:"liga" 1,"onum" 0}
   .prose li>ul,.prose li>ol{margin:.5rem 0 0;text-indent:0}
 
   /* A paragraph whose whole content is bold is a subheading the author wrote
      without a heading level — "**The exchange**" over a list of sources.
-     Setting it as one stops it reading as a shouted sentence. */
-  .prose p>strong:only-child:not(.no-subhead){display:block;font-family:var(--mono);font-weight:400;
-    font-size:var(--l-sm);letter-spacing:var(--tr-eyebrow);text-transform:uppercase;
-    color:var(--muted)}
-  .prose p:has(>strong:only-child:not(.no-subhead)){margin:1.9rem 0 .8rem}
+     It used to be set in 10px tracked-out mono, which made a section head the
+     smallest, faintest type on the page — a whisper where a voice was asked
+     for. Set as a run-in head in the book's own small caps at reading size,
+     opened by the red mark the book uses for a reference. */
+  .prose p>strong:only-child:not(.no-subhead){display:block;font-family:var(--sc);
+    font-variant-caps:all-small-caps;font-weight:600;font-size:var(--t-md);
+    letter-spacing:var(--tr-label-sc);color:var(--ink)}
+  .prose p>strong:only-child:not(.no-subhead)::before{content:"· ";color:var(--red-soft)}
+  .prose p:has(>strong:only-child:not(.no-subhead)){margin:2.1rem 0 .9rem}
   .prose img{max-width:min(100%,54rem);height:auto;margin:1.8rem auto;border:1px solid var(--rule)}
   .prose pre{max-width:100%;overflow:auto;padding:1rem;background:var(--red-wash);
     border:1px solid var(--rule);font-family:var(--mono);font-size:.78rem;line-height:1.55}

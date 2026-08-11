@@ -147,7 +147,9 @@
   body{background:var(--paper);color:var(--ink);font-family:var(--body);
     font-size:var(--t-body);line-height:1.62;font-optical-sizing:auto;
     font-feature-settings:"liga" 1,"onum" 1;font-kerning:normal;font-synthesis:none;
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    /* the lamp is a dimmer, not a switch — paper and ink crossfade */
+    transition:background-color .3s var(--ease),color .3s var(--ease)}
   /* A wash rather than a flag. Solid --red behind white reversed a whole
      paragraph out on selection, which is the loudest event on a page whose
      entire argument is that red is used sparingly. */
@@ -228,7 +230,7 @@
   .rail-note{font-family:var(--body);font-style:italic;font-size:var(--t-base);color:var(--muted);
     line-height:1.45;margin-bottom:1.4rem}
   .index{list-style:none;font-family:var(--mono);font-size:var(--l-lg)}
-  .index a{display:flex;align-items:baseline;gap:.5rem;padding:.32rem .3rem;
+  .index a{display:flex;align-items:baseline;gap:.5rem;padding:.42rem .3rem;
     text-decoration:none;color:var(--ink-soft);transition:color var(--dur) var(--ease)}
   /* head names never wrap — a wrapped name loses its dotted leader and
      breaks the ledger rhythm the whole rail depends on */
@@ -320,6 +322,12 @@
      head, and the folio rules below stop at the measure. Three widths, three
      sizes of division. */
   .thesis{padding:4.6rem var(--stream-pad) 3.2rem;border-bottom:1px solid var(--rule)}
+  /* The one ornament on the title page — a red fleuron above the kicker,
+     the way a printed title page carries its printer's device above the
+     imprint. Everything below it stays type and hairlines. */
+  .thesis .orn{display:block;color:var(--red);font-family:var(--flourish);
+    font-size:var(--t-lg);line-height:1;margin-bottom:1.6rem}
+  .thesis h1 em{font-style:italic}
   .thesis .kicker{font-size:var(--t-base);color:var(--muted);margin-bottom:1.5rem;
     font-variant-numeric:lining-nums;font-feature-settings:"liga" 1,"onum" 0}
   .thesis .kicker b{color:var(--red);font-weight:600}
@@ -377,6 +385,18 @@
   .entry-body{min-width:0}
   .entry-date{font-family:var(--mono);font-size:var(--l-sm);letter-spacing:var(--tr-label);
     text-transform:uppercase;color:var(--muted);margin-bottom:.55rem}
+  /* the stream's starting point: the newest folio says so, in the
+     collector's red, on the same line as its date */
+  .entry-date .latest{color:var(--red)}
+  /* A station marker between months. Quieter than the eyebrow that opens the
+     stream: no fleuron, no tracking fanfare — just small caps and a breath of
+     space, and the entry after it steps up so the pair reads as one unit. */
+  .month-mark{font-family:var(--sc);font-variant-caps:all-small-caps;
+    font-size:var(--t-label);font-weight:var(--w-label);
+    letter-spacing:var(--tr-label-sc);color:var(--muted);
+    padding:1.7rem var(--stream-pad) 0;
+    max-width:calc(var(--stream-box) + var(--stream-pad) * 2)}
+  .month-mark+.entry{padding-top:1.4rem}
   .entry h2{font-family:var(--display);font-weight:600;font-size:var(--t-lg);line-height:1.2;
     letter-spacing:var(--tr-display);margin-bottom:.8rem}
   .entry h2 a{text-decoration:none;transition:color var(--dur) var(--ease)}
@@ -512,25 +532,33 @@
   .source-chip:hover .source-chip-name{color:var(--red)}
   /* Standalone URLs become quiet editorial cards. Metadata is an enhancement:
      the domain, inferred title, and real link are useful before it arrives and
-     remain so when a publisher blocks preview requests. */
+     remain so when a publisher blocks preview requests.
+     The image is a PLATE, not a thumbnail: it stretches the full height of the
+     card and is cropped with object-fit:cover. The old box pinned it at a
+     fixed 1.5:1 with object-fit:contain and padding, so a 1200×630 OG image
+     letterboxed inside it — a sliver of picture under a band of white, which
+     read as a broken embed. Flexbox rather than grid so the plate simply
+     disappears from the layout when a publisher gives no image. */
   .link-preview{margin:2rem 0;border-top:1px solid var(--rule-strong);
-    border-bottom:1px solid var(--rule-strong);background:var(--red-wash)}
-  .link-preview[data-link-preview]>a{display:grid;grid-template-columns:minmax(0,1fr) auto auto;
-    gap:1rem;align-items:center;padding:1rem 1.1rem;color:var(--ink);text-decoration:none}
-  .link-preview-copy{display:block;min-width:0}
+    border-bottom:1px solid var(--rule-strong);background:var(--red-wash);
+    transition:border-color var(--dur) var(--ease)}
+  .link-preview[data-link-preview]>a{display:flex;align-items:stretch;
+    color:var(--ink);text-decoration:none}
+  .link-preview-copy{display:block;flex:1;min-width:0;padding:1.05rem 0 1.1rem 1.2rem}
   .link-preview-domain{display:block;margin-bottom:.35rem;color:var(--red);
     font-family:var(--mono);font-size:var(--l-sm);font-style:normal;
     letter-spacing:var(--tr-eyebrow);text-transform:uppercase}
   .link-preview strong{display:block;font-family:var(--display);font-size:var(--t-md);
     font-weight:600;line-height:1.2;letter-spacing:var(--tr-display)}
-  .link-preview-description{display:-webkit-box;margin-top:.35rem;overflow:hidden;
+  .link-preview-description{display:-webkit-box;margin-top:.4rem;overflow:hidden;
     -webkit-box-orient:vertical;-webkit-line-clamp:2;color:var(--ink-soft);
-    font-family:var(--body);font-size:var(--t-base);font-style:normal;line-height:1.38}
-  .link-preview-image{width:7.5rem;height:5rem;overflow:hidden;padding:.35rem;
-    border-left:1px solid var(--rule);background:var(--paper)}
-  .link-preview-image img{display:block;width:100%;height:100%;margin:0;border:0;object-fit:contain;
-    object-position:center}
-  .link-preview-arrow{color:var(--red);font-family:var(--mono);font-size:var(--l-lg)}
+    font-family:var(--body);font-size:var(--t-base);font-style:italic;line-height:1.42}
+  .link-preview-arrow{order:2;align-self:center;padding:0 1rem;color:var(--red);
+    font-family:var(--mono);font-size:var(--l-lg)}
+  .link-preview-image{order:3;flex:0 0 8.5rem;overflow:hidden;
+    border-left:1px solid var(--rule)}
+  .link-preview-image img{display:block;width:100%;height:100%;margin:0;border:0;
+    object-fit:cover;object-position:center}
   .link-preview:hover{border-color:var(--red-soft)}
   .link-preview:hover strong{color:var(--red)}
   /* ---- SYNDICATED EMBEDS AS PLATES ----
@@ -666,8 +694,9 @@
     .stream-end{padding:2rem var(--stream-pad) 2.5rem;flex-wrap:wrap}
     .stream-end a{width:100%;margin-left:0}
     .page-shell{padding:2.7rem 1.35rem 4rem}
-    .link-preview[data-link-preview]>a{gap:.75rem;padding:.9rem}
-    .link-preview-image{width:5.5rem;height:4.5rem}
+    .link-preview-copy{padding:.85rem 0 .9rem 1rem}
+    .link-preview-arrow{padding:0 .75rem}
+    .link-preview-image{flex-basis:5.5rem}
     .link-preview-description{-webkit-line-clamp:1}
   }
 

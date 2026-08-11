@@ -187,6 +187,10 @@ p,li,blockquote{text-wrap:pretty}
    optically flush with the paragraph above it. */
 blockquote{hanging-punctuation:first last}
 
+/* Anchored jumps (the threads section, footnotes) arrive with air above
+   them instead of flush against the top edge of the window. */
+html{scroll-padding-top:2rem}
+
 /* Keyboard focus is visible and takes the collector's ink —
    it is the reader being somewhere, which is passage.
    Form controls are in the selector deliberately: the original list was
@@ -213,7 +217,8 @@ blockquote{hanging-punctuation:first last}
    long-form entries — a drop cap on a two-line folio is costume,
    not typography.
    ============================================================= */
-.rubric::first-letter{
+.rubric::first-letter,
+.rubric-folio>p:first-child::first-letter{
   float:left;
   font-family:var(--display);
   font-weight:600;
