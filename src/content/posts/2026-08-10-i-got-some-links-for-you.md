@@ -2,7 +2,6 @@
 title: I got some links for you
 date: 2026-08-10
 type: links
-url: https://rabbitholes.garden/
 published: true
 draft: false
 featured: false
