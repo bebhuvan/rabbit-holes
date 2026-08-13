@@ -116,5 +116,13 @@ const tags = canonicalTags(posts).slice(0, 18);
         status && (status.textContent = 'The index could not be opened. Try the archive instead.');
       }
     });
+
+    // Deep-link support: /search?q=… pre-fills the box and runs the query.
+    const params = new URLSearchParams(location.search);
+    const initial = params.get('q');
+    if (initial && input) {
+      input.value = initial;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
   </script>
 </Base>

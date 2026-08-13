@@ -1,36 +1,17 @@
-# Robots.txt for Rabbit Holes
-# https://www.rabbitholes.garden
+# Robots.txt for Rabbit Holes — https://www.rabbitholes.garden
+#
+# All bots — including search engines and AI crawlers — are welcome to read
+# the site. A single group keeps the rules identical for every crawler.
 
 User-agent: *
 Allow: /
 
-# Allow all search engines to index the site
-# Block indexing of API endpoints and admin areas
+# Keep crawlers out of the API, generated JSON data, error pages, and
+# query-string variants (prevents parameter/duplicate-URL noise).
 Disallow: /api/
 Disallow: /cms
-
-# Block common bot traps and sensitive areas
 Disallow: /*.json$
 Disallow: /404
 Disallow: /*?*
 
-# Sitemaps
 Sitemap: https://www.rabbitholes.garden/sitemap.xml
-Sitemap: https://www.rabbitholes.garden/rss.xml
-
-# Crawl delay (optional - remove if you want faster crawling)
-# Crawl-delay: 1
-
-# Specific rules for different bots
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-# Block aggressive crawlers (uncomment if needed)
-# User-agent: AhrefsBot
-# Disallow: /
-# 
-# User-agent: MJ12bot
-# Disallow: /

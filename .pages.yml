@@ -70,9 +70,9 @@ content:
       - name: url
         label: Source URL
         type: string
-        description: "For link posts: paste one complete URL only, including https://. Put commentary and additional links in Content."
+        description: "Optional. For link posts: paste one complete URL only, including https://. Leave blank for everything else; put commentary and additional links in Content."
         pattern:
-          regex: "^https?://\\S+$"
+          regex: "^(https?://\\S+)?$"
           message: "Enter one complete URL beginning with http:// or https://, with no spaces or commentary."
       
       - name: tags
@@ -222,7 +222,7 @@ content:
         required: false
         description: "A full link to the original source, including https://. Leave blank if there isn't one."
         pattern:
-          regex: "^https?://\\S+$"
+          regex: "^(https?://\\S+)?$"
           message: "Enter one complete URL beginning with http:// or https://."
 
       - name: source_author

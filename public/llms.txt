@@ -1,0 +1,32 @@
+# Rabbit Holes
+
+> A public commonplace book by Bhuvanesh: links, quotes, poems, reflections, and long-form, cited visual explainers — kept in the open.
+
+Rabbit Holes is a personal commonplace book and digital garden published by Bhuvanesh ("Bhuvan"). It gathers the interesting, useful, and strange things he finds on the internet, in five forms: musings, links, reflections, verse, and practical notes. The work sits on three shelves:
+
+- **Folios** — the running linkblog and commonplace entries (the main feed).
+- **Explainers** — long, sourced visual essays that answer a single question properly (for example, where the elements come from). Every quantitative claim is cited to a primary source.
+- **Study notes** — reviewed summaries produced in conversation with an AI, each one pointing back to the source it was built from and naming the model used.
+
+Everything is written in plain language and published openly: no tracking, no newsletter modal, no paywall. RSS is the quiet way to follow along.
+
+Author: Bhuvan (https://twitter.com/bebhuvan)
+
+## Sections
+
+- [Home](https://www.rabbitholes.garden/): The latest folios and an entry point into the book.
+- [Explainers](https://www.rabbitholes.garden/explainers): Long-form, cited visual essays.
+- [Study Notes](https://www.rabbitholes.garden/study-notes): AI-assisted notes, each reviewed against its source.
+- [Subjects](https://www.rabbitholes.garden/heads): Hand-chosen subjects threading through the folios.
+- [Collections](https://www.rabbitholes.garden/collections): A curated place to start.
+- [Archive](https://www.rabbitholes.garden/archive): Every folio in order.
+- [Tags](https://www.rabbitholes.garden/tags): Normalized tags across the corpus.
+- [Blogroll](https://www.rabbitholes.garden/blogroll): Independent blogs Bhuvan recommends.
+- [Search](https://www.rabbitholes.garden/search): Search titles, subjects, and text.
+- [About](https://www.rabbitholes.garden/about): Who keeps this, and why.
+- [RSS feed](https://www.rabbitholes.garden/rss.xml): New folios and explainers as they are published.
+
+## Optional
+
+- [Sitemap](https://www.rabbitholes.garden/sitemap.xml): Machine-readable index of every page.
+- [Source](https://github.com/bebhuvan): The author's GitHub.

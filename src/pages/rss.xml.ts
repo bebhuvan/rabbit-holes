@@ -55,7 +55,7 @@ export async function GET(context: any) {
 
   return rss({
     title: "Rabbit Holes",
-    description: "A curiosity-driven journey through ideas, discoveries, and fascinating tangents",
+    description: "A public commonplace book: links, quotes, poems and stray thoughts, gathered as they struck me.",
     site: 'https://www.rabbitholes.garden',
     items,
     customData: `

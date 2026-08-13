@@ -10,6 +10,7 @@ import {
   newestFirst,
   relatedPosts,
 } from '../utils/content';
+import { websiteSchema, personSchema } from '../utils/seo';
 
 const allPosts = await getCollection('posts');
 const posts = newestFirst(allPosts);
@@ -28,6 +29,8 @@ const lastKept = posts[0]?.data.date;
   description="A public commonplace book: links, quotes, poems and stray thoughts, gathered as they struck me."
   active="index"
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify([websiteSchema(), personSchema()])}></script>
+
   <div class="shell">
     <IndexRail posts={posts} />
 

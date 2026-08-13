@@ -20,6 +20,7 @@ import {
 } from '../../utils/provenance';
 import { publishCiteNumbers } from '../../explainers/kit/citeRegistry';
 import { formatPostDate, readingTime } from '../../utils/content';
+import { articleSchema, absoluteImage, SITE_URL } from '../../utils/seo';
 import '../../styles/explainer.css';
 
 export async function getStaticPaths() {
@@ -57,6 +58,19 @@ publishCiteNumbers(
   explainer.slug,
   sourceList.map((source) => source.id)
 );
+
+// Sourced prose is ideal fodder for AI answer engines: declare every cited
+// source so the references are machine-readable, not just visible.
+const structuredData = articleSchema({
+  headline: explainer.data.title,
+  description: explainer.data.description ?? stripMarkup(explainer.data.standfirst),
+  url: `${SITE_URL}/explainers/${explainer.slug}`,
+  image: absoluteImage(explainer.data.image),
+  datePublished: explainer.data.date.toISOString(),
+  dateModified: lastTouched(explainer).toISOString(),
+  keywords: explainer.data.tags,
+  citations: sourceList.map((source) => ({ name: source.title, url: source.url })),
+});
 ---
 
 <Base
@@ -69,6 +83,7 @@ publishCiteNumbers(
     <meta property="og:type" content="article" />
     <meta property="article:published_time" content={explainer.data.date.toISOString()} />
     <meta property="article:modified_time" content={lastTouched(explainer).toISOString()} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </Fragment>
 
   {/* The depth rail. Ticks indent as the material deepens, so the navigation

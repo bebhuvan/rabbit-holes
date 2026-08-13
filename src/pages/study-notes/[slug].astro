@@ -4,6 +4,7 @@ export const prerender = true;
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import GlossShelf from '../../components/GlossShelf.astro';
+import { articleSchema, absoluteImage, SITE_URL } from '../../utils/seo';
 import '../../styles/gloss.css';
 
 export async function getStaticPaths() {
@@ -13,9 +14,21 @@ export async function getStaticPaths() {
 
 const { gloss } = Astro.props;
 const { Content } = await gloss.render();
+
+const structuredData = articleSchema({
+  headline: gloss.data.title,
+  description: gloss.data.description,
+  url: `${SITE_URL}/study-notes/${gloss.slug}`,
+  image: absoluteImage(undefined),
+  datePublished: gloss.data.date.toISOString(),
+  citations: gloss.data.source_url
+    ? [{ name: gloss.data.source_title, url: gloss.data.source_url }]
+    : undefined,
+});
 ---
 
 <Base title={gloss.data.title} description={gloss.data.description} active="study-notes">
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
   <GlossShelf />
   <article class="gloss-sheet">
     <div class="gloss-source">
