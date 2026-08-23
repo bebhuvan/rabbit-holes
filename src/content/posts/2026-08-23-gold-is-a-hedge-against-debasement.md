@@ -23,6 +23,8 @@ Gold is better understood as a hedge against debasement, rather than a hedge aga
 >
 > That can sound like an inflation hedge, but the claim is narrower. It may provide no protection when prices rise for reasons unrelated to money, like an oil or food shock. What it guards against is debasement, the value a currency loses when its supply expands or its credibility erodes.
 
+[https://x.com/choffstein/status/2091490430235922819](https://x.com/choffstein/status/2091490430235922819) 
+
 I recently recorded a podcast with Abid on the topic as well: 
 
-https://youtu.be/bf1VbbnSfNc?si=wDWm4b03umuVWBC7
+[https://youtu.be/bf1VbbnSfNc?si=wDWm4b03umuVWBC7](https://youtu.be/bf1VbbnSfNc?si=wDWm4b03umuVWBC7)
