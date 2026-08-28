@@ -4,6 +4,9 @@ title: How does the preference for sons impact the mental well-being of women in
 date: 2026-08-28
 type: links
 url: https://aces.illinois.edu/news/how-preference-sons-affects-womens-mental-health-rural-india
+tags:
+  - "Mental health "
+  - "Economics "
 published: true
 draft: false
 featured: false
