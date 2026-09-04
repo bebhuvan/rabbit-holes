@@ -15,3 +15,6 @@ I thought this was a thoughtful response:
 >
 > [https://x.com/andrewho03/status/2095598736265404631?s=20](https://x.com/andrewho03/status/2095598736265404631?s=20)
 
+As always, thoughtful response from Philippe Lemoine:
+
+[https://x.com/phl43/status/2095893159280611821](https://x.com/phl43/status/2095893159280611821) 
