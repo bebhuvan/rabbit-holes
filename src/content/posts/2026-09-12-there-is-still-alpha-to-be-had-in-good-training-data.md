@@ -3,6 +3,9 @@ title: There is still Alpha to be had in good training data.
 date: 2026-09-12
 type: links
 url: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf
+tags:
+  - "AI "
+  - "DeepSeek "
 published: true
 draft: false
 featured: false
