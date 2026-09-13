@@ -206,6 +206,8 @@ GDP survived partly because it gives us an extraordinarily clean answer to a rel
 
 Human progress is not a narrow question.
 
+[https://x.com/GestaltU/status/2096298111421346301](https://x.com/GestaltU/status/2096298111421346301) 
+
 ---
 
 *This short note was written with the help of ChatGPT, based on a back-and-forth about the economics, the historical context and the underlying sources.*
