@@ -3,6 +3,10 @@ title: "The price of Trump's stupidity "
 date: 2026-09-14
 type: links
 url: https://www.wsj.com/world/middle-east/widening-mideast-instability-squeezes-global-oil-supplies-0cd316ad?st=yiaHpN
+tags:
+  - "Geopolitics "
+  - Oil
+  - Trump
 published: true
 draft: false
 featured: false
