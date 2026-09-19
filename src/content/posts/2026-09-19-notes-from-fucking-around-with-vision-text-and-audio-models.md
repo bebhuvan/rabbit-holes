@@ -1,5 +1,5 @@
 ---
-title: Notes From Fucking Around With Vision, Text, and Audio Models
+title: Notes from messing around with vision, text, and audio models
 date: 2026-09-19
 type: musings
 tags:
@@ -12,285 +12,357 @@ published: true
 draft: false
 featured: false
 ---
-The bulk of my vibe-coding experiments over the last few months have involved audio and vision, so I’ve ended up trying an unreasonable number of multimodal models.
+The bulk of my vibe-coding experiments over the last few months have involved audio and video, or rather audio and vision, and I’ve been experimenting pretty heavily with multimodal models.
 
-This is a small guide based entirely on what I’ve actually used.
+So this is just a small guide based on what I’ve used.
 
-If you have a project where you need vision capabilities for text extraction, models for bulk text transformation, or audio models for speech-to-text workflows — recording yourself, transcribing audio, cleaning it up, voice journaling, whatever — these are the models I’ve found useful.
+If you have some project where you need vision capabilities for text extraction, or models for speech-to-text workflows — recording voice, transcribing audio, cleaning up audio, voice journaling, whatever — some of this might be useful.
 
-Vision
+Most of this is based on actually using these models in different workflows for months, rather than looking at benchmarks. And my use cases are also slightly weird, especially when it comes to vision.
 
-If the documents you’re trying to digitise are modern, and the text is modern English, I think most of the current multimodal models will work perfectly fine.
+## Vision
 
-At that point, the more interesting question is cost.
+If the documents you’re trying to digitise are modern, and they involve modern English, I think pretty much all the major vision models will work.
 
-If you’re processing thousands of pages, cost stops being an abstract number on a pricing page rather quickly.
+At that point, the more important question is cost.
 
-The newest model that looks especially promising to me is DeepSeek V4.1 Flash. It has native vision capabilities and is ridiculously cheap.
+If you have a heavy workload, cost becomes a problem very, very quickly.
 
-Gemini 3.1 Flash-Lite and 3.5 Flash-Lite are also very cheap and have been pretty reliable for me. The Qwen Flash family is another reasonable option; Qwen 3.7 Flash in particular looks promising. GLM 5.3 Flash is another candidate worth trying.
+The newer [DeepSeek Flash models](https://api-docs.deepseek.com/) seem very promising here. They have vision capabilities and they’re ridiculously cheap.
 
-The reason I keep recommending Flash-family models is simple: they are really, really cheap.
+The [Gemini Flash-Lite family](https://ai.google.dev/gemini-api/docs/models) is also very cheap and has been pretty reliable for me. The [Qwen Flash family](https://www.alibabacloud.com/help/en/model-studio/vision-model) is reasonably reliable. Qwen 3.7 Flash in particular seems promising. GLM 5.3 Flash is another one worth trying.
 
-If you need a workhorse model for a heavy workload, this matters enormously. Once you start sending thousands or tens of thousands of pages through larger models, the costs can become prohibitive, to put it lightly.
+The reason I keep mentioning Flash models is simply that they are really, really cheap.
 
-The slightly more expensive Gemini Flash models have also been very good. Gemini 3.6 Flash, 3.7 Flash and 3.8 Flash are all worth trying.
+If you need a workhorse model for a heavy workload, that matters much more than people realise. If you start throwing thousands or tens of thousands of pages at frontier models, the cost gets prohibitive, to put it lightly.
 
-My recommendation here is not particularly complicated: if you’re extracting text from ordinary modern PDFs, start cheap. You probably don’t need the smartest model on earth to read a clean page of English.
+The Gemini Flash family is slightly costlier but also very good.
 
-Old books are where things become annoying.
+So if your use case is basically extracting text from normal modern PDFs, my recommendation is: start cheap. You almost certainly don’t need the smartest model on earth to read a clean PDF.
 
-I have a weird interest in digitising very old books, which is what I do with "Akshara" ([https://akshara.ink/](https://akshara.ink/)), and I’ve also been digitising "old collections of letters" ([https://paperlanterns.ink/](https://paperlanterns.ink/)). I have wasted enough dollars on this particular obsession to have opinions.
+Old books are where all of this becomes annoying.
 
-There is no single “best” model.
+I have a weird interest in digitising very old books, which is what I do with [Akshara](https://akshara.ink/), and I’ve also been digitising [old collections of letters](https://paperlanterns.ink/).
 
-Of everything I’ve tested, the Gemini Flash family has been the most consistently accurate and reliable on degraded historical material, with Gemini Pro occasionally being useful when the page is particularly nasty.
+I have wasted enough dollars on this particular problem to have opinions.
 
-Gemini has one extremely irritating problem, though: recitation blocks.
+There is no best model.
 
-Every now and then it will simply refuse to extract text from a page because some safety filter or other dumb thing has decided that reproducing the contents of a 120-year-old book is apparently a threat to civilisation.
+Of all the models I’ve tested, the Gemini Flash family has probably been the most consistently accurate and reliable for old books, and occasionally Gemini Pro is useful if the page is particularly horrible.
 
-When that happens, Qwen is a decent backup. You may sacrifice some accuracy, but it usually gets the job done.
+The big problem with Gemini is recitation blocks.
 
-In terms of pure accuracy on the old material I’ve worked with, Gemini generally ranks above Qwen. On some books, though, it’s more or less a wash.
+Every now and then Gemini will simply refuse to extract the text from a page because it has triggered some safety filter or some other dumb and stupid thing. So you end up with a model refusing to reproduce a page from a 120-year-old book.
 
-I would be much more careful with DeepSeek for historical text extraction.
+In those cases, Qwen is a reasonable backup. You will sometimes sacrifice some accuracy, but it gets the job done.
 
-In my experiments, it has a tendency to aggressively modernise the text. Archaic spellings quietly become modern spellings, which is exactly what you don’t want if your objective is faithful digitisation.
+In terms of accuracy, Gemini generally ranks much higher than Qwen for the material I work with. But with some books it is more or less a wash.
 
-Qwen sometimes has a similar problem.
+I would not use DeepSeek as my primary model for old books.
 
-I’ve also tested Kimi and GLM Turbo for digitising old books. They’re reasonable backup models, but I wouldn’t use them as the primary model for this kind of work.
+It has a tendency to aggressively modernise the text. Archaic spellings become modern spellings and things like that, which is obviously terrible if the entire point is to preserve what was actually printed on the page.
 
-The broader problem I’ve found with a lot of the Chinese models is that there isn’t one predictable failure mode. There are several. Some aggressively modernise archaic spellings. Some are bad at preserving old punctuation. Some flatten or drop diacritics. And with older Indian books, transliteration can become its own little disaster: a book may use an older or idiosyncratic Sanskrit transliteration system, and the model will quietly “correct” it into something resembling modern IAST. That is useful if you want normalised text, but disastrous if what you’re trying to produce is a faithful transcription of the original page.
+Qwen has a similar problem sometimes.
 
-With modern documents, I think this distinction matters much less. If you’re dealing with reasonably clean contemporary PDFs, pretty much all the major vision models seem to land in roughly the same neighbourhood for ordinary text extraction.
+I’ve also tested Kimi and GLM Turbo for old books. They’re reasonable backups. I wouldn’t use them as my primary models.
 
-Which brings me back to cost.
+The broader problem I’ve found with a lot of these Chinese models is that there isn’t one failure pattern. There are several.
 
-For heavy workloads, I generally wouldn’t use frontier models unless there is some specific reason you need them. The cost gets prohibitive very quickly, and for straightforward document extraction the Flash models usually get the job done.
+Some models modernise the text. Some are bad at preserving old punctuation. Some are bad at archaic spellings. Some flatten or drop diacritics. With old Indian books, transliteration itself can become a problem because the book may be using some older or idiosyncratic Sanskrit transliteration scheme and the model will helpfully “correct” it into something resembling modern IAST.
 
-There are also slightly hacky ways to make large jobs cheaper. It’s worth watching for API discounts, temporary pricing, and places such as OpenRouter or OpenCode, where new or even unreleased anonymous models sometimes appear before their formal release. If you have one enormous job to run, these things can make a surprisingly large difference.
+Which is useful if you want normalised text.
 
-I also experimented with some of the newer Qwen models through Qwen Cloud. The underlying models can be quite good, but I’ve had enough reliability problems with the API that I wouldn’t currently build a large unattended workflow around it without fallbacks.
+It is a disaster if you want a faithful transcription.
 
-So, roughly speaking: for normal PDFs, use the cheap Flash models and save your money. For horrible old books, Gemini remains my first choice, with Qwen and some of the other Chinese models as backups when Gemini decides it has moral objections to OCR.
+They also fail differently, which makes this more annoying. One model may preserve the spelling but screw up the punctuation. Another may preserve the page structure but quietly modernise words. Another may start dropping diacritics.
 
-My experience here is admittedly skewed. My main vision use case is unusually stupid: digitising old books and letter collections.
+So if your requirement is digitising genuinely old documents, you need to test these things properly rather than assuming “OCR accuracy” is one number.
 
-I also briefly started another project where I wanted to extract the text from a very large collection of PDFs. That experiment ran into the obvious problem fairly quickly: cost. It has therefore taken a back seat.
+For modern documents, I think this distinction matters much less.
 
-Text
+If the PDF is clean and contemporary, pretty much all the major vision models are going to be in the same broad neighbourhood. At that point I would optimise for cost.
 
-The same logic applies to bulk text workflows.
+And for heavy workloads I really would not recommend frontier models unless you have a very specific reason to use them. The cost becomes silly. Flash models usually get the job done.
 
-If your job is summarisation, rewriting, extraction, classification, text generation, or some other task you need to perform hundreds or thousands of times, I think we’ve reached the point where pretty much any decent Flash model will get the job done.
+You can also do hacky things around pricing. Keep an eye out for API discounts, temporary free models, OpenRouter, OpenCode, and so on. Sometimes there are new or anonymous unreleased models floating around and if you have some huge one-off workload you can abuse these things while they last.
 
-I ran one experiment where I would take raw stock-exchange filings and transform them almost instantly into publishable news about the companies involved.
+I also tried some of the newer Qwen models through Qwen Cloud. The models themselves can be quite good. The API, at least in my experience, has been unreliable enough that I would not build some enormous unattended workflow around it without fallbacks.
 
-For that workflow, I used DeepSeek Flash and Xiaomi MiMo V2.5 quite a bit. Both were perfectly decent, but DeepSeek Flash became my preferred model.
+So, more or less: for normal PDFs, use the cheap Flash models and save your money.
 
-Its prose is surprisingly good.
+For horrible old books, Gemini is still my first choice, and Qwen and some of the other Chinese models are useful backups when Gemini suddenly develops moral objections to OCR.
 
-Obviously, if your benchmark is that every paragraph emerging from your API should sound like Shakespeare or Hemingway, then by all means spend money on the frontier models.
+My experience here is obviously skewed because my main use case for vision is unusually stupid: digitising old books and old letter collections.
 
-For the rest of us, “pretty good” is often more than good enough.
+I also briefly started another project where I wanted to extract the text from a gigantic collection of PDFs. I very quickly discovered that this was going to become expensive, so that project has taken a back seat.
 
-And if “pretty good” is your requirement, Flash models make a lot more sense. They’re dirt cheap, they’re fast, and once the workload gets large enough the difference in cost becomes absurd. Frontier models very quickly become prohibitively expensive when you’re calling them thousands of times for relatively mundane text transformations.
+## Text
 
-This also gives you another way to structure audio workflows.
+The same thing is true for text.
 
-You don’t necessarily need one multimodal model to do everything.
+If your workflow involves a lot of summarisation, rewriting, extraction, text generation, classification, whatever, I think at this point pretty much any decent Flash model will get the job done.
 
-If, for whatever reason, you prefer to keep transcription and editing separate, you can use a very cheap ASR or speech-to-text model — Microsoft MAI-Transcribe-2, OpenAI GPT-Transcribe, or something similar — purely to produce the raw transcript.
+I was running an experiment where I would take raw stock-exchange filings and transform them into almost instantaneous news stories about the companies involved.
 
-Then run that transcript through a second cheap model such as DeepSeek V4.1 Flash, GLM 5.3 Flash or Gemini 3.5 Flash-Lite to remove filler, fix obvious transcription debris, restructure it, rewrite it, summarise it, or do whatever other transformation you need.
+For that, I used DeepSeek Flash and Xiaomi MiMo V2.5 quite a bit.
 
-For a heavy workflow, that combination can make much more economic sense than throwing a frontier model at every stage of the pipeline.
+Both were perfectly decent.
 
-Audio
+I particularly like DeepSeek Flash. Its prose capabilities are surprisingly good.
+
+If your benchmark for prose is Shakespeare or Hemingway, then sure, use the frontier models.
+
+But if your benchmark is “pretty good”, which I think covers most bulk text-generation workflows, then the Flash models are more than enough.
+
+And they’re dirt cheap.
+
+Once you’re calling a model thousands and thousands of times, this difference matters. The frontier models become prohibitively expensive for things that are frankly not difficult enough to justify them.
+
+This also means you don’t necessarily need one multimodal model to own your entire audio workflow.
+
+If you prefer keeping transcription and editing separate, use a cheap ASR model — [Microsoft MAI-Transcribe-2](https://microsoft.ai/models/mai-transcribe-2/), [OpenAI GPT-Transcribe](https://developers.openai.com/api/docs/models/gpt-transcribe), whatever — to create the raw transcript.
+
+Then pass the transcript through something cheap like DeepSeek Flash, GLM Flash or Gemini Flash-Lite to clean it up, remove filler, structure it, rewrite it, summarise it, whatever you need.
+
+For heavy workloads, this can be much, much cheaper.
+
+## Audio
 
 I’ve taken heavily to voice typing.
 
-In fact, because I write regularly, I’ve almost stopped manually typing. Pressing all those disgusting little keys on a computer now seems terribly archaic to me.
+In fact, because I write regularly, I’ve almost stopped manually typing. Typing now feels slightly archaic to me. Pressing all those disgusting keys on a computer. Horrible.
 
-Voice dictation also seems to unlock a slightly different form of writing.
+But I also think voice typing unlocks a slightly different kind of writing.
 
-I don’t think it is a one-for-one replacement for the traditional, disgusting form of writing where you sit there pressing keys. But a lot of what I write consists of fleeting thoughts, observations and small musings, and for that, voice typing works perfectly.
+It is not necessarily a one-for-one replacement for the regular disgusting form of writing where you sit in front of a keyboard.
 
-A lot of my writing is also exploratory. I’m often trying to work through an idea without knowing where it is going. I’m perfectly happy to put the half-baked version somewhere first and refine it later.
+A lot of my writing is very short form: fleeting thoughts, observations, musings. Voice typing is perfect for that.
 
-Voice works exceptionally well for this.
+A lot of my writing is also exploratory. I’m trying to work through an idea without necessarily knowing what the idea is yet. I’m perfectly fine putting out the half-baked thought first and then refining it later.
 
-The workflow I’ve fallen into is basically: capture everything first — raw ideas, unfinished thoughts, digressions, repetitions, whatever — and worry about turning it into writing later.
+Voice works very well for that too.
 
-You can think of your phone as one of those little Dictaphones or handheld voice recorders journalists used to carry around.
+The workflow that makes sense to me is: capture everything first.
 
-ChatGPT works perfectly well for this. Gemini is a close second.
+Raw ideas, unfinished thoughts, repetitions, weird digressions, whatever.
 
-But if you want to build your own app, which I have done for myself, things get more interesting.
+Then worry about turning it into writing later.
 
-One approach is to use a multimodal model that can listen to the audio and do the transcription, cleanup and structuring in one pass.
+Basically, your phone becomes one of those little Dictaphones journalists used to carry around.
 
-The Gemini Flash and Flash-Lite families are very good at this.
+ChatGPT works perfectly fine for this. Gemini is a close second.
 
-You can give the model the audio and tell it: transcribe this accurately, remove filler and accidental repetition, clean up the speech debris, and return a structured version.
+But if you want to build your own app, which I have done for myself, there are a few different ways to do it.
 
-And it works surprisingly well.
+One is to just use a multimodal model that can take the audio directly and do transcription, cleanup and structuring in one pass.
 
-This is especially useful if you don’t particularly care about preserving the raw transcript. You speak for five or ten minutes and what comes back is already reasonably close to usable writing.
+The Gemini Flash and Flash-Lite models are very good at this.
 
-If you need an alternative or backup to Gemini for this sort of workflow, the Qwen Omni Flash family also looks promising. It can take audio directly, understand it, and return cleaned or structured text without requiring a separate ASR step.
+You can basically tell Gemini: listen to this, transcribe it correctly, remove filler and repetitions and all the other speech debris, and give me a cleaned-up post.
 
-The other approach is what I prefer when I want to preserve all my raw thoughts in their original ugliness.
+It works really well.
 
-In that case, use a dedicated transcription model — ASR, Automatic Speech Recognition, speech-to-text, whatever terminology you prefer — and keep transcription separate from editing.
+If you don’t care about keeping the raw transcript, this is probably the easiest workflow.
+
+If you want a backup to Gemini for this sort of thing, the [Qwen Omni family](https://www.alibabacloud.com/help/en/model-studio/models) seems promising too. It can take the audio, understand it, and give you the transformed text in one pass.
+
+The other option is to keep the raw transcription and the editing workflow completely separate.
+
+I actually like doing this because sometimes I want all my raw thoughts preserved in their original ugliness.
+
+Then you just use an ASR model — Automatic Speech Recognition, speech-to-text, whatever you want to call it.
 
 Gemini 3.5 Transcribe has worked very well for me.
 
-Microsoft MAI-Transcribe-2 came out recently. I’ve tested it a little and it seems promising, and it’s very cheap.
+Microsoft MAI-Transcribe-2 came out recently. I tested it a little. Seems promising. Very cheap.
 
-OpenAI’s GPT-Transcribe family is also worth trying. There is also GPT-4o Transcribe Diarize, which can identify different speakers in a conversation.
+OpenAI’s GPT-Transcribe family is also worth trying.
 
-Qwen’s ASR models are also decent and reliable.
+There is also GPT-4o Transcribe Diarize if your use case involves multiple speakers.
 
-Grok Voice Transcribe 2 came out literally as I was writing the original version of this note. I haven’t properly tested it yet, so I have no useful opinion about its accuracy, but the pricing is absurdly cheap.
+[Qwen’s ASR models](https://www.alibabacloud.com/help/en/model-studio/models) are decent and reliable.
 
-At prices like these, transcription itself is rapidly becoming something you barely need to think about.
+Grok Voice Transcribe 2 came out literally while I was writing the original version of this note. I haven’t tested it properly yet, so I have no opinion on the accuracy, but again it is dirt cheap.
 
-I know people whose workflow is basically recording meetings, generating transcripts and then turning those into notes or summaries. If speaker recognition matters, look for transcription models that support speaker diarisation — identifying who spoke when. Some of the newer Transcribe models now have this built in.
+And at these prices, transcription itself is increasingly not something you need to spend too much time worrying about.
 
-One recurring failure mode with audio models is unusual vocabulary.
+I know people whose entire use case is recording meetings and then turning the meetings into transcripts, notes and summaries.
 
-Indian names, technical terms, acronyms and model names can get mangled surprisingly often. Qwen, for example, seems to be a weirdly difficult word for transcription models. Even very good systems will confidently produce some other spelling.
+If you have multiple speakers, look for **speaker diarisation**, which is basically the model figuring out who spoke when. Some of these transcription models have it built in now.
 
-A better prompt usually helps.
+Another failure pattern worth mentioning is vocabulary.
 
-And if the transcription system supports custom vocabulary, keyword hints, hotwords, or phrase boosting — different providers use different terminology — give it the troublesome names and domain-specific words in advance. It can make a noticeable difference.
+Very specific words can get mangled repeatedly. Indian words, names, technical jargon, model names.
 
-And then there is the third option: don’t send the audio anywhere at all.
+For some reason Qwen itself is a good example. Q-W-E-N. Alibaba’s Qwen.
 
-I’ve also been running local speech models on my laptop, mostly OpenAI’s Whisper and NVIDIA’s Parakeet family of models.
+A surprising number of transcription systems manage to get that wrong.
 
-My use case, again, is voice typing.
+A better prompt often fixes some of this.
 
-I built myself a little desktop app called "Yawp" ([https://github.com/bebhuvan/yawp](https://github.com/bebhuvan/yawp)) — or, more accurately, Claude Code and Codex built it for me because I was too lazy to type.
+And depending on the ASR system, you may also have things called **custom vocabulary**, **hotwords**, **keyword hints**, **phrase boosting**, etc. The terminology varies, but the idea is basically the same: give the transcription model a list of weird words it should expect to hear.
+
+If your workflow has a lot of specialised vocabulary, use that.
+
+And then there is the third option: run everything locally.
+
+I’ve also used local speech models on my laptop, mostly OpenAI’s Whisper and [NVIDIA’s Parakeet family](https://docs.nvidia.com/nemo/speech/nightly/asr/featured_models.html).
+
+Again, my use case is voice typing.
+
+I built myself a little desktop app called [Yawp](https://github.com/bebhuvan/yawp).
+
+Or rather Claude Code and Codex built it for me because I was too lazy to type.
 
 It works only on Linux.
 
-The workflow is basically similar to Wispr Flow: press and hold a button, speak, release it, and the app transcribes what I said and pastes the text into whatever input surface I’m currently using.
+The workflow is basically similar to Wispr Flow: press and hold a button, speak, let go, and it transcribes the audio and pastes the text into whatever input surface I’m using.
 
 It works reasonably well.
 
-My testing methodology is not particularly scientific. I have been too lazy to buy a microphone, so I either shout at my laptop from about 50–60 centimetres away or lean over and speak like a moron directly into its microphone.
+I should point out that my testing setup here is idiotic.
 
-The accuracy is therefore a little lower than I’d like, but I suspect that particular problem is solved less by a new model than by me spending some money on a microphone.
+I have been too lazy to buy a proper microphone, so from about 50–60 centimetres away I either shout at my laptop or I lean over and speak like a moron directly into the built-in microphone.
+
+So the accuracy is a little lower than I would like.
+
+I strongly suspect this is a microphone problem rather than some deep indictment of speech recognition.
 
 Right now the workflow is press, hold, record, transcribe, paste.
 
-I haven’t yet tried live-streaming the text as I speak, the way Wispr Flow does. That’s probably my next experiment.
+I haven’t tried live streaming the text while I’m speaking, similar to Wispr Flow.
 
-If your workflow involves transcribing a lot of audio and you want to do it cheaply — or effectively for free once you already own the hardware — local models are absolutely worth looking at.
+That’s probably the next experiment.
 
-Whisper remains an obvious option. NVIDIA’s Parakeet family is another strong option, especially if you care about speed or want to experiment with streaming.
+If your workflow involves transcribing a lot of audio and you want to do it for cheap or almost free, local audio models are absolutely worth trying.
 
-Cohere also has an open-source transcription model called Cohere Transcribe. I haven’t tested it yet, but it looks promising enough to add to the list.
+[Whisper](https://openai.com/index/whisper/) is the obvious one.
 
-As I finished writing this post, "Qwen 3.8 Omni Flash" ([https://qwen.ai/blog?id=qwen3.8-omni-flash](https://qwen.ai/blog?id=qwen3.8-omni-flash)) came out. It looks like another promising model for multimodal and audio workflows, but I haven’t tested it yet, so I don’t have a useful opinion on it beyond that.
+NVIDIA Parakeet is another.
 
-And for people who actually know what they’re doing technically, there is an enormous open-source ecosystem here, both for audio and vision.
+Cohere also has an open-source model called [Cohere Transcribe](https://docs.cohere.com/docs/transcribe). I haven’t tested it, but it seems promising.
 
-If you are technically savvy, I suspect you can get these models to do a whole lot more than anything I’m describing here. I am a complete non-technoob. There are probably things you can build with these models that I can’t even dream of.
+And as I finished writing this post, [Qwen 3.8 Omni Flash](https://qwen.ai/blog?id=qwen3.8-omni-flash) came out. It looks like another promising multimodal/audio model.
 
-Languages
+I have not tested it yet, so I have no useful opinion beyond that.
 
-One giant caveat: I’ve barely tested any of this with non-English speech.
+Also, for people who actually know what they’re doing technically, there is an enormous open-source ecosystem here, both for audio and vision.
 
-English is the primary language in which I write, so almost all my experience is with English audio.
+If you’re technically savvy, you can probably get these models to do a whole lot more than anything I’ve described here.
 
-I did one brief Kannada experiment using a Qwen Omni model.
+I am a complete non-technoob.
+
+There are probably things you can build with all of this that I can’t even dream of.
+
+## Languages
+
+One giant caveat to everything I’ve said about audio: I have barely tested any of this with non-English speech.
+
+English is the primary language in which I write, so almost all my experience is English.
+
+I did one brief test in Kannada using a Qwen Omni model.
 
 It failed miserably.
 
-That is nowhere near enough testing to make some grand pronouncement about multilingual transcription, so I won’t. If your primary workflow is Kannada, Hindi, Tamil, Telugu, or anything else, assume none of my audio recommendations have been tested properly for your use case.
+That is obviously nowhere near enough testing for me to make some grand statement about multilingual transcription.
 
-The part I still find crazy
+So if your primary workflow is Kannada, Hindi, Tamil, Telugu, or some other language, assume none of my audio recommendations have been properly tested for your use case.
 
-The thing that still blows my mind is that all of this is possible in 2026.
+## The part I still find crazy
 
-I have absolutely no technical skills. I don’t mean that in the fake “haha I’m not technical” sense where somebody then casually writes Python. I barely know Excel.
+The other thing I keep coming back to is how fucking crazy it is that all of this is possible in 2026.
 
-And yet I can get Claude Code, Codex and these models to build utilities, desktop apps and workflows for me that I actually use.
+I have absolutely no technical skills.
 
-That is fucking crazy.
+And I don’t mean this in the fake tech-bro sense where somebody says “I’m not technical” and then starts casually writing Python.
 
-People keep having these endless AGI-this, AGI-that, ghanta-loda debates, and I think a lot of it misses the much more interesting thing happening in front of us.
+I barely know Excel.
+
+And somehow I am getting these coding tools to build desktop apps, utilities, little workflows, websites, whatever random thing I feel like making.
+
+That is insane.
+
+I know people keep having AGI-this, AGI-that, ghanta-loda debates about all of this.
 
 To say AGI is here would obviously be misleading.
 
-But for normies, in terms of practical utility, some threshold was crossed a while ago. For me, Claude Sonnet 4 was probably around the point where that became obvious.
+But I also think that for normies some threshold was crossed a while ago. For me it was probably around Claude Sonnet 4.
 
-I think most people dramatically underestimate how useful these tools can be because they’re using the wrong frame to think about them.
+And I think a lot of people are dramatically underestimating the utility of these tools because they are using the wrong frames to think about them.
 
-Or they haven’t experimented enough.
+Or they’re simply not experimenting enough.
 
-Or they’re listening to some mouth-breathing idiot with very strong opinions about LLMs who last seriously used one two years ago.
+Or they are listening to some mouth-breathing idiot with a very confident opinion about LLMs.
 
-I’ve been fucking around with these tools heavily for a long time now, and I still keep finding ridiculous amounts of utility in them.
+Even though I have been fucking around with these things heavily, I still keep finding an insane amount of utility in them.
 
-They’ve become deeply embedded in a lot of what I do, both at work and outside it. A bunch of things I do today simply would not have been possible for me without them.
+They have become a deep part of a lot of things I do, both at work and outside work.
 
-Which is why it always surprises me when people are still debating in the abstract whether LLMs are “useful.”
+A lot of the things I do now simply would not have been possible for me without them.
 
-And hearing “they’re just next-token predictors” or “stochastic parrots” used as some sort of devastating argument in 2026 boggles my mind.
+Which is why it continues to surprise me when people have these utterly idiotic debates about whether LLMs are useful.
 
-Okay. And?
+And I still hear “they’re just next-token predictors” or “stochastic parrots” thrown around as if that settles something.
 
-If the stochastic parrot can transcribe my voice, clean up the transcript, read a 120-year-old book, turn a stock-exchange filing into a news item, write code, build me a Linux desktop app and help me run a dozen weird side projects, I’m not entirely sure what argumentative work the phrase “stochastic parrot” is supposed to be doing anymore.
+In 2026 this boggles my mind.
 
-The one thing I highly recommend is: use these tools heavily.
+Okay, sure. It is a stochastic parrot.
 
-Not just the web chat boxes.
+The stochastic parrot transcribes my voice, cleans up my notes, reads 120-year-old books, helps me digitise old letters, turns stock-exchange filings into news, writes code, builds me a Linux desktop app and lets me make all sorts of weird side projects that I would otherwise have absolutely no ability to build.
 
-Get a subscription to Claude Code or Codex. Fuck around. Build something stupid. Try automating some annoying thing you do every week. Give it a project you’ve wanted to build for years but never had the technical ability to start.
+At some point I stop caring about the insult.
 
-You’ll be surprised not only by how much you can do, but by the kind of things you can suddenly do.
+The one thing I would highly recommend is: use these tools heavily.
 
-Especially if your brain has not completely died and you still have an imaginative streak — if you’ve always had a pile of silly online side projects you wanted to build — this feels like a golden age of side projects.
+And not just the chat websites.
 
-There has never been a better time to fuck around and find out.
+Get Claude Code. Get Codex. Fuck around.
+
+Build something stupid.
+
+Automate something annoying.
+
+Take one of those side projects you’ve had sitting in your head for five years because you never knew how to build it and just try.
+
+You’ll be surprised by how much you can do.
+
+But I think the more interesting surprise is the *kind* of things you suddenly realise you can do.
+
+Especially if you haven’t allowed your brain to die and you still have an imaginative streak, this is a golden age for side projects.
+
+There has probably never been a better time to fuck around and find out.
 
 These tools are really, really, really good.
 
 If you’re not using them, I think you’re missing out.
 
-Links
+## Links
 
-Vision and general-purpose models
+### Vision and general-purpose models
 
-- "DeepSeek V4.1 Flash — announcement" ([https://deepseek.com/en/news/deepseek-v4-1-flash/](https://deepseek.com/en/news/deepseek-v4-1-flash/))
-- "Gemini 3.1 Flash-Lite — announcement" ([https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/))
-- "Gemini 3.5 Flash — Google I/O announcement" ([https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/](https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/))
-- "Gemini 3.6 Flash and 3.5 Flash-Lite — announcement" ([https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/))
-- "Gemini 3.7 Flash — announcement" ([https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/))
-- "Gemini 3.8 Flash — announcement" ([https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/))
-- "Qwen 3.7 Flash — model page" ([https://www.alibabacloud.com/help/en/model-studio/qwen3-7-flash](https://www.alibabacloud.com/help/en/model-studio/qwen3-7-flash))
-- "Qwen 3.8 Omni Flash — announcement" ([https://qwen.ai/blog?id=qwen3.8-omni-flash](https://qwen.ai/blog?id=qwen3.8-omni-flash))
-- "GLM 5.3 Flash — announcement" ([https://autoclaw.z.ai/blog/model/glm-5.3-flash/](https://autoclaw.z.ai/blog/model/glm-5.3-flash/))
-- "Xiaomi MiMo V2.5 — official release page" ([https://platform.xiaomimimo.com/docs/en-US/news/v2.5-tts-release](https://platform.xiaomimimo.com/docs/en-US/news/v2.5-tts-release))
+- [DeepSeek V4.1 Flash — announcement](https://deepseek.com/en/news/deepseek-v4-1-flash/)
+- [Gemini 3.1 Flash-Lite — announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-flash-lite/)
+- [Gemini 3.5 Flash — Google I/O announcement](https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/)
+- [Gemini 3.6 Flash and 3.5 Flash-Lite — announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/)
+- [Gemini 3.7 Flash — announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/)
+- [Gemini 3.8 Flash — announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/)
+- [Qwen 3.7 Flash — model page](https://www.alibabacloud.com/help/en/model-studio/qwen3-7-flash)
+- [Qwen 3.8 Omni Flash — announcement](https://qwen.ai/blog?id=qwen3.8-omni-flash)
+- [GLM 5.3 Flash — announcement](https://autoclaw.z.ai/blog/model/glm-5.3-flash/)
+- [Xiaomi MiMo V2.5 — official release page](https://platform.xiaomimimo.com/docs/en-US/news/v2.5-tts-release)
 
-Audio and transcription
+### Audio and transcription
 
-- "OpenAI GPT-Transcribe — model page" ([https://developers.openai.com/api/docs/models/gpt-transcribe](https://developers.openai.com/api/docs/models/gpt-transcribe))
-- "OpenAI GPT-4o Transcribe — model page" ([https://developers.openai.com/api/docs/models/gpt-4o-transcribe](https://developers.openai.com/api/docs/models/gpt-4o-transcribe))
-- "OpenAI GPT-4o Transcribe Diarize — model page" ([https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize](https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize))
-- "Microsoft MAI-Transcribe-2 — announcement" ([https://microsoft.ai/news/mai-transcribe-2-is-the-fastest-most-accurate-and-cheapest-speech-recognition-model-in-the-world/](https://microsoft.ai/news/mai-transcribe-2-is-the-fastest-most-accurate-and-cheapest-speech-recognition-model-in-the-world/))
-- "Grok Voice Transcribe 2 — announcement" ([https://x.ai/news/grok-voice-transcribe-2](https://x.ai/news/grok-voice-transcribe-2))
-- "OpenAI Whisper — announcement" ([https://openai.com/index/whisper/](https://openai.com/index/whisper/))
-- "NVIDIA Parakeet ASR — introduction" ([https://developer.nvidia.com/blog/?p=80564](https://developer.nvidia.com/blog/?p=80564))
-- "Cohere Transcribe — announcement" ([https://cohere.com/blog/transcribe](https://cohere.com/blog/transcribe))
-- "Qwen Omni — documentation" ([https://docs.modelstudio.console.alibabacloud.com/en/model-studio/qwen-omni](https://docs.modelstudio.console.alibabacloud.com/en/model-studio/qwen-omni))
+- [OpenAI GPT-Transcribe — model page](https://developers.openai.com/api/docs/models/gpt-transcribe)
+- [OpenAI GPT-4o Transcribe — model page](https://developers.openai.com/api/docs/models/gpt-4o-transcribe)
+- [OpenAI GPT-4o Transcribe Diarize — model page](https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize)
+- [Microsoft MAI-Transcribe-2 — announcement](https://microsoft.ai/news/mai-transcribe-2-is-the-fastest-most-accurate-and-cheapest-speech-recognition-model-in-the-world/)
+- [Grok Voice Transcribe 2 — announcement](https://x.ai/news/grok-voice-transcribe-2)
+- [OpenAI Whisper — announcement](https://openai.com/index/whisper/)
+- [NVIDIA Parakeet ASR — introduction](https://developer.nvidia.com/blog/?p=80564)
+- [Cohere Transcribe — announcement](https://cohere.com/blog/transcribe)
+- [Qwen Omni — documentation](https://www.alibabacloud.com/help/en/model-studio/models)
 
-Disclaimer
+## Disclaimer
 
-This note was voice typed using ChatGPT. I also used ChatGPT to clean up my raw notes, structure them, edit them, and fact-check model names and links.
+This note was voice typed using ChatGPT. I also used ChatGPT to clean up the raw notes, structure them, edit them, and fact-check model names and links.
