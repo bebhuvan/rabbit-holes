@@ -28,7 +28,7 @@ At that point, the more important question is cost.
 
 If you have a heavy workload, cost becomes a problem very, very quickly.
 
-The newer [DeepSeek Flash models](https://api-docs.deepseek.com/) seem very promising here. They have vision capabilities and they’re ridiculously cheap.
+The newer [DeepSeek Flash model](https://api-docs.deepseek.com/) seem very promising here. It has vision capabilities and it's ridiculously cheap.
 
 The [Gemini Flash-Lite family](https://ai.google.dev/gemini-api/docs/models) is also very cheap and has been pretty reliable for me. The [Qwen Flash family](https://www.alibabacloud.com/help/en/model-studio/vision-model) is reasonably reliable. Qwen 3.7 Flash in particular seems promising. GLM 5.3 Flash is another one worth trying.
 
