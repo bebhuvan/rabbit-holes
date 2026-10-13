@@ -22,6 +22,15 @@ Two new model releases: one from GLM and one from Meta. GLM's model is a special
 
 ---
 
+File this under "relying on AI tools makes you dumber and stupider." 
+
+> The findings backed up what anecdotes and surveys have increasingly found in recent years: An overreliance on AI for answers erodes our cognitive fitness. When AI produces answers in seconds, we get used to that speed; anything that takes longer feels inefficient. And relying on AI also removes what the team called “productive struggle,” which can lead people to find their research strengths and passions.   
+> “We’ve built these systems to be helpful, but are they being helpful to us in a way that’s actually helping us?” Christian said. “We showed, ironically, that they are often helping us in ways that are kind of unhelpful.”
+>
+> [https://news.berkeley.edu/2026/10/09/using-ai-for-just-10-minutes-erodes-your-ability-to-persist-at-hard-things/](https://news.berkeley.edu/2026/10/09/using-ai-for-just-10-minutes-erodes-your-ability-to-persist-at-hard-things/) 
+
+---
+
 
 
 &nbsp;
